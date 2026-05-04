@@ -1,0 +1,19 @@
+{
+  "breakpoints": {
+    "375": {
+      "name": "teacher-collections-grid",
+      "viewportWidth": 327,
+      "width": 327,
+      "height": 0,
+      "bones": []
+    },
+    "768": {
+      "name": "teacher-collections-grid",
+      "viewportWidth": 348,
+      "width": 348,
+      "height": 0,
+      "bones": []
+    }
+  },
+  "_hash": "d41d8cd98f00b204e9800998ecf8427e"
+}

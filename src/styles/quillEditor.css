@@ -1,0 +1,80 @@
+.notification-quill .ql-toolbar.ql-snow {
+  border: none;
+  border-bottom: 1px solid rgb(226 232 240);
+  background-color: rgb(248 250 252);
+  padding: 0.625rem 0.75rem;
+}
+
+.notification-quill .ql-container.ql-snow {
+  border: none;
+}
+
+.notification-quill .ql-editor {
+  min-height: 12rem;
+  color: rgb(15 23 42);
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+
+.notification-quill .ql-editor.ql-blank::before {
+  color: rgb(148 163 184);
+  font-style: normal;
+}
+
+.notification-quill .ql-snow .ql-stroke {
+  stroke: rgb(71 85 105);
+}
+
+.notification-quill .ql-snow .ql-fill {
+  fill: rgb(71 85 105);
+}
+
+.notification-quill .ql-snow .ql-picker {
+  color: rgb(71 85 105);
+}
+
+.notification-quill .ql-snow .ql-picker-options {
+  border-color: rgb(226 232 240);
+  background-color: rgb(255 255 255);
+}
+
+.notification-quill .ql-snow .ql-active .ql-stroke,
+.notification-quill .ql-snow .ql-active .ql-fill,
+.notification-quill .ql-snow .ql-picker.ql-expanded,
+.notification-quill .ql-snow .ql-picker-label:hover,
+.notification-quill .ql-snow button:hover .ql-stroke,
+.notification-quill .ql-snow button:hover .ql-fill {
+  stroke: rgb(59 130 246);
+  fill: rgb(59 130 246);
+  color: rgb(59 130 246);
+}
+
+.dark .notification-quill .ql-toolbar.ql-snow {
+  border-bottom-color: rgb(51 65 85);
+  background-color: rgb(15 23 42 / 0.55);
+}
+
+.dark .notification-quill .ql-editor {
+  color: rgb(226 232 240);
+}
+
+.dark .notification-quill .ql-editor.ql-blank::before {
+  color: rgb(100 116 139);
+}
+
+.dark .notification-quill .ql-snow .ql-stroke {
+  stroke: rgb(148 163 184);
+}
+
+.dark .notification-quill .ql-snow .ql-fill {
+  fill: rgb(148 163 184);
+}
+
+.dark .notification-quill .ql-snow .ql-picker {
+  color: rgb(148 163 184);
+}
+
+.dark .notification-quill .ql-snow .ql-picker-options {
+  border-color: rgb(51 65 85);
+  background-color: rgb(15 23 42);
+}

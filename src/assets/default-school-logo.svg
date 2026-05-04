@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Default school logo">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#1d4ed8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Badge -->
+  <circle cx="128" cy="128" r="112" fill="url(#g)"/>
+  <circle cx="128" cy="128" r="104" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="6"/>
+
+  <!-- Book -->
+  <path d="M74 106c0-10 8-18 18-18h46v104H92c-10 0-18-8-18-18V106z" fill="#ffffff" opacity="0.95"/>
+  <path d="M182 106c0-10-8-18-18-18h-46v104h46c10 0 18-8 18-18V106z" fill="#ffffff" opacity="0.9"/>
+  <path d="M128 88v104" stroke="rgba(37,99,235,0.25)" stroke-width="4"/>
+  <path d="M92 116h36M92 132h36M92 148h36" stroke="rgba(37,99,235,0.35)" stroke-width="4" stroke-linecap="round"/>
+  <path d="M128 116h36M128 132h36M128 148h36" stroke="rgba(37,99,235,0.30)" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Cap -->
+  <path d="M128 54l70 26-70 26-70-26 70-26z" fill="#0b1220" opacity="0.9"/>
+  <path d="M88 94v20c0 16 18 28 40 28s40-12 40-28V94l-40 15-40-15z" fill="#0b1220" opacity="0.85"/>
+  <path d="M198 80v44" stroke="#0b1220" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="198" cy="128" r="8" fill="#0b1220"/>
+
+  <!-- Ribbon -->
+  <path d="M88 198h80c6 0 10-4 10-10v-6H78v6c0 6 4 10 10 10z" fill="rgba(255,255,255,0.9)"/>
+  <path d="M96 194h64" stroke="rgba(37,99,235,0.5)" stroke-width="4" stroke-linecap="round"/>
+</svg>
