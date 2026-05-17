@@ -81,7 +81,7 @@
 //       {isError && (
 //         <div className="p-4 border rounded-lg bg-red-50 text-red-600">
 //           Failed to load class data.
-//           <button onClick={() => refetch()} className="ml-3 underline">
+//           <button onClick={() => refetch()} className="cursor-pointer ml-3 underline">
 //             Retry
 //           </button>
 //         </div>
@@ -302,7 +302,7 @@ function RouteComponent() {
               </p>
               <button
                 onClick={() => refetch()}
-                className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+                className="cursor-pointer mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
               >
                 Try again
               </button>

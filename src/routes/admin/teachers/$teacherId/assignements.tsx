@@ -179,7 +179,7 @@ function TeacherAssignmentsPage() {
                         <button
                           type="submit"
                           disabled={form.formState.isSubmitting}
-                          className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-primary px-6 text-sm font-bold text-white shadow-sm transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
+                          className="cursor-pointer inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-primary px-6 text-sm font-bold text-white shadow-sm transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
                           onClick={form.handleSubmit(onSubmit)}
                         >
                           <span className="material-symbols-outlined text-[18px]">

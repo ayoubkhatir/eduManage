@@ -45,13 +45,13 @@ export function CollectionCard({
     <div key={folder.id} className="relative">
       <button
         onClick={() => onDelete(folder.id)}
-        className="size-8 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/30 z-30 absolute top-2 right-2 cursor-pointer"
+        className="cursor-pointer size-8 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/30 z-30 absolute top-2 right-2 cursor-pointer"
       >
         <span className="material-symbols-outlined text-lg">delete</span>
       </button>
       <button
         onClick={() => onEdit({ id: folder.id, name: folder.name })}
-        className="size-8 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/30 z-30 absolute top-2 right-12 cursor-pointer"
+        className="cursor-pointer size-8 rounded-full bg-white/20 text-white flex items-center justify-center hover:bg-white/30 z-30 absolute top-2 right-12 cursor-pointer"
       >
         <span className="material-symbols-outlined text-lg">edit</span>
       </button>

@@ -82,7 +82,7 @@ const SearchableSelect = memo(function SearchableSelect({
           <button
             type="button"
             tabIndex={-1}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-red-500 transition-colors cursor-pointer"
+            className="cursor-pointer absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-red-500 transition-colors cursor-pointer"
             onMouseDown={(e) => {
               e.preventDefault()
               onChange('')
@@ -383,7 +383,7 @@ function EventFormDialogComponent({
           <div className="flex gap-2 pt-1">
             <button
               type="submit"
-              className="flex-1 py-2 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary/90 active:scale-95 transition-all cursor-pointer shadow disabled:opacity-60 disabled:cursor-not-allowed"
+              className="cursor-pointer flex-1 py-2 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary/90 active:scale-95 transition-all cursor-pointer shadow disabled:opacity-60 disabled:cursor-not-allowed"
               disabled={isSaving}
             >
               {isSaving
@@ -394,7 +394,7 @@ function EventFormDialogComponent({
             </button>
             <button
               type="button"
-              className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all cursor-pointer"
+              className="cursor-pointer px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-all cursor-pointer"
               onClick={() => onOpenChange(false)}
             >
               Cancel

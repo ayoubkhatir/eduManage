@@ -50,7 +50,7 @@
 //                 type="button"
 //                 onClick={open}
 //                 disabled={!ready}
-//                 className="rounded-xl bg-black px-4 py-2 text-white disabled:opacity-50"
+//                 className="cursor-pointer rounded-xl bg-black px-4 py-2 text-white disabled:opacity-50"
 //               >
 //                 {ready ? 'Upload avatar' : 'Loading uploader...'}
 //               </button>
@@ -59,7 +59,7 @@
 
 //           <button
 //             type="button"
-//             className="px-4 py-2 bg-[#f0f2f4] dark:bg-gray-800 hover:bg-[#e2e8f0] dark:hover:bg-gray-700 text-[#111318] dark:text-white hover:text-red-400 border border-slate-300 hover:border-red-400 text-sm font-medium rounded-lg transition-colors cursor-pointer"
+//             className="cursor-pointer px-4 py-2 bg-[#f0f2f4] dark:bg-gray-800 hover:bg-[#e2e8f0] dark:hover:bg-gray-700 text-[#111318] dark:text-white hover:text-red-400 border border-slate-300 hover:border-red-400 text-sm font-medium rounded-lg transition-colors cursor-pointer"
 //           >
 //             Remove
 //           </button>
@@ -111,7 +111,7 @@ export default function ProfilePicInput<T extends FieldValues>({
               type="button"
               onClick={open}
               disabled={!ready}
-              className="relative"
+              className="cursor-pointer relative"
             >
               <div className="flex size-32 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-gray-100 shadow-sm dark:border-gray-700 dark:bg-gray-800">
                 {previewUrl ? (
@@ -145,7 +145,7 @@ export default function ProfilePicInput<T extends FieldValues>({
                 type="button"
                 onClick={open}
                 disabled={!ready}
-                className="rounded-lg bg-black px-4 py-2 text-white disabled:opacity-50"
+                className="cursor-pointer rounded-lg bg-black px-4 py-2 text-white disabled:opacity-50"
               >
                 {ready ? 'Upload image' : 'Loading uploader...'}
               </button>
@@ -153,7 +153,7 @@ export default function ProfilePicInput<T extends FieldValues>({
               <button
                 type="button"
                 onClick={handleRemove}
-                className="rounded-lg border border-slate-300 bg-slate-100 px-4 py-2 text-sm hover:border-red-400 hover:text-red-500 dark:bg-gray-800 dark:text-white"
+                className="cursor-pointer rounded-lg border border-slate-300 bg-slate-100 px-4 py-2 text-sm hover:border-red-400 hover:text-red-500 dark:bg-gray-800 dark:text-white"
               >
                 Remove
               </button>

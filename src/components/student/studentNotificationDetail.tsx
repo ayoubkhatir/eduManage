@@ -175,7 +175,7 @@ export default function StudentNotificationDetail({
         <nav className="mb-6">
           <button
             onClick={() => navigate({ to: '/student/notification' })}
-            className="flex items-center gap-2 text-indigo-400 hover:text-indigo-300 transition-colors group"
+            className="cursor-pointer flex items-center gap-2 text-indigo-400 hover:text-indigo-300 transition-colors group"
             type="button"
           >
             <span className="material-symbols-outlined text-lg group-hover:-translate-x-1 transition-transform">

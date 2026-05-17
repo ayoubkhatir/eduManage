@@ -17,10 +17,11 @@ export const Route = createFileRoute('/teacher/subjects/')({
   component: TeacherSubjectsPage,
   pendingComponent: TeacherSubjectsPending,
   head: () => ({
-    meta: [{ title: 'Student | Subjects - EduManage' }],
+    meta: [{ title: 'Teacher | Subjects - EduManage' }],
   }),
   loader: async ({ context }) => {
-    const teacherUserId = context.authState.user.id
+    const teacherUserId = context.authState.user?.id
+    if (!teacherUserId) return
 
     await context.queryClient.ensureQueryData({
       ...getTeacherSubjectsQueryOptions(teacherUserId),
@@ -30,23 +31,25 @@ export const Route = createFileRoute('/teacher/subjects/')({
 
 function TeacherSubjectsPending() {
   return (
-    <Skeleton name="student-subjects-page" loading>
-      <StudentSubjectsContent />
+    <Skeleton name="teacher-subjects-page" loading>
+      <TeacherSubjectsContent />
     </Skeleton>
   )
 }
 
 function TeacherSubjectsPage() {
   return (
-    <Skeleton name="student-subjects-page" loading={false}>
-      <StudentSubjectsContent />
+    <Skeleton name="teacher-subjects-page" loading={false}>
+      <TeacherSubjectsContent />
     </Skeleton>
   )
 }
 
-function StudentSubjectsContent() {
+function TeacherSubjectsContent() {
   const { authState } = Route.useRouteContext()
-  const teacherUserId = authState.user.id
+  const teacherUserId = authState.user?.id
+
+  if (!teacherUserId) return null
 
   const { data, status } = useQuery({
     ...getTeacherSubjectsQueryOptions(teacherUserId),
@@ -55,70 +58,51 @@ function StudentSubjectsContent() {
   const subjects = (data ?? []) as SubjectItem[]
 
   return (
-    <main className="flex-1 overflow-y-auto bg-background-light p-4 dark:bg-background-dark md:p-8">
-      <div className="mx-auto flex max-w-7xl flex-col gap-8">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-black tracking-tight text-[#0d121b] dark:text-white md:text-4xl">
+    <main className="flex-1 overflow-y-auto p-4 pt-2 md:p-6">
+      <div className="mx-auto flex max-w-7xl flex-col gap-6">
+        {/* Page heading */}
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl">
             My Subjects
           </h1>
-          <p className="text-base text-[#4c669a] dark:text-gray-400">
-            Here are the subjects you need to study this year.
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            Subjects you are teaching this academic year.
           </p>
         </div>
 
+        {/* Content */}
         {status === 'pending' ? (
           <SubjectsGridSkeleton />
         ) : status === 'error' ? (
-          <div className="rounded-2xl border border-red-200 bg-white p-8 text-center dark:border-red-900/40 dark:bg-slate-900">
-            <p className="text-sm font-medium text-red-600 dark:text-red-400">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-red-200 bg-white p-10 text-center dark:border-red-900/40 dark:bg-white/[0.02]">
+            <span className="material-symbols-outlined text-4xl text-red-400">
+              error
+            </span>
+            <p className="mt-3 text-sm font-medium text-red-600 dark:text-red-400">
               Failed to load subjects.
             </p>
           </div>
         ) : subjects.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center dark:border-slate-700 dark:bg-slate-900">
-            <span className="material-symbols-outlined text-4xl text-slate-400">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center dark:border-slate-700 dark:bg-white/[0.02]">
+            <span className="material-symbols-outlined text-5xl text-slate-300 dark:text-slate-600">
               menu_book
             </span>
-            <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">
-              You don't have any subjects yet.
+            <p className="mt-4 text-sm font-medium text-slate-500 dark:text-slate-400">
+              You don&apos;t have any subjects yet.
             </p>
           </div>
         ) : (
-          <>
-            {/* <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              <SummaryCard
-                title="Total Subjects"
-                value={subjects.length}
-                icon="menu_book"
-              />
-              <SummaryCard
-                title="Active Subjects"
-                value={subjects.filter((s) => s.status === 'Active').length}
-                icon="task_alt"
-              />
-              <SummaryCard
-                title="Pending Subjects"
-                value={subjects.filter((s) => s.status === 'Pending').length}
-                icon="hourglass_empty"
-              />
-              <SummaryCard
-                title="School Curriculum"
-                value={subjects.length}
-                icon="school"
-              />
-            </div> */}
-
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {subjects.map((subject) => (
-                <Link
-                  to="/teacher/subjects/$subjectCode"
-                  params={{ subjectCode: subject.code }}
-                >
-                  <SubjectCard key={subject.id} subject={subject} />
-                </Link>
-              ))}
-            </div>
-          </>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {subjects.map((subject) => (
+              <Link
+                key={subject.id}
+                to="/teacher/subjects/$subjectCode"
+                params={{ subjectCode: subject.code }}
+              >
+                <SubjectCard subject={subject} />
+              </Link>
+            ))}
+          </div>
         )}
       </div>
     </main>
@@ -129,30 +113,29 @@ function SubjectCard({ subject }: { subject: SubjectItem }) {
   const isActive = subject.status === 'Active'
 
   return (
-    <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700">
+    <div className="group rounded-2xl border border-slate-200/70 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-primary/40">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <h2 className="truncate text-xl font-bold text-slate-900 dark:text-white">
+            <h2 className="truncate text-lg font-bold text-slate-900 dark:text-white">
               {subject.name}
             </h2>
             <span
-              className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${
+              className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                 isActive
                   ? 'bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400'
-                  : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
+                  : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
               }`}
             >
               {subject.status}
             </span>
           </div>
-
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          <p className="mt-1 text-sm font-mono text-slate-400 dark:text-slate-500">
             {subject.code || 'No code'}
           </p>
         </div>
 
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white dark:bg-primary/10">
           <span className="material-symbols-outlined">menu_book</span>
         </div>
       </div>
@@ -165,37 +148,13 @@ function SubjectCard({ subject }: { subject: SubjectItem }) {
   )
 }
 
-function SummaryCard({
-  title,
-  value,
-  icon,
-}: {
-  title: string
-  value: number
-  icon: string
-}) {
-  return (
-    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5">
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-sm text-slate-500 dark:text-slate-400">{title}</p>
-          <h3 className="mt-1 text-2xl font-bold text-slate-900 dark:text-white">
-            {value}
-          </h3>
-        </div>
-        <span className="material-symbols-outlined text-primary">{icon}</span>
-      </div>
-    </div>
-  )
-}
-
 function InfoBox({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl bg-slate-100 p-3 dark:bg-slate-800/60">
-      <p className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
+    <div className="rounded-xl bg-slate-50 p-3 dark:bg-slate-800/50">
+      <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
         {label}
       </p>
-      <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-white">
+      <p className="mt-1 text-sm font-semibold text-slate-700 dark:text-slate-200">
         {value}
       </p>
     </div>
@@ -204,41 +163,26 @@ function InfoBox({ label, value }: { label: string; value: string }) {
 
 function SubjectsGridSkeleton() {
   return (
-    <>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div
-            key={i}
-            className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5"
-          >
-            <div className="h-5 w-24 rounded bg-slate-200 dark:bg-slate-700 animate-pulse" />
-            <div className="mt-3 h-8 w-16 rounded bg-slate-200 dark:bg-slate-700 animate-pulse" />
-          </div>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div
-            key={i}
-            className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900"
-          >
-            <div className="mb-5 flex items-start justify-between">
-              <div className="space-y-2">
-                <div className="h-6 w-32 rounded bg-slate-200 dark:bg-slate-700 animate-pulse" />
-                <div className="h-4 w-20 rounded bg-slate-200 dark:bg-slate-700 animate-pulse" />
-              </div>
-              <div className="h-11 w-11 rounded-xl bg-slate-200 dark:bg-slate-700 animate-pulse" />
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div
+          key={i}
+          className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900"
+        >
+          <div className="mb-5 flex items-start justify-between">
+            <div className="space-y-2">
+              <div className="h-5 w-28 animate-pulse rounded bg-slate-200 dark:bg-slate-700" />
+              <div className="h-4 w-16 animate-pulse rounded bg-slate-200 dark:bg-slate-700" />
             </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="h-20 rounded-xl bg-slate-200 dark:bg-slate-700 animate-pulse" />
-              <div className="h-20 rounded-xl bg-slate-200 dark:bg-slate-700 animate-pulse" />
-            </div>
+            <div className="h-11 w-11 animate-pulse rounded-xl bg-slate-200 dark:bg-slate-700" />
           </div>
-        ))}
-      </div>
-    </>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="h-16 animate-pulse rounded-xl bg-slate-200 dark:bg-slate-700" />
+            <div className="h-16 animate-pulse rounded-xl bg-slate-200 dark:bg-slate-700" />
+          </div>
+        </div>
+      ))}
+    </div>
   )
 }
 

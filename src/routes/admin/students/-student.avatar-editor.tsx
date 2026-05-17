@@ -87,7 +87,7 @@ export function AvatarUploadCard<T extends FieldValues>({
           <button
             type="button"
             onClick={() => setDialogOpen(true)}
-            className="group relative cursor-pointer rounded-full focus:outline-none focus:ring-2 focus:ring-primary/40"
+            className="cursor-pointer group relative cursor-pointer rounded-full focus:outline-none focus:ring-2 focus:ring-primary/40"
           >
             <div className="overflow-hidden rounded-full">
               {previewUrl ? (
@@ -167,7 +167,7 @@ export function AvatarUploadCard<T extends FieldValues>({
                 type="button"
                 onClick={handleOpenFilePicker}
                 disabled={loading}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600 disabled:opacity-50"
+                className="cursor-pointer inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600 disabled:opacity-50"
               >
                 {loading ? (
                   <>
@@ -186,7 +186,7 @@ export function AvatarUploadCard<T extends FieldValues>({
                 type="button"
                 onClick={handleRemove}
                 disabled={loading || !hasImage}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-slate-100 px-4 py-2 text-sm font-medium text-[#111318] transition-colors hover:border-red-400 hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-800 dark:text-white"
+                className="cursor-pointer inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-slate-100 px-4 py-2 text-sm font-medium text-[#111318] transition-colors hover:border-red-400 hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-800 dark:text-white"
               >
                 <Trash2Icon className="size-4" />
                 Remove picture
@@ -196,7 +196,7 @@ export function AvatarUploadCard<T extends FieldValues>({
                 type="button"
                 onClick={() => setDialogOpen(false)}
                 disabled={loading}
-                className="rounded-lg border border-transparent px-4 py-2 text-sm font-medium text-[#616f89] transition-colors hover:bg-gray-100 disabled:opacity-50 dark:text-gray-400 dark:hover:bg-gray-800"
+                className="cursor-pointer rounded-lg border border-transparent px-4 py-2 text-sm font-medium text-[#616f89] transition-colors hover:bg-gray-100 disabled:opacity-50 dark:text-gray-400 dark:hover:bg-gray-800"
               >
                 Done
               </button>

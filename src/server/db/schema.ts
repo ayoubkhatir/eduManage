@@ -41,7 +41,7 @@ export const userGendersList = Object.values(UserGenderEnum) as [UserGenderEnum,
 export const dbGenderEnum = pgEnum("gender", userGendersList);
 
 export const users = pgTable("users", {
-  id: text("id").primaryKey(),
+  id: text("id").primaryKey().$defaultFn(() => generateId()).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),

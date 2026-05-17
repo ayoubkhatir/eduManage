@@ -1,55 +1,56 @@
-import { Link} from '@tanstack/react-router'
-import SignupForm from "../signupForm"
+import { Link } from '@tanstack/react-router'
+import SignupForm from '../signupForm'
 import { UserRoleEnum } from '#/server/db/schema'
 
-
 export function RightPanel() {
-  
   return (
-    <div className="flex w-full flex-1 self-stretch flex-col justify-center bg-white dark:bg-background-dark overflow-y-auto overflow-x-hidden px-1 py-3 lg:px-15 xl:px-20">
-      <div className="mx-auto w-full max-w-130">
-        {/* Mobile Logo (Visible only on small screens) */}
-        <div className="lg:hidden mb-8 pl-3 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/70 border border-primary/90 text-white shadow-lg shadow-primary/20">
-            <span className="material-symbols-outlined text-2xl">school</span>
+    <div className="flex w-full flex-1 flex-col justify-center overflow-y-auto bg-white px-5 py-8 dark:bg-[#0d1117] sm:px-8 lg:px-12 xl:px-16">
+      <div className="mx-auto w-full max-w-md">
+        {/* Mobile logo */}
+        <div className="mb-8 flex items-center gap-2.5 lg:hidden">
+          <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-600 text-white shadow-md shadow-primary/25">
+            <span className="material-symbols-outlined text-xl">school</span>
           </div>
-          <h2 className="text-xl font-bold tracking-tight text-[#4c669a] dark:text-white">
-            School Manager
-          </h2>
+          <span className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">
+            EduManage
+          </span>
         </div>
-        {/* <!-- Header --> */}
-        <div className="mb-5">
-          <h1 className="font-display text-3xl font-extrabold tracking-tight text-[#0d121b] dark:text-white ">
-            Admin Registration
+
+        {/* Heading */}
+        <div className="mb-8">
+          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-3xl">
+            Create admin account
           </h1>
-          <p className="mt-1 text-[#4c669a] dark:text-[#94a3b8] text-sm">
+          <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">
             Start managing your school today with our comprehensive dashboard.
           </p>
         </div>
-        {/* <!-- Form --> */}
+
+        {/* Form */}
         <SignupForm />
-        {/* <!-- Divider --> */}
-        <div className="relative mt-5">
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 flex items-center"
-          >
-            <div className="w-full border-t border-slate-200 dark:border-slate-800"></div>
+
+        {/* Divider */}
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-slate-200 dark:border-slate-700" />
           </div>
           <div className="relative flex justify-center">
-            <span className="bg-background-light dark:bg-background-dark px-2 text-sm text-slate-500">
-              Log in
+            <span className="bg-white px-3 text-xs text-slate-400 dark:bg-[#0d1117] dark:text-slate-500">
+              Already have an account?
             </span>
           </div>
         </div>
-        {/* <!-- Login Link --> */}
-        <p className="mt-3 mb-2 text-center text-sm text-slate-600 dark:text-slate-400">
-          Already have an account?
+
+        {/* Login link */}
+        <p className="text-center text-sm text-slate-500 dark:text-slate-400">
           <Link
-            className="font-semibold leading-6 text-primary hover:text-primary/80 gap-1 ml-1"
+            className="font-semibold text-primary hover:underline"
             to="/log-in"
-            search={{ role: UserRoleEnum.ADMIN, redirectTo: '/admin/dashboard' }}
-            replace={true}
+            search={{
+              role: UserRoleEnum.ADMIN,
+              redirectTo: '/admin/dashboard',
+            }}
+            replace
           >
             Log in
           </Link>

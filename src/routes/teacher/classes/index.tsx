@@ -452,13 +452,13 @@ function TeacherClassesContent() {
 
   return (
     <main className="flex-1 flex flex-col min-w-0">
-      <div className="px-6 py-4">
+      <div className="px-6 py-4 pt-2">
         <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl">
               My Classes
             </h1>
-            <p className="text-slate-500 dark:text-slate-400 max-w-2xl">
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 max-w-2xl">
               View all classes assigned to you, grouped by grade and subject,
               with student counts and quick access to details.
             </p>
@@ -468,15 +468,15 @@ function TeacherClassesContent() {
             <button
               onClick={() => refetch()}
               disabled={isFetching}
-              className="cursor-pointer rounded-lg border border-slate-300 dark:border-slate-600 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="cursor-pointer rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:border-slate-300 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Refresh data
+              Refresh
             </button>
             <button
               onClick={refreshPage}
-              className="cursor-pointer rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              className="cursor-pointer rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-slate-800 active:scale-[0.98] dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
             >
-              Revalidate route
+              Revalidate
             </button>
           </div>
         </div>
@@ -508,14 +508,14 @@ function TeacherClassesContent() {
       </div>
 
       <div className="px-6 mb-6">
-        <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4">
+        <div className="rounded-2xl border border-slate-200/70 bg-white p-4 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
           <div className="flex flex-col lg:flex-row gap-3 lg:items-center lg:justify-between">
             <div className="flex flex-col sm:flex-row gap-3 w-full lg:max-w-3xl">
               <input
                 value={filters.search}
                 onChange={(e) => setFilters({ search: e.target.value })}
                 placeholder="Search by grade, class, or subject..."
-                className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent px-3 py-2 text-sm outline-none focus:border-primary"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-primary focus:bg-white dark:border-slate-700 dark:bg-slate-800/50 dark:placeholder:text-slate-500 dark:focus:border-primary dark:focus:bg-slate-800"
               />
 
               <select
@@ -525,7 +525,7 @@ function TeacherClassesContent() {
                     status: e.target.value as GetTeacherClassesSchema['status'],
                   })
                 }
-                className="rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent px-3 py-2 text-sm outline-none focus:border-primary"
+                className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm outline-none transition-all focus:border-primary dark:border-slate-700 dark:bg-slate-800/50 dark:focus:border-primary"
               >
                 <option value="all">All statuses</option>
                 <option value="Active">Active</option>
@@ -537,7 +537,7 @@ function TeacherClassesContent() {
               <select
                 value={filters.size}
                 onChange={(e) => setFilters({ size: Number(e.target.value) })}
-                className="rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent px-3 py-2 text-sm outline-none focus:border-primary"
+                className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm outline-none transition-all focus:border-primary dark:border-slate-700 dark:bg-slate-800/50 dark:focus:border-primary"
               >
                 <option value={8}>8 / page</option>
                 <option value={12}>12 / page</option>
@@ -545,8 +545,8 @@ function TeacherClassesContent() {
               </select>
             </div>
 
-            <div className="text-sm text-slate-500 dark:text-slate-400">
-              {rowCount} class assignment{rowCount === 1 ? '' : 's'}
+            <div className="text-sm text-slate-400 dark:text-slate-500">
+              {rowCount} assignment{rowCount === 1 ? '' : 's'}
             </div>
           </div>
         </div>
@@ -713,7 +713,7 @@ function TeacherClassesContent() {
                     onClick={() =>
                       setFilters({ page: (filters.page || 1) - 1 })
                     }
-                    className="rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="cursor-pointer rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Previous
                   </button>
@@ -722,7 +722,7 @@ function TeacherClassesContent() {
                     onClick={() =>
                       setFilters({ page: (filters.page || 1) + 1 })
                     }
-                    className="rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="cursor-pointer rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Next
                   </button>
@@ -746,15 +746,17 @@ function SummaryCard({
   icon: string
 }) {
   return (
-    <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5">
+    <div className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-slate-500 dark:text-slate-400">{title}</p>
-          <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+          <h3 className="mt-1 text-2xl font-bold text-slate-900 dark:text-white">
             {value}
           </h3>
         </div>
-        <span className="material-symbols-outlined text-primary">{icon}</span>
+        <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary dark:bg-primary/10">
+          <span className="material-symbols-outlined">{icon}</span>
+        </div>
       </div>
     </div>
   )
@@ -762,10 +764,10 @@ function SummaryCard({
 
 function ClassCard({ item }: { item: TeacherClassItem }) {
   return (
-    <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 transition-all hover:border-primary/40 hover:shadow-md">
+    <div className="group rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-primary/40">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
             {item.gradeName}
           </p>
           <h4 className="mt-1 text-lg font-semibold text-slate-900 dark:text-white">
@@ -791,7 +793,7 @@ function ClassCard({ item }: { item: TeacherClassItem }) {
         <Link
           to="/teacher/classes/$classId"
           params={{ classId: item.classId }}
-          className="text-sm font-semibold text-primary hover:underline"
+          className="text-sm font-semibold text-primary transition-colors hover:underline"
         >
           Open class
         </Link>
@@ -799,7 +801,7 @@ function ClassCard({ item }: { item: TeacherClassItem }) {
         <Link
           to="/teacher/attendance/$classId"
           params={{ classId: item.classId }}
-          className="text-sm text-slate-600 dark:text-slate-300 hover:underline"
+          className="text-sm text-slate-500 transition-colors hover:text-primary dark:text-slate-400"
         >
           Attendance
         </Link>
@@ -810,11 +812,13 @@ function ClassCard({ item }: { item: TeacherClassItem }) {
 
 function InfoPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg bg-slate-50 dark:bg-slate-900/40 px-3 py-2">
-      <p className="text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
+    <div className="rounded-xl bg-slate-50 px-3 py-2.5 dark:bg-slate-800/50">
+      <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
         {label}
       </p>
-      <p className="mt-1 font-medium text-slate-900 dark:text-white">{value}</p>
+      <p className="mt-0.5 font-medium text-slate-900 dark:text-white">
+        {value}
+      </p>
     </div>
   )
 }
@@ -822,17 +826,17 @@ function InfoPill({ label, value }: { label: string; value: string }) {
 function StatusBadge({ status }: { status: TeacherClassStatus }) {
   const map: Record<TeacherClassStatus, string> = {
     Active:
-      'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
+      'bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400',
     Inactive:
-      'bg-slate-100 text-slate-700 dark:bg-slate-700/40 dark:text-slate-300',
+      'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400',
     Pending:
-      'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
-    New: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
+      'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400',
+    New: 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400',
   }
 
   return (
     <span
-      className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${map[status]}`}
+      className={`inline-flex shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold ${map[status]}`}
     >
       {status}
     </span>

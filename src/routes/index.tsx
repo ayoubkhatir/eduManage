@@ -4,7 +4,12 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 import { UserRoleEnum } from '#/server/db/schema'
 import { useEffect, useState } from 'react'
-import { Icon, Section, FadeIn, Footer } from '#/components/landing/landing-shared'
+import {
+  Icon,
+  Section,
+  FadeIn,
+  Footer,
+} from '#/components/landing/landing-shared'
 
 export const Route = createFileRoute('/')({
   component: App,
@@ -81,7 +86,7 @@ function Navbar() {
             Sign in
           </Link>
           <button
-            className="rounded-lg p-2 text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white md:hidden"
+            className="cursor-pointer rounded-lg p-2 text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white md:hidden"
             onClick={toggleSideBar}
             aria-label="Open menu"
           >
@@ -123,7 +128,7 @@ function MobileSidebar() {
       style={{ visibility: isOpen ? 'visible' : 'hidden' }}
     >
       <button
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300"
+        className="cursor-pointer absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300"
         style={{ opacity: isOpen ? 1 : 0 }}
         onClick={close}
         aria-label="Close menu"
@@ -524,12 +529,12 @@ function Testimonials() {
                 'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
             }}
           >
-            <div className="flex gap-6 animate-marquee" style={{ width: 'max-content' }}>
+            <div
+              className="flex gap-6 animate-marquee"
+              style={{ width: 'max-content' }}
+            >
               {[...items, ...items].map((t, i) => (
-                <div
-                  key={`${t.name}-${i}`}
-                  className="w-[22rem] flex-shrink-0"
-                >
+                <div key={`${t.name}-${i}`} className="w-88 shrink-0">
                   <div className="group flex h-full flex-col rounded-2xl border border-slate-200/80 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/30 dark:border-white/6:border-white/[0.06] dark:bg-white/3 dark:hover:border-primary/40">
                     <div className="mb-4 flex gap-0.5 text-amber-400">
                       {[...Array(5)].map((_, j) => (
@@ -608,7 +613,7 @@ function FAQ() {
           <FadeIn key={i} delay={i * 60}>
             <div>
               <button
-                className="flex w-full items-center justify-between gap-4 py-5 text-left cursor-pointer"
+                className="cursor-pointer flex w-full items-center justify-between gap-4 py-5 text-left"
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
                 aria-expanded={openIndex === i}
               >
@@ -682,8 +687,6 @@ function CTA() {
     </Section>
   )
 }
-
-
 
 /* ─── Main App ─── */
 function App() {

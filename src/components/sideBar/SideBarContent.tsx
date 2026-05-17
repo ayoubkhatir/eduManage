@@ -4,7 +4,6 @@ import { UserProfile } from './UserProfile'
 import { Logo } from '../logo'
 import { useAuth } from '#/services/store/auth_store'
 
-
 export interface SidebarItem {
   name: string
   icon: string
@@ -30,36 +29,28 @@ export function SideBarContent({
   isDesktop,
 }: SideBarContentProps) {
   const user = useAuth((s) => s.user)
-  console.log('Rendering SideBarContent with user:', user)
+
   const handleNavClick = useCallback(
     (itemKey: string) => {
       handleClick(itemKey)
-      if (!isDesktop) {
-        setOpen(false)
-      }
+      if (!isDesktop) setOpen(false)
     },
     [handleClick, setOpen, isDesktop],
   )
 
   const handleProfileClick = useCallback(() => {
-    if (!isDesktop) {
-      setOpen(false)
-    }
+    if (!isDesktop) setOpen(false)
     setChoosen('settings')
   }, [setOpen, setChoosen, isDesktop])
 
   return (
     <>
-      <div className="flex flex-col gap-8 overflow-hidden">
+      <div className="flex flex-col gap-5">
         {/* Brand */}
         <Logo />
 
         {/* Navigation */}
-        <nav className="flex flex-col gap-2" aria-label="Primary">
-          {/* Search Bar - visible only on desktop and tablet */}
-          {/* <SearchBar /> */}
-
-          {/* Navigation Items */}
+        <nav className="flex flex-col gap-0.5" aria-label="Primary">
           {list.length > 0 ? (
             list.map((item) => (
               <NavButton
@@ -69,7 +60,7 @@ export function SideBarContent({
               />
             ))
           ) : (
-            <p className="text-xs text-slate-500 p-2">No items available</p>
+            <p className="px-3 py-2 text-xs text-slate-400">No items available</p>
           )}
         </nav>
       </div>

@@ -1,19 +1,10 @@
 import { useForm } from 'react-hook-form'
-
-// import type { SchoolLogoState } from '@/services/store/school_logo'
 import type { NewInfoOwnerFields } from './settings.schema'
 import { Switch } from '@/components/ui/switch'
 import { UserAvatar } from '#/components/admin/Table/columnsData'
-import type { AuthUser } from '#/server/modules/auth/auth.controller'
-
-// import useSchoolLogoStore from '@/services/store/school_logo'
+import type { AuthUser } from '#/schemas/auth.schema'
 
 export default function SettingsComp({ admin }: { admin: AuthUser }) {
-  // const setSchoolLogoSrc = useSchoolLogoStore(
-  //   (state: SchoolLogoState) => state.setSchoolLogoSrc,
-  // )
-
-  /* information form */
   const {
     register,
     handleSubmit,
@@ -23,170 +14,162 @@ export default function SettingsComp({ admin }: { admin: AuthUser }) {
       email: admin.email,
       description: '',
       phoneNumber: '',
-      SchoolName: admin.username,
+      SchoolName: admin.name,
     },
-    // resolver: zodResolver(newInfoOwnerSchema),
     mode: 'onSubmit',
     reValidateMode: 'onChange',
   })
 
-  const onSubmit = async () =>
-    //data: NewInfoOwnerFields
-    {
-      // const { confirmPassword, ...rest } = data
-    }
+  const onSubmit = async () => {}
 
   return (
-    <main className="flex-1 overflow-y-auto  p-4 md:p-6">
-      <div className="max-w-6xl mx-auto space-y-6">
-        {/* Page Heading */}
-        <div className="flex flex-col gap-1">
-          <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+    <main className="flex-1 overflow-y-auto p-4 md:p-6">
+      <div className="mx-auto max-w-6xl space-y-6">
+        {/* Page heading */}
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl">
             School Profile
           </h1>
-          <p className="text-slate-500 dark:text-slate-400">
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             Manage application-wide settings and school identity.
           </p>
         </div>
-        <div className="flex flex-col gap-8">
-          {/* Section: General Info & Logo */}
-          <section className="bg-white dark:bg-[#151f2b] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+
+        <div className="flex flex-col gap-6">
+          {/* General Information */}
+          <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
+            <div className="flex items-center justify-between border-b border-slate-100 p-6 dark:border-white/[0.06]">
               <div>
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                   General Information
                 </h2>
-                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                  Update your school's branding and primary details.
+                <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
+                  Update your school&apos;s branding and primary details.
                 </p>
               </div>
-              <span className="material-symbols-outlined text-slate-300 dark:text-slate-600 text-3xl">
+              <span className="material-symbols-outlined text-3xl text-slate-300 dark:text-slate-600">
                 domain
               </span>
             </div>
-            <div className="p-6 md:p-8 space-y-8">
-              {/* Logo Upload */}
-              <div className="flex flex-col md:flex-row gap-6 items-start">
-                <div className="relative group shrink-0">
-                  <div
-                    className="w-32 h-32 rounded-lg bg-slate-100 dark:bg-slate-800 border-2 border-dashed border-slate-300 dark:border-slate-600 flex items-center justify-center overflow-hidden bg-cover bg-center cursor-pointer hover:border-primary"
-                    data-alt="School logo preview placeholder"
-                  >
-                    <UserAvatar image={admin.image} size={25} />
 
-                    {/* <IconButton type="schoolLogo" /> */}
-                    <div
-                      className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 pointer-events-none"
-                      style={{ transition: 'opacity 0.2s ease-in-out' }}
-                    >
+            <div className="space-y-8 p-6 md:p-8">
+              {/* Logo */}
+              <div className="flex flex-col gap-6 md:flex-row md:items-start">
+                <div className="group relative shrink-0">
+                  <div className="flex size-28 items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-slate-300 bg-slate-100 bg-cover bg-center transition-colors hover:border-primary dark:border-slate-600 dark:bg-slate-800">
+                    <UserAvatar image={admin.image} size={25} />
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
                       <span className="material-symbols-outlined text-white">
                         edit
                       </span>
                     </div>
                   </div>
                 </div>
+
                 <div className="flex-1 space-y-3">
                   <div>
                     <h3 className="font-semibold text-slate-900 dark:text-white">
                       School Logo
                     </h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                      This logo will appear on report cards, emails, and the
-                      dashboard header.
+                    <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                      Will appear on report cards, emails, and the dashboard
+                      header.
                     </p>
                   </div>
-                  <div className="flex gap-3">
-                    <button
-                      // onClick={() => setSchoolLogoSrc(defaultSchoolLogo)}
-                      className="px-4 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 text-sm font-semibold rounded-lg cursor-pointer"
-                    >
-                      Remove Photo
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    className="cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+                  >
+                    Remove Photo
+                  </button>
                   <p className="text-xs text-slate-400">
                     JPG, GIF or PNG. Max size of 2MB.
                   </p>
                 </div>
               </div>
 
-              {/* Form Fields */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Form fields */}
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                     School Name
                   </label>
                   <input
-                    className="w-full h-11 px-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary outline-none placeholder:text-slate-400"
+                    className="h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
                     type="text"
                     placeholder="Sunnydale Academy"
                     {...register('SchoolName')}
                   />
                   {errors.SchoolName && (
-                    <p className="text-red-500 text-xs mt-1">
+                    <p className="text-xs text-red-500">
                       {errors.SchoolName.message}
                     </p>
                   )}
                 </div>
+
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                     School ID
                   </label>
                   <div className="relative">
                     <input
-                      className="w-full h-11 pl-3 pr-10 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-slate-400 cursor-not-allowed"
+                      className="h-11 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 text-slate-500 outline-none dark:border-slate-600 dark:bg-slate-900 dark:text-slate-400"
                       readOnly
                       type="text"
                       defaultValue="#882910"
                     />
-                    <span className="material-symbols-outlined absolute right-3 top-2.5 text-slate-400 text-lg">
+                    <span className="material-symbols-outlined absolute right-3 top-2.5 text-lg text-slate-400">
                       lock
                     </span>
                   </div>
                 </div>
+
                 <div className="space-y-2 md:col-span-2">
                   <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                     Description / Motto
                   </label>
                   <textarea
-                    className="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary outline-none resize-none placeholder:text-slate-400"
+                    className="w-full resize-none rounded-xl border border-slate-300 bg-white p-3 text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
                     rows={3}
                     placeholder="Where bright futures begin."
                     {...register('description')}
                   />
                   {errors.description && (
-                    <p className="text-red-500 text-xs mt-1">
+                    <p className="text-xs text-red-500">
                       {errors.description.message}
                     </p>
                   )}
                 </div>
+
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                     Email Address
                   </label>
                   <input
-                    className="w-full h-11 px-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+                    className="h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
                     type="email"
                     placeholder="admin@sunnydale.edu"
                     {...register('email')}
                   />
                   {errors.email && (
-                    <p className="text-red-500 text-xs mt-1">
+                    <p className="text-xs text-red-500">
                       {errors.email.message}
                     </p>
                   )}
                 </div>
+
                 <div className="space-y-2">
                   <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                     Phone Number
                   </label>
                   <input
-                    className="w-full h-11 px-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+                    className="h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
                     type="tel"
                     placeholder="+1 (555) 123-4567"
                     {...register('phoneNumber')}
                   />
                   {errors.phoneNumber && (
-                    <p className="text-red-500 text-xs mt-1">
+                    <p className="text-xs text-red-500">
                       {errors.phoneNumber.message}
                     </p>
                   )}
@@ -195,102 +178,97 @@ export default function SettingsComp({ admin }: { admin: AuthUser }) {
             </div>
           </section>
 
-          {/* Section: Feature Toggles */}
-          <section className="bg-white dark:bg-[#151f2b] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+          {/* Feature Toggles */}
+          <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
+            <div className="flex items-center justify-between border-b border-slate-100 p-6 dark:border-white/[0.06]">
               <div>
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                   Access &amp; Feature Controls
                 </h2>
-                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                  Enable the parts of the platform that already exist in your
-                  school portal.
+                <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
+                  Enable the parts of the platform that exist in your school
+                  portal.
                 </p>
               </div>
-              <span className="material-symbols-outlined text-slate-300 dark:text-slate-600 text-3xl">
+              <span className="material-symbols-outlined text-3xl text-slate-300 dark:text-slate-600">
                 toggle_on
               </span>
             </div>
-            <div className="divide-y divide-slate-100 dark:divide-slate-700">
-              <div className="p-4 md:px-6 md:py-5 flex items-center justify-between gap-4">
-                <div>
-                  <p className="font-medium text-slate-900 dark:text-white">
-                    Teacher Notifications
-                  </p>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
-                    Allow teachers to publish classroom and administrative
-                    notifications.
-                  </p>
+
+            <div className="divide-y divide-slate-100 dark:divide-slate-700/50">
+              {[
+                {
+                  title: 'Teacher Notifications',
+                  desc: 'Allow teachers to publish classroom and administrative notifications.',
+                  defaultChecked: true,
+                },
+                {
+                  title: 'School Announcements',
+                  desc: 'Show school-wide announcements to the people included in each post audience.',
+                  defaultChecked: true,
+                },
+                {
+                  title: 'Shared Calendar Access',
+                  desc: 'Make school events visible across owner, teacher, and student calendar views.',
+                  defaultChecked: true,
+                },
+                {
+                  title: 'Payments Module',
+                  desc: 'Keep the billing and payment management area available in the owner dashboard.',
+                  defaultChecked: false,
+                },
+              ].map((item) => (
+                <div
+                  key={item.title}
+                  className="flex items-center justify-between gap-4 p-4 md:px-6 md:py-5"
+                >
+                  <div>
+                    <p className="font-medium text-slate-900 dark:text-white">
+                      {item.title}
+                    </p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                      {item.desc}
+                    </p>
+                  </div>
+                  <Switch
+                    defaultChecked={item.defaultChecked}
+                    className="shrink-0"
+                  />
                 </div>
-                <Switch defaultChecked className="shrink-0" />
-              </div>
-              <div className="p-4 md:px-6 md:py-5 flex items-center justify-between gap-4">
-                <div>
-                  <p className="font-medium text-slate-900 dark:text-white">
-                    School Announcements
-                  </p>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
-                    Show school-wide announcements to the people included in
-                    each post audience.
-                  </p>
-                </div>
-                <Switch defaultChecked className="shrink-0" />
-              </div>
-              <div className="p-4 md:px-6 md:py-5 flex items-center justify-between gap-4">
-                <div>
-                  <p className="font-medium text-slate-900 dark:text-white">
-                    Shared Calendar Access
-                  </p>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
-                    Make school events visible across owner, teacher, and
-                    student calendar views.
-                  </p>
-                </div>
-                <Switch defaultChecked className="shrink-0" />
-              </div>
-              <div className="p-4 md:px-6 md:py-5 flex items-center justify-between gap-4">
-                <div>
-                  <p className="font-medium text-slate-900 dark:text-white">
-                    Payments Module
-                  </p>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">
-                    Keep the billing and payment management area available in
-                    the owner dashboard.
-                  </p>
-                </div>
-                <Switch className="shrink-0" />
-              </div>
+              ))}
             </div>
           </section>
-          {/* Security section */}
-          <section className="bg-white dark:bg-[#151f2b] rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+
+          {/* Security */}
+          <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
+            <div className="flex items-center justify-between border-b border-slate-100 p-6 dark:border-white/[0.06]">
               <div>
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                   Security
                 </h2>
-                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
                   Update passwords and security options.
                 </p>
               </div>
-              <span className="material-symbols-outlined text-slate-300 dark:text-slate-600 text-3xl">
+              <span className="material-symbols-outlined text-3xl text-slate-300 dark:text-slate-600">
                 security
               </span>
             </div>
-            <div className="p-6 md:p-8 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <div className="space-y-6 p-6 md:p-8">
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
                     New Password
                   </label>
                   <input
-                    className="w-full h-11 px-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary outline-none placeholder:text-slate-400"
+                    className="h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-slate-900 outline-none placeholder:text-slate-400 transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
                     placeholder="••••••••"
                     type="password"
                     {...register('newPassword')}
                   />
                   {errors.newPassword && (
-                    <p className="text-red-500 text-xs mt-1">
+                    <p className="text-xs text-red-500">
                       {errors.newPassword.message}
                     </p>
                   )}
@@ -300,22 +278,23 @@ export default function SettingsComp({ admin }: { admin: AuthUser }) {
                     Confirm Password
                   </label>
                   <input
-                    className="w-full h-11 px-3 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-primary outline-none placeholder:text-slate-400"
+                    className="h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-slate-900 outline-none placeholder:text-slate-400 transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
                     placeholder="••••••••"
                     type="password"
                     {...register('confirmPassword')}
                   />
                   {errors.confirmPassword && (
-                    <p className="text-red-500 text-xs mt-1">
+                    <p className="text-xs text-red-500">
                       {errors.confirmPassword.message}
                     </p>
                   )}
                 </div>
               </div>
-              <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900 rounded-lg">
-                <div className="flex gap-3 items-center">
-                  <div className="p-2 bg-white dark:bg-slate-800 rounded shadow-sm text-slate-700 dark:text-slate-300">
-                    <span className="material-symbols-outlined">
+
+              <div className="flex items-center justify-between rounded-xl bg-slate-50 p-4 dark:bg-slate-800/50">
+                <div className="flex items-center gap-3">
+                  <div className="flex size-10 items-center justify-center rounded-lg bg-white shadow-sm dark:bg-slate-800">
+                    <span className="material-symbols-outlined text-slate-600 dark:text-slate-300">
                       smartphone
                     </span>
                   </div>
@@ -323,52 +302,61 @@ export default function SettingsComp({ admin }: { admin: AuthUser }) {
                     <p className="text-sm font-bold text-slate-900 dark:text-white">
                       Two-Factor Authentication
                     </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                    <p className="text-xs text-slate-500">
                       Add an extra layer of security to your account.
                     </p>
                   </div>
                 </div>
-                <button className="text-primary text-sm font-bold hover:underline">
+                <button
+                  type="button"
+                  className="cursor-pointer text-sm font-bold text-primary hover:underline"
+                >
                   Enable
                 </button>
               </div>
             </div>
           </section>
-          {/* Action Buttons */}
-          <div className="flex items-center justify-end gap-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+
+          {/* Save button */}
+          <div className="flex items-center justify-end border-t border-slate-200 pt-6 dark:border-slate-700/50">
             <button
               onClick={handleSubmit(onSubmit)}
               disabled={isSubmitting}
-              className="px-6 py-2.5 rounded-lg bg-primary text-white font-bold hover:bg-blue-700 shadow-md shadow-blue-500/20 transform hover:scale-[1.02] cursor-pointer disabled:opacity-50"
+              className="cursor-pointer rounded-xl bg-slate-900 px-6 py-2.5 font-bold text-white shadow-lg transition-all hover:bg-slate-800 active:scale-[0.98] disabled:opacity-50 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
             >
               {isSubmitting ? 'Saving...' : 'Save Changes'}
             </button>
           </div>
-          {/* Section: Danger Zone */}
-          <section className="border border-red-200 dark:border-red-900/50 bg-red-50/50 dark:bg-red-900/10 rounded-xl shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-red-100 dark:border-red-900/30 flex justify-between items-center">
+
+          {/* Danger Zone */}
+          <section className="overflow-hidden rounded-2xl border border-red-200 bg-red-50/50 shadow-sm dark:border-red-900/50 dark:bg-red-900/10">
+            <div className="flex items-center justify-between border-b border-red-100 p-6 dark:border-red-900/30">
               <div>
                 <h2 className="text-lg font-bold text-red-700 dark:text-red-400">
                   Danger Zone
                 </h2>
-                <p className="text-sm text-red-600/70 dark:text-red-400/70 mt-1">
+                <p className="mt-0.5 text-sm text-red-600/70 dark:text-red-400/70">
                   Irreversible actions. Proceed with caution.
                 </p>
               </div>
-              <span className="material-symbols-outlined text-red-300 dark:text-red-800 text-3xl">
+              <span className="material-symbols-outlined text-3xl text-red-300 dark:text-red-800">
                 warning
               </span>
             </div>
-            <div className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+
+            <div className="flex flex-col items-start justify-between gap-4 p-6 sm:flex-row sm:items-center">
               <div>
                 <h3 className="font-semibold text-slate-900 dark:text-white">
                   Delete School Account
                 </h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                  This will remove all the data from the current academic year
+                <p className="mt-1 text-sm text-slate-500">
+                  This will remove all data from the current academic year.
                 </p>
               </div>
-              <button className="px-5 py-2.5 bg-white dark:bg-slate-800 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 font-semibold rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 whitespace-nowrap cursor-pointer">
+              <button
+                type="button"
+                className="cursor-pointer whitespace-nowrap rounded-xl border border-red-200 bg-white px-5 py-2.5 font-semibold text-red-600 transition-colors hover:bg-red-50 dark:border-red-800 dark:bg-slate-800 dark:text-red-400 dark:hover:bg-red-900/20"
+              >
                 Delete School
               </button>
             </div>

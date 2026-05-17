@@ -144,6 +144,7 @@ export function SimpleCloudinaryUpload({
       type="button"
       disabled={!ready}
       onClick={() => widgetRef.current?.open()}
+      className="cursor-pointer"
     >
       {ready ? 'Upload' : 'Loading...'}
     </button>
@@ -234,7 +235,7 @@ export function SimpleImageUpload({ value, onChange }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="cursor-pointer flex flex-col gap-3">
       <label>Image</label>
       <input
         type="file"

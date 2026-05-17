@@ -46,7 +46,7 @@ export const NotificationAudienceField = memo(function NotificationAudienceField
                 <span>{item.label}</span>
                 <button
                   type="button"
-                  className="size-4 flex items-center justify-center rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+                  className="cursor-pointer size-4 flex items-center justify-center rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors cursor-pointer"
                   onClick={() => onRemove(value)}
                 >
                   <span className="material-symbols-outlined text-[16px]">close</span>

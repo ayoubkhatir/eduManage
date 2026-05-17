@@ -78,7 +78,7 @@ function TeacherNotificationsContent() {
 
           <button
             onClick={() => navigate({ to: '/teacher/notifications/add' })}
-            className="flex shrink-0 items-center gap-2 justify-center rounded-lg h-10 px-5   bg-primary  hover:bg-blue-700 dark:hover:bg-blue-500 text-white text-sm font-bold active:scale-95 cursor-pointer"
+            className="cursor-pointer flex shrink-0 items-center gap-2 justify-center rounded-lg h-10 px-5   bg-primary  hover:bg-blue-700 dark:hover:bg-blue-500 text-white text-sm font-bold active:scale-95 cursor-pointer"
           >
             <span className="material-symbols-outlined text-[18px]">add</span>
             <span>Add Notification</span>
@@ -87,7 +87,7 @@ function TeacherNotificationsContent() {
           <button
             onClick={markAllAsRead}
             disabled={isMarkingAllRead}
-            className="flex shrink-0 items-center gap-2 justify-center rounded-lg h-10 px-5  border border-gray-300 dark:border-gray-700  bg-white dark:bg-[#282e39] hover:bg-slate-200 dark:hover:bg-[#323b49] text-black text-sm font-bold active:scale-95 cursor-pointer"
+            className="cursor-pointer flex shrink-0 items-center gap-2 justify-center rounded-lg h-10 px-5  border border-gray-300 dark:border-gray-700  bg-white dark:bg-[#282e39] hover:bg-slate-200 dark:hover:bg-[#323b49] text-black text-sm font-bold active:scale-95 cursor-pointer"
           >
             <span className="material-symbols-outlined text-[18px]">
               done_all
@@ -126,7 +126,7 @@ function TeacherNotificationsContent() {
                 <button
                   key={t}
                   onClick={() => setTab(t)}
-                  className={` flex h-9 items-center justify-center px-4 rounded-full text-sm font-medium ${variantClasses}`}
+                  className={`cursor-pointer flex h-9 items-center justify-center px-4 rounded-full text-sm font-medium ${variantClasses}`}
                   style={
                     isActive
                       ? { transition: 'transform 0.2s ease-in-out' }

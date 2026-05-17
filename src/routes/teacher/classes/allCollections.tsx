@@ -81,14 +81,14 @@ function AllCollectionsContent() {
                 Failed to load collections.
               </p>
               <button
-                className="ml-4 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
+                className="cursor-pointer ml-4 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-dark transition-colors"
                 onClick={() => refetchFolders()}
                 disabled={isFoldersFetching}
               >
                 Retry
               </button>
               <button
-                className="ml-4 px-4 py-2 bg-secondary text-white rounded-md hover:bg-secondary-dark transition-colors"
+                className="cursor-pointer ml-4 px-4 py-2 bg-secondary text-white rounded-md hover:bg-secondary-dark transition-colors"
                 onClick={() => router.history.back()}
               >
                 View All Collections

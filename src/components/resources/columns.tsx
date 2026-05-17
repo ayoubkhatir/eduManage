@@ -79,7 +79,7 @@ export const columns: Array<ColumnDef<ResourceDto>> = [
       return (
         <div className="flex items-center justify-end gap-2">
           <button
-            className="rounded p-1.5 text-slate-400 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400 transition-colors cursor-pointer"
+            className="cursor-pointer rounded p-1.5 text-slate-400 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400 transition-colors cursor-pointer"
             title={`Download ${fileName}`}
             type="button"
           >
@@ -89,7 +89,7 @@ export const columns: Array<ColumnDef<ResourceDto>> = [
           </button>
 
           <button
-            className="rounded p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors cursor-pointer"
+            className="cursor-pointer rounded p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors cursor-pointer"
             title={`Delete ${fileName}`}
             type="button"
           >

@@ -192,16 +192,15 @@ function PopUpNotification() {
       <button
         aria-expanded={isOpen}
         onClick={() => popUpOPen()}
-        className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-[#4c669a] cursor-pointer"
+        className="cursor-pointer relative flex size-9 cursor-pointer items-center justify-center rounded-lg text-[#4c669a] transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
       >
         <span
-          className="material-symbols-outlined"
-          style={{ fontSize: '24px' }}
+          className="material-symbols-outlined text-[22px]"
         >
           notifications
         </span>
         {!isRead && (
-          <span className="absolute top-2 right-2 size-2 bg-red-500 rounded-full border border-white dark:border-gray-900"></span>
+          <span className="absolute top-1.5 right-1.5 size-2 bg-red-500 rounded-full border border-white dark:border-gray-900"></span>
         )}
       </button>
 
@@ -210,7 +209,7 @@ function PopUpNotification() {
       {isOpen && (
         <button
           aria-label="Close sidebar"
-          className="fixed inset-0 z-30 bg-black/30 backdrop-blur-sm lg:hidden"
+          className="cursor-pointer fixed inset-0 z-30 bg-black/30 backdrop-blur-sm lg:hidden"
           onClick={() => setIsOpen(false)}
         ></button>
       )}
@@ -226,7 +225,7 @@ function PopUpNotification() {
           {/* <div className="flex gap-2">
             <button
               onClick={clearNotifications}
-              className="text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 cursor-pointer"
+              className="cursor-pointer text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 cursor-pointer"
             >
               Clear all
             </button>

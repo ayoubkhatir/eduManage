@@ -117,7 +117,7 @@ export const columns: Array<ColumnDef<Notification>> = [
       return (
         <div className="flex items-center justify-end gap-2">
           <button
-            className="rounded p-1.5 text-slate-400 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400 transition-colors cursor-pointer"
+            className="cursor-pointer rounded p-1.5 text-slate-400 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400 transition-colors cursor-pointer"
             title={`Edit ${id}`}
             type="button"
             onClick={(event) => {
@@ -127,7 +127,7 @@ export const columns: Array<ColumnDef<Notification>> = [
             <span className="material-symbols-outlined text-[20px]">edit</span>
           </button>
           <button
-            className="rounded p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors cursor-pointer"
+            className="cursor-pointer rounded p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors cursor-pointer"
             title={`Delete ${id}`}
             type="button"
             onClick={async (event) => {

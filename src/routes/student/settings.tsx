@@ -14,7 +14,7 @@ function RouteComponent() {
   const { authState } = Route.useRouteContext()
   return (
     <Skeleton name="student-settings-page" loading={false}>
-      <SettingsComp userRole={UserRoleEnum.STUDENT} user={authState.user} />
+      <SettingsComp userRole={UserRoleEnum.STUDENT} user={authState.user!} />
     </Skeleton>
   )
 }

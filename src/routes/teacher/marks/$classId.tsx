@@ -528,7 +528,7 @@ function RouteComponent() {
                           !newAssessment.title.trim() ||
                           createAssessmentMutation.isPending
                         }
-                        className="rounded-lg bg-primary px-5 py-2 text-white font-medium hover:bg-blue-700 disabled:opacity-50"
+                        className="cursor-pointer rounded-lg bg-primary px-5 py-2 text-white font-medium hover:bg-blue-700 disabled:opacity-50"
                       >
                         {createAssessmentMutation.isPending
                           ? 'Creating...'
@@ -717,7 +717,7 @@ function RouteComponent() {
                           <button
                             onClick={() => saveMarksMutation.mutate()}
                             disabled={saveMarksMutation.isPending}
-                            className="rounded-lg bg-primary px-5 py-2 text-white font-medium hover:bg-blue-700 disabled:opacity-50"
+                            className="cursor-pointer rounded-lg bg-primary px-5 py-2 text-white font-medium hover:bg-blue-700 disabled:opacity-50"
                           >
                             {saveMarksMutation.isPending
                               ? 'Saving...'
@@ -857,7 +857,7 @@ function ErrorCard({
       </p>
       <button
         onClick={onRetry}
-        className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+        className="cursor-pointer mt-4 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
       >
         Try again
       </button>
