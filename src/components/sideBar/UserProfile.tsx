@@ -18,32 +18,35 @@ export function UserProfile({
   const { mutate: logout, isPending } = useLogout()
 
   return (
-    <div className="flex items-center gap-2.5 rounded-lg border border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 p-2.5">
-      <Link onClick={onProfileClick} to={`/${localPath}/settings` as any}>
+    <div className="flex items-center gap-2.5 rounded-xl border border-slate-200/70 bg-slate-50/60 p-2.5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
+      <Link
+        onClick={onProfileClick}
+        to={`/${localPath}/settings` as any}
+        className="shrink-0 cursor-pointer rounded-lg transition-opacity hover:opacity-80"
+      >
         <UserAvatar image={user.image} size={9} />
-        {/* <Avatar
-          alt="profile picture"
-          src={avatarSrc}
-          sx={{ width: 36, height: 36 }}
-        /> */}
       </Link>
-      <div className="flex flex-col min-w-0 flex-1">
-        <h1 className="text-slate-900 dark:text-slate-100 text-sm font-semibold truncate">
+
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">
           {user.gender === 'Male' ? 'Mr' : 'Ms'}. {user.name}
-        </h1>
-        <p className="text-slate-500 dark:text-slate-400 text-xs font-normal truncate">
+        </p>
+        <p className="truncate text-xs font-medium text-slate-500 dark:text-slate-400">
           {user.role}
         </p>
       </div>
+
       <button
         onClick={() => logout()}
-        className="text-slate-500 dark:text-slate-400 hover:text-primary cursor-pointer transition-colors"
+        disabled={isPending}
+        className="cursor-pointer flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-red-50 hover:text-red-500 dark:text-slate-500 dark:hover:bg-red-500/10 dark:hover:text-red-400"
         aria-label="Logout"
+        type="button"
       >
         {isPending ? (
-          <Loader2Icon className="size-5 animate-spin" />
+          <Loader2Icon className="size-4 animate-spin" />
         ) : (
-          <LogOutIcon className="size-5" />
+          <LogOutIcon className="size-4" />
         )}
       </button>
     </div>

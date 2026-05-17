@@ -125,7 +125,7 @@ export function GlobalCalendar({
                 <button
                   key={event.id}
                   type="button"
-                  className="flex items-start gap-3 group text-left w-full cursor-pointer"
+                  className="cursor-pointer flex items-start gap-3 group text-left w-full cursor-pointer"
                   onClick={() => {
                     setDetailEvent(event)
                     setDetailOpen(true)
@@ -184,7 +184,7 @@ export function GlobalCalendar({
             <div className="flex items-center gap-0.5 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-1">
               <button
                 type="button"
-                className="p-1 rounded hover:bg-white dark:hover:bg-slate-700 transition-all cursor-pointer text-slate-600 dark:text-slate-300"
+                className="cursor-pointer p-1 rounded hover:bg-white dark:hover:bg-slate-700 transition-all cursor-pointer text-slate-600 dark:text-slate-300"
                 onClick={() => shiftDate(-1)}
                 aria-label="Previous"
               >
@@ -194,14 +194,14 @@ export function GlobalCalendar({
               </button>
               <button
                 type="button"
-                className="px-3 py-1 text-xs font-bold rounded hover:bg-white dark:hover:bg-slate-700 transition-all cursor-pointer text-slate-700 dark:text-slate-200"
+                className="cursor-pointer px-3 py-1 text-xs font-bold rounded hover:bg-white dark:hover:bg-slate-700 transition-all cursor-pointer text-slate-700 dark:text-slate-200"
                 onClick={() => setSelectedDate(new Date())}
               >
                 Today
               </button>
               <button
                 type="button"
-                className="p-1 rounded hover:bg-white dark:hover:bg-slate-700 transition-all cursor-pointer text-slate-600 dark:text-slate-300"
+                className="cursor-pointer p-1 rounded hover:bg-white dark:hover:bg-slate-700 transition-all cursor-pointer text-slate-600 dark:text-slate-300"
                 onClick={() => shiftDate(1)}
                 aria-label="Next"
               >

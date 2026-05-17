@@ -32,7 +32,7 @@ function UpcomingEventsPanelComponent({
             <button
               key={`${event.id ?? event.title}-${event.start.getTime()}`}
               type="button"
-              className="flex items-start gap-3 group text-left w-full cursor-pointer"
+              className="cursor-pointer flex items-start gap-3 group text-left w-full cursor-pointer"
               onClick={() => onSelectEvent(event)}
             >
               <div

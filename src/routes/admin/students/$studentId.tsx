@@ -351,7 +351,7 @@ function OwnerStudentDetailContent() {
                           />
                           <button
                             type="button"
-                            className="absolute right-4 top-1/2 -translate-y-1/2 text-[#616f89] hover:text-[#111318] dark:hover:text-white dark:text-gray-400 cursor-pointer"
+                            className="cursor-pointer absolute right-4 top-1/2 -translate-y-1/2 text-[#616f89] hover:text-[#111318] dark:hover:text-white dark:text-gray-400 cursor-pointer"
                             onClick={togglePassword}
                           >
                             <span className="material-symbols-outlined">
@@ -370,14 +370,14 @@ function OwnerStudentDetailContent() {
                     <Link to="/admin/students">
                       <button
                         type="button"
-                        className="w-full sm:w-auto h-10 px-6 rounded-lg border border-transparent text-[#616f89] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 font-bold text-sm transition-colors cursor-pointer"
+                        className="cursor-pointer w-full sm:w-auto h-10 px-6 rounded-lg border border-transparent text-[#616f89] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 font-bold text-sm transition-colors cursor-pointer"
                       >
                         Cancel
                       </button>
                     </Link>
                     <button
                       type="submit"
-                      className="w-full sm:w-auto h-10 px-6 rounded-lg bg-primary hover:bg-blue-600 text-white font-bold text-sm shadow-sm transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                      className="cursor-pointer w-full sm:w-auto h-10 px-6 rounded-lg bg-primary hover:bg-blue-600 text-white font-bold text-sm shadow-sm transition-colors flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <span className="material-symbols-outlined text-[18px]">
                         check

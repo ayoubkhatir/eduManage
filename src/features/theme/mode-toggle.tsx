@@ -43,7 +43,7 @@ export function ModeToggle() {
       variant="outline"
       size="icon"
       onClick={() => setTheme(nextTheme)}
-      className="relative h-10 w-10 cursor-pointer rounded-full border-slate-300 bg-white shadow-sm transition-colors hover:bg-amber-50 hover:border-amber-300 dark:border-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700"
+      className="relative h-9 w-9 cursor-pointer rounded-lg border-slate-200 bg-white shadow-sm transition-colors hover:bg-slate-100 hover:border-slate-300 dark:border-white/10 dark:bg-slate-800 dark:hover:bg-white/5"
       aria-label={`Current theme: ${label}. Click to switch theme.`}
       title={`Current theme: ${label}`}
     >

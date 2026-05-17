@@ -78,7 +78,7 @@ function Notifications({ initialTab = 'All' }: NotificationsProps) {
             <button
               onClick={markAllAsRead}
               disabled={isMarkingAllRead}
-              className="flex shrink-0 items-center gap-2 justify-center rounded-lg h-10 px-5   bg-primary dark:bg-[#282e39] hover:bg-blue-700 dark:hover:bg-[#323b49] text-white text-sm font-bold active:scale-95"
+              className="cursor-pointer flex shrink-0 items-center gap-2 justify-center rounded-lg h-10 px-5   bg-primary dark:bg-[#282e39] hover:bg-blue-700 dark:hover:bg-[#323b49] text-white text-sm font-bold active:scale-95"
             >
               <span className="material-symbols-outlined text-[18px]">
                 done_all
@@ -117,7 +117,7 @@ function Notifications({ initialTab = 'All' }: NotificationsProps) {
                   <button
                     key={t}
                     onClick={() => setTab(t)}
-                    className={` flex h-9 items-center justify-center px-4 rounded-full text-sm font-medium ${variantClasses}`}
+                    className={`cursor-pointer flex h-9 items-center justify-center px-4 rounded-full text-sm font-medium ${variantClasses}`}
                     style={
                       isActive
                         ? { transition: 'transform 0.2s ease-in-out' }

@@ -1,123 +1,123 @@
 import { useState } from 'react'
-
-import {useLogin} from "#/services/api/auth.hooks"
+import { useLogin } from '#/services/api/auth.hooks'
 import type { AuthRole } from '#/schemas/shared.schema'
 
-
-
-export default function Loginform({ redirectTo , role }: { redirectTo: string,  role: AuthRole }) {
-  
-  
-  /* visible password */
+export default function Loginform({
+  redirectTo,
+  role,
+}: {
+  redirectTo: string
+  role: AuthRole
+}) {
   const [showPassword, setShowPassword] = useState(false)
-  
-  const {form , errorMessage , onSubmit } = useLogin(redirectTo , role)
-  
+  const { form, errorMessage, onSubmit } = useLogin(redirectTo, role)
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" noValidate>
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="space-y-5"
+      noValidate
+    >
+      {/* Email */}
       <div>
         <label
-          className="block text-xs font-semibold text-[#111318] dark:text-white mb-1.5"
+          className="mb-1.5 block text-xs font-semibold text-slate-700 dark:text-slate-200"
           htmlFor="email"
         >
           Email address
         </label>
-        <div className="relative rounded-lg shadow-sm">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-            <span
-              className="material-symbols-outlined text-[#616f89] dark:text-gray-400"
-              style={{ fontSize: 20 }}
-            >
-              Email
+        <div className="relative">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+            <span className="material-symbols-outlined text-[18px] text-slate-400 dark:text-slate-500">
+              mail
             </span>
           </div>
           <input
             id="email"
-            className="form-input block w-full rounded-lg border-0 py-0 h-10 pl-12 text-[#111318] dark:text-white dark:bg-[#1a2234] shadow-sm ring-1 ring-inset ring-[#dbdfe6] dark:ring-gray-600 placeholder:text-[#616f89] dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-primary text-sm"
+            className="block h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-3 text-sm text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-800/50 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-primary dark:focus:ring-primary/10"
             {...form.register('email')}
             placeholder="name@school.com"
             type="email"
+            aria-describedby={form.formState.errors.email ? 'email-error' : undefined}
           />
         </div>
         {form.formState.errors.email && (
-          <p className="mt-1 text-xs text-red-600" id="email-error">
+          <p className="mt-1.5 text-xs text-red-500" id="email-error">
             {form.formState.errors.email.message}
           </p>
         )}
       </div>
 
+      {/* Password */}
       <div>
-        <div className="flex items-center justify-between mb-1.5">
+        <div className="mb-1.5 flex items-center justify-between">
           <label
-            className="block text-xs font-semibold text-[#111318] dark:text-white"
+            className="block text-xs font-semibold text-slate-700 dark:text-slate-200"
             htmlFor="password"
           >
             Password
           </label>
-          <div className="text-sm">
-            <a
-              className="font-medium text-primary hover:text-primary/80"
-              href="#"
-            >
-              Forgot password?
-            </a>
-          </div>
+          <a
+            className="text-xs font-medium text-primary transition-colors hover:text-primary/80"
+            href="#"
+          >
+            Forgot password?
+          </a>
         </div>
-        <div className="relative rounded-lg shadow-sm">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-            <span
-              className="material-symbols-outlined text-[#616f89] dark:text-gray-400"
-              style={{ fontSize: 20 }}
-            >
+        <div className="relative">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+            <span className="material-symbols-outlined text-[18px] text-slate-400 dark:text-slate-500">
               lock
             </span>
           </div>
           <input
             id="password"
-            className="form-input block w-full rounded-lg border-0 py-0 h-10 pl-12 pr-12 text-[#111318] dark:text-white dark:bg-[#1a2234] shadow-sm ring-1 ring-inset ring-[#dbdfe6] dark:ring-gray-600 placeholder:text-[#616f89] dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-primary text-sm"
+            className="block h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-10 text-sm text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-primary focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-800/50 dark:text-white dark:placeholder:text-slate-500 dark:focus:border-primary dark:focus:ring-primary/10"
             {...form.register('password')}
             placeholder="Enter your password"
             type={showPassword ? 'text' : 'password'}
+            aria-describedby={form.formState.errors.password ? 'password-error' : undefined}
           />
-          <div className="absolute inset-y-0 right-0 flex items-center pr-4 cursor-pointer group">
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              <span
-                className="material-symbols-outlined text-[#616f89] dark:text-gray-400 group-hover:text-primary cursor-pointer"
-                style={{ fontSize: 20 }}
-              >
-                {showPassword ? 'visibility' : 'visibility_off'}
-              </span>
-            </button>
-          </div>
+          <button
+            type="button"
+            className="cursor-pointer absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 transition-colors hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
+            onClick={() => setShowPassword(!showPassword)}
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
+          >
+            <span className="material-symbols-outlined text-[18px]">
+              {showPassword ? 'visibility' : 'visibility_off'}
+            </span>
+          </button>
         </div>
         {form.formState.errors.password && (
-          <p className="mt-1 text-xs text-red-600" id="password-error">
+          <p className="mt-1.5 text-xs text-red-500" id="password-error">
             {form.formState.errors.password.message}
           </p>
         )}
       </div>
 
+      {/* Submit */}
       <div>
         <button
-          className="flex w-full justify-center items-center rounded-lg bg-primary h-10 px-3 text-sm font-bold text-white shadow-sm hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transform hover:scale-[1.01] cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-          style={{
-            transition:
-              'transform 0.2s ease-in-out, background-color 0.2s ease-in-out',
-          }}
+          className="cursor-pointer flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-slate-900 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition-all hover:bg-slate-800 hover:shadow-xl active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed dark:bg-white dark:text-slate-900 dark:shadow-white/10 dark:hover:bg-slate-100"
           type="submit"
           disabled={form.formState.isSubmitting}
         >
-          Log In
-          <span className="material-symbols-outlined ml-2 text-[18px]">
-            arrow_forward
-          </span>
+          {form.formState.isSubmitting ? (
+            <span className="material-symbols-outlined animate-spin text-lg">
+              progress_activity
+            </span>
+          ) : (
+            <>
+              Log In
+              <span className="material-symbols-outlined text-lg">
+                arrow_forward
+              </span>
+            </>
+          )}
         </button>
         {errorMessage && (
-          <p className="mt-4 text-sm text-red-600 text-center">
+          <p className="mt-3 text-center text-sm text-red-500">
             {errorMessage}
           </p>
         )}

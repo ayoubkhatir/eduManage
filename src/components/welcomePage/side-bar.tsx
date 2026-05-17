@@ -1,103 +1,114 @@
 import { useEffect } from 'react'
-
-import useWelcomeSideBarStore from '@/services/store/welcome_store'
+import { Link } from '@tanstack/react-router'
+import { UserRoleEnum } from '#/server/db/schema'
+import useWelcomeSideBarStore from '#/services/store/welcome_store'
 
 type WelcomeSideBarProps = {
   onNavigate: (id: string) => void
 }
 
+function Icon({ name, className = '' }: { name: string; className?: string }) {
+  return (
+    <span className={`material-symbols-outlined ${className}`}>{name}</span>
+  )
+}
+
 export default function SideBar({ onNavigate }: WelcomeSideBarProps) {
-  const isOpen = useWelcomeSideBarStore((state) => state.isOpen)
-  const closeSideBar = useWelcomeSideBarStore((state) => state.closeSideBar)
+  const isOpen = useWelcomeSideBarStore((s) => s.isOpen)
+  const close = useWelcomeSideBarStore((s) => s.closeSideBar)
 
   useEffect(() => {
     if (!isOpen) return
-    const originalOverflow = document.body.style.overflow
+    const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => {
-      document.body.style.overflow = originalOverflow
+      document.body.style.overflow = prev
     }
   }, [isOpen])
 
   const handleNavigate =
-    (id: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
-      event.preventDefault()
-      closeSideBar()
+    (id: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault()
+      close()
       onNavigate(id)
     }
 
+  const links = [
+    { label: 'Features', id: 'features', icon: 'widgets' },
+    { label: 'Roles', id: 'roles', icon: 'people' },
+    { label: 'FAQ', id: 'faq', icon: 'help_outline' },
+    { label: 'Contact', id: 'contact', icon: 'mail' },
+  ]
+
   return (
     <div
-      className={`fixed inset-x-0 top-16 bottom-0 z-40 md:hidden ${
-        isOpen ? 'pointer-events-auto' : 'pointer-events-none'
-      }`}
+      className={`fixed inset-0 top-0 z-50 md:hidden ${isOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
       role="dialog"
       aria-modal="true"
       aria-hidden={!isOpen}
-      style={{
-        visibility: isOpen ? 'visible' : 'hidden',
-        transition: isOpen ? 'visibility 0s' : 'visibility 0s 0.3s',
-      }}
+      style={{ visibility: isOpen ? 'visible' : 'hidden' }}
     >
+      {/* Backdrop */}
       <button
-        type="button"
-        className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+        className="cursor-pointer absolute inset-0 cursor-pointer bg-black/50 backdrop-blur-sm transition-opacity duration-300"
+        style={{ opacity: isOpen ? 1 : 0 }}
+        onClick={close}
         aria-label="Close menu"
-        onClick={closeSideBar}
-        style={{
-          opacity: isOpen ? 1 : 0,
-          transition: 'opacity 0.3s ease-in-out',
-        }}
       />
 
+      {/* Panel */}
       <aside
-        className="absolute right-0 top-0 h-full w-[60%] max-w-sm overflow-y-auto bg-background-light dark:bg-background-dark border-l border-slate-200/70 dark:border-white/10 shadow-xl"
-        style={{
-          transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
-          transition: 'transform 0.3s ease-out',
-        }}
+        className="absolute left-0 top-0 h-full w-72 max-w-[85vw] flex flex-col bg-white shadow-2xl dark:bg-[#101622] border-r border-slate-200/60 dark:border-white/[0.06] transition-transform duration-300 ease-out"
+        style={{ transform: isOpen ? 'translateX(0)' : 'translateX(-100%)' }}
       >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200/70 dark:border-white/10">
-          <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-2xl text-slate-900 dark:text-white">
-              school
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200/60 dark:border-white/[0.06]">
+          <div className="flex items-center gap-2.5">
+            <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-white shadow-sm shadow-primary/20">
+              <Icon name="school" className="text-[18px]" />
+            </div>
+            <span className="text-base font-bold tracking-tight text-slate-900 dark:text-white">
+              EduManage
             </span>
-            <p className="text-slate-900 dark:text-white text-base font-bold tracking-tight">
-              SchoolManage
-            </p>
           </div>
+          <button
+            className="cursor-pointer flex size-8 cursor-pointer items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-white/5"
+            onClick={close}
+            aria-label="Close menu"
+          >
+            <Icon name="close" className="text-[20px]" />
+          </button>
         </div>
 
-        <nav
-          className="px-5 py-5 flex flex-col gap-3"
-          aria-label="Welcome navigation"
-        >
-          <a
-            className="rounded-lg px-4 py-3 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100/70 dark:hover:bg-white/10"
-            onClick={handleNavigate('features')}
-          >
-            Features
-          </a>
-          <a
-            className="rounded-lg px-4 py-3 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100/70 dark:hover:bg-white/10"
-            onClick={handleNavigate('roles')}
-          >
-            Roles
-          </a>
-          <a
-            className="rounded-lg px-4 py-3 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100/70 dark:hover:bg-white/10"
-            onClick={handleNavigate('contact')}
-          >
-            Contact
-          </a>
-
-          <a
-            onClick={handleNavigate('roles')}
-            className="mt-2 flex items-center justify-center rounded-full h-11 px-6 bg-primary text-white text-sm font-bold hover:brightness-95 cursor-pointer"
-          >
-            Login
-          </a>
+        {/* Nav links */}
+        <nav className="flex-1 overflow-y-auto px-3 py-3" aria-label="Mobile navigation">
+          <div className="flex flex-col gap-0.5">
+            {links.map((l) => (
+              <a
+                key={l.id}
+                href={`#${l.id}`}
+                onClick={handleNavigate(l.id)}
+                className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5"
+              >
+                <Icon name={l.icon} className="text-[20px] text-slate-400 dark:text-slate-500" />
+                {l.label}
+              </a>
+            ))}
+          </div>
         </nav>
+
+        {/* Footer CTA */}
+        <div className="border-t border-slate-200/60 dark:border-white/[0.06] p-4">
+          <Link
+            to="/log-in"
+            search={{ role: UserRoleEnum.ADMIN, redirectTo: '/admin/dashboard' }}
+            className="flex cursor-pointer items-center justify-center gap-2 rounded-full bg-primary py-2.5 text-sm font-semibold text-white shadow-sm shadow-primary/25 transition-colors hover:bg-primary/90"
+            onClick={close}
+          >
+            <Icon name="login" className="text-[18px]" />
+            Sign in
+          </Link>
+        </div>
       </aside>
     </div>
   )

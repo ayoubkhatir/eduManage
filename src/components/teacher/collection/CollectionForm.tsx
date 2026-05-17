@@ -37,7 +37,7 @@ export function CollectionForm({
       <button
         type="submit"
         disabled={isSubmitting}
-        className="px-4 py-2 rounded bg-primary text-white hover:bg-blue-700 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+        className="cursor-pointer px-4 py-2 rounded bg-primary text-white hover:bg-blue-700 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
       >
         {role === 'edit'
           ? isSubmitting

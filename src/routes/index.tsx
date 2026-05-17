@@ -135,7 +135,7 @@ function Navbar() {
             Sign in
           </Link>
           <button
-            className="rounded-lg p-2 text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white md:hidden"
+            className="cursor-pointer rounded-lg p-2 text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white md:hidden"
             onClick={toggleSideBar}
             aria-label="Open menu"
           >
@@ -177,7 +177,7 @@ function MobileSidebar() {
       style={{ visibility: isOpen ? 'visible' : 'hidden' }}
     >
       <button
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300"
+        className="cursor-pointer absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300"
         style={{ opacity: isOpen ? 1 : 0 }}
         onClick={close}
         aria-label="Close menu"
@@ -610,7 +610,7 @@ function FAQ() {
           <FadeIn key={i} delay={i * 60}>
             <div>
               <button
-                className="flex w-full items-center justify-between gap-4 py-5 text-left"
+                className="cursor-pointer flex w-full items-center justify-between gap-4 py-5 text-left"
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
                 aria-expanded={openIndex === i}
               >

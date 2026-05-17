@@ -196,7 +196,7 @@ function RouteComponent() {
                             {subject}
                             <button
                               type="button"
-                              className="hover:text-red-500 flex items-center justify-center"
+                              className="cursor-pointer hover:text-red-500 flex items-center justify-center"
                               onClick={() => {
                                 removeSubjects(subject)
                               }}
@@ -264,7 +264,7 @@ function RouteComponent() {
                           />
                           <button
                             type="button"
-                            className="absolute right-2 top-6 -translate-y-1/2 text-slate-500 hover:text-neutral-900 dark:hover:text-white dark:text-gray-400 cursor-pointer self-center"
+                            className="cursor-pointer absolute right-2 top-6 -translate-y-1/2 text-slate-500 hover:text-neutral-900 dark:hover:text-white dark:text-gray-400 cursor-pointer self-center"
                             onClick={togglePassword}
                           >
                             <span className="material-symbols-outlined">
@@ -283,7 +283,7 @@ function RouteComponent() {
                     <Link to="/admin/teachers">
                       <button
                         type="button"
-                        className="w-full sm:w-auto h-10 px-6 rounded-lg border border-transparent text-slate-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 font-bold text-sm transition-colors cursor-pointer"
+                        className="cursor-pointer w-full sm:w-auto h-10 px-6 rounded-lg border border-transparent text-slate-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 font-bold text-sm transition-colors cursor-pointer"
                       >
                         previous
                       </button>
@@ -291,7 +291,7 @@ function RouteComponent() {
 
                     <button
                       type="submit"
-                      className="w-full sm:w-auto h-10 px-6 rounded-lg bg-primary hover:bg-blue-600 text-white font-bold text-sm shadow-sm transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                      className="cursor-pointer w-full sm:w-auto h-10 px-6 rounded-lg bg-primary hover:bg-blue-600 text-white font-bold text-sm shadow-sm transition-colors flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <span className="material-symbols-outlined text-[18px]">
                         check

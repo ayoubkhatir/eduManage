@@ -70,7 +70,7 @@
 //                   shouldValidate: true,
 //                 })
 //               }}
-//               className="absolute right-9 top-1/2 -translate-y-1/2 p-1 rounded-md text-gray-400 dark:text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-900 hover:text-gray-700 dark:hover:text-gray-400 transition-all"
+//               className="cursor-pointer absolute right-9 top-1/2 -translate-y-1/2 p-1 rounded-md text-gray-400 dark:text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-900 hover:text-gray-700 dark:hover:text-gray-400 transition-all"
 //             >
 //               <X className="h-3.5 w-3.5" />
 //             </button>
@@ -195,7 +195,7 @@ export default function DatePickerField<T extends FieldValues>({
                       e.stopPropagation()
                       field.onChange('')
                     }}
-                    className="absolute right-9 top-1/2 -translate-y-1/2 p-1 rounded-md dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 hover:text-gray-700 dark:hover:text-gray-300 transition-all"
+                    className="cursor-pointer absolute right-9 top-1/2 -translate-y-1/2 p-1 rounded-md dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 hover:text-gray-700 dark:hover:text-gray-300 transition-all"
                     aria-label={`Clear ${label}`}
                   >
                     <X className="h-3.5 w-3.5" />
