@@ -1,10 +1,10 @@
 import type { AddTeacherSchema, AssignTeacherSchema, EditTeacherSchema, GetTeacherClassesSchema, GetTeachersSchema } from "#/schemas/teachers.schema";
 import { db, type Database } from "#/server/db/db";
-import { classesTable, gradesTable, StatusEnum, studentsTable, subjectsTable, teacherAssignmentsTable, teachersTable, UserGenderEnum, UserRoleEnum, usersTable } from "#/server/db/schema";
+import { classesTable, gradesTable, StatusEnum, studentsTable, subjectsTable, teacherAssignmentsTable, teachersTable, UserGenderEnum, UserRoleEnum, users } from "#/server/db/schema";
 import { and, asc, count, desc, eq, gte, ilike, inArray, lt, or, SQL } from "drizzle-orm"
 import { TeacherUserDto } from "./teachers.types";
-import { passwordHasher } from "../auth/services/password_hasher.service";
 import { generateTemporaryPassword } from "#/server/utils/temp_password_generator";
+import { handlePassword } from "#/server/utils/handle-password";
 
 export type CreateTeacherInput = {
     schoolId: string
@@ -68,8 +68,8 @@ class TeachersController {
 
         const sortColumn =
             sortBy === 'email'
-                ? usersTable.email
-                : usersTable.username // default = name
+                ? users.email
+                : users.name // default = name
 
         const orderDirection =
             sortOrder === 'desc' ? desc(sortColumn) : asc(sortColumn)
@@ -77,8 +77,8 @@ class TeachersController {
         if (normalizedSearch) {
             conditions.push(
                 or(
-                    ilike(usersTable.username, `%${normalizedSearch}%`),
-                    ilike(usersTable.email, `%${normalizedSearch}%`)
+                    ilike(users.name, `%${normalizedSearch}%`),
+                    ilike(users.email, `%${normalizedSearch}%`)
                 )!
             )
         }
@@ -94,10 +94,10 @@ class TeachersController {
             this.db
                 .select({
                     teacher: teachersTable,
-                    user: usersTable,
+                    user: users,
                 })
                 .from(teachersTable)
-                .innerJoin(usersTable, eq(teachersTable.userId, usersTable.id))
+                .innerJoin(users, eq(teachersTable.userId, users.id))
                 .where(whereClause)
                 .orderBy(orderDirection)
                 .limit(safeSize)
@@ -106,7 +106,7 @@ class TeachersController {
             this.db
                 .select({ total: count() })
                 .from(teachersTable)
-                .innerJoin(usersTable, eq(teachersTable.userId, usersTable.id))
+                .innerJoin(users, eq(teachersTable.userId, users.id))
                 .where(whereClause),
         ])
 
@@ -178,12 +178,12 @@ class TeachersController {
      * Create user + teacher profile in one transaction
      */
     async createTeacher(input: AddTeacherSchema) {
-        const passwordHash = await passwordHasher.hashPassword(generateTemporaryPassword(input.name))
+        const passwordHash = await handlePassword.hash(generateTemporaryPassword(input.name))
         const data = await this.db.transaction(async (tx) => {
             const [createdUser] = await tx
-                .insert(usersTable)
+                .insert(users)
                 .values({
-                    username: input.name,
+                    name: input.name,
                     email: input.email,
                     passwordHash: passwordHash,
                     image: input.image ?? null,
@@ -191,7 +191,7 @@ class TeachersController {
                     role: UserRoleEnum.TEACHER,
                     gender: input.gender,
                 })
-                .returning({ id: usersTable.id })
+                .returning({ id: users.id })
 
             console.log({ createdUser })
             const [createdTeacher] = await tx
@@ -236,18 +236,18 @@ class TeachersController {
                 joiningDate: teachersTable.joiningDate,
                 status: teachersTable.status,
 
-                username: usersTable.username,
-                email: usersTable.email,
-                telNumber: usersTable.telNumber,
-                gender: usersTable.gender,
-                image: usersTable.image,
-                createdAt: usersTable.createdAt,
-                updatedAt: usersTable.updatedAt,
+                username: users.name,
+                email: users.email,
+                telNumber: users.telNumber,
+                gender: users.gender,
+                image: users.image,
+                createdAt: users.createdAt,
+                updatedAt: users.updatedAt,
             })
             .from(teachersTable)
-            .innerJoin(usersTable, eq(teachersTable.userId, usersTable.id))
+            .innerJoin(users, eq(teachersTable.userId, users.id))
             .where(eq(teachersTable.schoolId, schoolId))
-            .orderBy(desc(usersTable.createdAt))
+            .orderBy(desc(users.createdAt))
     }
 
     /**
@@ -287,8 +287,8 @@ class TeachersController {
      * Get one teacher by user id
      */
     async getTeacherByUserId(userId: string) {
-        const user = await this.db.query.usersTable.findFirst({
-            where: eq(usersTable.id, userId),
+        const user = await this.db.query.users.findFirst({
+            where: eq(users.id, userId),
             with: {
                 teacher: {
                     with: {
@@ -340,15 +340,15 @@ class TeachersController {
 
 
             await tx
-                .update(usersTable)
+                .update(users)
                 .set({
                     email: input.email,
-                    username: input.name,
+                    name: input.name,
                     telNumber: input.telNumber,
                     image: input.image,
                     gender: input.gender,
                 })
-                .where(eq(usersTable.id, existingTeacher.userId))
+                .where(eq(users.id, existingTeacher.userId))
 
             await tx
                 .update(teachersTable)
@@ -370,17 +370,17 @@ class TeachersController {
                     joiningDate: teachersTable.joiningDate,
                     status: teachersTable.status,
 
-                    username: usersTable.username,
-                    email: usersTable.email,
-                    telNumber: usersTable.telNumber,
-                    gender: usersTable.gender,
-                    image: usersTable.image,
-                    emailVerified: usersTable.emailVerified,
-                    createdAt: usersTable.createdAt,
-                    updatedAt: usersTable.updatedAt,
+                    username: users.name,
+                    email: users.email,
+                    telNumber: users.telNumber,
+                    gender: users.gender,
+                    image: users.image,
+                    emailVerified: users.emailVerified,
+                    createdAt: users.createdAt,
+                    updatedAt: users.updatedAt,
                 })
                 .from(teachersTable)
-                .innerJoin(usersTable, eq(teachersTable.userId, usersTable.id))
+                .innerJoin(users, eq(teachersTable.userId, users.id))
                 .where(eq(teachersTable.id, input.teacherId))
 
             return updatedTeacher ?? null
@@ -389,7 +389,7 @@ class TeachersController {
 
     /**
      * Delete teacher and linked user
-     * Since usersTable is the account root, removing the user is usually cleaner.
+     * Since users is the account root, removing the user is usually cleaner.
      */
     async deleteTeacher(teacherId: string): Promise<void> {
         await this.db.transaction(async (tx) => {
@@ -409,7 +409,7 @@ class TeachersController {
                 .where(eq(teacherAssignmentsTable.teacherId, teacherId))
 
             if (teacher.userId) {
-                await tx.delete(usersTable).where(eq(usersTable.id, teacher.userId))
+                await tx.delete(users).where(eq(users.id, teacher.userId))
             } else {
                 await tx.delete(teachersTable).where(eq(teachersTable.id, teacherId))
             }
@@ -510,19 +510,19 @@ class TeachersController {
                 isPrimaryTeacher: teacherAssignmentsTable.isPrimaryTeacher,
                 assignmentStatus: teacherAssignmentsTable.status,
 
-                userId: usersTable.id,
-                username: usersTable.username,
-                email: usersTable.email,
-                telNumber: usersTable.telNumber,
-                image: usersTable.image,
-                gender: usersTable.gender,
+                userId: users.id,
+                username: users.name,
+                email: users.email,
+                telNumber: users.telNumber,
+                image: users.image,
+                gender: users.gender,
 
                 teacherStatus: teachersTable.status,
                 joiningDate: teachersTable.joiningDate,
             })
             .from(teacherAssignmentsTable)
             .innerJoin(teachersTable, eq(teacherAssignmentsTable.teacherId, teachersTable.id))
-            .innerJoin(usersTable, eq(teachersTable.userId, usersTable.id))
+            .innerJoin(users, eq(teachersTable.userId, users.id))
             .innerJoin(subjectsTable, eq(teacherAssignmentsTable.subjectId, subjectsTable.id))
             .where(eq(teacherAssignmentsTable.classId, classId))
             .orderBy(desc(teacherAssignmentsTable.createdAt))
@@ -677,14 +677,14 @@ class TeachersController {
                 gradeName: gradesTable.name,
                 isPrimaryTeacher: teacherAssignmentsTable.isPrimaryTeacher,
                 status: teacherAssignmentsTable.status,
-                teacherName: usersTable.username,
+                teacherName: users.name,
             })
             .from(teacherAssignmentsTable)
             .innerJoin(
                 teachersTable,
                 eq(teachersTable.id, teacherAssignmentsTable.teacherId),
             )
-            .innerJoin(usersTable, eq(usersTable.id, teachersTable.userId))
+            .innerJoin(users, eq(users.id, teachersTable.userId))
             .innerJoin(
                 subjectsTable,
                 eq(subjectsTable.id, teacherAssignmentsTable.subjectId),

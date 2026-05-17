@@ -59,7 +59,7 @@ class EventsController {
                     with: {
                         user: {
                             columns: {
-                                username: true
+                                name: true
                             }
                         }
                     }
@@ -93,7 +93,7 @@ class EventsController {
             isClass: e.isClass,
             classId: e.class?.id ?? null,
             className: e.class?.name ?? "",
-            teacherName: e.teacher?.user.username ?? "",
+            teacherName: e.teacher?.user.name ?? "",
             teacherId: e.teacher?.id ?? null
         }))
 

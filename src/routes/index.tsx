@@ -3,7 +3,8 @@ import useWelcomeSideBarStore from '#/services/store/welcome_store'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 import { UserRoleEnum } from '#/server/db/schema'
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
+import { Icon, Section, FadeIn, Footer } from '#/components/landing/landing-shared'
 
 export const Route = createFileRoute('/')({
   component: App,
@@ -15,64 +16,6 @@ export const Route = createFileRoute('/')({
     ],
   }),
 })
-
-/* ─── Icon wrapper ─── */
-function Icon({ name, className = '' }: { name: string; className?: string }) {
-  return (
-    <span className={`material-symbols-outlined ${className}`}>{name}</span>
-  )
-}
-
-/* ─── Section wrapper ─── */
-function Section({
-  id,
-  className = '',
-  children,
-}: { id?: string; className?: string; children: React.ReactNode }) {
-  return (
-    <section id={id} className={`relative ${className}`}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">{children}</div>
-    </section>
-  )
-}
-
-/* ─── Fade-in on scroll ─── */
-function FadeIn({
-  children,
-  className = '',
-  delay = 0,
-}: { children: React.ReactNode; className?: string; delay?: number }) {
-  const [visible, setVisible] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setVisible(true)
-          obs.disconnect()
-        }
-      },
-      { threshold: 0.15 },
-    )
-    obs.observe(el)
-    return () => obs.disconnect()
-  }, [])
-
-  return (
-    <div
-      ref={ref}
-      className={`transition-all duration-700 ease-out ${
-        visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-      } ${className}`}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
-      {children}
-    </div>
-  )
-}
 
 /* ─── Navbar ─── */
 function Navbar() {
@@ -96,7 +39,7 @@ function Navbar() {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'border-b border-slate-200/60 bg-white/80 dark:border-white/[0.06] dark:bg-[#101622]/80 backdrop-blur-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]'
+          ? 'border-b border-slate-200/60 bg-white/80 dark:border-white/6 dark:bg-background-dark/80 backdrop-blur-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]'
           : 'border-b border-transparent bg-transparent'
       }`}
     >
@@ -129,8 +72,11 @@ function Navbar() {
           <ModeToggle />
           <Link
             to="/log-in"
-            search={{ role: UserRoleEnum.ADMIN, redirectTo: '/admin/dashboard' }}
-            className="hidden sm:inline-flex items-center rounded-full bg-primary px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-primary/25 transition-all hover:bg-primary/90 hover:shadow-md hover:shadow-primary/30"
+            search={{
+              role: UserRoleEnum.ADMIN,
+              redirectTo: '/admin/dashboard',
+            }}
+            className="hidden sm:inline-flex items-center rounded-full bg-primary px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-primary/25 transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5"
           >
             Sign in
           </Link>
@@ -183,7 +129,7 @@ function MobileSidebar() {
         aria-label="Close menu"
       />
       <aside
-        className="absolute right-0 top-0 h-full w-72 border-l border-slate-200/60 bg-white shadow-2xl dark:border-white/[0.06] dark:bg-[#101622] transition-transform duration-300 ease-out"
+        className="absolute right-0 top-0 h-full w-72 border-l border-slate-200/60 bg-white shadow-2xl dark:border-white/6 dark:bg-background-dark transition-transform duration-300 ease-out"
         style={{ transform: isOpen ? 'translateX(0)' : 'translateX(100%)' }}
       >
         <div className="flex flex-col gap-1 p-4">
@@ -194,7 +140,9 @@ function MobileSidebar() {
               onClick={(e) => {
                 e.preventDefault()
                 close()
-                document.getElementById(l.id)?.scrollIntoView({ behavior: 'smooth' })
+                document
+                  .getElementById(l.id)
+                  ?.scrollIntoView({ behavior: 'smooth' })
               }}
               className="rounded-lg px-4 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5"
             >
@@ -203,8 +151,11 @@ function MobileSidebar() {
           ))}
           <Link
             to="/log-in"
-            search={{ role: UserRoleEnum.ADMIN, redirectTo: '/admin/dashboard' }}
-            className="mt-3 flex items-center justify-center rounded-full bg-primary py-3 text-sm font-semibold text-white transition-colors hover:bg-primary/90"
+            search={{
+              role: UserRoleEnum.ADMIN,
+              redirectTo: '/admin/dashboard',
+            }}
+            className="mt-3 flex items-center justify-center rounded-full bg-primary py-3 text-sm font-semibold text-white shadow-sm shadow-primary/25 transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5"
             onClick={close}
           >
             Sign in
@@ -221,15 +172,15 @@ function Hero() {
     <div className="relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28">
       {/* Background gradient */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 size-[700px] rounded-full bg-primary/10 blur-[120px] dark:bg-primary/5" />
-        <div className="absolute top-20 right-0 size-[400px] rounded-full bg-blue-400/10 blur-[100px] dark:bg-blue-400/5" />
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 size-175 rounded-full bg-primary/10 blur-[120px] dark:bg-primary/5" />
+        <div className="absolute top-20 right-0 size-100 rounded-full bg-blue-400/10 blur-[100px] dark:bg-blue-400/5" />
       </div>
 
       <Section>
         <div className="relative mx-auto flex max-w-4xl flex-col items-center text-center">
           {/* Badge */}
           <FadeIn>
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/60 px-4 py-1.5 text-xs font-semibold text-slate-700 shadow-sm backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-slate-300">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/60 px-4 py-1.5 text-xs font-semibold text-slate-700 shadow-sm backdrop-blur-sm dark:border-white/8 dark:bg-white/4 dark:text-slate-300">
               <span className="inline-block size-1.5 rounded-full bg-emerald-500 animate-pulse" />
               Now used by 50+ schools worldwide
             </div>
@@ -240,7 +191,7 @@ function Hero() {
             <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl lg:text-6xl">
               Managing the{' '}
               <span className="relative inline-block">
-                <span className="relative z-10 bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent">
+                <span className="relative z-10 bg-linear-to-r from-primary to-blue-500 bg-clip-text text-transparent">
                   Future
                 </span>
               </span>{' '}
@@ -265,11 +216,14 @@ function Hero() {
                 className="group inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 text-base font-semibold text-white shadow-lg shadow-primary/25 transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5"
               >
                 Get Started Free
-                <Icon name="arrow_forward" className="text-lg transition-transform group-hover:translate-x-0.5" />
+                <Icon
+                  name="arrow_forward"
+                  className="text-lg transition-transform group-hover:translate-x-0.5"
+                />
               </Link>
               <a
                 href="#features"
-                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-3.5 text-base font-semibold text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:-translate-y-0.5 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300 dark:hover:bg-white/[0.08]"
+                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-8 py-3.5 text-base font-semibold text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:-translate-y-0.5 dark:border-white/10 dark:bg-white/4 dark:text-slate-300 dark:hover:bg-white/8"
               >
                 <Icon name="play_circle" className="text-lg" />
                 View Demo
@@ -279,22 +233,31 @@ function Hero() {
 
           {/* Hero image / mockup */}
           <FadeIn delay={360} className="mt-16 w-full max-w-3xl">
-            <div className="relative rounded-2xl border border-slate-200/80 bg-white p-2 shadow-2xl shadow-slate-900/5 dark:border-white/[0.08] dark:bg-white/[0.03] dark:shadow-black/30">
-              <div className="overflow-hidden rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 aspect-[16/9] flex items-center justify-center">
+            <div className="relative rounded-2xl border border-slate-200/80 bg-white p-2 shadow-2xl shadow-slate-900/5 dark:border-white/8 dark:bg-white/3 dark:shadow-black/30">
+              <div className="overflow-hidden rounded-xl bg-linear-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 aspect-video flex items-center justify-center">
                 <div className="text-center">
-                  <Icon name="dashboard" className="text-6xl text-slate-400 dark:text-slate-600" />
-                  <p className="mt-3 text-sm font-medium text-slate-500 dark:text-slate-500">Dashboard Preview</p>
+                  <Icon
+                    name="dashboard"
+                    className="text-6xl text-slate-400 dark:text-slate-600"
+                  />
+                  <p className="mt-3 text-sm font-medium text-slate-500 dark:text-slate-500">
+                    Dashboard Preview
+                  </p>
                 </div>
               </div>
             </div>
             {/* Floating badge */}
-            <div className="absolute -right-4 -bottom-4 flex items-center gap-3 rounded-xl border border-slate-200/80 bg-white px-4 py-3 shadow-lg dark:border-white/[0.08] dark:bg-[#1a202c] sm:-right-8 sm:-bottom-6">
+            <div className="absolute -right-4 -bottom-4 flex items-center gap-3 rounded-xl border border-slate-200/80 bg-white px-4 py-3 shadow-lg dark:border-white/8 dark:bg-surface-dark sm:-right-8 sm:-bottom-6">
               <div className="flex size-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
                 <Icon name="trending_up" className="text-xl" />
               </div>
               <div>
-                <p className="text-xs font-medium text-slate-500 dark:text-slate-400">Attendance</p>
-                <p className="text-base font-bold text-slate-900 dark:text-white">98% Today</p>
+                <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                  Attendance
+                </p>
+                <p className="text-base font-bold text-slate-900 dark:text-white">
+                  98% Today
+                </p>
               </div>
             </div>
           </FadeIn>
@@ -313,7 +276,7 @@ function Stats() {
   ]
 
   return (
-    <div className="border-y border-slate-200/60 bg-slate-50/50 dark:border-white/[0.06] dark:bg-white/[0.02]">
+    <div className="border-y border-slate-200/60 bg-slate-50/50 dark:border-white/6border-white/[0.06] dark:bg-white/2">
       <Section>
         <div className="grid grid-cols-1 gap-6 py-14 sm:grid-cols-3">
           {items.map((s, i) => (
@@ -390,7 +353,7 @@ function Features() {
         {features.map((f, i) => (
           <FadeIn key={f.title} delay={i * 80} className={f.span || ''}>
             <div
-              className={`group relative h-full rounded-2xl border border-slate-200/80 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/30 dark:border-white/[0.06] dark:bg-white/[0.03] dark:hover:border-primary/40 ${
+              className={`group relative h-full rounded-2xl border border-slate-200/80 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/30 dark:border-white/6border-white/[0.06] dark:bg-white/3 dark:hover:border-primary/40 ${
                 f.span ? 'flex flex-col justify-between' : ''
               }`}
             >
@@ -398,7 +361,7 @@ function Features() {
                 <div className="pointer-events-none absolute -right-16 -bottom-16 size-64 rounded-full bg-primary/5 blur-3xl transition-opacity group-hover:opacity-80" />
               )}
               <div className="relative">
-                <div className="mb-5 flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white dark:bg-primary/10">
+                <div className="mb-5 flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-white dark:bg-primary/10">
                   <Icon name={f.icon} className="text-xl" />
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white">
@@ -465,8 +428,8 @@ function Roles() {
       <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {roles.map((r, i) => (
           <FadeIn key={r.title} delay={i * 100}>
-            <div className="group flex h-full flex-col items-center rounded-2xl border border-slate-200/80 bg-white p-8 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/30 dark:border-white/[0.06] dark:bg-white/[0.03] dark:hover:border-primary/40">
-              <div className="mb-5 flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-white group-hover:shadow-lg group-hover:shadow-primary/20 dark:bg-primary/10">
+            <div className="group flex h-full flex-col items-center rounded-2xl border border-slate-200/80 bg-white p-8 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/30 dark:border-white/6border-white/[0.06] dark:bg-white/3 dark:hover:border-primary/40">
+              <div className="mb-5 flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-white dark:bg-primary/10">
                 <Icon name={r.icon} className="text-3xl" />
               </div>
               <h3 className="text-xl font-bold text-slate-900 dark:text-white">
@@ -514,10 +477,31 @@ function Testimonials() {
       role: 'Head Teacher, Greenfield School',
       avatar: 'MS',
     },
+    {
+      quote:
+        'The grade tracking feature saved us weeks of manual work. Our teachers can finally focus on teaching.',
+      name: 'David Kim',
+      role: 'Administrator, Seoul International School',
+      avatar: 'DK',
+    },
+    {
+      quote:
+        'Implementing EduManage was the best decision we made. The onboarding was smooth and the support is exceptional.',
+      name: 'Aisha Patel',
+      role: 'Vice Principal, Delhi Public School',
+      avatar: 'AP',
+    },
+    {
+      quote:
+        'The analytics dashboard gives us insights we never had before. Data-driven decisions have improved our student outcomes significantly.',
+      name: 'Thomas Mueller',
+      role: 'Head of IT, Berlin International Academy',
+      avatar: 'TM',
+    },
   ]
 
   return (
-    <div className="border-y border-slate-200/60 bg-slate-50/50 dark:border-white/[0.06] dark:bg-white/[0.02]">
+    <div className="border-y border-slate-200/60 bg-slate-50/50 dark:border-white/6border-white/[0.06] dark:bg-white/2">
       <Section className="py-24 sm:py-32">
         <FadeIn>
           <div className="mx-auto max-w-2xl text-center">
@@ -530,36 +514,50 @@ function Testimonials() {
           </div>
         </FadeIn>
 
-        <div className="mt-16 grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {items.map((t, i) => (
-            <FadeIn key={t.name} delay={i * 100}>
-              <div className="flex h-full flex-col rounded-2xl border border-slate-200/80 bg-white p-8 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
-                {/* Stars */}
-                <div className="mb-4 flex gap-0.5 text-amber-400">
-                  {[...Array(5)].map((_, j) => (
-                    <Icon key={j} name="star" className="text-lg" />
-                  ))}
-                </div>
-                <blockquote className="flex-1 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-                  &ldquo;{t.quote}&rdquo;
-                </blockquote>
-                <div className="mt-6 flex items-center gap-3">
-                  <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
-                    {t.avatar}
+        <FadeIn className="mt-16">
+          <div
+            className="overflow-hidden"
+            style={{
+              maskImage:
+                'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
+              WebkitMaskImage:
+                'linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)',
+            }}
+          >
+            <div className="flex gap-6 animate-marquee" style={{ width: 'max-content' }}>
+              {[...items, ...items].map((t, i) => (
+                <div
+                  key={`${t.name}-${i}`}
+                  className="w-[22rem] flex-shrink-0"
+                >
+                  <div className="group flex h-full flex-col rounded-2xl border border-slate-200/80 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/30 dark:border-white/6:border-white/[0.06] dark:bg-white/3 dark:hover:border-primary/40">
+                    <div className="mb-4 flex gap-0.5 text-amber-400">
+                      {[...Array(5)].map((_, j) => (
+                        <Icon key={j} name="star" className="text-lg" />
+                      ))}
+                    </div>
+                    <blockquote className="flex-1 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                      &ldquo;{t.quote}&rdquo;
+                    </blockquote>
+                    <div className="mt-6 flex items-center gap-3">
+                      <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-white">
+                        {t.avatar}
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                          {t.name}
+                        </p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                          {t.role}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-semibold text-slate-900 dark:text-white">
-                      {t.name}
-                    </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
-                      {t.role}
-                    </p>
-                  </div>
                 </div>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
+              ))}
+            </div>
+          </div>
+        </FadeIn>
       </Section>
     </div>
   )
@@ -605,12 +603,12 @@ function FAQ() {
         </div>
       </FadeIn>
 
-      <div className="mx-auto mt-14 max-w-3xl divide-y divide-slate-200 dark:divide-white/[0.06]">
+      <div className="mx-auto mt-14 max-w-3xl divide-y divide-slate-200 dark:divide-white/6">
         {faqs.map((faq, i) => (
           <FadeIn key={i} delay={i * 60}>
             <div>
               <button
-                className="flex w-full items-center justify-between gap-4 py-5 text-left"
+                className="flex w-full items-center justify-between gap-4 py-5 text-left cursor-pointer"
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
                 aria-expanded={openIndex === i}
               >
@@ -647,7 +645,7 @@ function CTA() {
   return (
     <Section className="py-24 sm:py-32">
       <FadeIn>
-        <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-gradient-to-br from-slate-900 to-slate-800 px-6 py-16 text-center shadow-2xl dark:border-white/[0.08] sm:px-12 sm:py-24">
+        <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-linear-to-br from-slate-900 to-slate-800 px-6 py-16 text-center shadow-2xl dark:border-white/8 sm:px-12 sm:py-24">
           {/* Background decoration */}
           <div className="pointer-events-none absolute -top-24 -right-24 size-96 rounded-full bg-primary/20 blur-[100px]" />
           <div className="pointer-events-none absolute -bottom-24 -left-24 size-80 rounded-full bg-blue-500/10 blur-[80px]" />
@@ -666,7 +664,10 @@ function CTA() {
                 className="group inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-base font-semibold text-slate-900 shadow-lg transition-all hover:bg-slate-100 hover:-translate-y-0.5 hover:shadow-xl"
               >
                 Create an Account
-                <Icon name="arrow_forward" className="text-lg transition-transform group-hover:translate-x-0.5" />
+                <Icon
+                  name="arrow_forward"
+                  className="text-lg transition-transform group-hover:translate-x-0.5"
+                />
               </Link>
               <a
                 href="#contact"
@@ -682,98 +683,13 @@ function CTA() {
   )
 }
 
-/* ─── Footer ─── */
-function Footer() {
-  const columns = [
-    {
-      title: 'Product',
-      links: ['Features', 'Pricing', 'Security', 'Changelog'],
-    },
-    {
-      title: 'Company',
-      links: ['About', 'Careers', 'Blog', 'Press'],
-    },
-    {
-      title: 'Resources',
-      links: ['Documentation', 'Help Center', 'Community', 'Contact'],
-    },
-    {
-      title: 'Legal',
-      links: ['Privacy', 'Terms', 'Cookie Policy', 'Licenses'],
-    },
-  ]
 
-  return (
-    <footer id="contact" className="border-t border-slate-200/60 dark:border-white/[0.06]">
-      <Section className="py-16">
-        <div className="grid grid-cols-2 gap-10 sm:grid-cols-4 lg:grid-cols-5">
-          {/* Brand */}
-          <div className="col-span-2 sm:col-span-4 lg:col-span-1">
-            <div className="flex items-center gap-2.5">
-              <div className="flex size-9 items-center justify-center rounded-lg bg-primary text-white">
-                <Icon name="school" className="text-xl" />
-              </div>
-              <span className="text-lg font-bold text-slate-900 dark:text-white">
-                EduManage
-              </span>
-            </div>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-slate-500 dark:text-slate-400">
-              Making education management simple, efficient, and accessible for
-              everyone.
-            </p>
-            {/* Social */}
-            <div className="mt-6 flex gap-3">
-              {['chat', 'mail', 'language'].map((icon) => (
-                <a
-                  key={icon}
-                  href="#"
-                  className="flex size-9 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-all hover:border-primary hover:text-primary dark:border-white/10 dark:text-slate-400 dark:hover:border-primary dark:hover:text-primary"
-                >
-                  <Icon name={icon} className="text-lg" />
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Link columns */}
-          {columns.map((col) => (
-            <div key={col.title}>
-              <h4 className="text-sm font-semibold text-slate-900 dark:text-white">
-                {col.title}
-              </h4>
-              <ul className="mt-4 flex flex-col gap-3">
-                {col.links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
-                      className="text-sm text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
-                    >
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom bar */}
-        <div className="mt-16 border-t border-slate-200/60 pt-8 text-center dark:border-white/[0.06]">
-          <p className="text-xs text-slate-400 dark:text-slate-500">
-            &copy; {new Date().getFullYear()} EduManage Inc. All rights
-            reserved.
-          </p>
-        </div>
-      </Section>
-    </footer>
-  )
-}
 
 /* ─── Main App ─── */
 function App() {
   return (
     <Skeleton name="landing-page" loading={false}>
-      <div className="min-h-screen bg-white text-slate-900 antialiased dark:bg-[#101622] dark:text-slate-100">
+      <div className="min-h-screen bg-white text-slate-900 antialiased dark:bg-background-dark dark:text-slate-100">
         <Navbar />
         <MobileSidebar />
         <main>

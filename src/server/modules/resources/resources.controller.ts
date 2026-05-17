@@ -4,7 +4,7 @@ import {
     resourcesTable,
     classesTable,
     gradeSubjectsTable,
-    usersTable,
+    users,
     subjectsTable,
     studentsTable,
 } from '#/server/db/schema'

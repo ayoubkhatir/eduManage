@@ -8,7 +8,7 @@ import {
     gradesTable,
     subjectsTable,
     teacherAssignmentsTable,
-    usersTable,
+    users,
 } from '#/server/db/schema'
 import type {
     CreateAssessmentSchema,
@@ -65,16 +65,16 @@ class MarksController {
         const students = await this.db
             .select({
                 studentId: studentsTable.id,
-                userId: usersTable.id,
-                name: usersTable.username,
-                email: usersTable.email,
-                image: usersTable.image,
+                userId: users.id,
+                name: users.name,
+                email: users.email,
+                image: users.image,
                 status: studentsTable.status,
             })
             .from(studentsTable)
-            .innerJoin(usersTable, eq(usersTable.id, studentsTable.userId))
+            .innerJoin(users, eq(users.id, studentsTable.userId))
             .where(eq(studentsTable.classId, input.classId))
-            .orderBy(asc(usersTable.username))
+            .orderBy(asc(users.name))
 
         const periods = await this.db
             .select({
@@ -221,14 +221,14 @@ class MarksController {
         const students = await this.db
             .select({
                 studentId: studentsTable.id,
-                name: usersTable.username,
-                email: usersTable.email,
-                image: usersTable.image,
+                name: users.name,
+                email: users.email,
+                image: users.image,
             })
             .from(studentsTable)
-            .innerJoin(usersTable, eq(usersTable.id, studentsTable.userId))
+            .innerJoin(users, eq(users.id, studentsTable.userId))
             .where(eq(studentsTable.classId, assessment.classId))
-            .orderBy(asc(usersTable.username))
+            .orderBy(asc(users.name))
 
         const markRows = await this.db
             .select({

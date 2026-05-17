@@ -2,22 +2,22 @@
 import { auth } from "../../utils/auth.server.js";
 import type { LoginBody, RegisterBody } from "./auth.schema.js";
 import { authService } from "./auth.service.js";
-import { deleteCookie, getCookie , } from '@tanstack/react-start/server'
+import { deleteCookie, getCookie, } from '@tanstack/react-start/server'
 
 
 interface IAuthController {
-    login : ( input : LoginBody , headers : Headers) => Promise<Record<string , any>>
-    register : (payload: RegisterBody, headers: Headers) => Promise<Record<string , any>>
-    logout : (headers : Headers) => Promise<Record<string , any>>
-    refresh : (headers: Headers) => Promise<Record<string , any>>
-		loginOAuth : (provider : "google" | "facebook") => Promise<Record<string , any>>
+    login: (input: LoginBody, headers: Headers) => Promise<Record<string, any>>
+    register: (payload: RegisterBody, headers: Headers) => Promise<Record<string, any>>
+    logout: (headers: Headers) => Promise<Record<string, any>>
+    refresh: (headers: Headers) => Promise<Record<string, any>>
+    loginOAuth: (provider: "google" | "facebook") => Promise<Record<string, any>>
 }
 
 
 
 
 class AuthController implements IAuthController {
-    async login(input  : LoginBody , headers : Headers) {
+    async login(input: LoginBody, headers: Headers) {
 
         try {
             const data = await auth.api.signInEmail({
@@ -32,14 +32,14 @@ class AuthController implements IAuthController {
             // Normalize role comparison: input is lowercase, database role is PascalCase
             const normalizedInputRole = input.role.charAt(0).toUpperCase() + input.role.slice(1);
             if (normalizedInputRole != data.user.role) {
-                return(
+                return (
                     {
                         success: false,
                         message: "Invalid role for the user",
-                        status : 403 
+                        status: 403
                     }
                 )
-                }
+            }
 
             const loginFailure = authService.resolveLoginFailure(data);
             if (loginFailure) {
@@ -110,11 +110,11 @@ class AuthController implements IAuthController {
 
             if (typeof data?.token !== "string" || !data.token) {
                 return {
-                    success : false,
+                    success: false,
                     message: "Registration succeeded but session token is missing",
                     status: 500
                 };
-                
+
             }
 
             const userAgent = headers.get("user-agent") || "";
@@ -125,7 +125,7 @@ class AuthController implements IAuthController {
             );
             const response = await authService.enrichUserWithInfo({ ...data, token: accessToken });
             return {
-                success: true, 
+                success: true,
                 message: "User registered successfully",
                 status: 201,
                 data: response
@@ -145,15 +145,15 @@ class AuthController implements IAuthController {
                 message: authService.getErrorMessage(error, "Registration failed"),
                 status: authService.getErrorStatus(error, 400)
             };
-            
+
         }
     }
 
-    async logout(headers : Headers) {
+    async logout(headers: Headers) {
         try {
             const currentRefreshToken = getCookie("refreshToken");
             if (!currentRefreshToken) {
-                return{
+                return {
                     success: true,
                     message: "Logged out successfully",
                     status: 200,
@@ -226,30 +226,30 @@ class AuthController implements IAuthController {
             };
         }
     }
-    async loginOAuth(provider : "google" | "facebook") {
+    async loginOAuth(provider: "google" | "facebook") {
         const data = await auth.api.signInSocial({
-      body: {
-        provider,
-        callbackURL: "/admin/dashboard", 
-      },
-    });
+            body: {
+                provider,
+                callbackURL: "/admin/dashboard",
+            },
+        });
 
-    
-    if (data?.url) {
-      return {
-				success: true,
-				status: 200,
-				data: {
-					url: data.url,
-				},
-			};
-    }
 
-    return {
-			success: false,
-			message: "Failed to initiate social login",
-		}
-		
+        if (data?.url) {
+            return {
+                success: true,
+                status: 200,
+                data: {
+                    url: data.url,
+                },
+            };
+        }
+
+        return {
+            success: false,
+            message: "Failed to initiate social login",
+        }
+
     }
 }
 
