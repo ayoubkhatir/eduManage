@@ -102,6 +102,38 @@ export default function Signup() {
               </p>
             )}
           </div>
+          {/* <!-- Gender --> */}
+          <div>
+            <div className="flex items-center justify-between mb-2 ">
+              <label className="text-slate-700 dark:text-slate-300 text-xs font-medium leading-normal">
+                Gender
+              </label>
+            </div>
+            <div className="relative rounded-lg shadow-sm">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                <span
+                  className="material-symbols-outlined text-[#616f89] dark:text-gray-400"
+                  style={{ fontSize: 20 }}
+                >
+                  people
+                </span>
+              </div>
+              <select
+                id="gender"
+                className="form-input block w-full rounded-lg border-0 py-0 h-10 pl-12 pr-3 text-[#111318] dark:text-white dark:bg-[#1a2234] shadow-sm ring-1 ring-inset ring-[#dbdfe6] dark:ring-gray-600 placeholder:text-[#616f89] dark:placeholder:text-gray-500 focus:ring-inset sm:text-base sm:leading-6 appearance-none"
+                {...form.register('gender')}
+              >
+                <option value="">Select gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+            {form.formState.errors.gender && (
+              <p className="mt-2 text-xs text-red-600">
+                {form.formState.errors.gender.message}
+              </p>
+            )}
+          </div>
           {/* <!-- Password Fields Row --> */}
           <div className="flex flex-col sm:flex-row gap-5">
             <div>

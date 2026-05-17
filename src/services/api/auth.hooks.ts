@@ -108,6 +108,9 @@ export function useSignup() {
 
   const form = useForm<SignupFields>({
     resolver: zodResolver(signupFieldsSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+    
   })
   const setToken = useAuth((s) => s.setToken)
   const setUser = useAuth((s) => s.setUser)
@@ -138,6 +141,7 @@ export function useSignup() {
       password: data.password,
 			fullName: data.fullName,
 			schoolName: data.schoolName,
+      gender: data.gender,
 			confirmPassword: data.confirmPassword,
       rememberMe: true,
       callbackURL,

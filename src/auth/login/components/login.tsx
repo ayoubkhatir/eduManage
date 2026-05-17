@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { FaGoogle } from 'react-icons/fa'
 import { FaMeta } from 'react-icons/fa6'
 
@@ -7,10 +8,38 @@ import { UserRoleEnum } from '#/server/db/schema'
 import Loginform from '../loginform'
 
 import type { logInSearch } from '../../../routes/log-in'
+import { loginOAuthServer } from '#/server/modules/auth/auth.server-function'
 
 export default function Login({ role, redirectTo }: logInSearch) {
   const roles = [UserRoleEnum.ADMIN, UserRoleEnum.TEACHER, UserRoleEnum.STUDENT] as const
   const otherRoles = roles.filter((r) => r !== role)
+  const [errorMessageOAuth, setErrorMessageOAuth] = useState<string | null>(null)
+  
+  
+  // * Rebuild the full logic : 
+  
+  const handleOAuthLogin = async (provider: "google" | "facebook") => {
+    try {
+      setErrorMessageOAuth(null)
+      const response = await loginOAuthServer({ data: { provider } })
+
+      if (!response.success) {
+        setErrorMessageOAuth(response?.message!)
+        return
+      }
+
+      const redirectUrl = response?.data?.url
+      if (!redirectUrl) {
+        setErrorMessageOAuth("No redirect URL received. Please try again.")
+        return
+      }
+
+      
+      window.location.assign(redirectUrl)
+    } catch (error) {
+      setErrorMessageOAuth("Failed to initiate social login. Please try again.")
+    }
+  }
 
   const heading =
     role === UserRoleEnum.ADMIN ? (
@@ -45,7 +74,9 @@ export default function Login({ role, redirectTo }: logInSearch) {
         </div>
         <div className="mb-5 border-b border-[#dbdfe6] dark:border-gray-700"></div>
         <Loginform redirectTo={redirectTo} role={role} />
+        {role === UserRoleEnum.ADMIN &&
         <div className="mt-5">
+          
           <div className="relative">
             <div
               aria-hidden="true"
@@ -55,7 +86,7 @@ export default function Login({ role, redirectTo }: logInSearch) {
             </div>
 
             {/* connection with third auth*/}
-
+            
             <div className="relative flex justify-center text-sm font-medium leading-6">
               <span className="bg-white dark:bg-background-dark px-4 text-[#616f89] dark:text-gray-500">
                 Or continue with
@@ -63,22 +94,28 @@ export default function Login({ role, redirectTo }: logInSearch) {
             </div>
           </div>
           <div className="mt-6 grid grid-cols-2 gap-4">
-            <a
+            <button
               className="flex w-full items-center justify-center gap-3 rounded-lg bg-white dark:bg-[#1a2234] px-3 py-3 text-sm font-semibold text-[#111318] dark:text-white shadow-sm ring-1 ring-inset ring-[#dbdfe6] dark:ring-gray-700 hover:bg-background-light dark:hover:bg-gray-800"
-              href="#"
+              onClick={() => handleOAuthLogin("google")}
             >
               <FaGoogle className="h-5 w-5" />
               <span>Google</span>
-            </a>
-            <a
+            </button>
+            <button
               className="flex w-full items-center justify-center gap-3 rounded-lg bg-white dark:bg-[#1a2234] px-3 py-3 text-sm font-semibold text-[#111318] dark:text-white shadow-sm ring-1 ring-inset ring-[#dbdfe6] dark:ring-gray-700 hover:bg-background-light dark:hover:bg-gray-800"
-              href="#"
+              onClick={() => handleOAuthLogin("facebook")}
             >
               <FaMeta className="h-5 w-5" />
               <span>Meta</span>
-            </a>
+            </button>
           </div>
+          {errorMessageOAuth &&
+            <div className="mt-4 text-center text-sm text-red-600">
+              {errorMessageOAuth}
+            </div>
+          }
         </div>
+          }
         <div className="mt-6 text-center">
           {role === UserRoleEnum.ADMIN && (
             <p className="mb-6 text-sm text-[#637588] dark:text-[#9da6b9]">
@@ -92,6 +129,7 @@ export default function Login({ role, redirectTo }: logInSearch) {
               </Link>
             </p>
           )}
+          
           <div className="mb-2 text-center">
             <p className="text-[#637588] dark:text-[#9da6b9] text-sm mb-4">
               Not a Teacher? Login as:

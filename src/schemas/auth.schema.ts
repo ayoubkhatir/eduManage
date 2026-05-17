@@ -1,6 +1,6 @@
 import z from "zod/v4"
 import * as schema from "../server/db/schema" 
-import { authRoleSchema, type AuthRole } from "./shared.schema"
+import { authRoleSchema, genderSchema, type AuthRole  , type UserGender } from "./shared.schema"
 //import Signup from '../auth/signup/signupForm';
 
 export const loginSchema = z.object({
@@ -16,6 +16,7 @@ const registerBaseSchema = z.object({
     fullName: z.string().min(2, 'Full name is required'),
     schoolName: z.string().min(2, 'School name is required'),
     email: z.email('Invalid email address'),
+    gender : genderSchema,
     password: z.string().min(8, 'Password must be at least 8 characters'),
     confirmPassword: z.string(),
     rememberMe : z.boolean().optional(),
@@ -57,6 +58,7 @@ export type RegisterRequest = {
   fullName: string
   schoolName: string
   email: string
+  gender: UserGender
   password: string
   confirmPassword: string
   rememberMe: boolean

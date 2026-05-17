@@ -1,5 +1,5 @@
 
-import { auth } from "../../../utils/auth.js";
+import { auth } from "../../utils/auth.server.js";
 import type { LoginBody, RegisterBody } from "./auth.schema.js";
 import { authService } from "./auth.service.js";
 import { deleteCookie, getCookie , } from '@tanstack/react-start/server'
@@ -10,6 +10,7 @@ interface IAuthController {
     register : (payload: RegisterBody, headers: Headers) => Promise<Record<string , any>>
     logout : (headers : Headers) => Promise<Record<string , any>>
     refresh : (headers: Headers) => Promise<Record<string , any>>
+		loginOAuth : (provider : "google" | "facebook") => Promise<Record<string , any>>
 }
 
 
@@ -225,7 +226,31 @@ class AuthController implements IAuthController {
             };
         }
     }
+    async loginOAuth(provider : "google" | "facebook") {
+        const data = await auth.api.signInSocial({
+      body: {
+        provider,
+        callbackURL: "/admin/dashboard", 
+      },
+    });
+
     
+    if (data?.url) {
+      return {
+				success: true,
+				status: 200,
+				data: {
+					url: data.url,
+				},
+			};
+    }
+
+    return {
+			success: false,
+			message: "Failed to initiate social login",
+		}
+		
+    }
 }
 
 export const authController = new AuthController();

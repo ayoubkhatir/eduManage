@@ -29,7 +29,7 @@ export function UserProfile({
       </Link>
       <div className="flex flex-col min-w-0 flex-1">
         <h1 className="text-slate-900 dark:text-slate-100 text-sm font-semibold truncate">
-          {/*user.gender === 'Male' ? 'Mr' : 'Ms'*/}. {user.name}
+          {user.gender === 'Male' ? 'Mr' : 'Ms'}. {user.name}
         </h1>
         <p className="text-slate-500 dark:text-slate-400 text-xs font-normal truncate">
           {user.role}

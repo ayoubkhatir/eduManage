@@ -15,9 +15,12 @@ export const phoneNumberSchema = z.string().regex(/^(?:06|05|07)\d{8}$/, 'Phone 
 
 export const roleSchema = z.enum(UserRoleEnum)
 export const authRoleSchema = z.enum(UserRoleEnum)
-export const genderSchema = z.enum(UserGenderEnum)
+export const genderSchema = z.enum(UserGenderEnum , {
+    error : "Invalid gender"
+})
 export const statusSchema = z.enum(StatusEnum)
 
 export type AuthRole = z.infer<typeof authRoleSchema>
+export type UserGender = z.infer<typeof genderSchema>
 
 export const sortOptionsSchema = z.enum(['newest', 'oldest', 'name', 'size'])

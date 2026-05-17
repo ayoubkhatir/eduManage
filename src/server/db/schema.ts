@@ -137,6 +137,7 @@ export const users = pgTable("users", {
   email: varchar("email", { length: 255 }).notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
+  gender : dbGenderEnum("gender").notNull(),
   name: varchar("name", { length: 50 }).notNull(),
   telNumber: varchar("tel_number", { length: 20 }),
   role: dbRoleEnum("role").notNull(),
