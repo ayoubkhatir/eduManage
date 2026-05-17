@@ -12,7 +12,7 @@ export type NotificationsProps = {
 export type NotificationListProps = {
   tab?: TypeTabFilter
   searchText?: string
-  role?: 'student' | 'teacher'
+  role?: 'Student' | 'Teacher'
   data?: Array<ResourceCard>
   isLoading?: boolean
   error?: any

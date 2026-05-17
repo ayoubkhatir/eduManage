@@ -6,22 +6,7 @@
 // export const statusEnum = pgEnum("status", [StatusEnum.NEW, "Inactive", "Pending", "New"]);
 // export const genderEnum = pgEnum("gender", ["Male", "Female"])
 
-// export const usersTable = pgTable("users", {
-//   id: text("id").primaryKey(),
-//   username: varchar("username", { length: 50 }).notNull(),
-//   email: varchar("email", { length: 255 }).notNull().unique(),
-//   emailVerified: boolean("email_verified").default(false).notNull(),
-//   image: text("image"),
-//   passwordHash: varchar("password_hash", { length: 255 }).notNull(),
-//   telNumber: varchar("tel_number", { length: 50 }).notNull(),
-//   role: roleEnum("role").notNull(),
-//   createdAt: timestamp("created_at").defaultNow().notNull(),
-//   updatedAt: timestamp("updated_at")
-//     .defaultNow()
-//     .$onUpdate(() => /* @__PURE__ */ new Date())
-//     .notNull(),
-//   gender: genderEnum("gender").notNull(),
-// });
+
 
 // export const usersRelations = relations(usersTable, ({ one, many }) => ({
 //   student: one(studentsTable),
@@ -114,6 +99,7 @@ import {
   integer,
   varchar,
   boolean,
+  index,
   uniqueIndex,
   date,
 } from "drizzle-orm/pg-core";
@@ -146,27 +132,27 @@ export enum UserGenderEnum {
 export const userGendersList = Object.values(UserGenderEnum) as [UserGenderEnum, ...UserGenderEnum[]]
 export const dbGenderEnum = pgEnum("gender", userGendersList);
 
-export const usersTable = pgTable("users", {
-  id: text("id").primaryKey().$defaultFn(() => generateId()).notNull(),
-  username: varchar("username", { length: 50 }).notNull(),
+export const users = pgTable("users", {
+  id: text("id").primaryKey(),
   email: varchar("email", { length: 255 }).notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
-  passwordHash: varchar("password_hash", { length: 255 }).notNull(),
-  telNumber: varchar("tel_number", { length: 50 }).notNull(),
+  name: varchar("name", { length: 50 }).notNull(),
+  telNumber: varchar("tel_number", { length: 20 }),
   role: dbRoleEnum("role").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
-    .$onUpdate(() => new Date())
+    .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
-  gender: dbGenderEnum("gender").notNull(),
 });
 
-export const usersRelations = relations(usersTable, ({ one }) => ({
+export const usersRelations = relations(users, ({ one , many}) => ({
   student: one(studentsTable),
   teacher: one(teachersTable),
   admin: one(adminsTable),
+  sessions: many(session),
+  accounts: many(account),
 }));
 
 export const adminsTable = pgTable("admins", {
@@ -174,16 +160,16 @@ export const adminsTable = pgTable("admins", {
   userId: text("user_id")
     .notNull()
     .unique()
-    .references(() => usersTable.id, { onDelete: "cascade" }),
+    .references(() => users.id, { onDelete: "cascade" }),
   schoolName: varchar("school_name", { length: 120 }).notNull(),
   numberStudents: integer("number_students").notNull().default(0),
   numberTeachers: integer("number_teachers").notNull().default(0),
 });
 
 export const adminsRelations = relations(adminsTable, ({ one, many }) => ({
-  user: one(usersTable, {
+  user: one(users, {
     fields: [adminsTable.userId],
-    references: [usersTable.id],
+    references: [users.id],
   }),
   grades: many(gradesTable),
   classes: many(classesTable),
@@ -291,7 +277,7 @@ export const studentsTable = pgTable("students", {
   userId: text("user_id")
     .unique()
     .notNull()
-    .references(() => usersTable.id, { onDelete: "cascade" }),
+    .references(() => users.id, { onDelete: "cascade" }),
 
   classId: text("class_id")
     .notNull()
@@ -306,9 +292,9 @@ export const studentsTable = pgTable("students", {
 });
 
 export const studentsRelations = relations(studentsTable, ({ one }) => ({
-  user: one(usersTable, {
+  user: one(users, {
     fields: [studentsTable.userId],
-    references: [usersTable.id],
+    references: [users.id],
   }),
   school: one(adminsTable, {
     fields: [studentsTable.schoolId],
@@ -330,7 +316,7 @@ export const teachersTable = pgTable("teachers", {
   userId: text("user_id")
     .notNull()
     .unique()
-    .references(() => usersTable.id, { onDelete: "cascade" }),
+    .references(() => users.id, { onDelete: "cascade" }),
 
   address: text("address").notNull(),
   dateOfBirth: date("date_of_birth").notNull(),
@@ -340,9 +326,9 @@ export const teachersTable = pgTable("teachers", {
 })
 
 export const teachersRelations = relations(teachersTable, ({ one, many }) => ({
-  user: one(usersTable, {
+  user: one(users, {
     fields: [teachersTable.userId],
-    references: [usersTable.id],
+    references: [users.id],
   }),
   school: one(adminsTable, {
     fields: [teachersTable.schoolId],
@@ -668,24 +654,6 @@ export const studentMarksRelations = relations(studentMarksTable, ({ one }) => (
   }),
 }))
 
-// sessions
-export const sessionsTable = pgTable('sessions', {
-  id: text('id').primaryKey(), // hashed token
-  userId: text('user_id')
-    .notNull()
-    .references(() => usersTable.id, { onDelete: 'cascade' }),
-
-  expiresAt: timestamp('expires_at').notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-})
-
-export const sessionsRelations = relations(sessionsTable, ({ one }) => ({
-  user: one(usersTable, {
-    fields: [sessionsTable.userId],
-    references: [usersTable.id],
-  }),
-}))
-
 export const eventsTable = pgTable('events', {
   id: text('id').primaryKey().$defaultFn(() => generateId()).notNull(),
 
@@ -830,3 +798,80 @@ export const resourcesRelations = relations(resourcesTable, ({ one }) => ({
     references: [teachersTable.id],
   }),
 }))
+
+
+// Better Auth tables
+export const session = pgTable(
+  "session",
+  {
+    id: text("id").primaryKey(),
+    expiresAt: timestamp("expires_at").notNull(),
+    token: text("token").notNull().unique(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    ipAddress: text("ip_address"),
+    userAgent: text("user_agent"),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+  },
+  (table) => [index("session_userId_idx").on(table.userId)],
+);
+
+export const account = pgTable(
+  "account",
+  {
+    id: text("id").primaryKey(),
+    accountId: text("account_id").notNull(),
+    providerId: text("provider_id").notNull(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    accessToken: text("access_token"),
+    refreshToken: text("refresh_token"),
+    idToken: text("id_token"),
+    accessTokenExpiresAt: timestamp("access_token_expires_at"),
+    refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
+    scope: text("scope"),
+    password: text("password"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [index("account_userId_idx").on(table.userId)],
+);
+
+export const verification = pgTable(
+  "verification",
+  {
+    id: text("id").primaryKey(),
+    identifier: text("identifier").notNull(),
+    value: text("value").notNull(),
+    expiresAt: timestamp("expires_at").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  (table) => [index("verification_identifier_idx").on(table.identifier)],
+);
+
+
+
+export const sessionRelations = relations(session, ({ one }) => ({
+  users: one(users, {
+    fields: [session.userId],
+    references: [users.id],
+  }),
+}));
+
+export const accountRelations = relations(account, ({ one }) => ({
+  users: one(users, {
+    fields: [account.userId],
+    references: [users.id],
+  }),
+}));

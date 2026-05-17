@@ -15,7 +15,7 @@ export const getResourcesServerFn = createServerFn({ method: 'GET' })
             const { data, pagination } = await resourcesController.listResources(input)
             return paginatedSuccessResponse(data, pagination)
         } catch (error) {
-            console.log({ error })
+            console.log("\x1b[36m[server]\x1b[0m " + error)
             return mapDbError(error) as PaginatedAPIResponse<ResourceDto[]>
         }
     })

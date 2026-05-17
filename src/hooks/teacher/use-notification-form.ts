@@ -15,7 +15,7 @@ export type RecipientOption = {
   label: string
 }
 
-export function useNotificationForm(role: 'teacher' | 'admin') {
+export function useNotificationForm(role: 'Teacher' | 'Admin') {
   const [uploadProgress, setUploadProgress] = useState(0)
   const [selectionProgress, setSelectionProgress] = useState(0)
 
@@ -31,7 +31,7 @@ export function useNotificationForm(role: 'teacher' | 'admin') {
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: {
-      sendTo: role === 'teacher' ? ['Students'] : [],
+      sendTo: role === 'Teacher' ? ['Students'] : [],
       type: DEFAULT_NOTIFICATION_TYPE,
     },
   })
@@ -46,7 +46,7 @@ export function useNotificationForm(role: 'teacher' | 'admin') {
         role,
         subject: data.subject.trim(),
         content: data.content.trim(),
-        sendTo: role === 'admin' ? data.sendTo : undefined,
+        sendTo: role === 'Admin' ? data.sendTo : undefined,
         type: data.type,
         attachments: data.attachments,
         onUploadProgress: (progress) => {
@@ -57,7 +57,7 @@ export function useNotificationForm(role: 'teacher' | 'admin') {
       reset({
         subject: '',
         content: '',
-        sendTo: role === 'teacher' ? ['Students'] : [],
+        sendTo: role === 'Teacher' ? ['Students'] : [],
         type: DEFAULT_NOTIFICATION_TYPE,
         attachments: undefined,
       })
@@ -74,7 +74,7 @@ export function useNotificationForm(role: 'teacher' | 'admin') {
   } = useGetSendToList()
 
   const selectedSendTo =
-    useWatch({ control, name: 'sendTo' }) ?? (role === 'teacher' ? ['Students'] : [])
+    useWatch({ control, name: 'sendTo' }) ?? (role === 'Teacher' ? ['Students'] : [])
 
   const attachments = useWatch({ control, name: 'attachments' }) as
     | FileList

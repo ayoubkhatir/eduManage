@@ -33,7 +33,7 @@ export const addTeacherServerFn = createServerFn({ method: 'POST' })
             return successResponse(data) as APIResponse<TeacherUser>
         }
         catch (error) {
-            console.log({ error })
+            console.log("\x1b[36m[server]\x1b[0m " + error)
             return mapDbError(error) as APIResponse<TeacherUser>
         }
     })
@@ -76,7 +76,7 @@ export const editTeacherServerFn = createServerFn({ method: 'POST' })
             const data = await teachersController.updateTeacher(body)
             return successResponse(data) as APIResponse<TeacherUser>
         } catch (error) {
-            console.log({ error })
+            console.log("\x1b[36m[server]\x1b[0m " + error)
             return mapDbError(error) as APIResponse<TeacherUser>
         }
     })
@@ -104,7 +104,7 @@ export const assignTeacherToClassAndSubjectServerFn = createServerFn({ method: '
         try {
             return successResponse(await teachersController.assignTeacherToClassAndSubject(data))
         } catch (error) {
-            console.log({ error })
+            console.log("\x1b[36m[server]\x1b[0m " + error)
             return mapDbError(error) as APIResponse<{
                 schoolId: string;
                 teacherId: string;

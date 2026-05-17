@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useQuery } from '@tanstack/react-query'
-import type { EventForm } from '#/components/owner/calendar/model'
+import type { EventForm } from '#/components/admin/calendar/model'
 
 
 async function getEvents(className?: string, teacherId?: string, isOwner = false) {
@@ -35,7 +35,7 @@ export const useGetEventsOptions = (
 ) => ({
   queryKey: [
     'events',
-    isOwner ? 'owner-all' : (className ?? teacherId ?? 'all'),
+    isOwner ? 'admin-all' : (className ?? teacherId ?? 'all'),
   ],
   queryFn: () => getEvents(className, teacherId, isOwner),
   enabled: true,

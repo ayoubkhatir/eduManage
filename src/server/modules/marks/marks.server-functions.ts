@@ -25,6 +25,7 @@ export const getTeacherClassMarksPageServerFn = createServerFn({
                 await marksController.getTeacherClassMarksPage(data),
             )
         } catch (error) {
+            console.log("\x1b[36m[server]\x1b[0m " + error)
             return mapDbError(error) as APIResponse<{
                 class: {
                     classId: string;
@@ -87,6 +88,7 @@ export const createAssessmentServerFn = createServerFn({
         try {
             return successResponse(await marksController.createAssessment(data))
         } catch (error) {
+            console.log("\x1b[36m[server]\x1b[0m " + error)
             return mapDbError(error) as APIResponse<{
                 classId: string;
                 subjectId: string;
@@ -132,6 +134,7 @@ export const updateAssessmentServerFn = createServerFn({
         try {
             return successResponse(await marksController.updateAssessment(data)) as APIResponse<updateAssessment>
         } catch (error) {
+            console.log("\x1b[36m[server]\x1b[0m " + error)
             return mapDbError(error) as APIResponse<updateAssessment>
         }
     })
@@ -145,6 +148,7 @@ export const deleteAssessmentServerFn = createServerFn({
             await marksController.deleteAssessment(data.assessmentId)
             return { success: true }
         } catch (error) {
+            console.log("\x1b[36m[server]\x1b[0m " + error)
             return mapDbError(error) as APIResponse<unknown>
         }
     })
@@ -171,6 +175,7 @@ export const getAssessmentsByClassSubjectServerFn = createServerFn({
                 await marksController.getAssessmentsByClassAndSubject(data),
             ) as APIResponse<AssessmentsByClassSubject>
         } catch (error) {
+            console.log("\x1b[36m[server]\x1b[0m " + error)
             return mapDbError(error) as APIResponse<AssessmentsByClassSubject>
         }
     })
@@ -214,6 +219,7 @@ export const getAssessmentMarksServerFn = createServerFn({
                 await marksController.getAssessmentMarks(data.assessmentId),
             ) as APIResponse<AssessmentMarks>
         } catch (error) {
+            console.log("\x1b[36m[server]\x1b[0m " + error)
             return mapDbError(error) as APIResponse<AssessmentMarks>
         }
     })
@@ -256,6 +262,7 @@ export const saveStudentMarksServerFn = createServerFn({
         try {
             return successResponse(await marksController.saveStudentMarks(data)) as APIResponse<StudentMarks>
         } catch (error) {
+            console.log("\x1b[36m[server]\x1b[0m " + error)
             return mapDbError(error) as APIResponse<StudentMarks>
         }
     })

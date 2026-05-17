@@ -2,14 +2,14 @@
    Owner Big Calendar — react-big-calendar overrides
    ============================================================================= */
 
-.owner-big-calendar .rbc-calendar {
+.admin-big-calendar .rbc-calendar {
   background: transparent;
   color: var(--foreground);
   font-family: var(--font-display);
 }
 
 /* ── Headers (day names) ── */
-.owner-big-calendar .rbc-header {
+.admin-big-calendar .rbc-header {
   border-bottom: 1px solid var(--border);
   color: color-mix(in oklab, var(--foreground) 55%, transparent);
   display: flex;
@@ -24,73 +24,73 @@
 }
 
 /* ── Restore dividing lines between day header columns ── */
-.owner-big-calendar .rbc-header + .rbc-header {
+.admin-big-calendar .rbc-header + .rbc-header {
   border-left: 1px solid var(--border) !important;
 }
 
-.owner-big-calendar .rbc-time-header-content {
+.admin-big-calendar .rbc-time-header-content {
   border-left: none !important;
 }
 
-.owner-big-calendar .rbc-time-header.rbc-overflowing {
+.admin-big-calendar .rbc-time-header.rbc-overflowing {
   border-right: none !important;
 }
 
-.owner-big-calendar .rbc-day-bg + .rbc-day-bg {
+.admin-big-calendar .rbc-day-bg + .rbc-day-bg {
   border-left: 1px solid var(--border) !important;
 }
 
-.owner-big-calendar .rbc-time-content > * + * > * {
+.admin-big-calendar .rbc-time-content > * + * > * {
   border-left: 1px solid var(--border) !important;
 }
 
-.owner-big-calendar .rbc-day-col + .rbc-day-col {
+.admin-big-calendar .rbc-day-col + .rbc-day-col {
   border-left: 1px solid var(--border) !important;
 }
 
-.owner-big-calendar .rbc-time-content .rbc-day-col {
+.admin-big-calendar .rbc-time-content .rbc-day-col {
   border-left: 1px solid var(--border) !important;
 }
 
-.owner-big-calendar .rbc-time-view .rbc-allday-cell + .rbc-allday-cell {
+.admin-big-calendar .rbc-time-view .rbc-allday-cell + .rbc-allday-cell {
   border-left: 1px solid var(--border) !important;
 }
 
 /* ── rbc-time-header: the sticky header row in week/day views ── */
-.owner-big-calendar .rbc-time-header {
+.admin-big-calendar .rbc-time-header {
   background: #ffffff;
   border-bottom: 1px solid var(--border);
   border-right: none !important;
 }
 
-.owner-big-calendar .rbc-time-header > .rbc-row:first-child {
+.admin-big-calendar .rbc-time-header > .rbc-row:first-child {
   border-bottom: 1px solid var(--border);
 }
 
-.owner-big-calendar .rbc-time-header > .rbc-row.rbc-row-resource {
+.admin-big-calendar .rbc-time-header > .rbc-row.rbc-row-resource {
   border-bottom: 1px solid var(--border);
 }
 
 /* header-gutter (the top-left corner above the time gutter) */
-.owner-big-calendar .rbc-time-header-gutter {
+.admin-big-calendar .rbc-time-header-gutter {
   background: #ffffff;
   border-bottom: none;
   border-right: 1px solid var(--border) !important;
 }
 
 /* the main header content area (all day + day names) */
-.owner-big-calendar .rbc-time-header-content {
+.admin-big-calendar .rbc-time-header-content {
   background: #ffffff;
 }
 
 /* all-day row inside the header */
-.owner-big-calendar .rbc-allday-cell {
+.admin-big-calendar .rbc-allday-cell {
   border-bottom: 1px solid var(--border);
   background: #ffffff;
 }
 
 /* time-slot inside the header (the "all day" label area) */
-.owner-big-calendar .rbc-time-header .rbc-time-slot {
+.admin-big-calendar .rbc-time-header .rbc-time-slot {
   background: #ffffff;
   color: color-mix(in oklab, var(--foreground) 45%, transparent);
   font-size: 0.65rem;
@@ -101,47 +101,47 @@
 }
 
 /* ── rbc-time-header dark mode ── */
-.dark .owner-big-calendar .rbc-time-header,
-.dark .owner-big-calendar .rbc-time-header-gutter,
-.dark .owner-big-calendar .rbc-time-header-content,
-.dark .owner-big-calendar .rbc-allday-cell,
-.dark .owner-big-calendar .rbc-time-header .rbc-time-slot {
+.dark .admin-big-calendar .rbc-time-header,
+.dark .admin-big-calendar .rbc-time-header-gutter,
+.dark .admin-big-calendar .rbc-time-header-content,
+.dark .admin-big-calendar .rbc-allday-cell,
+.dark .admin-big-calendar .rbc-time-header .rbc-time-slot {
   background: oklch(0.208 0.042 265.755);
 }
 
-.dark .owner-big-calendar .rbc-time-header-gutter {
+.dark .admin-big-calendar .rbc-time-header-gutter {
   border-right-color: var(--border);
 }
 
-.dark .owner-big-calendar .rbc-time-header > .rbc-row:first-child,
-.dark .owner-big-calendar .rbc-time-header > .rbc-row.rbc-row-resource,
-.dark .owner-big-calendar .rbc-allday-cell {
+.dark .admin-big-calendar .rbc-time-header > .rbc-row:first-child,
+.dark .admin-big-calendar .rbc-time-header > .rbc-row.rbc-row-resource,
+.dark .admin-big-calendar .rbc-allday-cell {
   border-bottom-color: var(--border);
 }
 
 /* border between header and scrollable time grid */
-.owner-big-calendar .rbc-time-content {
+.admin-big-calendar .rbc-time-content {
   border-top: 1px solid var(--border) !important;
 }
 
 /* time-view outer border */
-.owner-big-calendar .rbc-time-view {
+.admin-big-calendar .rbc-time-view {
   border: 1px solid var(--border);
   border-radius: 0.75rem;
   overflow: hidden;
 }
 
 /* ── All borders ── */
-.owner-big-calendar .rbc-month-view,
-.owner-big-calendar .rbc-day-bg,
-.owner-big-calendar .rbc-timeslot-group,
-.owner-big-calendar .rbc-time-slot,
-.owner-big-calendar .rbc-month-row {
+.admin-big-calendar .rbc-month-view,
+.admin-big-calendar .rbc-day-bg,
+.admin-big-calendar .rbc-timeslot-group,
+.admin-big-calendar .rbc-time-slot,
+.admin-big-calendar .rbc-month-row {
   border-color: var(--border);
 }
 
 /* ── Day background ── */
-.owner-big-calendar .rbc-day-bg {
+.admin-big-calendar .rbc-day-bg {
   background: transparent;
   transition:
     background 0.15s,
@@ -150,29 +150,29 @@
   position: relative;
 }
 
-.owner-big-calendar .rbc-day-bg:hover {
+.admin-big-calendar .rbc-day-bg:hover {
   background: color-mix(in oklab, var(--primary) 7%, transparent);
   box-shadow: inset 0 0 0 1.5px
     color-mix(in oklab, var(--primary) 30%, transparent);
 }
 
 /* Pass pointer events through the content layer to the background day card */
-.owner-big-calendar .rbc-row-content {
+.admin-big-calendar .rbc-row-content {
   pointer-events: none;
 }
 
 /* Restore pointer events on all interactive elements inside */
-.owner-big-calendar .rbc-row-content .rbc-date-cell,
-.owner-big-calendar .rbc-row-content .rbc-date-cell *,
-.owner-big-calendar .rbc-row-content .rbc-event,
-.owner-big-calendar .rbc-row-content .rbc-show-more,
-.owner-big-calendar .rbc-row-content .rbc-selected,
-.owner-big-calendar .rbc-row-content button {
+.admin-big-calendar .rbc-row-content .rbc-date-cell,
+.admin-big-calendar .rbc-row-content .rbc-date-cell *,
+.admin-big-calendar .rbc-row-content .rbc-event,
+.admin-big-calendar .rbc-row-content .rbc-show-more,
+.admin-big-calendar .rbc-row-content .rbc-selected,
+.admin-big-calendar .rbc-row-content button {
   pointer-events: auto;
 }
 
 /* ── Centered "+" hover hint on the full day card (OWNER CALENDAR ONLY) ── */
-.owner-calendar-view .rbc-day-bg::after {
+.admin-calendar-view .rbc-day-bg::after {
   content: '+';
   position: absolute;
   bottom: 8px;
@@ -194,43 +194,43 @@
   transform: scale(0.7);
 }
 
-.owner-calendar-view .rbc-day-bg:hover::after {
+.admin-calendar-view .rbc-day-bg:hover::after {
   opacity: 0.9;
   transform: scale(1);
 }
 
 /* ── date-cell cursor ── */
-.owner-big-calendar .rbc-date-cell {
+.admin-big-calendar .rbc-date-cell {
   position: relative;
   cursor: pointer;
 }
 
 /* ── Off-range days ── */
-.owner-big-calendar .rbc-off-range-bg {
+.admin-big-calendar .rbc-off-range-bg {
   background: color-mix(in oklab, var(--muted) 45%, transparent);
 }
 
-.dark .owner-big-calendar .rbc-off-range-bg {
+.dark .admin-big-calendar .rbc-off-range-bg {
   background: color-mix(in oklab, var(--accent) 60%, transparent);
 }
 
-.owner-big-calendar .rbc-off-range .rbc-button-link {
+.admin-big-calendar .rbc-off-range .rbc-button-link {
   color: color-mix(in oklab, var(--foreground) 30%, transparent);
 }
 
 /* ── Today highlight ── */
-.owner-big-calendar .rbc-today {
+.admin-big-calendar .rbc-today {
   background: color-mix(in oklab, var(--primary) 4%, transparent);
 }
 
 /* ── Date cell number ── */
-.owner-big-calendar .rbc-date-cell {
+.admin-big-calendar .rbc-date-cell {
   padding: 6px 8px 2px;
   text-align: right;
   cursor: pointer;
 }
 
-.owner-big-calendar .rbc-button-link {
+.admin-big-calendar .rbc-button-link {
   color: var(--foreground);
   font-weight: 600;
   font-size: 0.8rem;
@@ -243,30 +243,30 @@
   cursor: pointer;
 }
 
-.owner-big-calendar .rbc-button-link:hover {
+.admin-big-calendar .rbc-button-link:hover {
   background: color-mix(in oklab, var(--primary) 15%, transparent);
   color: var(--primary);
   transform: scale(1.15);
 }
 
 /* ── Current date circle ── */
-.owner-big-calendar .rbc-today .rbc-button-link {
+.admin-big-calendar .rbc-today .rbc-button-link {
   /*background: var(--primary);*/
   color: black;
   border-radius: 9999px;
 }
-.dark .owner-big-calendar .rbc-today .rbc-button-link {
+.dark .admin-big-calendar .rbc-today .rbc-button-link {
   background: color-mix(in oklab, var(--primary) 70%, #000);
   color: #fff;
 }
 
-.owner-big-calendar .rbc-today .rbc-button-link:hover {
+.admin-big-calendar .rbc-today .rbc-button-link:hover {
   background: color-mix(in oklab, var(--primary) 85%, #000);
   color: #fff;
 }
 
 /* ── Events ── */
-.owner-big-calendar .rbc-event {
+.admin-big-calendar .rbc-event {
   border: none !important;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
   transition:
@@ -275,12 +275,12 @@
   cursor: pointer;
 }
 
-.owner-big-calendar .rbc-event:hover {
+.admin-big-calendar .rbc-event:hover {
   filter: brightness(1.08);
   transform: translateY(-1px);
 }
 
-.owner-big-calendar .rbc-event.rbc-selected {
+.admin-big-calendar .rbc-event.rbc-selected {
   box-shadow:
     0 0 0 2px #fff,
     0 0 0 4px currentColor;
@@ -288,7 +288,7 @@
 }
 
 /* ── Show more link ── */
-.owner-big-calendar .rbc-show-more {
+.admin-big-calendar .rbc-show-more {
   color: var(--primary);
   font-weight: 700;
   font-size: 0.72rem;
@@ -297,12 +297,12 @@
   cursor: pointer;
 }
 
-.owner-big-calendar .rbc-show-more:hover {
+.admin-big-calendar .rbc-show-more:hover {
   text-decoration: underline;
 }
 
 /* ── Time gutter labels ── */
-.owner-big-calendar .rbc-time-gutter .rbc-label {
+.admin-big-calendar .rbc-time-gutter .rbc-label {
   font-size: 0.68rem;
   font-weight: 700;
   color: color-mix(in oklab, var(--foreground) 45%, transparent);
@@ -311,18 +311,18 @@
   padding: 0 4px;
 }
 
-.owner-big-calendar .rbc-time-gutter {
+.admin-big-calendar .rbc-time-gutter {
   border-right: 1px solid var(--border);
 }
 
 /* ── Current time indicator ── */
-.owner-big-calendar .rbc-current-time-indicator {
+.admin-big-calendar .rbc-current-time-indicator {
   background: var(--primary);
   height: 2px;
   opacity: 0.85;
 }
 
-.owner-big-calendar .rbc-current-time-indicator::before {
+.admin-big-calendar .rbc-current-time-indicator::before {
   content: '';
   position: absolute;
   left: -5px;
@@ -334,12 +334,12 @@
 }
 
 /* ── Week/Day all-day area ── */
-.owner-big-calendar .rbc-allday-cell {
+.admin-big-calendar .rbc-allday-cell {
   border-bottom: 1px solid var(--border);
 }
 
 /* ── Slot selection highlight ── */
-.owner-big-calendar .rbc-slot-selection {
+.admin-big-calendar .rbc-slot-selection {
   background: color-mix(in oklab, var(--primary) 18%, transparent);
   border: 1px solid var(--primary);
   border-radius: 4px;
@@ -347,11 +347,11 @@
 }
 
 /* ── Agenda view ── */
-.owner-big-calendar .rbc-agenda-view table.rbc-agenda-table {
+.admin-big-calendar .rbc-agenda-view table.rbc-agenda-table {
   border-color: var(--border);
 }
 
-.owner-big-calendar .rbc-agenda-view table.rbc-agenda-table thead > tr > th {
+.admin-big-calendar .rbc-agenda-view table.rbc-agenda-table thead > tr > th {
   font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -361,18 +361,18 @@
   border-bottom: 1px solid var(--border);
 }
 
-.owner-big-calendar .rbc-agenda-view table.rbc-agenda-table tbody > tr > td {
+.admin-big-calendar .rbc-agenda-view table.rbc-agenda-table tbody > tr > td {
   padding: 0.6rem;
   border-bottom: 1px solid var(--border);
   font-size: 0.85rem;
 }
 
-.owner-big-calendar .rbc-agenda-event-cell {
+.admin-big-calendar .rbc-agenda-event-cell {
   cursor: pointer;
 }
 
 /* ── General row separator ── */
-.owner-big-calendar .rbc-month-row + .rbc-month-row {
+.admin-big-calendar .rbc-month-row + .rbc-month-row {
   border-top: 1px solid var(--border);
 }
 

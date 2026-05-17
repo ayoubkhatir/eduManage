@@ -135,7 +135,7 @@ function Notifications({ initialTab = 'All' }: NotificationsProps) {
           <NotificationList
             tab={tab}
             searchText={searchText}
-            role="student"
+            role="Student"
             isLoading={isMarkingAllRead}
           />
 

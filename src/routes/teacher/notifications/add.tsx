@@ -58,7 +58,7 @@ function TeacherNotificationContent() {
 
   return (
     <AddNotification
-      role="teacher"
+      role="Teacher"
       filters={filters}
       onFilterChange={setFilters}
     />

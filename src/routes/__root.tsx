@@ -2,6 +2,7 @@ import {
   HeadContent,
   Scripts,
   createRootRouteWithContext,
+  redirect,
   useLocation,
 } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
@@ -13,17 +14,31 @@ import '../styles/calendar.css'
 import '../styles/_variables.scss'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 
-import { QueryClientProvider, type QueryClient } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
+import type { QueryClient } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
 import { queryClient } from '#/lib/query-client'
 import { Toaster } from '#/components/ui/sonner'
 import { ThemeProvider } from '#/features/theme/theme-provider'
+import { syncAuthSession } from '#/lib/syncAuthSession'
+import AuthProvider from '#/providers/authProvider'
 
 const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getItem('theme');var mode=(stored==='light'||stored==='dark'||stored==='auto')?stored:'auto';var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=mode==='auto'?(prefersDark?'dark':'light'):mode;var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(resolved);if(mode==='auto'){root.removeAttribute('data-theme')}else{root.setAttribute('data-theme',mode)}root.style.colorScheme=resolved;}catch(e){}})();`
+const PUBLIC_PATHS = new Set(['/', '/log-in', '/sign-up'])
 
-export const Route = createRootRouteWithContext<{
-  queryClient: QueryClient
-}>()({
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  beforeLoad: async ({ location }) => {
+    const authData = await syncAuthSession()
+    const isPublicPath = PUBLIC_PATHS.has(location.pathname)
+
+    if (!authData.token && !isPublicPath) {
+      throw redirect({ to: '/' })
+    }
+    console.log('Auth data on route load:', authData) 
+    return {
+      authState: authData,
+    }
+  },
   head: () => ({
     meta: [
       {
@@ -55,7 +70,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
         </head>
-      <body className="font-sans antialiased wrap-anywhere selection:bg-[rgba(79,184,178,0.24)]">
+      <body
+        suppressHydrationWarning
+        className="font-sans antialiased wrap-anywhere selection:bg-[rgba(79,184,178,0.24)]"
+      >
         <Toaster richColors closeButton position="top-center" />
 
         <Root>{children}</Root>
@@ -90,16 +108,20 @@ function getRouteSkeletonName(pathname: string) {
 
 function Root({ children }: { children: ReactNode }) {
   const location = useLocation()
+  const { authState } = Route.useRouteContext()
+
   const routeSkeletonName = getRouteSkeletonName(location.pathname)
   return (
     <>
       {/* <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme"> */}
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <Skeleton name={routeSkeletonName} loading={false}>
-            {children}
-          </Skeleton>
-        </ThemeProvider>
+        <AuthProvider initialProps={authState}>
+          <ThemeProvider>
+            <Skeleton name={routeSkeletonName} loading={false}>
+              {children}
+            </Skeleton>
+          </ThemeProvider>
+        </AuthProvider>
       </QueryClientProvider>
       {/* </ThemeProvider> */}
     </>

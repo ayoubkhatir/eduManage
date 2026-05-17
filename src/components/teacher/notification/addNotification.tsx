@@ -13,7 +13,7 @@ export default function AddNotification({
   filters,
   onFilterChange,
 }: {
-  role: 'teacher' | 'admin'
+  role: 'Teacher' | 'Admin'
   filters: NotificationFilter
   onFilterChange: (nextFilters: Partial<NotificationFilter>) => void
 }) {
@@ -29,7 +29,7 @@ export default function AddNotification({
     data: notificationsData,
     isLoading: isNotificationsLoading,
     isError: isNotificationsError,
-  } = useGetTeacherNotifications(filters)
+  } = useGetTeacherNotifications(filters,true)
   const data: Array<Notification> = notificationsData?.data ?? []
   const rowCount = notificationsData?.rowCount ?? 0
 
@@ -62,12 +62,12 @@ export default function AddNotification({
           <div className="flex flex-wrap justify-between items-end gap-4">
             <div className="flex flex-col gap-1">
               <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
-                {role === 'admin' ? 'Announcements' : 'Notifications'}
+                {role === 'Admin' ? 'Announcements' : 'Notifications'}
               </h1>
               <p className="text-slate-500 dark:text-slate-400 text-base max-w-2xl">
                 Manage and send important{' '}
-                {role === 'admin' ? 'announcements' : 'notifications'} to your{' '}
-                {role === 'teacher' ? 'students ' : 'teachers and students'}.
+                {role === 'Admin' ? 'announcements' : 'notifications'} to your{' '}
+                {role === 'Teacher' ? 'students ' : 'teachers and students'}.
               </p>
             </div>
           </div>

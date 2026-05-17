@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
-import { SearchBar } from './SearchBar'
 import { NavButton } from './NavButton'
 import { UserProfile } from './UserProfile'
 import { Logo } from '../logo'
-import type { AuthState } from '#/server/modules/auth/auth.controller'
+import { useAuth } from '#/services/store/auth_store'
+
 
 export interface SidebarItem {
   name: string
@@ -19,7 +19,6 @@ export interface SideBarContentProps {
   setChoosen: (key: string) => void
   setOpen: (open: boolean) => void
   isDesktop: boolean
-  authState: AuthState
 }
 
 export function SideBarContent({
@@ -29,8 +28,9 @@ export function SideBarContent({
   setChoosen,
   setOpen,
   isDesktop,
-  authState,
 }: SideBarContentProps) {
+  const user = useAuth((s) => s.user)
+  console.log('Rendering SideBarContent with user:', user)
   const handleNavClick = useCallback(
     (itemKey: string) => {
       handleClick(itemKey)
@@ -75,11 +75,13 @@ export function SideBarContent({
       </div>
 
       {/* User Profile */}
-      <UserProfile
-        user={authState.user}
-        localPath={localPath}
-        onProfileClick={handleProfileClick}
-      />
+      {user && (
+        <UserProfile
+          user={user}
+          localPath={localPath}
+          onProfileClick={handleProfileClick}
+        />
+      )}
     </>
   )
 }

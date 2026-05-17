@@ -46,8 +46,8 @@ const basePubNotificationSchema = z.object({
     ),
 })
 
-export const getPubNotificationSchema = (role: 'teacher' | 'admin') => {
-  if (role === 'teacher') {
+export const getPubNotificationSchema = (role: 'Teacher' | 'Admin') => {
+  if (role === 'Teacher') {
     return basePubNotificationSchema
   }
 

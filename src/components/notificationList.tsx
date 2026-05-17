@@ -113,11 +113,11 @@ const filterNotifications = (
 export default function NotificationList({
   tab = 'All',
   searchText = '',
-  role = 'student',
+  role = 'Student',
   data: propData,
   isLoading: propIsLoading,
   error: propError,
-  detailTo = role === 'teacher'
+  detailTo = role === 'Teacher'
     ? '/teacher/notifications'
     : '/student/notification',
 }: NotificationListProps) {
@@ -132,9 +132,9 @@ export default function NotificationList({
   const navigate = useNavigate()
 
   const hookResult =
-    role === 'teacher' ? teacherNotificationsQuery : studentNotificationsQuery
+    role === 'Teacher' ? teacherNotificationsQuery : studentNotificationsQuery
   const data =
-    propData ?? (role === 'teacher' ? hookResult.data?.data : hookResult.data)
+    propData ?? (role === 'Teacher' ? hookResult.data?.data : hookResult.data)
   const isLoading = propIsLoading ?? hookResult.isLoading
   const error = propError ?? hookResult.error
 
@@ -144,7 +144,7 @@ export default function NotificationList({
     return (
       <BoneyardSkeleton
         name={
-          role === 'teacher'
+          role === 'Teacher'
             ? 'teacher-notification-list'
             : 'student-notification-list'
         }

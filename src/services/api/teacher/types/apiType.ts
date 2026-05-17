@@ -71,7 +71,7 @@ export interface CollectionFetcher {
 }
 
 export type AddTeacherNotificationPayload = {
-  role: 'teacher' | 'admin'
+  role: 'Teacher' | 'Admin'
   subject: string
   content: string
   attachments?: FileList | Array<File>

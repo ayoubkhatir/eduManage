@@ -1,165 +1,231 @@
-import { db, type Database } from '#/server/db/db'
-import { sessionsTable, UserRoleEnum, usersTable, type UserGenderEnum } from '#/server/db/schema'
-import { eq } from 'drizzle-orm'
-import { passwordHasher, type IPasswordHasher } from '../auth/services/password_hasher.service'
-import type { LoginSchema } from '#/schemas/auth.schema'
-import { sessionManager, type ISessionManager } from './services/session_manager.service'
 
-export type AuthSession = {
-    id: string,
-    expiresAt: Date,
-    createdAt: Date
+import { auth } from "../../../utils/auth.js";
+import type { LoginBody, RegisterBody } from "./auth.schema.js";
+import { authService } from "./auth.service.js";
+import { deleteCookie, getCookie , } from '@tanstack/react-start/server'
+
+
+interface IAuthController {
+    login : ( input : LoginBody , headers : Headers) => Promise<Record<string , any>>
+    register : (payload: RegisterBody, headers: Headers) => Promise<Record<string , any>>
+    logout : (headers : Headers) => Promise<Record<string , any>>
+    refresh : (headers: Headers) => Promise<Record<string , any>>
 }
 
-export type AuthUser = {
-    id: string
-    username: string
-    email: string
-    role: UserRoleEnum
-    image: string | null
-    gender: UserGenderEnum
-    roleId: string
-}
 
-export type AuthState = {
-    session: AuthSession,
-    user: AuthUser
-}
 
-class AuthController {
-    constructor(
-        private readonly db: Database,
-        private readonly passwordHasher: IPasswordHasher,
-        private readonly sessionManager: ISessionManager
-    ) { }
 
-    async login(input: LoginSchema) {
-        const user = await this.db.query.usersTable.findFirst({
-            where: eq(usersTable.email, input.email),
-            with: {
-                teacher: { columns: { id: true } },
-                student: { columns: { id: true } },
-                admin: { columns: { id: true } }
-            }
-        })
-        console.log({ user })
+class AuthController implements IAuthController {
+    async login(input  : LoginBody , headers : Headers) {
 
-        if (!user) {
-            throw new Error('Invalid email or password')
-        }
-
-        const isValidPassword = await this.passwordHasher.comparePassword(
-            input.password,
-            user.passwordHash,
-        )
-        console.log({ isValidPassword })
-        if (!isValidPassword) {
-            throw new Error('Invalid email or password')
-        }
-
-        const roleId = this.getRoleId(user);
-
-        const rawToken = this.sessionManager.generateSessionToken()
-        const hashedSessionID = this.sessionManager.hashSessionToken(rawToken)
-        const expiresAt = this.sessionManager.getSessionExpiresAt()
-
-        await this.db.insert(sessionsTable).values({
-            id: hashedSessionID,
-            userId: user.id,
-            expiresAt,
-        })
-
-        return {
-            token: rawToken,
-            expiresAt,
-            user: {
-                id: user.id,
-                username: user.username,
-                email: user.email,
-                role: user.role,
-                image: user.image,
-                roleId
-            },
-        }
-    }
-
-    async logout(token: string) {
-        const hashedSessionID = this.sessionManager.hashSessionToken(token)
-
-        await this.db.delete(sessionsTable).where(eq(sessionsTable.id, hashedSessionID))
-
-        return { success: true }
-    }
-
-    async getCurrentUser(token: string): Promise<AuthState | null> {
-        const hashedSessionID = this.sessionManager.hashSessionToken(token)
-
-        const session = await this.db.query.sessionsTable.findFirst({
-            where: eq(sessionsTable.id, hashedSessionID),
-            with: {
-                user: {
-                    with: {
-                        student: { columns: { id: true } },
-                        teacher: { columns: { id: true } },
-                        admin: { columns: { id: true } }
-                    }
+        try {
+            const data = await auth.api.signInEmail({
+                body: {
+                    email: input.email,
+                    password: input.password,
+                    rememberMe: input.rememberMe,
+                    callbackURL: input.callbackURL,
                 },
-            },
-        })
+                headers: headers,
+            });
+            // Normalize role comparison: input is lowercase, database role is PascalCase
+            const normalizedInputRole = input.role.charAt(0).toUpperCase() + input.role.slice(1);
+            if (normalizedInputRole != data.user.role) {
+                return(
+                    {
+                        success: false,
+                        message: "Invalid role for the user",
+                        status : 403 
+                    }
+                )
+                }
 
-        if (!session) return null
+            const loginFailure = authService.resolveLoginFailure(data);
+            if (loginFailure) {
+                return {
+                    success: false,
+                    message: loginFailure.message,
+                    status: loginFailure.status,
+                };
+            }
 
-        if (session.expiresAt < new Date()) {
-            await this.db.delete(sessionsTable).where(eq(sessionsTable.id, hashedSessionID))
-            return null
-        }
+            if (typeof data?.token !== "string" || !data.token) {
+                return {
+                    success: false,
+                    message: "Authentication succeeded but session token is missing",
+                    status: 500,
+                };
+            }
 
-        const roleId = this.getRoleId(session.user)
-        return {
-            session: {
-                id: session.id,
-                expiresAt: session.expiresAt,
-                createdAt: session.createdAt,
-            },
-            user: {
-                id: session.user.id,
-                username: session.user.username,
-                email: session.user.email,
-                role: session.user.role,
-                image: session.user.image,
-                gender: session.user.gender,
-                roleId
-            },
+            const userAgent = headers.get("user-agent") || "";
+            const { accessToken } = await authService.generateToken(
+                { userId: data.user.id },
+                data.token,
+                userAgent,
+            );
+            const response = await authService.enrichUserWithInfo({ ...data, token: accessToken });
+            return {
+                success: true,
+                status: 200,
+                data: response,
+            };
+        } catch (error: any) {
+            console.log("\x1b[36m[server]\x1b[0m " + error)
+            return {
+                success: false,
+                message: authService.getErrorMessage(error, "Authentication failed"),
+                status: 401,
+            };
         }
     }
 
-    private getRoleId(user: {
-        role: UserRoleEnum
-        student: {
-            id: string;
-        } | null;
-        teacher: {
-            id: string;
-        } | null;
-        admin: {
-            id: string;
-        } | null;
-    }) {
+    async register(payload: RegisterBody, headers: Headers) {
+        const { fullName, schoolName, email, password, rememberMe, callbackURL } =
+            payload;
 
-        let roleId: string
-        switch (user.role) {
-            case UserRoleEnum.ADMIN:
-                roleId = user.admin?.id!;
-                break
-            case UserRoleEnum.STUDENT:
-                roleId = user.student?.id!;
-                break;
-            case UserRoleEnum.TEACHER:
-                roleId = user.teacher?.id!
-                break;
+        try {
+            const existingUser = await authService.findUserByEmail(email);
+            if (existingUser) {
+                return {
+                    success: false,
+                    message: "User already exists",
+                    status: 409,
+                };
+            }
+
+            const data = await auth.api.signUpEmail({
+                body: {
+                    name: fullName,
+                    email,
+                    password,
+                    rememberMe,
+                    callbackURL,
+                    role: "Admin",
+                },
+
+            });
+
+            await authService.addAdmin(data, schoolName);
+
+            if (typeof data?.token !== "string" || !data.token) {
+                return {
+                    success : false,
+                    message: "Registration succeeded but session token is missing",
+                    status: 500
+                };
+                
+            }
+
+            const userAgent = headers.get("user-agent") || "";
+            const { accessToken } = await authService.generateToken(
+                { userId: data.user.id },
+                data.token,
+                userAgent,
+            );
+            const response = await authService.enrichUserWithInfo({ ...data, token: accessToken });
+            return {
+                success: true, 
+                message: "User registered successfully",
+                status: 201,
+                data: response
+            };
+        } catch (error: any) {
+            console.log("\x1b[36m[server]\x1b[0m " + error)
+            if (authService.isUserAlreadyExistsError(error)) {
+                return {
+                    success: false,
+                    message: "User already exists",
+                    status: 409
+                };
+            }
+
+            return {
+                success: false,
+                message: authService.getErrorMessage(error, "Registration failed"),
+                status: authService.getErrorStatus(error, 400)
+            };
+            
         }
-        return roleId;
     }
+
+    async logout(headers : Headers) {
+        try {
+            const currentRefreshToken = getCookie("refreshToken");
+            if (!currentRefreshToken) {
+                return{
+                    success: true,
+                    message: "Logged out successfully",
+                    status: 200,
+                    redirectURL: "/",
+                };
+            }
+
+            headers.set("Authorization", `Bearer ${currentRefreshToken}`);
+
+            await auth.api.signOut({
+                headers
+            });
+            deleteCookie("refreshToken");
+            return {
+                success: true,
+                message: "Logged out successfully",
+                redirectURL: "/",
+                status: 200,
+            };
+        } catch (error: any) {
+            console.log("\x1b[36m[server]\x1b[0m " + error)
+            return {
+                success: false,
+                message: authService.getErrorMessage(error, "Logout failed"),
+                redirectURL: "/",
+                status: authService.getErrorStatus(error, 400),
+            };
+        }
+    }
+    async refresh(headers: Headers) {
+        const currentRefreshToken = getCookie("refreshToken");
+
+
+
+        if (!currentRefreshToken) {
+            return {
+                success: false,
+                message: "no session token provided",
+                status: 401
+            };
+        }
+
+        try {
+            const userAgent = headers.get("user-agent") || "";
+            const refreshResult = await authService.rotateSessionToken(currentRefreshToken, userAgent);
+
+            if (!refreshResult) {
+                return {
+                    success: false,
+                    message: "Invalid or expired session token",
+                    status: 401
+                };
+            }
+
+            return {
+                success: true,
+                message: "Session refreshed successfully",
+                status: 200,
+                data: {
+                    token: refreshResult.accessToken,
+                    user: refreshResult.user,
+                }
+            };
+        } catch (error: any) {
+            console.log("\x1b[36m[server]\x1b[0m " + error)
+            return {
+                success: false,
+                message: authService.getErrorMessage(error, "Session refresh failed"),
+                status: authService.getErrorStatus(error, 400)
+            };
+        }
+    }
+    
 }
 
-export const authController = new AuthController(db, passwordHasher, sessionManager);
+export const authController = new AuthController();

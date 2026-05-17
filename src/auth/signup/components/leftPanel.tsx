@@ -74,7 +74,7 @@ export function LeftPanel() {
               </span>
             </div>
             <span className="text-xs font-medium text-white">
-              Loved by Owners
+              Loved by Admins
             </span>
           </div>
         </div>

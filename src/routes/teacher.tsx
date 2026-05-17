@@ -3,18 +3,13 @@ import { Skeleton } from 'boneyard-js/react'
 import { Activity, useMemo } from 'react'
 import { SideBar } from '@/components/sideBar/SideBar'
 import TopNav from '@/components/top_nav'
-import { requireRole } from '#/server/modules/auth/services/session'
-import { UserRoleEnum } from '#/server/db/schema'
+
 
 export const Route = createFileRoute('/teacher')({
   component: Teacher,
   head: () => ({
     meta: [{ title: 'Teacher - EduManage' }],
-  }),
-  beforeLoad: async ({ location }) => {
-    const authState = await requireRole(UserRoleEnum.TEACHER, location.pathname)
-    return { authState }
-  },
+  })
 })
 
 const info = {
@@ -34,12 +29,11 @@ function Teacher() {
     () => [...location.pathname.split('/')],
     [location],
   )
-  const { authState } = Route.useRouteContext()
 
   return (
     <Skeleton name="teacher-layout" loading={false}>
       <div className="bg-background-light dark:bg-background-dark text-[#0d121b] dark:text-gray-100 h-screen overflow-hidden flex flex-row">
-        <SideBar authState={authState} info={info} />
+        <SideBar info={info} />
         <main className="flex-1 flex flex-col h-full overflow-y-auto relative">
           <TopNav />
           <nav className="flex items-center text-sm font-medium text-slate-500 dark:text-slate-400 px-6 pt-3 mb-2.5">

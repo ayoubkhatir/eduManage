@@ -5,7 +5,7 @@ import type { NewInfoSchema } from './settingsAuth.schema'
 import { Switch } from '@/components/ui/switch'
 
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
-import { UserAvatar } from '#/components/owner/Table/columnsData'
+import { UserAvatar } from '#/components/admin/Table/columnsData'
 import { UserRoleEnum } from '#/server/db/schema'
 import type { AuthUser } from '#/server/modules/auth/auth.controller'
 

@@ -11,6 +11,7 @@ export const getEventsServerFn = createServerFn({ method: 'GET' })
         try {
             return successResponse(await eventsController.listEvents(data))
         } catch (error) {
+            console.log("\x1b[36m[server]\x1b[0m " + error)
             return mapDbError(error) as APIResponse<{
                 id: string;
                 title: string;
@@ -34,6 +35,7 @@ export const addEventServerFn = createServerFn({ method: 'POST' })
         try {
             return successResponse(await eventsController.createEvent(data))
         } catch (error) {
+            console.log("\x1b[36m[server]\x1b[0m " + error)
             return mapDbError(error) as APIResponse<{
                 classId: string | null;
                 teacherId: string | null;

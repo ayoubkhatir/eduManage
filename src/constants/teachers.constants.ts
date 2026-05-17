@@ -1,4 +1,4 @@
-import type { UICardType } from "#/components/owner/UICard";
+import type { UICardType } from "#/components/admin/UICard";
 
 export const UICardList: Array<UICardType> = [
     {

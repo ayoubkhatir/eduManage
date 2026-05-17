@@ -1,8 +1,8 @@
 import { Link } from '@tanstack/react-router'
-import { UserAvatar } from '../owner/Table/columnsData'
+import { UserAvatar } from '../admin/Table/columnsData'
 import { useLogout } from '#/services/api/auth.hooks'
 import { Loader2Icon, LogOutIcon } from 'lucide-react'
-import type { AuthUser } from '#/server/modules/auth/auth.controller'
+import type { AuthUser } from '#/schemas/auth.schema'
 
 export interface UserProfileProps {
   localPath: string
@@ -29,7 +29,7 @@ export function UserProfile({
       </Link>
       <div className="flex flex-col min-w-0 flex-1">
         <h1 className="text-slate-900 dark:text-slate-100 text-sm font-semibold truncate">
-          {user.gender === 'Male' ? 'Mr' : 'Ms'}. {user.username}
+          {/*user.gender === 'Male' ? 'Mr' : 'Ms'*/}. {user.name}
         </h1>
         <p className="text-slate-500 dark:text-slate-400 text-xs font-normal truncate">
           {user.role}

@@ -16,7 +16,7 @@
 // } from 'date-fns'
 // import { useMemo, useState, type ReactNode } from 'react'
 // import type { View } from 'react-big-calendar'
-// import type { EventForm } from '@/components/owner/calendar/model'
+// import type { EventForm } from '@/components/admin/calendar/model'
 // import {
 //   Dialog,
 //   DialogContent,
@@ -498,7 +498,7 @@
 //   })
 
 //   return (
-//     <div className="owner-big-calendar flex-1 h-full min-h-[52vh]">
+//     <div className="admin-big-calendar flex-1 h-full min-h-[52vh]">
 //       <Calendar
 //         date={selectedDate}
 //         events={events}
@@ -551,7 +551,7 @@ import {
   type ReactNode,
 } from 'react'
 import type { View } from 'react-big-calendar'
-import type { EventForm } from '@/components/owner/calendar/model'
+import type { EventForm } from '@/components/admin/calendar/model'
 import {
   Dialog,
   DialogContent,
@@ -571,7 +571,7 @@ import {
   SelectValue,
 } from '#/components/ui/select'
 import { getTeacherByUserIdServerFn } from '#/server/modules/teachers/teachers.server-functions'
-import { getTeacherQueryOptions } from '#/services/api/owner/teacher/hooks'
+import { getTeacherQueryOptions } from '#/services/api/admin/teacher/hooks'
 import { getClassesByTeacherUserIdServerFn } from '#/server/modules/classes/classes.server-functions'
 // import { zodValidator } from '@tanstack/zod-adapter'
 // import z from 'zod/v4'
@@ -1125,7 +1125,7 @@ function EventsCalendar({ events }: { events: EventForm[] }) {
     setDetailOpen,
   } = useCalendarContext()
   return (
-    <div className="owner-big-calendar flex-1 h-full min-h-[52vh]">
+    <div className="admin-big-calendar flex-1 h-full min-h-[52vh]">
       <Calendar
         date={
           typeof selectedDate === 'number'

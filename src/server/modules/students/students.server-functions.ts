@@ -26,7 +26,7 @@ export const addStudentServerFn = createServerFn({ method: "POST" })
             const data = await studentsController.addStudent(body);
             return successResponse(data) as APIResponse<typeof data>
         } catch (error) {
-            console.log({ errorbackend: error })
+            console.log("\x1b[36m[server]\x1b[0m " + error)
             return mapDbError(error) as APIErrorResponses
         }
     })
@@ -39,7 +39,7 @@ export const editStudentServerFn = createServerFn({ method: "POST" })
             return successResponse(data) as APIResponse<typeof data>
         }
         catch (error) {
-            console.log({ errorbackend: error })
+            console.log("\x1b[36m[server]\x1b[0m " + error)
             return mapDbError(error) as APIErrorResponses
         }
     })

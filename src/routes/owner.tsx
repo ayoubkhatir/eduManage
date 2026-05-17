@@ -4,26 +4,22 @@ import { Skeleton } from 'boneyard-js/react'
 import { Activity } from 'react'
 import { SideBar } from '@/components/sideBar/SideBar'
 import TopNav from '@/components/top_nav'
-import { requireRole } from '#/server/modules/auth/services/session'
-import { UserRoleEnum } from '#/server/db/schema'
+
 
 export const Route = createFileRoute('/owner')({
   component: Owner,
   head: () => ({
     meta: [
       {
-        title: 'Owner - EduManage',
+        title: 'Admin - EduManage',
       },
     ],
   }),
-  beforeLoad: async ({ location }) => {
-    const authState = await requireRole(UserRoleEnum.ADMIN, location.pathname)
-    return { authState }
-  },
+  
 })
 
 const info = {
-  layout: 'owner',
+  layout: 'admin',
   list: [
     { name: 'Dashboard', icon: 'dashboard' },
     { name: 'Calendar', icon: 'calendar_month' },
@@ -39,12 +35,11 @@ const info = {
 function Owner() {
   const location = useLocation()
   const path: Array<string> = [...location.pathname.split('/')]
-  const { authState } = Route.useRouteContext()
 
   return (
-    <Skeleton name="owner-layout" loading={false}>
+    <Skeleton name="admin-layout" loading={false}>
       <div className="bg-background-light dark:bg-background-dark text-[#0d121b] dark:text-gray-100 h-screen overflow-y-hidden flex flex-row">
-        <SideBar authState={authState} info={info} />
+        <SideBar info={info} />
         <main className="flex-1 flex flex-col h-full overflow-y-auto relative">
           <TopNav />
           <nav className="flex items-center text-sm font-medium text-slate-500 dark:text-slate-400 px-6 pt-3 mb-3">

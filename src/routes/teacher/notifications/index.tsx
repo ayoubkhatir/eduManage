@@ -143,7 +143,7 @@ function TeacherNotificationsContent() {
         {/* Notifications List */}
         <NotificationList
           tab={tab}
-          role="teacher"
+          role="Teacher"
           searchText={searchText}
           isLoading={isMarkingAllRead}
         />

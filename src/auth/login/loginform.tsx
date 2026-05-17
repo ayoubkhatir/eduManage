@@ -1,65 +1,21 @@
-import { Activity, useState } from 'react'
-import { useNavigate } from '@tanstack/react-router'
+import { useState } from 'react'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { loginSchema } from './login.schema'
-// import { postLogin } from './postlogin'
+import {useLogin} from "#/services/api/auth.hooks"
+import type { AuthRole } from '#/schemas/shared.schema'
 
-import type { SubmitHandler } from 'react-hook-form'
 
-import type { LoginFields } from './login.schema'
 
-export default function Loginform({ redirectTo }: { redirectTo: string }) {
-  const navigate = useNavigate()
+export default function Loginform({ redirectTo , role }: { redirectTo: string,  role: AuthRole }) {
+  
+  
   /* visible password */
   const [showPassword, setShowPassword] = useState(false)
-  /* login not found account */
-  const [notFound] = useState<string | null>(null)
-
-  /* validation */
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginFields>({
-    resolver: zodResolver(loginSchema),
-    mode: 'onSubmit',
-    reValidateMode: 'onChange',
-  })
-
-  /* Submit function */
-  const onSubmit: SubmitHandler<LoginFields> = async () => {
-    // // await new Promise((resolve) => setTimeout(resolve, 1000))
-    navigate({
-      to: redirectTo,
-      replace: true,
-    })
-    /* try {
-      const response = await postLogin({
-        ...data,
-        role: redirectTo.split('/')[1],
-      })
-    
-      console.log(response)
-      if (response.length > 0) {
-        navigate({
-          to: redirectTo,
-          replace: true,
-        })
-        setNotFound(null)
-      } else {
-        setNotFound('Account not found. Please check your email and password.')
-      }
-    } catch (error) {
-      setNotFound(
-        error instanceof Error ? error.message : 'An unknown error occurred',
-      )
-    }*/
-  }
+  
+  const {form , errorMessage , onSubmit } = useLogin(redirectTo , role)
+  
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" noValidate>
       <div>
         <label
           className="block text-xs font-semibold text-[#111318] dark:text-white mb-1.5"
@@ -79,14 +35,14 @@ export default function Loginform({ redirectTo }: { redirectTo: string }) {
           <input
             id="email"
             className="form-input block w-full rounded-lg border-0 py-0 h-10 pl-12 text-[#111318] dark:text-white dark:bg-[#1a2234] shadow-sm ring-1 ring-inset ring-[#dbdfe6] dark:ring-gray-600 placeholder:text-[#616f89] dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-primary text-sm"
-            {...register('email')}
+            {...form.register('email')}
             placeholder="name@school.com"
             type="email"
           />
         </div>
-        {errors.email && (
+        {form.formState.errors.email && (
           <p className="mt-1 text-xs text-red-600" id="email-error">
-            {errors.email.message}
+            {form.formState.errors.email.message}
           </p>
         )}
       </div>
@@ -120,7 +76,7 @@ export default function Loginform({ redirectTo }: { redirectTo: string }) {
           <input
             id="password"
             className="form-input block w-full rounded-lg border-0 py-0 h-10 pl-12 pr-12 text-[#111318] dark:text-white dark:bg-[#1a2234] shadow-sm ring-1 ring-inset ring-[#dbdfe6] dark:ring-gray-600 placeholder:text-[#616f89] dark:placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-primary text-sm"
-            {...register('password')}
+            {...form.register('password')}
             placeholder="Enter your password"
             type={showPassword ? 'text' : 'password'}
           />
@@ -138,9 +94,9 @@ export default function Loginform({ redirectTo }: { redirectTo: string }) {
             </button>
           </div>
         </div>
-        {errors.password && (
+        {form.formState.errors.password && (
           <p className="mt-1 text-xs text-red-600" id="password-error">
-            {errors.password.message}
+            {form.formState.errors.password.message}
           </p>
         )}
       </div>
@@ -153,16 +109,18 @@ export default function Loginform({ redirectTo }: { redirectTo: string }) {
               'transform 0.2s ease-in-out, background-color 0.2s ease-in-out',
           }}
           type="submit"
-          disabled={isSubmitting}
+          disabled={form.formState.isSubmitting}
         >
           Log In
           <span className="material-symbols-outlined ml-2 text-[18px]">
             arrow_forward
           </span>
         </button>
-        <Activity mode={notFound ? 'visible' : 'hidden'}>
-          <p className="mt-4 text-sm text-red-600 text-center">{notFound}</p>
-        </Activity>
+        {errorMessage && (
+          <p className="mt-4 text-sm text-red-600 text-center">
+            {errorMessage}
+          </p>
+        )}
       </div>
     </form>
   )

@@ -9,7 +9,7 @@
 // } from '@/services/api/teacher/collection/hooks.ts'
 // import { getResourcesSchema } from '#/schemas/resources.schema'
 // import { useQuery } from '@tanstack/react-query'
-// import DataTable from '#/components/owner/Table/dataTable'
+// import DataTable from '#/components/admin/Table/dataTable'
 // import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
 
 // export const Route = createFileRoute('/student/subjects')({

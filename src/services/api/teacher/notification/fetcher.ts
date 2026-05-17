@@ -36,7 +36,7 @@ const isMultipartParsingError = (error: unknown): boolean => {
 }
 
 const buildAudience = (
-  role: 'teacher' | 'admin',
+  role: 'Teacher' | 'Admin',
   sendTo: Array<string> = [],
 ): NonNullable<Notification['sendTo']> => {
   const normalized = sendTo.filter(
@@ -48,7 +48,7 @@ const buildAudience = (
     return normalized
   }
 
-  return role === 'teacher' ? ['Students'] : ['Teachers', 'Students']
+  return role === 'Teacher' ? ['Students'] : ['Teachers', 'Students']
 }
 
 class JsonNotificationFetcher implements NotificationFetcher {

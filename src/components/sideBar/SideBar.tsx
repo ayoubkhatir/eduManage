@@ -98,7 +98,6 @@ import { useLocation, useNavigate } from '@tanstack/react-router'
 import useSideBarStore from '../../services/store/sidebar_show_store'
 import { SideBarContent, type SidebarItem } from './SideBarContent'
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
-import type { AuthState } from '#/server/modules/auth/auth.controller'
 
 function getCurrentSidebarKey(pathname: string) {
   return pathname.split('/')[2] || 'calendar'
@@ -110,10 +109,9 @@ export interface SideBarProps {
     list?: Array<{ name: string; icon: string }>
     layout?: string
   }
-  authState: AuthState
 }
 
-export function SideBar({ info, authState }: SideBarProps) {
+export function SideBar({ info  }: SideBarProps) {
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -160,7 +158,6 @@ export function SideBar({ info, authState }: SideBarProps) {
 
           <DrawerContent className="w-72 h-screen justify-between bg-surface-light dark:bg-surface-dark border-r border-slate-200/80 dark:border-slate-800 p-4">
             <SideBarContent
-              authState={authState}
               list={list}
               handleClick={(key) => {
                 handleClick(key)
@@ -178,7 +175,6 @@ export function SideBar({ info, authState }: SideBarProps) {
       {/* Desktop only */}
       <aside className="hidden lg:flex lg:w-72 lg:min-w-72 lg:flex-col lg:justify-between bg-surface-light dark:bg-surface-dark border-r border-slate-200/80 dark:border-slate-800 p-4">
         <SideBarContent
-          authState={authState}
           list={list}
           handleClick={handleClick}
           localPath={localPath}

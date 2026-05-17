@@ -2,21 +2,22 @@ import { FaGoogle } from 'react-icons/fa'
 import { FaMeta } from 'react-icons/fa6'
 
 import { Link } from '@tanstack/react-router'
+import { UserRoleEnum } from '#/server/db/schema'
 
 import Loginform from '../loginform'
 
-import type { logInSearch } from '#/routes/auth/login'
+import type { logInSearch } from '../../../routes/log-in'
 
 export default function Login({ role, redirectTo }: logInSearch) {
-  const roles = ['owner', 'teacher', 'student'] as const
+  const roles = [UserRoleEnum.ADMIN, UserRoleEnum.TEACHER, UserRoleEnum.STUDENT] as const
   const otherRoles = roles.filter((r) => r !== role)
 
   const heading =
-    role === 'owner' ? (
+    role === UserRoleEnum.ADMIN ? (
       <>
         Manage your <br /> Teachers & Students
       </>
-    ) : role === 'teacher' ? (
+    ) : role === UserRoleEnum.TEACHER ? (
       <>
         Teach your <br /> Students
       </>
@@ -43,7 +44,7 @@ export default function Login({ role, redirectTo }: logInSearch) {
           </p>
         </div>
         <div className="mb-5 border-b border-[#dbdfe6] dark:border-gray-700"></div>
-        <Loginform redirectTo={redirectTo} />
+        <Loginform redirectTo={redirectTo} role={role} />
         <div className="mt-5">
           <div className="relative">
             <div
@@ -79,8 +80,7 @@ export default function Login({ role, redirectTo }: logInSearch) {
           </div>
         </div>
         <div className="mt-6 text-center">
-          {/* if he is owner  */}
-          {role === 'owner' && (
+          {role === UserRoleEnum.ADMIN && (
             <p className="mb-6 text-sm text-[#637588] dark:text-[#9da6b9]">
               Don’t have an account?{' '}
               <Link
@@ -103,7 +103,7 @@ export default function Login({ role, redirectTo }: logInSearch) {
                   replace={true}
                   key={r}
                   className="px-4 py-2 rounded-lg bg-[#f0f2f5] dark:bg-[#282e39] text-[#111418] dark:text-white text-sm font-medium hover:bg-primary/10 hover:text-primary"
-                  search={{ role: r, redirectTo: `/${r}/calendar` }}
+                  search={{ role: r, redirectTo: `/${r.toLowerCase()}/calendar` }}
                 >
                   {r.charAt(0).toUpperCase() + r.slice(1)}
                 </Link>

@@ -1,10 +1,19 @@
-import { loginSchema, type LoginSchema } from "#/schemas/auth.schema"
-import { loginServerFn, logoutServerFn } from "#/server/modules/auth/auth.server-functions"
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema"
+
 import { useMutation } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { toast } from "sonner"
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { loginFieldsSchema, signupFieldsSchema , type LoginFields  , type LoginRequest , type RegisterRequest , type AuthResult, type LoginSchema, type SignupFields , type RegisterSchema} from '../../schemas/auth.schema'
+import type { AuthRole } from '../../schemas/shared.schema'
+import { useAuth } from "#/services/store/auth_store"
+import { loginServerFn ,registerServerFn , logoutServerFn  } from "#/server/modules/auth/auth.server-function"
+
+import type { SubmitHandler } from 'react-hook-form'
+
+
+
 
 export function useLogout() {
     const navigate = useNavigate()
@@ -15,63 +24,133 @@ export function useLogout() {
             if (!response.success) {
                 throw new Error('Failed to logout')
             }
-            return response
+            return response.message
         },
         onSuccess: () => {
-            navigate({ to: '/auth/login' })
+            navigate({ to: '/' , replace: true})
         },
     })
 }
 
 
-export function useLogin() {
+export function useLogin(redirectTo: string, role: AuthRole) {
     const navigate = useNavigate()
+    /*error message */
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-    const form = useForm<LoginSchema>({
-        resolver: standardSchemaResolver(loginSchema),
-        defaultValues: {
-            email: '',
-            password: '',
-        },
+  /* validation */
+  const form = useForm<LoginFields>({
+    resolver: zodResolver(loginFieldsSchema),
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
+  })
+  const setToken = useAuth((s) => s.setToken)
+  const setUser = useAuth((s) => s.setUser)
+  
+  const loginMutation = useMutation<AuthResult, never, LoginRequest>({
+      mutationFn: (data : LoginSchema) =>  loginServerFn({data}) ,
+      onSuccess: (result ) => {
+        if (!result.success || !result.data) {
+          return
+        }
+  
+        const payload = result.data
+  
+        setToken(payload.token || null)
+        setUser(payload.user || null)
+      },
     })
 
-    console.log({ errors: form.formState.errors })
-    const { mutate, isPending } = useMutation({
-        mutationFn: async (data: LoginSchema) => {
-            const response = await loginServerFn({ data })
-            if (response.success) return response.data
-            throw new Error('Login failed')
-        },
-        onSuccess: (data) => {
-            toast.success('Logged in successfully')
+  /* Submit function */
+  const onSubmit: SubmitHandler<LoginFields> = async (data) => {
+    
+    setErrorMessage(null)
 
-            const role = data.user.role
+    const callbackURL =
+      redirectTo.startsWith('http://') || redirectTo.startsWith('https://')
+        ? redirectTo
+        : new URL(redirectTo, window.location.origin).toString()
 
-            if (role === 'Admin') {
-                navigate({ to: '/owner' })
-                return
-            }
-
-            if (role === 'Teacher') {
-                navigate({ to: '/teacher' })
-                return
-            }
-
-            if (role === 'Student') {
-                navigate({ to: '/student' })
-                return
-            }
-
-            // navigate({ to: '/' })
-        },
-        onError: (error) => {
-            toast.error(error instanceof Error ? error.message : 'Login failed')
-        },
+    const result = await loginMutation.mutateAsync({
+      email: data.email,
+      password: data.password,
+      rememberMe: true,
+      role,
+      callbackURL,
     })
 
-    function onSubmit(data: LoginSchema) {
-        mutate(data)
+    if (!result.success) {
+      setErrorMessage(
+        result.message ?? 'Login failed. Please check your credentials.',
+      )
+      return
     }
 
-    return { form, onSubmit, isPending }
+    navigate({
+      to:
+        redirectTo.startsWith('http://') || redirectTo.startsWith('https://')
+          ? (() => {
+              const url = new URL(redirectTo)
+              return `${url.pathname}${url.search}${url.hash}` || '/'
+            })()
+          : redirectTo,
+      replace: true,
+    })
+  }
+
+  return {form , errorMessage , onSubmit  }
+}
+
+export function useSignup() {
+	const navigate = useNavigate()
+	const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+
+  const form = useForm<SignupFields>({
+    resolver: zodResolver(signupFieldsSchema),
+  })
+  const setToken = useAuth((s) => s.setToken)
+  const setUser = useAuth((s) => s.setUser)
+
+  const signupMutation = useMutation<AuthResult, never, RegisterRequest>({
+      mutationFn: (data : RegisterSchema) =>  registerServerFn({data}) ,
+      onSuccess: (result ) => {
+        if (!result.success || !result.data) {
+          return
+        }
+
+        const payload = result.data
+
+        setToken(payload.token || null)
+        setUser(payload.user || null)
+      },
+    })
+
+  const onSubmit: SubmitHandler<SignupFields> = async (data) => {
+    
+    setErrorMessage(null)
+
+    const redirectPath = '/admin/dashboard'
+    const callbackURL = new URL(redirectPath, window.location.origin).toString()
+
+    const result = await signupMutation.mutateAsync({
+      email: data.email,
+      password: data.password,
+			fullName: data.fullName,
+			schoolName: data.schoolName,
+			confirmPassword: data.confirmPassword,
+      rememberMe: true,
+      callbackURL,
+    })
+
+    if (!result.success) {
+      setErrorMessage(
+        result.message ?? 'Signup failed. Please check your credentials.',
+      )
+      return
+    }
+
+    navigate({ to: redirectPath, replace: true })
+  }
+	return { form, onSubmit ,errorMessage  }
 }

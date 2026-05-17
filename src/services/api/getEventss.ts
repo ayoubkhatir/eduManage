@@ -12,7 +12,7 @@ export const useGetEventsOptions = (
     return queryOptions({
         queryKey: [
             'events',
-            isOwner ? 'owner-all' : classId ?? teacherId ?? 'all',
+            isOwner ? 'admin-all' : classId ?? teacherId ?? 'all',
             isOwner ? null : now.toISOString().split('T')[0],
             isOwner ? null : in30Days.toISOString().split('T')[0],
         ],

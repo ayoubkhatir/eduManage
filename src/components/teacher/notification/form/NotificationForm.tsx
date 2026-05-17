@@ -4,7 +4,7 @@ import { NotificationAttachmentsField } from './NotificationAttachmentsField'
 import { useNotificationForm } from '@/hooks/teacher/use-notification-form'
 import QuillEditor from '#/components/ui/quillEditor'
 
-export function NotificationForm({ role }: { role: 'teacher' | 'admin' }) {
+export function NotificationForm({ role }: { role: 'Teacher' | 'Admin' }) {
   const {
     register,
     control,
@@ -61,7 +61,7 @@ export function NotificationForm({ role }: { role: 'teacher' | 'admin' }) {
             )}
           </div>
 
-          {role === 'admin' && (
+          {role === 'Admin' && (
             <NotificationAudienceField
               selectedSendTo={selectedSendTo}
               sendToList={sendToList}

@@ -3,10 +3,10 @@ import { Skeleton } from 'boneyard-js/react'
 import {
   getTeacherQueryOptions,
   useUpdateTeacherSettings,
-} from '#/services/api/owner/teacher/hooks'
+} from '#/services/api/admin/teacher/hooks'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { FormProvider } from 'react-hook-form'
-import { UserAvatar } from '#/components/owner/Table/columnsData'
+import { UserAvatar } from '#/components/admin/Table/columnsData'
 import { Switch } from '#/components/ui/switch'
 import type { TeacherUser } from '#/server/modules/teachers/teachers.types'
 

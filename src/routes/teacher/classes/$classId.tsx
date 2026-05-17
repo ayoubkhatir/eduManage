@@ -180,7 +180,7 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery, queryOptions } from '@tanstack/react-query'
 import { Skeleton } from 'boneyard-js/react'
 import { getTeachersByClassServerFn } from '#/server/modules/teachers/teachers.server-functions'
-import { UserAvatar } from '#/components/owner/Table/columnsData'
+import { UserAvatar } from '#/components/admin/Table/columnsData'
 
 type TeacherInClass = {
   assignmentId: string

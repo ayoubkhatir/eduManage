@@ -11,7 +11,7 @@ import {
 } from 'date-fns'
 import { useMemo, useState } from 'react'
 import type { EventPropGetter, View } from 'react-big-calendar'
-import type { EventForm } from '@/components/owner/calendar/model'
+import type { EventForm } from '@/components/admin/calendar/model'
 import useGetEvents from '@/services/api/getEvents'
 import {
   Dialog,
@@ -266,7 +266,7 @@ export function GlobalCalendar({
               </p>
             </div>
           ) : (
-            <div className="owner-big-calendar flex-1 h-full min-h-[52vh]">
+            <div className="admin-big-calendar flex-1 h-full min-h-[52vh]">
               <Calendar
                 date={selectedDate}
                 events={events}

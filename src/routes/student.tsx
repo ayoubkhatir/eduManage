@@ -8,18 +8,12 @@ import { Skeleton } from 'boneyard-js/react'
 import { Activity, useMemo } from 'react'
 import { SideBar } from '@/components/sideBar/SideBar'
 import TopNav from '@/components/top_nav'
-import { requireRole } from '#/server/modules/auth/services/session'
-import { UserRoleEnum } from '#/server/db/schema'
 
 export const Route = createFileRoute('/student')({
   component: Student,
   head: () => ({
     meta: [{ title: 'Student - EduManage' }],
   }),
-  beforeLoad: async ({ location }) => {
-    const authState = await requireRole(UserRoleEnum.STUDENT, location.pathname)
-    return { authState }
-  },
 })
 
 const info = {
@@ -34,7 +28,6 @@ const info = {
 
 function Student() {
   // const matchRoute = useMatchRoute()
-  const { authState } = Route.useRouteContext()
   const location = useLocation()
   const path: Array<string> = useMemo(
     () => [...location.pathname.split('/')],
@@ -46,7 +39,7 @@ function Student() {
   return (
     <Skeleton name="student-layout" loading={false}>
       <div className="bg-background-light dark:bg-background-dark text-[#0d121b] dark:text-gray-100 h-screen overflow-hidden flex flex-row">
-        <SideBar info={info} authState={authState} />
+        <SideBar info={info} />
         <main className="flex-1 flex flex-col h-full overflow-y-auto relative">
           {/* <TopNav /> */}
           <TopNav />
