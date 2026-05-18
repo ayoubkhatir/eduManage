@@ -7,7 +7,7 @@ export const getUsersSchema = paginationQueriesSchema.extend({
     email: z.string().trim().nullable().default(null),
     status: z.string().trim().nullable().default(""),
 });
-export type getUsersSchema = z.infer<typeof getUsersSchema>;
+
 
 export const addUserSchema = z.object({
     name: z.string()

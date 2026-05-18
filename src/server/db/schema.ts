@@ -1,96 +1,3 @@
-// import { text, uuid, pgTable, pgEnum, timestamp, integer, varchar, boolean } from "drizzle-orm/pg-core";
-// import { relations } from "drizzle-orm";
-
-// // * enums : 
-// export const roleEnum = pgEnum("role", ["Student", "Teacher", "Admin"]);
-// export const statusEnum = pgEnum("status", [StatusEnum.NEW, "Inactive", "Pending", "New"]);
-// export const genderEnum = pgEnum("gender", ["Male", "Female"])
-
-
-
-// export const usersRelations = relations(usersTable, ({ one, many }) => ({
-//   student: one(studentsTable),
-//   teacher: one(teachersTable),
-//   admin: one(adminsTable),
-//   // sessions: many(session),
-//   // accounts: many(account),
-//   // notifications: many(notificationsTable),
-// }));
-
-// export const adminsTable = pgTable("admins", {
-//   id: uuid("school_id").notNull().primaryKey().defaultRandom(),
-//   userId: text("user_id").notNull().unique().references(() => usersTable.id, { onDelete: "cascade" }),
-//   schoolName: varchar("school_name", { length: 120 }).notNull(),
-//   numberStudents: integer("number_students").notNull().default(0),
-//   numberTeachers: integer("number_teachers").notNull().default(0),
-//   schoolIconFileId: uuid("school_icon_file_id")
-//   // .references(() => filesTable.id, { onDelete: "set null" }),
-// });
-
-// export const adminsRelations = relations(adminsTable, ({ one }) => ({
-//   user: one(usersTable, {
-//     fields: [adminsTable.userId],
-//     references: [usersTable.id],
-//   }),
-//   // schoolIconFile: one(filesTable, {
-//   //   fields: [adminsTable.schoolIconFileId],
-//   //   references: [filesTable.id],
-//   // }),
-// }));
-
-// export const studentsTable = pgTable("students", {
-//   id: uuid("id").notNull().primaryKey().defaultRandom(),
-//   schoolId: uuid("school_id").notNull().references(() => adminsTable.id, { onDelete: "cascade" }),
-//   userId: text("user_id").unique().notNull().references(() => usersTable.id, { onDelete: "cascade" }),
-//   grade: varchar("grade", { length: 50 }).notNull(),
-//   classe: varchar("classe", { length: 40 }).notNull(),
-//   parentPhoneNumber: varchar("parent_phone_number", { length: 50 }).notNull(),
-//   parentName: varchar("parent_name", { length: 120 }).notNull(),
-//   status: statusEnum("status").notNull().default("New"),
-//   address: text("address").notNull(),
-//   dateOfBirth: date("date_of_birth").notNull()..notNull(),
-//   enrollmentDate: varchar("enrollement_date", { length: 40 }).notNull(),
-//   // studentPictureFileId: uuid("student_picture_file_id").references(() => filesTable.id, { onDelete: "set null" }),
-// });
-
-// export const studentsRelations = relations(studentsTable, ({ one, many }) => ({
-//   user: one(usersTable, {
-//     fields: [studentsTable.userId],
-//     references: [usersTable.id],
-//   }),
-
-//   // enrollments: many(enrollmentsTable),
-//   // studentPictureFile: one(filesTable, {
-//   //   fields: [studentsTable.studentPictureFileId],
-//   //   references: [filesTable.id],
-//   // }),
-// }));
-
-// export const teachersTable = pgTable("teachers", {
-//   id: uuid("id").notNull().primaryKey().defaultRandom(),
-//   schoolId: uuid("school_id").notNull().references(() => adminsTable.id, { onDelete: "cascade" }),
-//   userId: text("user_id").references(() => usersTable.id, { onDelete: "cascade" }),
-//   telNumber: varchar("number", { length: 50 }),
-//   address: text("address").notNull(),
-//   subjects: text("subjects").notNull(),
-//   dateOfBirth: date("date_of_birth").notNull().notNull().,
-//   joiningDate: varchar("joining_date", { length: 50 }).notNull(),
-//   status: statusEnum("status").notNull().default("New"),
-//   // .references(() => filesTable.id, { onDelete: "set null" }),
-// });
-
-// export const teachersRelations = relations(teachersTable, ({ one, many }) => ({
-//   user: one(usersTable, {
-//     fields: [teachersTable.userId],
-//     references: [usersTable.id],
-//   }),
-//   // courses: many(coursesTable),
-//   // teacherPictureFile: one(filesTable, {
-//   //   fields: [teachersTable.teacherPictureFileId],
-//   //   references: [filesTable.id],
-//   // }),
-// }));
-
 import {
   text,
   pgTable,
@@ -522,14 +429,16 @@ export const assessmentPeriodsTable = pgTable(
   })
 )
 
-export const assessmentTypeEnum = pgEnum("assessment_type", [
-  "Homework",
-  "Quiz",
-  "Test",
-  "Exam",
-  "Project",
-  "Participation",
-])
+export enum AssessmentTypeEnum {
+  Homework = "Homework",
+  Quiz = "Quiz",
+  Test = "Test",
+  Exam = "Exam",
+  Project = "Project",
+  Participation = "Participation",
+}
+
+export const assessmentTypeEnum = pgEnum("assessment_type", Object.values(AssessmentTypeEnum) as [AssessmentTypeEnum, ...AssessmentTypeEnum[]])
 
 export const assessmentsTable = pgTable(
   "assessments",
@@ -555,7 +464,7 @@ export const assessmentsTable = pgTable(
       .references(() => assessmentPeriodsTable.id, { onDelete: "set null" }),
 
     title: varchar("title", { length: 120 }).notNull(), // "Math Test 1"
-    type: assessmentTypeEnum("type").notNull().default("Test"),
+    type: assessmentTypeEnum("type").notNull().default(AssessmentTypeEnum.Test).$type<AssessmentTypeEnum>(),
 
     maxScore: integer("max_score").notNull().default(20),
     weight: integer("weight").notNull().default(1), // coefficient inside subject period

@@ -7,4 +7,3 @@ export const addClassSchema = z.object({
     name: z.string().max(40),
     status: statusSchema
 })
-export type AddClassSchema = z.infer<typeof addClassSchema>

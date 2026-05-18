@@ -6,7 +6,7 @@ export const getStudentsSchema = getUsersSchema.extend({
     grade: z.string().trim().nullable().default(null),
     classe: z.string().trim().nullable().default(null),
 });
-export type GetStudentsSchema = z.infer<typeof getStudentsSchema>;
+
 
 export const addStudentSchema = addUserSchema.extend({
     schoolId: validCuidSchema,
@@ -21,9 +21,8 @@ export const addStudentSchema = addUserSchema.extend({
     dateOfBirth: z.string(),
     enrollmentDate: z.string(),
 })
-export type AddStudentSchema = z.infer<typeof addStudentSchema>
+
 
 export const editStudentSchema = addStudentSchema
     .extend({ studentId: validCuidSchema })
     .omit({ schoolId: true });
-export type EditStudentSchema = z.infer<typeof editStudentSchema>

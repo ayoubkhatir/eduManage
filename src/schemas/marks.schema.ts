@@ -1,21 +1,10 @@
 import z from 'zod/v4'
 import { validCuidSchema } from '#/schemas/shared.schema'
+import { AssessmentTypeEnum, StatusEnum } from '#/server/db/schema';
 
-export const assessmentStatusSchema = z.enum([
-    'Active',
-    'Inactive',
-    'Pending',
-    'New',
-])
+export const assessmentStatusSchema = z.enum(StatusEnum)
 
-export const assessmentTypeSchema = z.enum([
-    'Homework',
-    'Quiz',
-    'Test',
-    'Exam',
-    'Project',
-    'Participation',
-])
+export const assessmentTypeSchema = z.enum(AssessmentTypeEnum)
 
 export const classIdSchema = z.object({
     classId: validCuidSchema,
@@ -32,9 +21,7 @@ export const getTeacherClassMarksPageSchema = z.object({
     periodId: validCuidSchema.optional(),
 })
 
-export type GetTeacherClassMarksPageSchema = z.infer<
-    typeof getTeacherClassMarksPageSchema
->
+
 
 export const createAssessmentSchema = z.object({
     schoolId: validCuidSchema,
@@ -49,10 +36,10 @@ export const createAssessmentSchema = z.object({
     weight: z.coerce.number().int().positive().max(100).default(1),
     assessmentDate: z.string().datetime().optional(),
     notes: z.string().trim().max(2000).optional(),
-    status: assessmentStatusSchema.default('Active'),
+    status: assessmentStatusSchema.default(StatusEnum.ACTIVE),
 })
 
-export type CreateAssessmentSchema = z.infer<typeof createAssessmentSchema>
+
 
 export const updateAssessmentSchema = z.object({
     assessmentId: validCuidSchema,
@@ -66,7 +53,7 @@ export const updateAssessmentSchema = z.object({
     status: assessmentStatusSchema.optional(),
 })
 
-export type UpdateAssessmentSchema = z.infer<typeof updateAssessmentSchema>
+
 
 export const getAssessmentsByClassSubjectSchema = z.object({
     classId: validCuidSchema,
@@ -74,9 +61,7 @@ export const getAssessmentsByClassSubjectSchema = z.object({
     periodId: validCuidSchema.optional(),
 })
 
-export type GetAssessmentsByClassSubjectSchema = z.infer<
-    typeof getAssessmentsByClassSubjectSchema
->
+
 
 export const markEntrySchema = z.object({
     studentId: validCuidSchema,
@@ -92,16 +77,15 @@ export const saveStudentMarksSchema = z.object({
     marks: z.array(markEntrySchema).min(1),
 })
 
-export type SaveStudentMarksSchema = z.infer<typeof saveStudentMarksSchema>
+
 
 export const getAssessmentMarksSchema = z.object({
     assessmentId: validCuidSchema,
 })
 
-export type GetAssessmentMarksSchema = z.infer<typeof getAssessmentMarksSchema>
+
 
 export const deleteAssessmentSchema = z.object({
     assessmentId: validCuidSchema,
 })
 
-export type DeleteAssessmentSchema = z.infer<typeof deleteAssessmentSchema>

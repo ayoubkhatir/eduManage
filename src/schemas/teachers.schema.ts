@@ -5,7 +5,7 @@ import { genderSchema, statusSchema, validCuidSchema } from "./shared.schema";
 export const getTeachersSchema = getUsersSchema.extend({
     subject: z.string().nullable().default(""),
 });
-export type GetTeachersSchema = z.infer<typeof getTeachersSchema>;
+
 
 
 export const addTeacherSchema = z.object({
@@ -21,7 +21,7 @@ export const addTeacherSchema = z.object({
     status: statusSchema,
 })
 
-export type AddTeacherSchema = z.infer<typeof addTeacherSchema>
+
 
 export const editTeacherSchema = z
     .object({
@@ -38,25 +38,25 @@ export const editTeacherSchema = z
         status: statusSchema,
     })
 
-export type EditTeacherSchema = z.infer<typeof editTeacherSchema>
+
 
 export const teacherIdSchema = z.object({
     teacherId: z.string().min(1),
 })
 
-export type TeacherIdSchema = z.infer<typeof teacherIdSchema>
+
 
 export const teacherUserIdSchema = z.object({
     userId: z.string().min(1),
 })
 
-export type TeacherUserIdSchema = z.infer<typeof teacherUserIdSchema>
+
 
 export const schoolIdSchema = z.object({
     schoolId: validCuidSchema,
 })
 
-export type SchoolIdSchema = z.infer<typeof schoolIdSchema>
+
 
 export const assignTeacherSchema = z.object({
     schoolId: validCuidSchema,
@@ -68,7 +68,7 @@ export const assignTeacherSchema = z.object({
     status: statusSchema.optional(),
 })
 
-export type AssignTeacherSchema = z.infer<typeof assignTeacherSchema>
+
 
 export const updateTeacherAssignmentSchema = z
     .object({
@@ -80,21 +80,19 @@ export const updateTeacherAssignmentSchema = z
     })
     .strict()
 
-export type UpdateTeacherAssignmentSchema = z.infer<
-    typeof updateTeacherAssignmentSchema
->
+
 
 export const assignmentIdSchema = z.object({
     assignmentId: validCuidSchema,
 })
 
-export type AssignmentIdSchema = z.infer<typeof assignmentIdSchema>
+
 
 export const classIdSchema = z.object({
     classId: validCuidSchema,
 })
 
-export type ClassIdSchema = z.infer<typeof classIdSchema>
+
 
 export const getTeacherClassesSchema = z.object({
     teacherId: validCuidSchema,
@@ -105,4 +103,4 @@ export const getTeacherClassesSchema = z.object({
         .enum(['Active', 'Inactive', 'Pending', 'New', 'All'])
         .default('All'),
 })
-export type GetTeacherClassesSchema = z.infer<typeof getTeacherClassesSchema>
+

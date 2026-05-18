@@ -18,20 +18,9 @@ export const getResourcesSchema = z.object({
     schoolId: validCuidSchema.optional(),
 })
 
-export type GetResourcesSchema = z.infer<typeof getResourcesSchema>
 
-export type ResourceDto = {
-    id: string
-    fileName: string
-    type: string
-    dateAdded: string
-    size: string
-}
 
-export type PaginationData<T> = {
-    data: Array<T>
-    rowCount: number
-}
+
 
 export const addResourceSchema = z.object({
     subjectCode: z.string(),
@@ -46,7 +35,7 @@ export const addResourceSchema = z.object({
     visibility: z.string(),
     status: statusSchema
 })
-export type AddResourceSchema = z.infer<typeof addResourceSchema>
+
 
 export const formatFileSize = (bytes: number) => {
     if (bytes === 0) return "0 Bytes";

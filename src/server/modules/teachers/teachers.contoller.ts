@@ -1,6 +1,6 @@
 import type { AddTeacherSchema, AssignTeacherSchema, EditTeacherSchema, GetTeacherClassesSchema, GetTeachersSchema } from "#/schemas/teachers.schema";
 import { db, type Database } from "#/server/db/db";
-import { classesTable, gradesTable, StatusEnum, studentsTable, subjectsTable, teacherAssignmentsTable, teachersTable, UserGenderEnum, UserRoleEnum, usersTable } from "#/server/db/schema";
+import { classesTable, gradesTable, StatusEnum, studentsTable, subjectsTable, teacherAssignmentsTable, teachersTable, UserGenderEnum, UserRoleEnum, users } from "#/server/db/schema";
 import { and, asc, count, desc, eq, gte, ilike, inArray, lt, or, SQL } from "drizzle-orm"
 import { TeacherUserDto } from "./teachers.types";
 import { passwordHasher } from "../auth/services/password_hasher.service";
@@ -68,8 +68,8 @@ class TeachersController {
 
         const sortColumn =
             sortBy === 'email'
-                ? usersTable.email
-                : usersTable.username // default = name
+                ? users.email
+                : users.name // default = name
 
         const orderDirection =
             sortOrder === 'desc' ? desc(sortColumn) : asc(sortColumn)
@@ -77,8 +77,8 @@ class TeachersController {
         if (normalizedSearch) {
             conditions.push(
                 or(
-                    ilike(usersTable.username, `%${normalizedSearch}%`),
-                    ilike(usersTable.email, `%${normalizedSearch}%`)
+                    ilike(users.name, `%${normalizedSearch}%`),
+                    ilike(users.email, `%${normalizedSearch}%`)
                 )!
             )
         }
@@ -94,10 +94,10 @@ class TeachersController {
             this.db
                 .select({
                     teacher: teachersTable,
-                    user: usersTable,
+                    user: users,
                 })
                 .from(teachersTable)
-                .innerJoin(usersTable, eq(teachersTable.userId, usersTable.id))
+                .innerJoin(users, eq(teachersTable.userId, users.id))
                 .where(whereClause)
                 .orderBy(orderDirection)
                 .limit(safeSize)
@@ -106,7 +106,7 @@ class TeachersController {
             this.db
                 .select({ total: count() })
                 .from(teachersTable)
-                .innerJoin(usersTable, eq(teachersTable.userId, usersTable.id))
+                .innerJoin(users, eq(teachersTable.userId, users.id))
                 .where(whereClause),
         ])
 
@@ -181,7 +181,7 @@ class TeachersController {
         const passwordHash = await passwordHasher.hashPassword(generateTemporaryPassword(input.name))
         const data = await this.db.transaction(async (tx) => {
             const [createdUser] = await tx
-                .insert(usersTable)
+                .insert(users)
                 .values({
                     username: input.name,
                     email: input.email,
