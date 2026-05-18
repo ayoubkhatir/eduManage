@@ -1,12 +1,12 @@
 import type { AddStudentSchema, EditStudentSchema, GetStudentsSchema } from "#/schemas/students.schema";
 import { db } from "#/server/db/db";
-import { classesTable, StatusEnum, studentsTable, UserRoleEnum, usersTable } from "#/server/db/schema";
+import { account, classesTable, StatusEnum, studentsTable, UserRoleEnum, users } from "#/server/db/schema";
 import { and, count, eq, gte, lt } from "drizzle-orm";
-import { studentsRepository, type IStudentsRepository } from "../../db/repo";
 import generateId from "../../utils/id_generator";
 import { generateTemporaryPassword } from "../../utils/temp_password_generator";
-import { passwordHasher } from "../auth/services/password_hasher.service";
 import { StudentUserDto, type StudentUser } from "./students.types";
+import { handlePassword } from "#/server/utils/handle-password";
+import { studentsRepository, type IStudentsRepository } from "#/server/db/repo";
 
 class StudentsController {
     constructor(private readonly studentsRepository: IStudentsRepository) { }
@@ -15,11 +15,14 @@ class StudentsController {
         return await this.studentsRepository.listStudents(search_queries);
     }
 
+
+
+
+
     async addStudent(data: AddStudentSchema) {
         const userId = generateId();
 
-        const password = generateTemporaryPassword(data.name)
-        const passwordHash = await passwordHasher.hashPassword(password);
+        const passwordHash = await handlePassword.hash(generateTemporaryPassword(data.name))
 
         const student = await db.transaction(async (tx) => {
             const classe = await tx.query.classesTable.findFirst({
@@ -27,16 +30,25 @@ class StudentsController {
             })
             if (!classe) throw new Error("Classe Not Found");
 
-            await tx.insert(usersTable).values({
+            await tx.insert(users).values({
                 id: userId,
                 email: data.email,
-                passwordHash,
-                role: UserRoleEnum.STUDENT,
-                username: data.name,
-                image: data.image,
-                emailVerified: false,
                 telNumber: data.telNumber,
                 gender: data.gender,
+                image: data.image,
+                role: UserRoleEnum.STUDENT,
+                name: data.name,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            })
+
+            await tx.insert(account).values({
+                id: generateId(),
+                userId,
+                accountId: userId,
+                providerId: "credentials",
+                password: passwordHash,
+                createdAt: new Date(),
             })
 
             const [{ id: studentId }] = await tx
@@ -89,7 +101,7 @@ class StudentsController {
 
     async editStudent(data: EditStudentSchema) {
         const password = generateTemporaryPassword(data.name)
-        const passwordHash = await passwordHasher.hashPassword(password);
+        const passwordHash = await handlePassword.hash(password);
 
         const student = await db.transaction(async (tx) => {
             const foundStudent = await tx.query.studentsTable.findFirst({
@@ -100,18 +112,26 @@ class StudentsController {
             const userId = foundStudent.userId;
 
             const [updatedUser] = await tx
-                .update(usersTable)
+                .update(users)
                 .set({
                     email: data.email,
-                    passwordHash,
-                    username: data.name,
+                    name: data.name,
                     image: data.image,
                     emailVerified: false,
                     telNumber: data.telNumber,
                     gender: data.gender,
                 })
-                .where(eq(usersTable.id, userId))
+                .where(eq(users.id, userId))
                 .returning()
+
+            await tx.update(account)
+                .set({
+                    password: passwordHash,
+                })
+                .where(eq(account.userId, userId))
+
+
+
             console.log({ newUser: updatedUser });
 
             const [updatedStudent] = await tx

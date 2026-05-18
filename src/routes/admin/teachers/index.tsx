@@ -101,7 +101,7 @@ const getTeachersQueryOptions = ({
 
 export const Route = createFileRoute('/admin/teachers/')({
   component: RouteComponent,
-  pendingComponent: OwnerTeachersPending,
+  pendingComponent: AdminTeachersPending,
   loaderDeps: ({ search }) => search,
   loader: async ({ context, deps }) => {
     // // await new Promise((resolve) => setTimeout(resolve, 2000))
@@ -113,20 +113,20 @@ export const Route = createFileRoute('/admin/teachers/')({
 function RouteComponent() {
   return (
     <Skeleton name="admin-teachers-page" loading={false}>
-      <OwnerTeachersContent />
+      <AdminTeachersContent />
     </Skeleton>
   )
 }
 
-function OwnerTeachersPending() {
+function AdminTeachersPending() {
   return (
     <Skeleton name="admin-teachers-page" loading>
-      <OwnerTeachersContent />
+      <AdminTeachersContent />
     </Skeleton>
   )
 }
 
-function OwnerTeachersContent() {
+function AdminTeachersContent() {
   const navigate = Route.useNavigate()
   const { search, size } = Route.useSearch({
     select: (s) => ({ search: s.search, size: s.size }),
@@ -134,11 +134,6 @@ function OwnerTeachersContent() {
   return (
     <div className="flex-1 w-full overflow-y-auto overflow-x-auto flex flex-col gap-4">
       <IndexPageComponent role="Teacher">
-        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {UICardList.map((card, i) => (
-            <UICardComponent {...card} key={i} />
-          ))}
-        </div> */}
         <TeachersStatCards />
         <div className="flex items-center justify-between">
           <SearchInput

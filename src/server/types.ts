@@ -4,8 +4,8 @@ import type * as schema from "./db/schema.ts";
 
 export type Db = NodePgDatabase<typeof schema>;
 
-export type User = typeof schema.usersTable.$inferSelect;
-export type NewUser = typeof schema.usersTable.$inferInsert;
+export type User = typeof schema.users.$inferSelect;
+export type NewUser = typeof schema.users.$inferInsert;
 
 export type Student = typeof schema.studentsTable.$inferSelect;
 export type NewStudent = typeof schema.studentsTable.$inferInsert;

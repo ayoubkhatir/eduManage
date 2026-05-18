@@ -27,6 +27,7 @@ import { thumbnail } from '@cloudinary/url-gen/actions/resize'
 import { byRadius } from '@cloudinary/url-gen/actions/roundCorners'
 import { AssignTeacherMenuItem } from '../DropDownMenuComp/AssignTeacherMenuItem'
 import { Badge } from '#/components/ui/badge'
+import { StatusEnum, UserGenderEnum } from '#/server/db/schema'
 
 export function UserAvatar({
   image,
@@ -45,10 +46,12 @@ export function UserAvatar({
             .height(size * 4),
         )
         .roundCorners(byRadius(999))}
-      className={`size-${size} object-cover rounded-full border-gray-200 dark:border-gray-800`}
+      className={`size-${size} object-cover rounded-full border-2 border-slate-200 dark:border-slate-700 shadow-sm`}
     />
   ) : (
-    <UserCircleIcon className={`size-${size}`} />
+    <UserCircleIcon
+      className={`size-${size} text-slate-400 dark:text-slate-500`}
+    />
   )
 }
 
@@ -226,7 +229,22 @@ export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
     accessorKey: 'imgSrc',
     header: '',
     size: 10,
-    cell: ({ row }) => <ImageColumnUI image={row.original.image} />,
+    cell: ({ row }) => (
+      <div className="flex items-center justify-center">
+        <div className="relative">
+          <ImageColumnUI image={row.original.image} />
+          <span
+            className={`absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white dark:border-slate-800 ${
+              row.original.status === 'Active'
+                ? 'bg-green-500'
+                : row.original.status === 'Inactive'
+                  ? 'bg-red-500'
+                  : 'bg-yellow-500'
+            }`}
+          />
+        </div>
+      </div>
+    ),
   },
   {
     accessorKey: 'name',
@@ -235,9 +253,14 @@ export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
     },
     size: 20,
     cell: ({ row }) => (
-      <span className="font-medium text-slate-900 dark:text-white">
-        {row.original.name}
-      </span>
+      <div className="flex flex-col">
+        <span className="font-semibold text-slate-900 dark:text-white">
+          {row.original.name}
+        </span>
+        <span className="text-xs text-slate-500 dark:text-slate-400">
+          {row.original.id}
+        </span>
+      </div>
     ),
   },
 
@@ -248,8 +271,15 @@ export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
     },
     size: 28,
     cell: ({ row }) => (
-      <div className="text-sm text-slate-700 dark:text-slate-300 truncate w-full">
-        {row.original.email}
+      <div className="flex flex-col">
+        <span className="text-sm text-slate-700 dark:text-slate-300">
+          {row.original.email}
+        </span>
+        {row.original.telNumber && (
+          <span className="text-xs text-slate-500 dark:text-slate-400">
+            {row.original.telNumber}
+          </span>
+        )}
       </div>
     ),
   },
@@ -258,15 +288,20 @@ export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
     header: 'Gender',
     size: 10,
     cell: ({ row }) => (
-      <span className="capitalize">{row.original.gender}</span>
+      <span className="inline-flex items-center gap-1.5 text-sm text-slate-700 dark:text-slate-300 capitalize">
+        <span
+          className={`h-2 w-2 rounded-full ${
+            row.original.gender === UserGenderEnum.MALE
+              ? 'bg-blue-500'
+              : row.original.gender === UserGenderEnum.FEMALE
+                ? 'bg-pink-500'
+                : 'bg-gray-400'
+          }`}
+        />
+        {row.original.gender}
+      </span>
     ),
   },
-
-  // {
-  //   accessorKey: 'departement',
-  //   header: 'Department',
-  //   size: 15,
-  // },
 
   {
     accessorKey: 'subjects',
@@ -274,9 +309,15 @@ export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
     size: 20,
     cell: ({ row }) => {
       return (
-        <div className="flex flex-wrap gap-1 text-sm text-slate-700 dark:text-slate-300 truncate max-w-50">
+        <div className="flex flex-wrap gap-1.5 max-w-50">
           {row.original.subjects.map((s) => (
-            <Badge>{s.name}</Badge>
+            <Badge
+              key={s.id}
+              variant="secondary"
+              className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 dark:bg-indigo-950 dark:text-indigo-300 dark:hover:bg-indigo-900 border border-indigo-200 dark:border-indigo-800 font-medium"
+            >
+              {s.name}
+            </Badge>
           ))}
         </div>
       )
@@ -289,19 +330,39 @@ export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
     cell: ({ row }) => {
       const teacher = row.original
 
-      const bgColor =
-        teacher.status === 'Active'
-          ? 'bg-green-100 text-green-800'
-          : teacher.status === 'Inactive'
-            ? 'bg-red-100 text-red-800'
-            : teacher.status === 'Pending'
-              ? 'bg-yellow-100 text-yellow-800'
-              : 'bg-gray-100 text-gray-800'
+      const statusConfig = {
+        Active: {
+          bg: 'bg-emerald-50 dark:bg-emerald-950/50',
+          text: 'text-emerald-700 dark:text-emerald-400',
+          border: 'border-emerald-200 dark:border-emerald-800',
+          dot: 'bg-emerald-500',
+        },
+        Inactive: {
+          bg: 'bg-red-50 dark:bg-red-950/50',
+          text: 'text-red-700 dark:text-red-400',
+          border: 'border-red-200 dark:border-red-800',
+          dot: 'bg-red-500',
+        },
+        Pending: {
+          bg: 'bg-amber-50 dark:bg-amber-950/50',
+          text: 'text-amber-700 dark:text-amber-400',
+          border: 'border-amber-200 dark:border-amber-800',
+          dot: 'bg-amber-500',
+        },
+      }
+
+      const config =
+        teacher.status === StatusEnum.ACTIVE
+          ? statusConfig.Active
+          : teacher.status === StatusEnum.INACTIVE
+            ? statusConfig.Inactive
+            : statusConfig.Pending
 
       return (
         <span
-          className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${bgColor}`}
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${config.bg} ${config.text} ${config.border}`}
         >
+          <span className={`h-1.5 w-1.5 rounded-full ${config.dot}`} />
           {teacher.status}
         </span>
       )
@@ -319,8 +380,9 @@ export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                variant="outline"
-                className="h-8 w-8 p-0 hover:bg-slate-200 dark:hover:bg-slate-700"
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400"
               >
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
@@ -329,21 +391,21 @@ export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
 
             <DropdownMenuContent
               align="end"
-              className="min-w-44 w-fit bg-white dark:bg-slate-800"
+              className="min-w-44 w-fit bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700"
             >
-              <DropdownMenuLabel className="text-black dark:text-white">
+              <DropdownMenuLabel className="text-slate-900 dark:text-white font-semibold">
                 Actions
               </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-black" />
+              <DropdownMenuSeparator className="bg-slate-200 dark:bg-slate-700" />
 
               <CopyIdMenuItem role="Teacher" id={teacher.id} />
-              <DropdownMenuSeparator className="bg-gray-300" />
+              <DropdownMenuSeparator className="bg-slate-200 dark:bg-slate-700" />
 
               <ViewProfileMenuItem role="Teacher" id={teacher.id} />
-              <DropdownMenuSeparator className="bg-gray-300" />
+              <DropdownMenuSeparator className="bg-slate-200 dark:bg-slate-700" />
 
               <AssignTeacherMenuItem teacherId={teacher.id} />
-              <DropdownMenuSeparator className="bg-gray-300" />
+              <DropdownMenuSeparator className="bg-slate-200 dark:bg-slate-700" />
 
               <DeleteMenuItem role="Teacher" id={teacher.id} />
             </DropdownMenuContent>
@@ -420,7 +482,7 @@ function TeacherSortButton({ property }: { property: 'name' | 'email' }) {
   if (sortBy !== property) {
     return (
       <Button
-        className="capitalize"
+        className="capitalize font-semibold text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
         variant="ghost"
         onClick={() =>
           navigate({
@@ -435,18 +497,17 @@ function TeacherSortButton({ property }: { property: 'name' | 'email' }) {
         }
       >
         {property}
-        <ArrowUpDown className="ml-2 h-4 w-4 rotate-180" />
+        <ArrowUpDown className="ml-2 h-3.5 w-3.5 opacity-50" />
       </Button>
     )
   }
 
   return (
     <Button
-      className="capitalize"
-      variant="default"
+      className="capitalize font-semibold text-sm text-indigo-600 dark:text-indigo-400"
+      variant="ghost"
       onClick={() =>
         navigate({
-          // replace: true,
           to: '/admin/teachers',
           search: (s) => ({
             ...s,
@@ -458,9 +519,9 @@ function TeacherSortButton({ property }: { property: 'name' | 'email' }) {
     >
       {property}
       {sortOrder === 'asc' ? (
-        <MoveUpIcon className="ml-2 h-4 w-4" />
+        <MoveUpIcon className="ml-2 h-3.5 w-3.5" />
       ) : (
-        <MoveDownIcon className="ml-2 h-4 w-4" />
+        <MoveDownIcon className="ml-2 h-3.5 w-3.5" />
       )}
     </Button>
   )

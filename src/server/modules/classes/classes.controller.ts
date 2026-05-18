@@ -1,6 +1,6 @@
 import type { AddClassSchema } from "#/schemas/classes.schema";
 import { db, type Database } from "#/server/db/db";
-import { classesTable, usersTable } from "#/server/db/schema";
+import { classesTable, users } from "#/server/db/schema";
 import { eq } from "drizzle-orm";
 
 class ClassesController {
@@ -40,8 +40,8 @@ class ClassesController {
     }
 
     async getClassesByTeacherUserId(teacherUserId: string) {
-        const user = await this.db.query.usersTable.findFirst({
-            where: eq(usersTable.id, teacherUserId),
+        const user = await this.db.query.users.findFirst({
+            where: eq(users.id, teacherUserId),
             columns: {},
             with: {
                 teacher: {

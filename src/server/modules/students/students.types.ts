@@ -46,7 +46,7 @@ export function StudentUserDto(
         emailVerified: user.emailVerified,
         gender: user.gender,
         image: user.image,
-        name: user.username,
+        name: user.name,
         parentName: student.parentName,
         parentPhoneNumber: student.parentPhoneNumber,
         role: user.role,

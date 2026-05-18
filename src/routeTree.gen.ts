@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TeacherRouteImport } from './routes/teacher'
 import { Route as StudentRouteImport } from './routes/student'
 import { Route as SignUpRouteImport } from './routes/sign-up'
-import { Route as OwnerRouteImport } from './routes/owner'
 import { Route as LogInRouteImport } from './routes/log-in'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -23,6 +22,20 @@ import { Route as StudentCalendarRouteImport } from './routes/student/calendar'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 import { Route as AdminAnnouncementsRouteImport } from './routes/admin/announcements'
+import { Route as PagesTermsRouteImport } from './routes/Pages/terms'
+import { Route as PagesSecurityRouteImport } from './routes/Pages/security'
+import { Route as PagesPrivacyRouteImport } from './routes/Pages/privacy'
+import { Route as PagesPricingRouteImport } from './routes/Pages/pricing'
+import { Route as PagesPressRouteImport } from './routes/Pages/press'
+import { Route as PagesLicensesRouteImport } from './routes/Pages/licenses'
+import { Route as PagesHelpRouteImport } from './routes/Pages/help'
+import { Route as PagesDocumentationRouteImport } from './routes/Pages/documentation'
+import { Route as PagesCookiePolicyRouteImport } from './routes/Pages/cookie-policy'
+import { Route as PagesCommunityRouteImport } from './routes/Pages/community'
+import { Route as PagesChangelogRouteImport } from './routes/Pages/changelog'
+import { Route as PagesCareersRouteImport } from './routes/Pages/careers'
+import { Route as PagesBlogRouteImport } from './routes/Pages/blog'
+import { Route as PagesAboutRouteImport } from './routes/Pages/about'
 import { Route as TeacherSubjectsIndexRouteImport } from './routes/teacher/subjects/index'
 import { Route as TeacherNotificationsIndexRouteImport } from './routes/teacher/notifications/index'
 import { Route as TeacherClassesIndexRouteImport } from './routes/teacher/classes/index'
@@ -61,11 +74,6 @@ const StudentRoute = StudentRouteImport.update({
 const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
   path: '/sign-up',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OwnerRoute = OwnerRouteImport.update({
-  id: '/owner',
-  path: '/owner',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LogInRoute = LogInRouteImport.update({
@@ -117,6 +125,76 @@ const AdminAnnouncementsRoute = AdminAnnouncementsRouteImport.update({
   id: '/announcements',
   path: '/announcements',
   getParentRoute: () => AdminRoute,
+} as any)
+const PagesTermsRoute = PagesTermsRouteImport.update({
+  id: '/Pages/terms',
+  path: '/Pages/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesSecurityRoute = PagesSecurityRouteImport.update({
+  id: '/Pages/security',
+  path: '/Pages/security',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesPrivacyRoute = PagesPrivacyRouteImport.update({
+  id: '/Pages/privacy',
+  path: '/Pages/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesPricingRoute = PagesPricingRouteImport.update({
+  id: '/Pages/pricing',
+  path: '/Pages/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesPressRoute = PagesPressRouteImport.update({
+  id: '/Pages/press',
+  path: '/Pages/press',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesLicensesRoute = PagesLicensesRouteImport.update({
+  id: '/Pages/licenses',
+  path: '/Pages/licenses',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesHelpRoute = PagesHelpRouteImport.update({
+  id: '/Pages/help',
+  path: '/Pages/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesDocumentationRoute = PagesDocumentationRouteImport.update({
+  id: '/Pages/documentation',
+  path: '/Pages/documentation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesCookiePolicyRoute = PagesCookiePolicyRouteImport.update({
+  id: '/Pages/cookie-policy',
+  path: '/Pages/cookie-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesCommunityRoute = PagesCommunityRouteImport.update({
+  id: '/Pages/community',
+  path: '/Pages/community',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesChangelogRoute = PagesChangelogRouteImport.update({
+  id: '/Pages/changelog',
+  path: '/Pages/changelog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesCareersRoute = PagesCareersRouteImport.update({
+  id: '/Pages/careers',
+  path: '/Pages/careers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesBlogRoute = PagesBlogRouteImport.update({
+  id: '/Pages/blog',
+  path: '/Pages/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesAboutRoute = PagesAboutRouteImport.update({
+  id: '/Pages/about',
+  path: '/Pages/about',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const TeacherSubjectsIndexRoute = TeacherSubjectsIndexRouteImport.update({
   id: '/subjects/',
@@ -253,10 +331,23 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/log-in': typeof LogInRoute
-  '/owner': typeof OwnerRoute
   '/sign-up': typeof SignUpRoute
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
+  '/Pages/about': typeof PagesAboutRoute
+  '/Pages/blog': typeof PagesBlogRoute
+  '/Pages/careers': typeof PagesCareersRoute
+  '/Pages/changelog': typeof PagesChangelogRoute
+  '/Pages/community': typeof PagesCommunityRoute
+  '/Pages/cookie-policy': typeof PagesCookiePolicyRoute
+  '/Pages/documentation': typeof PagesDocumentationRoute
+  '/Pages/help': typeof PagesHelpRoute
+  '/Pages/licenses': typeof PagesLicensesRoute
+  '/Pages/press': typeof PagesPressRoute
+  '/Pages/pricing': typeof PagesPricingRoute
+  '/Pages/privacy': typeof PagesPrivacyRoute
+  '/Pages/security': typeof PagesSecurityRoute
+  '/Pages/terms': typeof PagesTermsRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -293,10 +384,23 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/log-in': typeof LogInRoute
-  '/owner': typeof OwnerRoute
   '/sign-up': typeof SignUpRoute
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
+  '/Pages/about': typeof PagesAboutRoute
+  '/Pages/blog': typeof PagesBlogRoute
+  '/Pages/careers': typeof PagesCareersRoute
+  '/Pages/changelog': typeof PagesChangelogRoute
+  '/Pages/community': typeof PagesCommunityRoute
+  '/Pages/cookie-policy': typeof PagesCookiePolicyRoute
+  '/Pages/documentation': typeof PagesDocumentationRoute
+  '/Pages/help': typeof PagesHelpRoute
+  '/Pages/licenses': typeof PagesLicensesRoute
+  '/Pages/press': typeof PagesPressRoute
+  '/Pages/pricing': typeof PagesPricingRoute
+  '/Pages/privacy': typeof PagesPrivacyRoute
+  '/Pages/security': typeof PagesSecurityRoute
+  '/Pages/terms': typeof PagesTermsRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -334,10 +438,23 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/log-in': typeof LogInRoute
-  '/owner': typeof OwnerRoute
   '/sign-up': typeof SignUpRoute
   '/student': typeof StudentRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
+  '/Pages/about': typeof PagesAboutRoute
+  '/Pages/blog': typeof PagesBlogRoute
+  '/Pages/careers': typeof PagesCareersRoute
+  '/Pages/changelog': typeof PagesChangelogRoute
+  '/Pages/community': typeof PagesCommunityRoute
+  '/Pages/cookie-policy': typeof PagesCookiePolicyRoute
+  '/Pages/documentation': typeof PagesDocumentationRoute
+  '/Pages/help': typeof PagesHelpRoute
+  '/Pages/licenses': typeof PagesLicensesRoute
+  '/Pages/press': typeof PagesPressRoute
+  '/Pages/pricing': typeof PagesPricingRoute
+  '/Pages/privacy': typeof PagesPrivacyRoute
+  '/Pages/security': typeof PagesSecurityRoute
+  '/Pages/terms': typeof PagesTermsRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/settings': typeof AdminSettingsRoute
@@ -376,10 +493,23 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/log-in'
-    | '/owner'
     | '/sign-up'
     | '/student'
     | '/teacher'
+    | '/Pages/about'
+    | '/Pages/blog'
+    | '/Pages/careers'
+    | '/Pages/changelog'
+    | '/Pages/community'
+    | '/Pages/cookie-policy'
+    | '/Pages/documentation'
+    | '/Pages/help'
+    | '/Pages/licenses'
+    | '/Pages/press'
+    | '/Pages/pricing'
+    | '/Pages/privacy'
+    | '/Pages/security'
+    | '/Pages/terms'
     | '/admin/announcements'
     | '/admin/dashboard'
     | '/admin/settings'
@@ -416,10 +546,23 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/log-in'
-    | '/owner'
     | '/sign-up'
     | '/student'
     | '/teacher'
+    | '/Pages/about'
+    | '/Pages/blog'
+    | '/Pages/careers'
+    | '/Pages/changelog'
+    | '/Pages/community'
+    | '/Pages/cookie-policy'
+    | '/Pages/documentation'
+    | '/Pages/help'
+    | '/Pages/licenses'
+    | '/Pages/press'
+    | '/Pages/pricing'
+    | '/Pages/privacy'
+    | '/Pages/security'
+    | '/Pages/terms'
     | '/admin/announcements'
     | '/admin/dashboard'
     | '/admin/settings'
@@ -456,10 +599,23 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/log-in'
-    | '/owner'
     | '/sign-up'
     | '/student'
     | '/teacher'
+    | '/Pages/about'
+    | '/Pages/blog'
+    | '/Pages/careers'
+    | '/Pages/changelog'
+    | '/Pages/community'
+    | '/Pages/cookie-policy'
+    | '/Pages/documentation'
+    | '/Pages/help'
+    | '/Pages/licenses'
+    | '/Pages/press'
+    | '/Pages/pricing'
+    | '/Pages/privacy'
+    | '/Pages/security'
+    | '/Pages/terms'
     | '/admin/announcements'
     | '/admin/dashboard'
     | '/admin/settings'
@@ -497,10 +653,23 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   LogInRoute: typeof LogInRoute
-  OwnerRoute: typeof OwnerRoute
   SignUpRoute: typeof SignUpRoute
   StudentRoute: typeof StudentRouteWithChildren
   TeacherRoute: typeof TeacherRouteWithChildren
+  PagesAboutRoute: typeof PagesAboutRoute
+  PagesBlogRoute: typeof PagesBlogRoute
+  PagesCareersRoute: typeof PagesCareersRoute
+  PagesChangelogRoute: typeof PagesChangelogRoute
+  PagesCommunityRoute: typeof PagesCommunityRoute
+  PagesCookiePolicyRoute: typeof PagesCookiePolicyRoute
+  PagesDocumentationRoute: typeof PagesDocumentationRoute
+  PagesHelpRoute: typeof PagesHelpRoute
+  PagesLicensesRoute: typeof PagesLicensesRoute
+  PagesPressRoute: typeof PagesPressRoute
+  PagesPricingRoute: typeof PagesPricingRoute
+  PagesPrivacyRoute: typeof PagesPrivacyRoute
+  PagesSecurityRoute: typeof PagesSecurityRoute
+  PagesTermsRoute: typeof PagesTermsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -524,13 +693,6 @@ declare module '@tanstack/react-router' {
       path: '/sign-up'
       fullPath: '/sign-up'
       preLoaderRoute: typeof SignUpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/owner': {
-      id: '/owner'
-      path: '/owner'
-      fullPath: '/owner'
-      preLoaderRoute: typeof OwnerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/log-in': {
@@ -602,6 +764,104 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/announcements'
       preLoaderRoute: typeof AdminAnnouncementsRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/Pages/terms': {
+      id: '/Pages/terms'
+      path: '/Pages/terms'
+      fullPath: '/Pages/terms'
+      preLoaderRoute: typeof PagesTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/security': {
+      id: '/Pages/security'
+      path: '/Pages/security'
+      fullPath: '/Pages/security'
+      preLoaderRoute: typeof PagesSecurityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/privacy': {
+      id: '/Pages/privacy'
+      path: '/Pages/privacy'
+      fullPath: '/Pages/privacy'
+      preLoaderRoute: typeof PagesPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/pricing': {
+      id: '/Pages/pricing'
+      path: '/Pages/pricing'
+      fullPath: '/Pages/pricing'
+      preLoaderRoute: typeof PagesPricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/press': {
+      id: '/Pages/press'
+      path: '/Pages/press'
+      fullPath: '/Pages/press'
+      preLoaderRoute: typeof PagesPressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/licenses': {
+      id: '/Pages/licenses'
+      path: '/Pages/licenses'
+      fullPath: '/Pages/licenses'
+      preLoaderRoute: typeof PagesLicensesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/help': {
+      id: '/Pages/help'
+      path: '/Pages/help'
+      fullPath: '/Pages/help'
+      preLoaderRoute: typeof PagesHelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/documentation': {
+      id: '/Pages/documentation'
+      path: '/Pages/documentation'
+      fullPath: '/Pages/documentation'
+      preLoaderRoute: typeof PagesDocumentationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/cookie-policy': {
+      id: '/Pages/cookie-policy'
+      path: '/Pages/cookie-policy'
+      fullPath: '/Pages/cookie-policy'
+      preLoaderRoute: typeof PagesCookiePolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/community': {
+      id: '/Pages/community'
+      path: '/Pages/community'
+      fullPath: '/Pages/community'
+      preLoaderRoute: typeof PagesCommunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/changelog': {
+      id: '/Pages/changelog'
+      path: '/Pages/changelog'
+      fullPath: '/Pages/changelog'
+      preLoaderRoute: typeof PagesChangelogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/careers': {
+      id: '/Pages/careers'
+      path: '/Pages/careers'
+      fullPath: '/Pages/careers'
+      preLoaderRoute: typeof PagesCareersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/blog': {
+      id: '/Pages/blog'
+      path: '/Pages/blog'
+      fullPath: '/Pages/blog'
+      preLoaderRoute: typeof PagesBlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/about': {
+      id: '/Pages/about'
+      path: '/Pages/about'
+      fullPath: '/Pages/about'
+      preLoaderRoute: typeof PagesAboutRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/teacher/subjects/': {
       id: '/teacher/subjects/'
@@ -869,10 +1129,23 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   LogInRoute: LogInRoute,
-  OwnerRoute: OwnerRoute,
   SignUpRoute: SignUpRoute,
   StudentRoute: StudentRouteWithChildren,
   TeacherRoute: TeacherRouteWithChildren,
+  PagesAboutRoute: PagesAboutRoute,
+  PagesBlogRoute: PagesBlogRoute,
+  PagesCareersRoute: PagesCareersRoute,
+  PagesChangelogRoute: PagesChangelogRoute,
+  PagesCommunityRoute: PagesCommunityRoute,
+  PagesCookiePolicyRoute: PagesCookiePolicyRoute,
+  PagesDocumentationRoute: PagesDocumentationRoute,
+  PagesHelpRoute: PagesHelpRoute,
+  PagesLicensesRoute: PagesLicensesRoute,
+  PagesPressRoute: PagesPressRoute,
+  PagesPricingRoute: PagesPricingRoute,
+  PagesPrivacyRoute: PagesPrivacyRoute,
+  PagesSecurityRoute: PagesSecurityRoute,
+  PagesTermsRoute: PagesTermsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

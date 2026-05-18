@@ -168,6 +168,20 @@ code {
   background-color: #4b5563;
 }
 
+/* ─── Marquee / testimonials scroll ─── */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 50s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
 /* :root {
   --sea-ink: #173a40;
   --sea-ink-soft: #416166;

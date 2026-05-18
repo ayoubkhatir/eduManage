@@ -1,34 +1,36 @@
 import { eq } from "drizzle-orm";
-import { db, type Database } from "../db.js";
-import { usersTable } from "../schema.js";
-import type { NewUser, User } from "#/server/types.js";
+import { Database, db } from "../db.js";
+import { users } from "../schemas.js";
+import type { NewUser, User } from "../../types.js";
 
 
 export interface IUsersRepository {
-  createUser(data: NewUser): Promise<User>
+  createUser(data: NewUser): Promise<User[]>
   findUserById(id: string): Promise<User | undefined>
   findUserByUsername(username: string): Promise<User | undefined>
   findUserByEmail(email: string): Promise<User | undefined>
   updateUser(id: string, data: Partial<NewUser>): Promise<User | undefined>
+  deleteUser(id: string): Promise<User | undefined>
 }
 
 class UsersRepository implements IUsersRepository {
   constructor(private readonly db: Database) { }
 
-  async createUser(data: NewUser): Promise<User> {
-    const [row] = await this.db.insert(usersTable).values(data).returning();
-    return row;
+  async createUser(data: NewUser): Promise<User[]> {
+    const payload = { ...data, id: data.id ?? crypto.randomUUID() };
+    const rows = await this.db.insert(users).values(payload).returning();
+    return rows;
   }
 
   async findUserById(id: string): Promise<User | undefined> {
-    return this.db.query.usersTable.findFirst({
-      where: eq(usersTable.id, id),
+    return this.db.query.users.findFirst({
+      where: eq(users.id, id),
     });
   }
 
   async findUserByEmail(email: string): Promise<User | undefined> {
     return this.db.query.users.findFirst({
-      where: eq(usersTable.email, email),
+      where: eq(users.email, email),
     });
   }
 
@@ -36,7 +38,7 @@ class UsersRepository implements IUsersRepository {
     username: string,
   ): Promise<User | undefined> {
     return this.db.query.users.findFirst({
-      where: eq(usersTable.username, username),
+      where: eq(users.name, username),
     });
   }
 
@@ -45,17 +47,17 @@ class UsersRepository implements IUsersRepository {
     data: Partial<NewUser>,
   ): Promise<User | undefined> {
     const [row] = await this.db
-      .update(usersTable)
+      .update(users)
       .set(data)
-      .where(eq(usersTable.id, id))
+      .where(eq(users.id, id))
       .returning();
     return row;
   }
 
-  async deleteUser(id: string): Promise<void> {
-    await this.db.delete(usersTable).where(eq(usersTable.id, id));
+  async deleteUser(id: string): Promise<User | undefined> {
+    const [row] = await this.db.delete(users).where(eq(users.id, id)).returning();
+    return row;
   }
 }
 
 export const usersRepository = new UsersRepository(db);
-
