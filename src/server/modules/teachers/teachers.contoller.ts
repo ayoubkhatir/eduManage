@@ -1,21 +1,20 @@
 import type { AddTeacherSchema, AssignTeacherSchema, EditTeacherSchema, GetTeacherClassesSchema, GetTeachersSchema } from "#/schemas/teachers.schema";
 import { db, type Database } from "#/server/db/db";
-import { classesTable, gradesTable, StatusEnum, studentsTable, subjectsTable, teacherAssignmentsTable, teachersTable, UserGenderEnum, UserRoleEnum, users } from "#/server/db/schema";
+import { account, classesTable, gradesTable, StatusEnum, studentsTable, subjectsTable, teacherAssignmentsTable, teachersTable, UserGenderEnum, UserRoleEnum, users } from "#/server/db/schema";
 import { and, asc, count, desc, eq, gte, ilike, inArray, lt, or, SQL } from "drizzle-orm"
 import { TeacherUserDto } from "./teachers.types";
 import { generateTemporaryPassword } from "#/server/utils/temp_password_generator";
 import { handlePassword } from "#/server/utils/handle-password";
+import generateId from "#/server/utils/id_generator";
 
 export type CreateTeacherInput = {
     schoolId: string
-
     username: string
     email: string
     passwordHash: string
     image?: string | null
     telNumber: string
     gender: UserGenderEnum
-
     address: string
     dateOfBirth: string
     joiningDate: string
@@ -69,7 +68,7 @@ class TeachersController {
         const sortColumn =
             sortBy === 'email'
                 ? users.email
-                : users.name // default = name
+                : users.name
 
         const orderDirection =
             sortOrder === 'desc' ? desc(sortColumn) : asc(sortColumn)
@@ -177,33 +176,44 @@ class TeachersController {
     /**
      * Create user + teacher profile in one transaction
      */
-    async createTeacher(input: AddTeacherSchema) {
-        const passwordHash = await handlePassword.hash(generateTemporaryPassword(input.name))
-        const data = await this.db.transaction(async (tx) => {
-            const [createdUser] = await tx
-                .insert(users)
-                .values({
-                    name: input.name,
-                    email: input.email,
-                    passwordHash: passwordHash,
-                    image: input.image ?? null,
-                    telNumber: input.telNumber,
-                    role: UserRoleEnum.TEACHER,
-                    gender: input.gender,
-                })
+    async createTeacher(data: AddTeacherSchema) {
+        const passwordHash = await handlePassword.hash(generateTemporaryPassword(data.name))
+
+        const userId = generateId();
+
+        const result = await this.db.transaction(async (tx) => {
+            await tx.insert(users).values({
+                id: userId,
+                email: data.email,
+                name: data.name,
+                image: data.image ?? null,
+                telNumber: data.telNumber,
+                role: UserRoleEnum.TEACHER,
+                gender: data.gender,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            })
                 .returning({ id: users.id })
 
-            console.log({ createdUser })
+            await tx.insert(account).values({
+                id: generateId(),
+                userId,
+                accountId: userId,
+                providerId: "credentials",
+                password: passwordHash,
+                createdAt: new Date(),
+            })
+
+
             const [createdTeacher] = await tx
                 .insert(teachersTable)
                 .values({
-                    schoolId: input.schoolId,
-                    userId: createdUser.id,
-                    address: input.address,
-                    dateOfBirth: input.dateOfBirth,
+                    schoolId: data.schoolId,
+                    userId,
+                    address: data.address,
+                    dateOfBirth: data.dateOfBirth,
                     joiningDate: new Date().toISOString(),
-                    status: input.status ?? "New",
-
+                    status: data.status ?? "New",
                 })
                 .returning({ id: teachersTable.id })
             console.log({ createdTeacher })
@@ -336,8 +346,6 @@ class TeachersController {
             if (!existingTeacher) {
                 throw new Error("Teacher not found")
             }
-
-
 
             await tx
                 .update(users)

@@ -17,14 +17,17 @@ interface DataTableProps<TData> {
 
 export default function DataTable<TData>({ table }: DataTableProps<TData>) {
   return (
-    <div className="rounded-md border">
+    <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow
+              key={headerGroup.id}
+              className="border-b border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50"
+            >
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className="text-slate-700 dark:text-slate-300 font-semibold text-sm">
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -43,9 +46,10 @@ export default function DataTable<TData>({ table }: DataTableProps<TData>) {
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && 'selected'}
+                className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors"
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell key={cell.id} className="py-3">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -55,9 +59,9 @@ export default function DataTable<TData>({ table }: DataTableProps<TData>) {
             <TableRow>
               <TableCell
                 colSpan={table.getAllColumns().length}
-                className="h-24 text-center"
+                className="h-24 text-center text-slate-500 dark:text-slate-400"
               >
-                No results.
+                No results found.
               </TableCell>
             </TableRow>
           )}

@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 import { PageLayout, Section, FadeIn } from '#/components/landing/landing-shared'
 
-export const Route = createFileRoute('/changelog')({
+export const Route = createFileRoute('/Pages/changelog')({
   component: RouteComponent,
   head: () => ({ meta: [{ title: 'Changelog - EduManage' }] }),
 })

@@ -2,11 +2,11 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { Skeleton } from 'boneyard-js/react'
 import { useAddTeacher } from '@/services/api/admin/teacher/hooks'
-import ProfilePicWrapper from '@/components/admin/Wrappers/ProfilePicWrapper'
+// import ProfilePicWrapper from '@/components/admin/Wrappers/ProfilePicWrapper'
 import InputWrapper from '@/components/admin/Wrappers/InputWrapper'
 import SelectWrapper from '@/components/admin/Wrappers/SelectWrapper'
 import DatePickerField from '@/components/admin/DatePickerField'
-import type { AddTeacherSchema } from '#/schemas/teachers.schema'
+// import type { AddTeacherSchema } from '#/schemas/teachers.schema'
 import { SimpleImageUpload } from '#/components/cloudinary-uploader'
 import { useAuth } from '#/services/store/auth_store'
 
@@ -29,6 +29,8 @@ function RouteComponent() {
   }
   const user = useAuth((s) => s.user)
   const { onSubmit, form } = useAddTeacher(user?.id!)
+
+  
   // const subjects = form.watch('subjects')
 
   // function addSubjects(subject: string) {
@@ -264,7 +266,7 @@ function RouteComponent() {
                           />
                           <button
                             type="button"
-                            className="cursor-pointer absolute right-2 top-6 -translate-y-1/2 text-slate-500 hover:text-neutral-900 dark:hover:text-white dark:text-gray-400 cursor-pointer self-center"
+                            className="cursor-pointer absolute right-2 top-6 -translate-y-1/2 text-slate-500 hover:text-neutral-900 dark:hover:text-white dark:text-gray-400 self-center"
                             onClick={togglePassword}
                           >
                             <span className="material-symbols-outlined">
@@ -283,7 +285,7 @@ function RouteComponent() {
                     <Link to="/admin/teachers">
                       <button
                         type="button"
-                        className="cursor-pointer w-full sm:w-auto h-10 px-6 rounded-lg border border-transparent text-slate-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 font-bold text-sm transition-colors cursor-pointer"
+                        className="w-full sm:w-auto h-10 px-6 rounded-lg border border-transparent text-slate-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 font-bold text-sm transition-colors cursor-pointer"
                       >
                         previous
                       </button>
@@ -291,7 +293,7 @@ function RouteComponent() {
 
                     <button
                       type="submit"
-                      className="cursor-pointer w-full sm:w-auto h-10 px-6 rounded-lg bg-primary hover:bg-blue-600 text-white font-bold text-sm shadow-sm transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                      className="w-full sm:w-auto h-10 px-6 rounded-lg bg-primary hover:bg-blue-600 text-white font-bold text-sm shadow-sm transition-colors flex items-center justify-center gap-2 cursor-pointer"
                     >
                       <span className="material-symbols-outlined text-[18px]">
                         check

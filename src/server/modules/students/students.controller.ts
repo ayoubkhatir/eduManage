@@ -6,6 +6,7 @@ import generateId from "../../utils/id_generator";
 import { generateTemporaryPassword } from "../../utils/temp_password_generator";
 import { StudentUserDto, type StudentUser } from "./students.types";
 import { handlePassword } from "#/server/utils/handle-password";
+import { studentsRepository, type IStudentsRepository } from "#/server/db/repo";
 
 class StudentsController {
     constructor(private readonly studentsRepository: IStudentsRepository) { }
@@ -14,23 +15,20 @@ class StudentsController {
         return await this.studentsRepository.listStudents(search_queries);
     }
 
+
+
+
+
     async addStudent(data: AddStudentSchema) {
         const userId = generateId();
 
-        const password = generateTemporaryPassword(data.name)
-        const passwordHash = await handlePassword.hash(password);
+        const passwordHash = await handlePassword.hash(generateTemporaryPassword(data.name))
 
         const student = await db.transaction(async (tx) => {
             const classe = await tx.query.classesTable.findFirst({
                 where: eq(classesTable.id, data.classId)
             })
             if (!classe) throw new Error("Classe Not Found");
-
-
-            // insert in users accounts and then teachers 
-
-
-
 
             await tx.insert(users).values({
                 id: userId,

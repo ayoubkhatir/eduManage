@@ -15,7 +15,6 @@ export const addTeacherSchema = z.object({
     image: z.string(),
     telNumber: z.string().max(20),
     gender: genderSchema,
-
     address: z.string().min(1),
     dateOfBirth: z.string().min(1),
     status: statusSchema,

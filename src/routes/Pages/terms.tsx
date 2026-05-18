@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 import { PageLayout, Section, FadeIn } from '#/components/landing/landing-shared'
 
-export const Route = createFileRoute('/terms')({
+export const Route = createFileRoute('/Pages/terms')({
   component: RouteComponent,
   head: () => ({ meta: [{ title: 'Terms of Service - EduManage' }] }),
 })

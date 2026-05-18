@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 import { PageLayout, Section, FadeIn } from '#/components/landing/landing-shared'
 
-export const Route = createFileRoute('/privacy')({
+export const Route = createFileRoute('/Pages/privacy')({
   component: RouteComponent,
   head: () => ({ meta: [{ title: 'Privacy Policy - EduManage' }] }),
 })

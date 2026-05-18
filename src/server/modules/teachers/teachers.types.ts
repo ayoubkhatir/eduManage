@@ -4,12 +4,12 @@ import type { Teacher, User } from "#/server/types";
 export type TeacherUser = {
     id: string,
     userId: string,
-    teacherId: string,
+    // teacherId: string,
     email: string;
     emailVerified: boolean;
     image: string | null;
     name: string;
-    telNumber: string;
+    telNumber: string | null;
     role: UserRoleEnum;
     createdAt: Date;
     updatedAt: Date;
@@ -37,7 +37,7 @@ export function TeacherUserDto(
         emailVerified: user.emailVerified,
         gender: user.gender,
         image: user.image,
-        name: user.username,
+        name: user.name,
         role: user.role,
         schoolId: teacher.schoolId,
         status: teacher.status,
@@ -45,7 +45,7 @@ export function TeacherUserDto(
         userId: user.id,
         telNumber: user.telNumber,
         joiningDate: teacher.joiningDate,
-        teacherId: teacher.id,
+        // teacherId: teacher.id,
         subjects,
         about: teacher.about,
     }
