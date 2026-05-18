@@ -1,41 +1,20 @@
-// export type UICardType = {
-//   id: string
-//   iconName: string
-//   iconColor: string
-//   stateIcon: string
-//   percentage: number
-//   cardTitle: string
-//   info: string
-// }
+import { getTeachersStatsServerFn } from '#/server/modules/teachers/teachers.server-functions'
+import { useQuery } from '@tanstack/react-query'
+import { useMemo } from 'react'
 
-// export default function UICardComponent(props: UICardType) {
-//   return (
-//     <div className="bg-white dark:bg-surface-dark p-6 rounded-xl border border-slate-200 dark:border-gray-800 shadow-sm hover:shadow-md dark:hover:shadow-lg dark:hover:shadow-black/20 dark:hover:border-gray-700 group">
-//       <div className="flex justify-between items-start mb-4">
-//         <div
-//           className={`p-2 ${props.iconColor == 'blue' ? 'bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400' : props.iconColor == 'purple' ? 'bg-purple-50 dark:bg-purple-500/20  text-purple-600 dark:text-purple-400' : props.iconColor == 'green' ? 'bg-green-50 dark:bg-green-500/20  text-green-600 dark:text-green-400' : 'bg-orange-50 dark:bg-orange-500/20  text-orange-600 dark:text-orange-400'} rounded-lg group-hover:scale-110`}
-//           style={{ transition: 'transform 0.2s ease-in-out' }}
-//         >
-//           <span className="material-symbols-outlined">{props.iconName}</span>
-//         </div>
-//         <span
-//           className={`flex items-center text-xs font-bold   px-2 py-1 rounded-full border border-transparent  ${props.percentage > 0 ? 'text-green-600 dark:text-green-400 dark:border-green-500/10 bg-green-50 dark:bg-green-500/10' : 'text-red-600 dark:text-red-400 dark:border-red-500/10 bg-red-50 dark:bg-red-500/10'}`}
-//         >
-//           <span className="material-symbols-outlined text-sm mr-1">
-//             {props.stateIcon}
-//           </span>
-//           {props.percentage}%
-//         </span>
-//       </div>
-//       <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
-//         {props.cardTitle}
-//       </p>
-//       <h3 className="text-2xl font-bold text-[#111318] dark:text-white mt-1">
-//         {props.info}
-//       </h3>
-//     </div>
-//   )
-// }
+const getTeacherStatsQueryOptions = () => ({
+  queryKey: ['teachers', 'stats'],
+  queryFn: async () => {
+    const response = await getTeachersStatsServerFn()
+    if (response.success) return response.data
+    else
+      return {
+        totalTeachers: 0,
+        totalActiveTeachers: 0,
+        totalNewThisMonth: 0,
+      }
+  },
+})
 import { Skeleton } from '@/components/ui/skeleton'
 
 type CardColor = 'blue' | 'purple' | 'green' | 'orange'
@@ -132,6 +111,56 @@ export function UICardSkeleton({ count = 4 }: { count?: number }) {
     <div className={`grid grid-cols-1 gap-4 md:grid-cols-${count}`}>
       {Array.from({ length: count }).map((_, i) => (
         <UICardSkeletonItem key={i} />
+      ))}
+    </div>
+  )
+}
+
+export function TeachersStatCards() {
+  const { data: teachersStat, status: fetchStatus } = useQuery({
+    ...getTeacherStatsQueryOptions(),
+  })
+
+  const cards = useMemo<UICardType[]>(
+    () => [
+      {
+        id: '0',
+        iconName: 'school',
+        iconColor: 'blue',
+        stateIcon: 'trending_up',
+        percentage: 5,
+        cardTitle: 'Total Teachers',
+        info: teachersStat?.totalTeachers ?? 0,
+      },
+      {
+        id: '1',
+        iconName: 'bolt',
+        iconColor: 'green',
+        stateIcon: 'trending_up',
+        percentage: 2,
+        cardTitle: 'Active Now',
+        info: teachersStat?.totalActiveTeachers ?? 0,
+      },
+      {
+        id: '2',
+        iconName: 'person_add',
+        iconColor: 'purple',
+        stateIcon: 'trending_up',
+        percentage: 10,
+        cardTitle: 'New This Month',
+        info: teachersStat?.totalNewThisMonth ?? 0,
+      },
+    ],
+    [teachersStat],
+  )
+
+  if (fetchStatus === 'pending') return <UICardSkeleton count={3} />
+  if (fetchStatus === 'error') return null
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {cards.map((card, i) => (
+        <UICardComponent {...card} key={i} />
       ))}
     </div>
   )

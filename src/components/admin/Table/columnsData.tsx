@@ -28,6 +28,7 @@ import { byRadius } from '@cloudinary/url-gen/actions/roundCorners'
 import { AssignTeacherMenuItem } from '../DropDownMenuComp/AssignTeacherMenuItem'
 import { Badge } from '#/components/ui/badge'
 import { StatusEnum, UserGenderEnum } from '#/server/db/schema'
+import ProfilePicGenerator from '../profilePicGenerator'
 
 export function UserAvatar({
   image,
@@ -232,7 +233,11 @@ export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
     cell: ({ row }) => (
       <div className="flex items-center justify-center">
         <div className="relative">
-          <ImageColumnUI image={row.original.image} />
+          <ProfilePicGenerator
+            name={row.original.name}
+            imgSrc={row.original.image || undefined}
+          />
+          {/* <ImageColumnUI image={row.original.image} />
           <span
             className={`absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white dark:border-slate-800 ${
               row.original.status === 'Active'
@@ -241,7 +246,7 @@ export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
                   ? 'bg-red-500'
                   : 'bg-yellow-500'
             }`}
-          />
+          /> */}
         </div>
       </div>
     ),

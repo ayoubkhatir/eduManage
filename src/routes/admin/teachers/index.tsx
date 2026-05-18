@@ -1,12 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
-import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useQuery } from '@tanstack/react-query'
-import { TeacherColumns } from '@/components/admin/Table/columnsData'
-
-import DataTable, {
-  CustomDataTableSkeleton,
-} from '@/components/admin/Table/dataTable'
 import { CustomPagination } from '@/components/admin/PaginationComp'
 import { SearchInput } from '@/components/admin/SearchInput'
 import { SelectPageSize } from '@/components/admin/SelectPageSize'
@@ -20,12 +14,16 @@ import {
   getTeachersSchema,
   type GetTeachersSchema,
 } from '#/schemas/teachers.schema'
-import type { TeacherUser } from '#/server/modules/teachers/teachers.types'
 import UICardComponent, {
   UICardSkeleton,
   type UICardType,
 } from '#/components/admin/UICard'
 import { useMemo } from 'react'
+import {
+  CustomDataTableSkeleton,
+  TeachersTable,
+} from '#/components/admin/Table/dataTable'
+import { TeachersStatCards } from '#/components/admin/cards/StatsCards'
 
 const getTeachersQueryOptions = ({
   page,
@@ -70,41 +68,11 @@ const getTeachersQueryOptions = ({
   },
 })
 
-// const getStudentsQueryOptions = ({
-//   page,
-//   search,
-//   size,
-//   status,
-//   sortOrder,
-//   sortBy,
-// }: GetTeachersSchema) => ({
-//   queryKey: ['students', page, search, size, sortOrder, sortBy, status],
-//   queryFn: async () => {
-//     const response = await getTeachersServerFn({})
-//     // teacherFetcher.getTeachers({
-//     //   page,
-//     //   search,
-//     //   size,
-//     //   // status,
-//     //   sortOrder,
-//     //   sortBy,
-//     // })
-//     if (response.success)
-//       return {
-//         data: response.data,
-//         pagination: response.pagination,
-//       }
-//     else throw new Error(response.message)
-//   },
-//   placeholderData: keepPreviousData,
-// })
-
 export const Route = createFileRoute('/admin/teachers/')({
   component: RouteComponent,
   pendingComponent: AdminTeachersPending,
   loaderDeps: ({ search }) => search,
   loader: async ({ context, deps }) => {
-    // // await new Promise((resolve) => setTimeout(resolve, 2000))
     context.queryClient.ensureQueryData(getTeachersQueryOptions(deps))
   },
   validateSearch: zodValidator(getTeachersSchema),
@@ -169,70 +137,6 @@ function AdminTeachersContent() {
   )
 }
 
-const getTeacherStatsQueryOptions = () => ({
-  queryKey: ['teachers', 'stats'],
-  queryFn: async () => {
-    const response = await getTeachersStatsServerFn()
-    if (response.success) return response.data
-    else
-      return {
-        totalTeachers: 0,
-        totalActiveTeachers: 0,
-        totalNewThisMonth: 0,
-      }
-  },
-})
-
-function TeachersStatCards() {
-  const { data: teachersStat, status: fetchStatus } = useQuery({
-    ...getTeacherStatsQueryOptions(),
-  })
-
-  const cards = useMemo<UICardType[]>(
-    () => [
-      {
-        id: '0',
-        iconName: 'school',
-        iconColor: 'blue',
-        stateIcon: 'trending_up',
-        percentage: 5,
-        cardTitle: 'Total Teachers',
-        info: teachersStat?.totalTeachers ?? 0,
-      },
-      {
-        id: '1',
-        iconName: 'bolt',
-        iconColor: 'green',
-        stateIcon: 'trending_up',
-        percentage: 2,
-        cardTitle: 'Active Now',
-        info: teachersStat?.totalActiveTeachers ?? 0,
-      },
-      {
-        id: '2',
-        iconName: 'person_add',
-        iconColor: 'purple',
-        stateIcon: 'trending_up',
-        percentage: 10,
-        cardTitle: 'New This Month',
-        info: teachersStat?.totalNewThisMonth ?? 0,
-      },
-    ],
-    [teachersStat],
-  )
-
-  if (fetchStatus === 'pending') return <UICardSkeleton count={3} />
-  if (fetchStatus === 'error') return null
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {cards.map((card, i) => (
-        <UICardComponent {...card} key={i} />
-      ))}
-    </div>
-  )
-}
-
 function MainPageContent() {
   const navigate = Route.useNavigate()
   const { size, page, search, sortBy, sortOrder, status, email, subject } =
@@ -291,14 +195,4 @@ function MainPageContent() {
       )}
     </>
   )
-}
-
-function TeachersTable({ data }: { data: Array<TeacherUser> }) {
-  const table = useReactTable({
-    data,
-    columns: TeacherColumns,
-    getCoreRowModel: getCoreRowModel(),
-  })
-
-  return <DataTable table={table} />
 }

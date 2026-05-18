@@ -182,7 +182,7 @@ class TeachersController {
         const userId = generateId();
 
         const result = await this.db.transaction(async (tx) => {
-            await tx.insert(users).values({
+            const createdUser = await tx.insert(users).values({
                 id: userId,
                 email: data.email,
                 name: data.name,
@@ -192,17 +192,18 @@ class TeachersController {
                 gender: data.gender,
                 createdAt: new Date(),
                 updatedAt: new Date(),
-            })
-                .returning({ id: users.id })
+            }).returning({ id: users.id })
+            console.log(createdUser)
 
-            await tx.insert(account).values({
+            const createdAccount = await tx.insert(account).values({
                 id: generateId(),
                 userId,
                 accountId: userId,
                 providerId: "credentials",
                 password: passwordHash,
                 createdAt: new Date(),
-            })
+            }).returning()
+            console.log(createdAccount)
 
 
             const [createdTeacher] = await tx
@@ -229,7 +230,7 @@ class TeachersController {
             return TeacherUserDto(teacher, teacher.user, [])
         })
 
-        return data
+        return result
     }
 
     /**
@@ -245,7 +246,7 @@ class TeachersController {
                 dateOfBirth: teachersTable.dateOfBirth,
                 joiningDate: teachersTable.joiningDate,
                 status: teachersTable.status,
-
+                
                 username: users.name,
                 email: users.email,
                 telNumber: users.telNumber,

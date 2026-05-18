@@ -319,10 +319,6 @@ function OwnerTeacherDetailContent() {
 
   if (!teacherData) throw notFound()
 
-  // function togglePassword() {
-  //   setShowPassword(!showPassword)
-  // }
-
   return (
     <div className="flex h-full w-full">
       <main className="flex-1 flex flex-col h-full min-w-0 bg-background-light dark:bg-background-dark overflow-hidden relative">
@@ -338,9 +334,7 @@ function OwnerTeacherDetailContent() {
             </div>
 
             <div className="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-[#f0f2f4] dark:border-gray-800 overflow-hidden">
-              {teacherData.teacherId && (
-                <EditTeacherForm teacherData={teacherData} />
-              )}
+              {teacherData.id && <EditTeacherForm teacherData={teacherData} />}
             </div>
           </div>
         </div>
