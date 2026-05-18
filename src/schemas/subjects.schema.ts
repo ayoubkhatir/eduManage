@@ -14,4 +14,3 @@ export const addSubjectSchema = z.object({
     status: statusSchema,
 })
 
-export type AddSubjectSchema = z.infer<typeof addSubjectSchema>

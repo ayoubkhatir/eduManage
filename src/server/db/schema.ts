@@ -1,4 +1,3 @@
-
 import {
   text,
   pgTable,
@@ -430,14 +429,16 @@ export const assessmentPeriodsTable = pgTable(
   })
 )
 
-export const assessmentTypeEnum = pgEnum("assessment_type", [
-  "Homework",
-  "Quiz",
-  "Test",
-  "Exam",
-  "Project",
-  "Participation",
-])
+export enum AssessmentTypeEnum {
+  Homework = "Homework",
+  Quiz = "Quiz",
+  Test = "Test",
+  Exam = "Exam",
+  Project = "Project",
+  Participation = "Participation",
+}
+
+export const assessmentTypeEnum = pgEnum("assessment_type", Object.values(AssessmentTypeEnum) as [AssessmentTypeEnum, ...AssessmentTypeEnum[]])
 
 export const assessmentsTable = pgTable(
   "assessments",
@@ -463,7 +464,7 @@ export const assessmentsTable = pgTable(
       .references(() => assessmentPeriodsTable.id, { onDelete: "set null" }),
 
     title: varchar("title", { length: 120 }).notNull(), // "Math Test 1"
-    type: assessmentTypeEnum("type").notNull().default("Test"),
+    type: assessmentTypeEnum("type").notNull().default(AssessmentTypeEnum.Test).$type<AssessmentTypeEnum>(),
 
     maxScore: integer("max_score").notNull().default(20),
     weight: integer("weight").notNull().default(1), // coefficient inside subject period

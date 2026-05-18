@@ -9,7 +9,6 @@ export const getEventsSchema = z.object({
     endDate: z.string().optional(),
 })
 
-export type GetEventsSchema = z.infer<typeof getEventsSchema>
 
 export const addEventSchema = z.object({
     schoolId: validCuidSchema,
@@ -30,4 +29,3 @@ export const addEventSchema = z.object({
     status: statusSchema
 })
 
-export type AddEventSchema = z.infer<typeof addEventSchema>

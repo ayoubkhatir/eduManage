@@ -1,4 +1,4 @@
-import type { AddTeacherSchema, AssignTeacherSchema, EditTeacherSchema, GetTeacherClassesSchema, GetTeachersSchema } from "#/schemas/teachers.schema";
+import type { AddTeacherSchema, AssignTeacherSchema, EditTeacherSchema, GetTeacherClassesSchema, GetTeachersSchema } from "#/types/teacherTypes";
 import { db, type Database } from "#/server/db/db";
 import { account, classesTable, gradesTable, StatusEnum, studentsTable, subjectsTable, teacherAssignmentsTable, teachersTable, UserGenderEnum, UserRoleEnum, users } from "#/server/db/schema";
 import { and, asc, count, desc, eq, gte, ilike, inArray, lt, or, SQL } from "drizzle-orm"
