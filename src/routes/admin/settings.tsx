@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 import SettingsComp from '@/components/settings/admin/settingsComp'
-import { useAuth } from '#/services/store/auth_store'
+import { useAuth } from '#/store/auth_store'
 
 export const Route = createFileRoute('/admin/settings')({
   component: RouteComponent,

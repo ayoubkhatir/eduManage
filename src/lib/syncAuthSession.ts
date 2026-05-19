@@ -1,5 +1,5 @@
 import { refreshServerFn } from '#/server/modules/auth/auth.server-function'
-import type { InitialAuthProps } from '#/services/store/auth_store'
+import type { InitialAuthProps } from '#/store/auth_store'
 
 
 export async function syncAuthSession(): Promise<InitialAuthProps> {

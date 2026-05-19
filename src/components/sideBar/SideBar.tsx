@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useLocation, useNavigate } from '@tanstack/react-router'
-import useSideBarStore from '../../services/store/sidebar_show_store'
+import useSideBarStore from '../../store/sidebar_show_store'
 import { SideBarContent, type SidebarItem } from './SideBarContent'
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
 

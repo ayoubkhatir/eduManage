@@ -6,8 +6,8 @@ import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
 
 import {
     addSubjectSchema,
-    type AddSubjectSchema,
 } from '#/schemas/subjects.schema'
+import type { AddSubjectSchema } from '#/types/subjectsTypes'
 import { addSubjectServerFn, getStudentSubjectsServerFn, getTeacherSubjectsServerFn } from '#/server/modules/subjects/subjects.server-functions'
 import { StatusEnum } from '#/server/db/schema'
 

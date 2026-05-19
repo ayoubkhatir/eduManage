@@ -3,7 +3,7 @@ import { getEventsServerFn } from '#/server/modules/events/events.server-functio
 
 export const useGetEventsOptions = (
     classId?: string,
-    teacherId?: string,
+    teacherUserId?: string,
     isOwner = false,
 ) => {
     const now = new Date()
@@ -12,7 +12,7 @@ export const useGetEventsOptions = (
     return queryOptions({
         queryKey: [
             'events',
-            isOwner ? 'admin-all' : classId ?? teacherId ?? 'all',
+            isOwner ? 'admin-all' : classId ?? teacherUserId ?? 'all',
             isOwner ? null : now.toISOString().split('T')[0],
             isOwner ? null : in30Days.toISOString().split('T')[0],
         ],
@@ -20,7 +20,7 @@ export const useGetEventsOptions = (
             const response = await getEventsServerFn({
                 data: {
                     classId,
-                    teacherId,
+                    teacherUserId,
                     isOwner,
                     startDate: isOwner ? undefined : now.toISOString(),
                     endDate: isOwner ? undefined : in30Days.toISOString(),
@@ -35,8 +35,8 @@ export const useGetEventsOptions = (
 
 export default function useGetEvents(
     classId?: string,
-    teacherId?: string,
+    teacherUserId?: string,
     isOwner = false,
 ) {
-    return useQuery(useGetEventsOptions(classId, teacherId, isOwner))
+    return useQuery(useGetEventsOptions(classId, teacherUserId, isOwner))
 }

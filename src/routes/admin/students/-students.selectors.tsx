@@ -7,8 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '#/components/ui/select'
-import { getAllClassesQueryOptions } from '#/services/api/classes.hooks'
-import { getAllGradesQueryOptions } from '#/services/api/grades.hooks'
+import { getAllClassesQueryOptions } from '#/hooks/classes/hooks'
+import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
 import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { Controller, useFormContext, type Path } from 'react-hook-form'

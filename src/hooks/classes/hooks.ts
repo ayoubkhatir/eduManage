@@ -4,7 +4,8 @@ import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
-import { addClassSchema, type AddClassSchema } from "#/schemas/classes.schema";
+import { addClassSchema} from "#/schemas/classes.schema";
+import type { AddClassSchema } from "#/types/classesTypes";
 import { StatusEnum } from "#/server/db/schema";
 
 export const getAllClassesQueryOptions = () => ({

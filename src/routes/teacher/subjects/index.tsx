@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { Skeleton } from 'boneyard-js/react'
-import { getTeacherSubjectsQueryOptions } from '#/services/api/subjects.hooks'
+import { getTeacherSubjectsQueryOptions } from '#/hooks/subjects/hooks'
 
 type SubjectItem = {
   id: string
@@ -74,7 +74,7 @@ function TeacherSubjectsContent() {
         {status === 'pending' ? (
           <SubjectsGridSkeleton />
         ) : status === 'error' ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-red-200 bg-white p-10 text-center dark:border-red-900/40 dark:bg-white/[0.02]">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-red-200 bg-white p-10 text-center dark:border-red-900/40 dark:bg-white/2">
             <span className="material-symbols-outlined text-4xl text-red-400">
               error
             </span>
@@ -83,7 +83,7 @@ function TeacherSubjectsContent() {
             </p>
           </div>
         ) : subjects.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center dark:border-slate-700 dark:bg-white/[0.02]">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center dark:border-slate-700 dark:bg-white/2">
             <span className="material-symbols-outlined text-5xl text-slate-300 dark:text-slate-600">
               menu_book
             </span>
@@ -113,7 +113,7 @@ function SubjectCard({ subject }: { subject: SubjectItem }) {
   const isActive = subject.status === 'Active'
 
   return (
-    <div className="group rounded-2xl border border-slate-200/70 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-primary/40">
+    <div className="group rounded-2xl border border-slate-200/70 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md dark:border-white/6 dark:bg-white/2 dark:hover:border-primary/40">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">

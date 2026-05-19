@@ -16,9 +16,9 @@ export type AuthUser = typeof schema.users.$inferSelect & {
     info?: AuthUserInfo
 }
 
-export type UserRole = typeof schema.UserRoleEnum
-export type UserGender = typeof schema.UserGenderEnum
-export type UserStatus = typeof schema.StatusEnum
+export type UserRole = schema.UserRoleEnum
+export type UserGender = schema.UserGenderEnum
+export type Status = schema.StatusEnum
 
 
 

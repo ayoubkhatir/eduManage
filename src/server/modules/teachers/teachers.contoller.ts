@@ -229,7 +229,7 @@ class TeachersController {
             return TeacherUserDto(teacher, teacher.user, [])
         })
 
-        return data
+        return result
     }
 
     /**

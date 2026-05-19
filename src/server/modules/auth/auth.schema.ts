@@ -1,4 +1,4 @@
-import { authRoleSchema } from "#/schemas/shared.schema"
+import { authRoleSchema, genderSchema } from "#/schemas/shared.schema"
 import z from "zod"
 
 export const loginSchema = z.object({
@@ -14,6 +14,7 @@ export const registerSchema = z.object({
     schoolName: z.string().min(3),
     email: z.email(),
     password: z.string().min(8),
+    gender: genderSchema,
     rememberMe: z.boolean().default(false),
     callbackURL: z.url().optional(),
     confirmPassword: z.string().min(8)

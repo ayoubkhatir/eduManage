@@ -38,3 +38,16 @@ export type AssignmentIdSchema = z.infer<typeof assignmentIdSchema>
 export type ClassIdSchema = z.infer<typeof classIdSchema>
 
 export type GetTeacherClassesSchema = z.infer<typeof getTeacherClassesSchema>
+
+export type TeacherClassItem = {
+  assignmentId: string
+  classId: string
+  className: string
+  gradeId: string
+  gradeName: string
+  subjectId: string
+  subjectName: string
+  studentCount: number
+  isPrimaryTeacher: boolean
+  status: schema.StatusEnum
+}

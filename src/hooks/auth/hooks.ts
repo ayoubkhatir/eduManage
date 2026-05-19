@@ -1,13 +1,12 @@
-
 import { useMutation } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { loginFieldsSchema, signupFieldsSchema , type LoginFields  , type LoginRequest , type RegisterRequest , type AuthResult, type LoginSchema, type SignupFields , type RegisterSchema} from '../../schemas/auth.schema'
-import type { AuthRole } from '../../schemas/shared.schema'
-import { useAuth } from "#/services/store/auth_store"
+import { loginFieldsSchema, signupFieldsSchema , type LoginFields  ,  type SignupFields } from '../../schemas/auth.schema'
+import type { UserRole , AuthResult , LoginRequest , RegisterRequest} from '../../types/authTypes'
+import { useAuth } from "#/store/auth_store"
 import { loginServerFn ,registerServerFn , logoutServerFn  } from "#/server/modules/auth/auth.server-function"
 
 import type { SubmitHandler } from 'react-hook-form'
@@ -33,7 +32,7 @@ export function useLogout() {
 }
 
 
-export function useLogin(redirectTo: string, role: AuthRole) {
+export function useLogin(redirectTo: string, role: UserRole) {
     const navigate = useNavigate()
     /*error message */
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -48,7 +47,7 @@ export function useLogin(redirectTo: string, role: AuthRole) {
   const setUser = useAuth((s) => s.setUser)
   
   const loginMutation = useMutation<AuthResult, never, LoginRequest>({
-      mutationFn: (data : LoginSchema) =>  loginServerFn({data}) ,
+      mutationFn: (data : LoginRequest) =>  loginServerFn({data}) ,
       onSuccess: (result ) => {
         if (!result.success || !result.data) {
           return
@@ -116,7 +115,7 @@ export function useSignup() {
   const setUser = useAuth((s) => s.setUser)
 
   const signupMutation = useMutation<AuthResult, never, RegisterRequest>({
-      mutationFn: (data : RegisterSchema) =>  registerServerFn({data}) ,
+      mutationFn: (data : RegisterRequest) =>  registerServerFn({data}) ,
       onSuccess: (result ) => {
         if (!result.success || !result.data) {
           return

@@ -18,8 +18,8 @@ import {
 import type { StudentUser } from '#/server/modules/students/students.types'
 import {
   getStudentsSchema,
-  type GetStudentsSchema,
 } from '#/schemas/students.schema'
+import type { GetStudentsSchema } from '#/types/studentTypes'
 import {
   Select,
   SelectContent,
@@ -27,7 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '#/components/ui/select'
-import { getAllGradesQueryOptions } from '#/services/api/grades.hooks'
+import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
 import UICardComponent, {
   UICardSkeleton,
   type UICardType,

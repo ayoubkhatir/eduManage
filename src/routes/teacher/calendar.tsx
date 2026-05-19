@@ -529,7 +529,6 @@
 // }
 
 import { createFileRoute } from '@tanstack/react-router'
-import { Skeleton } from 'boneyard-js/react'
 import { UserRoleEnum } from '#/server/db/schema'
 
 import { enUS } from 'date-fns/locale'
@@ -558,7 +557,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { useGetEventsOptions } from '#/services/api/getEventss'
+import { useGetEventsOptions } from '#/hooks/events/hooks'
 import { useQuery } from '@tanstack/react-query'
 import { zodValidator } from '@tanstack/zod-adapter'
 import z from 'zod/v4'
@@ -570,8 +569,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '#/components/ui/select'
-import { getTeacherByUserIdServerFn } from '#/server/modules/teachers/teachers.server-functions'
-import { getTeacherQueryOptions } from '#/services/api/admin/teacher/hooks'
 import { getClassesByTeacherUserIdServerFn } from '#/server/modules/classes/classes.server-functions'
 // import { zodValidator } from '@tanstack/zod-adapter'
 // import z from 'zod/v4'
@@ -611,10 +608,13 @@ export const Route = createFileRoute('/teacher/calendar')({
     meta: [{ title: 'Teacher | Calendar - EduManage' }],
   }),
   loader: async ({ context }) => {
+    const user = context.authState.user
+    if (!user) throw new Error('Unauthorized')
+
     await context.queryClient.prefetchQuery(
       useGetEventsOptions(
         'jhhuh9rhumjp',
-        context.authState.user.id,
+        user.id,
         // context.authState.user.role === UserRoleEnum.ADMIN,
         false,
       ),
@@ -673,31 +673,31 @@ function useCalendarContext() {
 function TeacherCalendarSkeleton() {
   const { authState } = Route.useRouteContext()
   const { classId } = Route.useSearch()
+  const user = authState.user
+  if (!user) throw new Error('Unauthorized')
   return (
-    <Skeleton name="teacher-calendar-page" loading>
-      <CalendarEventsFetchingWrapper
-        classId={classId}
-        teacherUserId={authState.user.id}
-        isTeacher={authState.user.role === UserRoleEnum.TEACHER}
-      />
-    </Skeleton>
+    <CalendarEventsFetchingWrapper
+      classId={classId}
+      teacherUserId={user.id}
+      isTeacher={user.role === UserRoleEnum.TEACHER}
+    />
   )
 }
 
 function TeacherCalendar() {
   const { authState } = Route.useRouteContext()
   const { classId } = Route.useSearch()
+  const user = authState.user
+  if (!user) throw new Error('Unauthorized')
 
   return (
-    <Skeleton name="teacher-calendar-page" loading={false}>
-      <CalendarContextProvider>
-        <CalendarEventsFetchingWrapper
-          classId={classId}
-          teacherUserId={authState.user.id}
-          isTeacher={authState.user.role === UserRoleEnum.TEACHER}
-        />
-      </CalendarContextProvider>
-    </Skeleton>
+    <CalendarContextProvider>
+      <CalendarEventsFetchingWrapper
+        classId={classId}
+        teacherUserId={user.id}
+        isTeacher={user.role === UserRoleEnum.TEACHER}
+      />
+    </CalendarContextProvider>
   )
 }
 
@@ -840,7 +840,7 @@ export function GlobalCalendar({
                     event.id ?? `${event.title}-${event.start.toISOString()}`
                   }
                   type="button"
-                  className="cursor-pointer flex items-start gap-3 group text-left w-full cursor-pointer"
+                  className="cursor-pointer flex items-start gap-3 group text-left w-full"
                   onClick={() => {
                     // setSearchQuery(
                     //   'detailEvent',
@@ -892,8 +892,8 @@ export function GlobalCalendar({
         </div>
       </aside>
 
-      <section className="flex-1 flex flex-col gap-4 min-w-0 min-h-[65vh]">
-        <div className="bg-white dark:bg-slate-900 rounded-2xl px-5 py-1.5 shadow-sm border border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-4">
+      <section className="flex-1 flex flex-col gap-4 min-w-0 min-h-0 overflow-hidden">
+        <div className="shrink-0 bg-white dark:bg-slate-900 rounded-2xl px-5 py-1.5 shadow-sm border border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
               {title}
@@ -901,7 +901,7 @@ export function GlobalCalendar({
             <div className="flex items-center gap-0.5 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-1">
               <button
                 type="button"
-                className="cursor-pointer p-1 rounded hover:bg-white dark:hover:bg-slate-700 transition-all cursor-pointer text-slate-600 dark:text-slate-300"
+                className="cursor-pointer p-1 rounded hover:bg-white dark:hover:bg-slate-700 transition-all text-slate-600 dark:text-slate-300"
                 onClick={() => shiftDate(-1)}
                 aria-label="Previous"
               >
@@ -911,7 +911,7 @@ export function GlobalCalendar({
               </button>
               <button
                 type="button"
-                className="cursor-pointer px-3 py-1 text-xs font-bold rounded hover:bg-white dark:hover:bg-slate-700 transition-all cursor-pointer text-slate-700 dark:text-slate-200"
+                className="cursor-pointer px-3 py-1 text-xs font-bold rounded hover:bg-white dark:hover:bg-slate-700 transition-all text-slate-700 dark:text-slate-200"
                 onClick={() => {
                   // setSearchQuery('selectedDate', new Date())
                   setSelectedDate(new Date())
@@ -921,7 +921,7 @@ export function GlobalCalendar({
               </button>
               <button
                 type="button"
-                className="cursor-pointer p-1 rounded hover:bg-white dark:hover:bg-slate-700 transition-all cursor-pointer text-slate-600 dark:text-slate-300"
+                className="cursor-pointer p-1 rounded hover:bg-white dark:hover:bg-slate-700 transition-all text-slate-600 dark:text-slate-300"
                 onClick={() => shiftDate(1)}
                 aria-label="Next"
               >
@@ -957,7 +957,7 @@ export function GlobalCalendar({
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-4 flex-1 flex flex-col min-h-[58vh]">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-4 flex-1 flex flex-col min-h-0 overflow-hidden">
           {children}
         </div>
       </section>
@@ -1125,7 +1125,7 @@ function EventsCalendar({ events }: { events: EventForm[] }) {
     setDetailOpen,
   } = useCalendarContext()
   return (
-    <div className="admin-big-calendar flex-1 h-full min-h-[52vh]">
+    <div className="admin-big-calendar flex-1 h-full min-h-0">
       <Calendar
         date={
           typeof selectedDate === 'number'
@@ -1176,8 +1176,10 @@ function ClassSelector() {
   const [open, setOpen] = useState(false)
   const navigate = Route.useNavigate()
   const { authState } = Route.useRouteContext()
+  const user = authState.user
+  if (!user) throw new Error('Unauthorized')
   const { data: classes, status: fetchStatus } = useQuery({
-    ...getClassesByTeacherUserIdQueryOptions(authState.user.id),
+    ...getClassesByTeacherUserIdQueryOptions(user.id),
   })
   if (fetchStatus !== 'success') return null
   const classesOptions = classes.map((c) => ({ label: c.name, value: c.id }))

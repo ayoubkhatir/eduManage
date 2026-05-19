@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { addTeacherServerFn, assignTeacherToClassAndSubjectServerFn, deleteTeacherAssignmentServerFn, deleteTeacherServerFn, editTeacherServerFn, getTeacherByIdServerFn, getTeacherByUserIdServerFn } from '#/server/modules/teachers/teachers.server-functions'
-import { addTeacherSchema, assignTeacherSchema, editTeacherSchema, type AddTeacherSchema, type AssignTeacherSchema, type EditTeacherSchema } from '#/schemas/teachers.schema'
+import { addTeacherSchema, assignTeacherSchema, editTeacherSchema } from '#/schemas/teachers.schema'
 import type { TeacherUser } from '#/server/modules/teachers/teachers.types'
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
 import { toast } from 'sonner'
@@ -13,6 +13,12 @@ import { useNavigate, useRouter } from '@tanstack/react-router'
 import { queryClient } from '#/lib/query-client'
 import { StatusEnum, UserGenderEnum } from '#/server/db/schema'
 import type { APIResponse } from '#/server/utils/response.type'
+import type {
+  AddTeacherSchema,
+  AssignTeacherSchema,
+  EditTeacherSchema,
+} from '#/types/teacherTypes'
+import type { UseFormReturn } from 'react-hook-form'
 
 export function useAddTeacher(schoolId: string) {
   const queryClient = useQueryClient()
@@ -65,38 +71,14 @@ export function useAddTeacher(schoolId: string) {
   return { form, onSubmit }
 }
 
-// export function useGetTeachers({
-//   page,
-//   search,
-//   size,
-//   email, sortBy, sortOrder, status
-// }: Partial<Filters<TeacherUser>> = {}) {
-//   return useQuery({
-//     queryKey: ['teachers', page, search, size],
-//     queryFn: () => teacherFetcher.getTeachers({ page, search, size, email: email ?? "", sortBy: sortBy as any, sortOrder: sortOrder as any ?? "asc", status: status ?? "", subject: {} as any }),
-//     select: (response) => {
-//       return {
-//         data: response.success ? response.data : [],
-//         pagination: {
-//           totalPages: response.success ? response.pagination.totalPages : 1,
-//           totalElements: response.success
-//             ? response.pagination.totalElements
-//             : 0,
-//         },
-//       }
-//     },
-//     placeholderData: keepPreviousData,
-//   })
-// }
-
 export function useEditTeacher(editedTeacher: TeacherUser) {
-  const form = useForm<EditTeacherSchema>({
+  const form: UseFormReturn<EditTeacherSchema> = useForm<EditTeacherSchema>({
     defaultValues: {
       teacherId: editedTeacher.id,
       name: editedTeacher.name,
-      telNumber: editedTeacher.telNumber,
+      telNumber: editedTeacher.telNumber ?? '',
       status: editedTeacher.status,
-      image: editedTeacher.image,
+      image: editedTeacher.image ?? null,
       gender: editedTeacher.gender,
       email: editedTeacher.email,
       dateOfBirth: editedTeacher.dateOfBirth,
@@ -161,9 +143,9 @@ export const getTeacherQueryOptions = (args: { fetchBy: "userId", userId: string
     let response: APIResponse<TeacherUser>
 
     if (args.fetchBy === "teacherId") {
-      response = await getTeacherByIdServerFn({ data: args.teacherId })// await teacherFetcher.getTeacher(teacherId)
+      response = await getTeacherByIdServerFn({ data: args.teacherId })
     } else {
-      response = await getTeacherByUserIdServerFn({ data: args.userId })// await teacherFetcher.getTeacher(teacherId)
+      response = await getTeacherByUserIdServerFn({ data: args.userId })
     }
     if (response.success) return response.data
     throw new Error("Error occured")
@@ -225,10 +207,19 @@ export function useDeleteTeacherAssignement() {
 }
 
 export function useUpdateTeacherSettings(teacher: TeacherUser) {
-  const form = useForm<EditTeacherSchema>({
+  const form: UseFormReturn<EditTeacherSchema> = useForm<EditTeacherSchema>({
     resolver: standardSchemaResolver(editTeacherSchema),
     defaultValues: {
-      ...teacher
+      teacherId: teacher.id,
+      name: teacher.name,
+      email: teacher.email,
+      image: teacher.image,
+      telNumber: teacher.telNumber ?? '',
+      gender: teacher.gender,
+      about: teacher.about,
+      address: teacher.address,
+      dateOfBirth: teacher.dateOfBirth,
+      status: teacher.status,
     }
   })
   const router = useRouter()

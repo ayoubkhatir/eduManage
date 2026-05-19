@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/react-query'
 import { getResourcesServerFn } from '#/server/modules/resources/resources.server-functions'
-import type { GetResourcesSchema } from '#/schemas/resources.schema'
+import type { GetResourcesSchema } from '#/types/resourcesTypes'
 
 export const getResourcesQueryOptions = (searchParams: GetResourcesSchema) =>
   queryOptions({

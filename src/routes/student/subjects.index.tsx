@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { Skeleton } from 'boneyard-js/react'
-import { getStudentSubjectsQueryOptions } from '#/services/api/subjects.hooks'
+import { getStudentSubjectsQueryOptions } from '#/hooks/subjects/hooks'
 
 type SubjectItem = {
   id: string

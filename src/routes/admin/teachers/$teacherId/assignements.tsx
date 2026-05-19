@@ -7,11 +7,11 @@ import {
   getTeacherQueryOptions,
   useAssignTeacher,
   useDeleteTeacherAssignement,
-} from '#/services/api/admin/teacher/hooks'
+} from '#/hooks/teachers/hooks'
 import SelectWrapper from '#/components/admin/Wrappers/SelectWrapper'
 import { getAllSubjectsServerFn } from '#/server/modules/subjects/subjects.server-functions'
 import { FormProvider, useFormContext } from 'react-hook-form'
-import type { AssignTeacherSchema } from '#/schemas/teachers.schema'
+import type { AssignTeacherSchema } from '#/types/teacherTypes'
 import {
   StudentClassSelector,
   StudentGradeSelector,
@@ -47,7 +47,7 @@ import {
   DropdownMenuTrigger,
 } from '#/components/ui/dropdown-menu'
 import { Button } from '#/components/ui/button'
-import { getAllGradesQueryOptions } from '#/services/api/grades.hooks'
+import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
 import { AddSubjectDialog } from './-add-subject.form'
 import type { StatusEnum } from '#/server/db/schema'
 import { UserAvatar } from '#/components/admin/Table/columnsData'
@@ -86,11 +86,13 @@ function RouteComponent() {
 function TeacherAssignmentsPage() {
   const { teacherId } = Route.useParams()
   const { authState } = Route.useRouteContext()
+  const user = authState.user
+  if (!user) throw new Error('Unauthorized')
   const { data: teacherData, status: fetchStatus } = useSuspenseQuery({
     ...getTeacherQueryOptions({ fetchBy: 'teacherId', teacherId: teacherId }),
   })
 
-  const { form, onSubmit } = useAssignTeacher(teacherId, authState.user.roleId)
+  const { form, onSubmit } = useAssignTeacher(teacherId, user.id)
   console.log({ errors: form.formState.errors })
 
   if (fetchStatus === 'error' || !teacherData) throw notFound()
@@ -158,7 +160,7 @@ function TeacherAssignmentsPage() {
                           <div className="flex items-start gap-1">
                             <SubjectsSelector />
                             <AddSubjectDialog
-                              schoolId={authState.user.id}
+                              schoolId={user.id}
                               onCreated={(subjectId) => {
                                 form.setValue('subjectId', subjectId, {
                                   shouldDirty: true,

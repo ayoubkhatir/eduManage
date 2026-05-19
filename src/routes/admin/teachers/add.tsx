@@ -1,14 +1,14 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { Skeleton } from 'boneyard-js/react'
-import { useAddTeacher } from '@/services/api/admin/teacher/hooks'
+import { useAddTeacher } from '#/hooks/teachers/hooks'
 // import ProfilePicWrapper from '@/components/admin/Wrappers/ProfilePicWrapper'
 import InputWrapper from '@/components/admin/Wrappers/InputWrapper'
 import SelectWrapper from '@/components/admin/Wrappers/SelectWrapper'
 import DatePickerField from '@/components/admin/DatePickerField'
 // import type { AddTeacherSchema } from '#/schemas/teachers.schema'
 import { SimpleImageUpload } from '#/components/cloudinary-uploader'
-import { useAuth } from '#/services/store/auth_store'
+import { useAuth } from '#/store/auth_store'
 
 export const Route = createFileRoute('/admin/teachers/add')({
   component: RouteComponent,

@@ -7,11 +7,10 @@ import {
   addResourceSchema,
   formatFileSize,
   getResourcesSchema,
-  type AddResourceSchema,
 } from '#/schemas/resources.schema'
 import { columns } from '@/components/resources/columns'
 import { ResourcesTable } from '#/components/teacher/resources/resources-table'
-import { getResourcesQueryOptions } from '#/services/api/resources.hooks'
+import { getResourcesQueryOptions } from '#/hooks/resources/hooks'
 import { Button } from '#/components/ui/button'
 import { PlusCircleIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -29,6 +28,7 @@ import { toast } from 'sonner'
 import { useState } from 'react'
 import { SimpleDocumentUpload } from '#/components/cloudinary-uploader'
 import z from 'zod'
+import type { AddResourceSchema } from '#/types/resourcesTypes'
 
 export const Route = createFileRoute('/teacher/subjects/$subjectCode')({
   component: StudentResourcesPage,
@@ -41,11 +41,14 @@ export const Route = createFileRoute('/teacher/subjects/$subjectCode')({
     // IMPORTANT:
     // replace this with the real student profile id if authState.user.id is only the auth user id
 
+    const user = context.authState.user
+    if (!user) throw new Error('Unauthorized')
+
     await context.queryClient.ensureQueryData(
       getResourcesQueryOptions({
         ...deps,
         subjectCode,
-        teacherId: context.authState.user.roleId,
+        teacherId: user.id,
       }),
     )
   },
@@ -71,13 +74,15 @@ function StudentResourcesContent() {
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
   const { authState } = Route.useRouteContext()
+  const user = authState.user
+  if (!user) throw new Error('Unauthorized')
 
   const { subjectCode } = Route.useParams()
   const { data, status } = useQuery(
     getResourcesQueryOptions({
       ...search,
       subjectCode,
-      teacherId: authState.user.roleId,
+      teacherId: user.id,
     }),
   )
 
@@ -111,7 +116,7 @@ function StudentResourcesContent() {
             </p>
           </div>
           <AddResourceDialog
-            teacherId={authState.user.roleId}
+            teacherId={user.id}
             schoolId={'r0akyppqt5jl'}
             subjectCode={subjectCode}
           />
@@ -141,7 +146,7 @@ function StudentResourcesContent() {
               })
             },
           }}
-          filters={search}
+          filters={{ ...search, subjectCode }}
           onFilterChange={setFilters}
         />
       )}
@@ -240,7 +245,6 @@ function AddResourceDialog({
     () => setOpen(false),
   )
 
-  const [file, setFile] = useState<File | null>(null)
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>

@@ -3,7 +3,7 @@ import { Skeleton } from 'boneyard-js/react'
 import {
   getTeacherQueryOptions,
   useUpdateTeacherSettings,
-} from '#/services/api/admin/teacher/hooks'
+} from '#/hooks/teachers/hooks'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { FormProvider } from 'react-hook-form'
 import { UserAvatar } from '#/components/admin/Table/columnsData'
@@ -16,7 +16,9 @@ export const Route = createFileRoute('/teacher/settings')({
     meta: [{ title: 'Teacher | Settings - EduManage' }],
   }),
   loader: async ({ context }) => {
-    const userId = context.authState.user.id
+    const user = context.authState.user
+    if (!user) throw new Error('Unauthorized')
+    const userId = user.id
     await context.queryClient.prefetchQuery({
       ...getTeacherQueryOptions({ fetchBy: 'userId', userId }),
     })
@@ -25,8 +27,10 @@ export const Route = createFileRoute('/teacher/settings')({
 
 function RouteComponent() {
   const { authState } = Route.useRouteContext()
+  const user = authState.user
+  if (!user) throw new Error('Unauthorized')
   const { data: teacherData } = useSuspenseQuery({
-    ...getTeacherQueryOptions({ fetchBy: 'userId', userId: authState.user.id }),
+    ...getTeacherQueryOptions({ fetchBy: 'userId', userId: user.id }),
   })
 
   return (
@@ -61,8 +65,8 @@ function SettingsComp({ teacher }: { teacher: TeacherUser }) {
             {/* Main form area */}
             <div className="flex-1 space-y-6">
               {/* Profile */}
-              <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
-                <div className="border-b border-slate-100 p-6 dark:border-white/[0.06]">
+              <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/6 dark:bg-white/2">
+                <div className="border-b border-slate-100 p-6 dark:border-white/6">
                   <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                     Profile Picture
                   </h2>
@@ -80,7 +84,7 @@ function SettingsComp({ teacher }: { teacher: TeacherUser }) {
                     </p>
                     <button
                       type="button"
-                      className="cursor-pointer mt-3 cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+                      className="mt-3 rounded-lg px-4 py-2 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 cursor-pointer"
                     >
                       Remove Photo
                     </button>
@@ -89,8 +93,8 @@ function SettingsComp({ teacher }: { teacher: TeacherUser }) {
               </section>
 
               {/* Personal Information */}
-              <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
-                <div className="flex items-center justify-between border-b border-slate-100 p-6 dark:border-white/[0.06]">
+              <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/6 dark:bg-white/2">
+                <div className="flex items-center justify-between border-b border-slate-100 p-6 dark:border-white/6">
                   <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                     Personal Information
                   </h2>

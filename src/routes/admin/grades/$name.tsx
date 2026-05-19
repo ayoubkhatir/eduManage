@@ -2,9 +2,10 @@ import { createFileRoute, Link, notFound } from '@tanstack/react-router'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '#/components/ui/skeleton'
-import { getAllGradesWithClassesAndSubjectsQueryOptions } from '#/services/api/grades.hooks'
+import { getAllGradesWithClassesAndSubjectsQueryOptions } from '#/hooks/grades/hooks'
 import { AddClassDialog } from '../teachers/$teacherId/-add-class.form-dialog'
 import { AddSubjectDialog } from '../teachers/$teacherId/-add-subject.form'
+import { useAuth } from '#/store/auth_store'
 
 export const Route = createFileRoute('/admin/grades/$name')({
   component: RouteComponent,
@@ -29,7 +30,7 @@ export const Route = createFileRoute('/admin/grades/$name')({
 
 function RouteComponent() {
   const { name } = Route.useParams()
-  const { authState } = Route.useRouteContext()
+  const user = useAuth((s)=>s.user)
   const { data: grades } = useSuspenseQuery({
     ...getAllGradesWithClassesAndSubjectsQueryOptions(),
   })
@@ -193,7 +194,7 @@ function RouteComponent() {
                         {grade.subjects.length} total
                       </div>
                       <AddSubjectDialog
-                        schoolId={authState.user.id}
+                        schoolId={user!.info!.id}
                         defaultGradeIds={[grade.id]}
                         lockGradeSelection
                         triggerTitle="Add subject"

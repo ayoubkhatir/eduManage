@@ -6,14 +6,23 @@ import {
 } from '@tanstack/react-query'
 import { standardSchemaResolver } from "@hookform/resolvers/standard-schema"
 import { useForm } from 'react-hook-form'
-import { studentFetcher } from './fetcher'
-import type { Filters } from '../types/apiTypes'
-import { addStudentServerFn, deleteStudentServerFn, editStudentServerFn, getStudentByIdServerFn } from '#/server/modules/students/students.server-functions';
+import {
+  addStudentServerFn,
+  deleteStudentServerFn,
+  editStudentServerFn,
+  getAllStudentsServerFn,
+  getStudentByIdServerFn,
+} from '#/server/modules/students/students.server-functions';
 import type { StudentUser } from '#/server/modules/students/students.types';
 import { useNavigate, useRouter } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import { addStudentSchema, editStudentSchema, type AddStudentSchema, type EditStudentSchema } from '#/schemas/students.schema';
+import { addStudentSchema, editStudentSchema } from '#/schemas/students.schema';
 import { UserGenderEnum } from '#/server/db/schema'
+import type {
+  AddStudentSchema,
+  EditStudentSchema,
+  GetStudentsSchema,
+} from '#/types/studentTypes'
 
 // add student
 export function useAddStudent(schoolId: string) {
@@ -66,7 +75,7 @@ export function useAddStudent(schoolId: string) {
 export const getStudentQueryOptions = (studentId: string) => ({
   queryKey: ['student', studentId],
   queryFn: async () => {
-    const response = await getStudentByIdServerFn({ data: studentId })//studentFetcher.getStudent(studentId)
+    const response = await getStudentByIdServerFn({ data: studentId })
     if (response.success) return response.data
     throw new Error("user not found");
   },
@@ -82,18 +91,24 @@ export function useGetStudents({
   page,
   search,
   size,
-}: Partial<Filters<StudentUser>>) {
+}: Partial<GetStudentsSchema>) {
   return useQuery({
     queryKey: ['students', page, search, size],
-    queryFn: () =>
-      studentFetcher.getStudents({ page, search, size }),
+    queryFn: async () =>
+      getAllStudentsServerFn({
+        data: {
+          page,
+          search,
+          size,
+        },
+      }),
     select: (response) => {
       return {
         data: response.success ? response.data : [],
         pagination: {
           totalPages: response.success ? response.pagination.totalPages : 1,
           totalElements: response.success
-            ? response.pagination.totalElements
+            ? response.pagination.totalCount
             : 0,
         },
       }
@@ -112,18 +127,6 @@ export function useEditStudent(edited: StudentUser) {
       const response = await editStudentServerFn({ data })
       return response
     },
-    // onMutate: () => {
-    // queryClient.cancelQueries({ queryKey: ['students'] })
-    // const oldStudentList = queryClient.getQueryData<Array<StudentUser>>([
-    //   'students',
-    // ])
-    // const newStudentList = oldStudentList?.map((student) =>
-    //   student.id === edited.id
-    //     ? { ...student, ...edited }
-    //     : student,
-    // )
-    // queryClient.setQueryData(['students'], newStudentList)
-    // },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['students'] })
     },
@@ -184,26 +187,10 @@ export function useDeleteStudent() {
   const queryClient = useQueryClient()
   const router = useRouter()
   return useMutation({
-    mutationFn: (studentId: string) => deleteStudentServerFn({ data: studentId }),//studentFetcher.deleteStudent(id),
+    mutationFn: (studentId: string) => deleteStudentServerFn({ data: studentId }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['students'] })
       await router.invalidate()
-      // queryClient.removeQueries({ queryKey: ['students', studentId] })
     },
-    // onMutate: async (studentId) => {
-    //   await queryClient.cancelQueries({ queryKey: ['students'] })
-
-    //   const previous = queryClient.getQueryData(['students'])
-
-    //   queryClient.setQueryData(['students'], (old: any[]) =>
-    //     old?.filter((s) => s.id !== studentId)
-    //   )
-
-    //   return { previous }
-    // },
-
-    // onError: (_, __, context) => {
-    //   queryClient.setQueryData(['students'], context?.previous)
-    // },
   })
 }

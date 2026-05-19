@@ -2,9 +2,10 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '#/components/ui/skeleton'
-import { getAllGradesWithClassesAndSubjectsQueryOptions } from '#/services/api/grades.hooks'
+import { getAllGradesWithClassesAndSubjectsQueryOptions } from '#/hooks/grades/hooks'
 import { Link } from '@tanstack/react-router'
 import { AddGradeDialog } from './-add-grade.form'
+import { useAuth } from '#/store/auth_store'
 
 export const Route = createFileRoute('/admin/grades/')({
   component: RouteComponent,
@@ -21,7 +22,7 @@ function RouteComponent() {
     ...getAllGradesWithClassesAndSubjectsQueryOptions(),
   })
 
-  const { authState } = Route.useRouteContext()
+  const user = useAuth((s) => s.user)
 
   return (
     <div className="flex h-full w-full overflow-y-hidden">
@@ -38,12 +39,12 @@ function RouteComponent() {
                   Browse grades with their classes and subjects.
                 </p>
               </div>
-              <AddGradeDialog schoolId={authState.user?.id ?? ''} />
+              <AddGradeDialog schoolId={user?.info?.id ?? ''} />
             </div>
 
             {/* Content */}
             {grades.length === 0 ? (
-              <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center dark:border-slate-700 dark:bg-white/[0.02]">
+              <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center dark:border-slate-700 dark:bg-white/2">
                 <span className="material-symbols-outlined text-5xl text-slate-300 dark:text-slate-600">
                   stairs_2
                 </span>
@@ -93,7 +94,7 @@ function GradeCard({ grade }: GradeCardProps) {
   const isActive = grade.status === 'Active'
 
   return (
-    <div className="group rounded-2xl border border-slate-200/70 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-primary/40">
+    <div className="group rounded-2xl border border-slate-200/70 bg-white p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md dark:border-white/6 dark:bg-white/2 dark:hover:border-primary/40">
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">

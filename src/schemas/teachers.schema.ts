@@ -1,6 +1,7 @@
 import z from "zod/v4";
 import { getUsersSchema } from "./users.schema";
 import { genderSchema, statusSchema, validCuidSchema } from "./shared.schema";
+import { StatusEnum } from "#/server/db/schema";
 
 export const getTeachersSchema = getUsersSchema.extend({
     subject: z.string().nullable().default(""),
@@ -99,7 +100,7 @@ export const getTeacherClassesSchema = z.object({
     page: z.coerce.number().int().default(1),
     size: z.coerce.number().int().default(10),
     status: z
-        .enum(['Active', 'Inactive', 'Pending', 'New', 'All'])
+        .enum([...Object.values(StatusEnum), "All"])
         .default('All'),
 })
 
