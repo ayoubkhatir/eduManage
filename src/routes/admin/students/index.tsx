@@ -6,8 +6,7 @@ import { CustomPagination } from '@/components/admin/PaginationComp'
 import { SearchInput } from '@/components/admin/SearchInput'
 import { SelectPageSize } from '@/components/admin/SelectPageSize'
 import IndexPageComponent from '@/components/admin/IndexPageComponent'
-import { getAllStudentsServerFn } from '#/server/modules/students/students.server-functions'
-import { getStudentsSchema } from '#/schemas/students.schema'
+import { studentSearchSchema } from '#/schemas/students.schema'
 import {
   Select,
   SelectContent,
@@ -15,11 +14,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '#/components/ui/select'
-import { getAllGradesQueryOptions } from '#/services/api/grades.hooks'
 import { useState } from 'react'
-import type { GetStudentsSchema } from '#/types/studentTypes'
 import { StudentsStatCards } from '#/components/admin/cards/UICard'
-import { CustomDataTableSkeleton, StudentsTable } from '#/components/admin/Table/dataTable'
+import {
+  CustomDataTableSkeleton,
+  StudentsTable,
+} from '#/components/admin/Table/dataTable'
+import { getAllGradesQueryOptions } from '#/server/db/repo/grades.repository'
+import { getStudentsQueryOptions } from '#/server/db/repo'
 
 // type QueryOptionsType = Filters<StudentModel>
 
@@ -33,53 +35,6 @@ import { CustomDataTableSkeleton, StudentsTable } from '#/components/admin/Table
 //   page: fallback(z.coerce.number().int().positive(), 1).default(1),
 //   size: fallback(z.coerce.number().int().positive(), 10).default(10),
 // })
-const getStudentsQueryOptions = ({
-  page,
-  search,
-  size,
-  status,
-  grade,
-  sortOrder,
-  sortBy,
-  classe,
-  email,
-}: GetStudentsSchema) => ({
-  queryKey: [
-    'students',
-    page,
-    search,
-    size,
-    status,
-    grade,
-    sortOrder,
-    sortBy,
-    classe,
-    email,
-  ],
-  queryFn: async () => {
-    const response = await getAllStudentsServerFn({
-      data: {
-        page,
-        search,
-        size,
-        status,
-        sortOrder,
-        sortBy,
-        grade,
-        classe,
-        email,
-      },
-    })
-
-    if (response.success)
-      return {
-        data: response.data,
-        pagination: response.pagination,
-      }
-    else throw new Error(response.message)
-  },
-  // placeholderData: keepPreviousData,
-})
 
 export const Route = createFileRoute('/admin/students/')({
   component: RouteComponent,
@@ -90,7 +45,7 @@ export const Route = createFileRoute('/admin/students/')({
     context.queryClient.ensureQueryData(getAllGradesQueryOptions())
     context.queryClient.ensureQueryData(getStudentsQueryOptions(deps))
   },
-  validateSearch: zodValidator(getStudentsSchema),
+  validateSearch: zodValidator(studentSearchSchema),
 })
 
 function RouteComponent() {
@@ -159,7 +114,6 @@ function OwnerStudentsContent() {
 
 function GradesFilter() {
   const navigate = Route.useNavigate()
-  const { grade } = Route.useSearch({ select: (s) => ({ grade: s.grade }) })
   const { data: gradesData, status: fetchStatus } = useQuery(
     getAllGradesQueryOptions(),
   )
@@ -182,7 +136,7 @@ function GradesFilter() {
     <Select
       open={open}
       onOpenChange={setOpen}
-      defaultValue={grade ?? ''}
+      defaultValue={''}
       onValueChange={(v) =>
         navigate({ to: '.', search: (s) => ({ ...s, grade: v }) })
       }
@@ -220,27 +174,13 @@ function GradesFilter() {
 }
 
 function MainPageContent() {
-  const {
-    size,
-    page,
-    search,
-    sortBy,
-    sortOrder,
-    status,
-    grade,
-    email,
-    classe,
-  } = Route.useSearch({
+  const { size, page, search, sortBy, sortOrder } = Route.useSearch({
     select: (s) => ({
       size: s.size,
       page: s.page,
       search: s.search,
       sortBy: s.sortBy,
       sortOrder: s.sortOrder,
-      status: s.status,
-      grade: s.grade,
-      email: s.email,
-      classe: s.classe,
     }),
   })
   const { data: studentsData, status: fetchStatus } = useQuery({
@@ -250,10 +190,6 @@ function MainPageContent() {
       search,
       sortBy,
       sortOrder,
-      status,
-      grade,
-      email,
-      classe,
     }),
     placeholderData: keepPreviousData,
   })

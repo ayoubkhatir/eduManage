@@ -29,6 +29,6 @@ export const studentSearchSchema = z.object({
     search: z.string().default(""),
     page: z.number().default(1),
     size: z.number().default(10),
-    sortBy: z.enum(['name', 'email', 'grade', 'status']).default('name'),
+    sortBy: z.enum(['name', 'email']).default('name'),
     sortOrder: z.enum(['asc', 'desc']).default('asc'),
 })

@@ -7,8 +7,8 @@ import {
     assignmentsTable,
     coursesTable,
     filesTable,
-} from "../schemas.js";
-import type { Assignment, NewAssignment } from "../../types.js";
+
+
 
 export type AssignmentWithRelations = Assignment & {
     files: Array<InferSelectModel<typeof assignmentFilesTable> & {

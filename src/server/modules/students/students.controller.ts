@@ -46,7 +46,7 @@ class StudentsController {
                 createdAt: new Date(),
             })
 
-            const [{ id: studentId }] = await tx
+            const [createdStudent] = await tx
                 .insert(studentsTable)
                 .values({
                     address: data.address,
@@ -59,40 +59,18 @@ class StudentsController {
                     classId: data.classId,
                 })
                 .returning({ id: studentsTable.id })
-
-            const student = await tx.query.studentsTable.findFirst({
-                where: eq(studentsTable.id, studentId),
-                with: {
-                    user: true,
-                    class: {
-                        columns: {
-                            id: true,
-                            name: true,
-                        },
-                        with: {
-                            grade: {
-                                columns: {
-                                    id: true,
-                                    name: true
-                                }
-                            }
-                        }
-                    }
-                }
-            })
-            return student;
+            return createdStudent;
+            if (!createdStudent) throw new Error("student not created");
         })
 
-        if (!student) throw new Error("USER CREATED");
 
-        const studentWithUser: StudentUser = StudentUserDto(student, student?.user, student?.class, student?.class.grade);
-        console.log({ studentWithUser })
-        return studentWithUser
     }
+
 
     async getStudent(studentId: string) {
         return this.studentsRepository.findStudentById(studentId)
     }
+
 
     async editStudent(data: EditStudentType) {
         const password = generateTemporaryPassword(data.name)
@@ -142,35 +120,14 @@ class StudentsController {
                 .where(eq(studentsTable.id, data.studentId))
                 .returning()
             console.log({ newStudent: updatedStudent })
-
-            const student = await tx.query.studentsTable.findFirst({
-                where: eq(studentsTable.id, data.studentId),
-                with: {
-                    user: true,
-                    class: {
-                        columns: {
-                            id: true,
-                            name: true
-                        },
-                        with: {
-                            grade: {
-                                columns: {
-                                    id: true,
-                                    name: true
-                                }
-                            }
-                        }
-                    }
-                }
-            })
-            return student
+            return updatedStudent
         })
 
         if (!student) throw new Error("User UPDATED")
 
-        const studentWithUser: StudentUser = StudentUserDto(student, student.user, student.class, student.class.grade);
-        console.log({ studentWithUser })
-        return studentWithUser
+        const updatedStudent = student
+        console.log(updatedStudent)
+        return updatedStudent
 
     }
 

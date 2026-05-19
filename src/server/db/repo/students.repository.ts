@@ -1,7 +1,8 @@
 import { db, type Database } from "../db.js";
-import { eq, inArray, like, or, sql } from "drizzle-orm";
+import { asc, desc, eq, inArray, like, sql } from "drizzle-orm";
 import { studentsTable, UserRoleEnum, users } from "../schema.js";
 import { type AddStudentType, type Student, type StudentSearchType } from "#/types/studentTypes.js";
+import { getAllStudentsServerFn } from "#/server/modules/students/students.server-functions.js";
 
 
 export interface IStudentsRepository {
@@ -18,33 +19,7 @@ export interface IStudentsRepository {
 class StudentsRepository implements IStudentsRepository {
   constructor(private readonly db: Database) { }
 
-  // type newAuthUser = {
-  //     name: string;
-  //     email: string;
-  //     emailVerified: boolean;
-  //     image: string | null;
-  //     gender: UserGenderEnum;
-  //     telNumber: string | null;
-  //     role: UserRoleEnum;
-  // }
-
-  //     userId: z.ZodCUID2;
-  //     schoolId: z.ZodCUID2;
-  //     gradeId: z.ZodCUID2;
-  //     classId: z.ZodCUID2;
-  //     parentPhoneNumber: z.ZodString;
-  //     parentName: z.ZodString;
-  //     status: z.ZodEnum<{
-  //         Active: "Active";
-  //         Inactive: "Inactive";
-  //         Pending: "Pending";
-  //         New: "New";
-  //     }>;
-  //     address: z.ZodString;
-  //     dateOfBirth: z.ZodString;
-  //     enrollmentDate: z.ZodString;
-  // }, z.core.$strip>
-  // import addStudentSchema
+  // create student query function 
 
   async createStudent(data: AddStudentType): Promise<Student[]> {
 
@@ -74,15 +49,19 @@ class StudentsRepository implements IStudentsRepository {
     return newStudent;
   }
 
+
+  // find student by id query function
+
   async findStudentById(id: string) {
     const student = await db.query.studentsTable.findFirst({
       where: eq(studentsTable.id, id),
       with: { user: true },
     });
     if (!student) return undefined;
-
     return student;
   }
+
+  // find student by user id query function
 
   async findStudentByUserId(
     userId: string,
@@ -95,6 +74,9 @@ class StudentsRepository implements IStudentsRepository {
     return student
   }
 
+  // list students query function with search, pagination and sorting
+  // still not completed
+
   async listStudents({
     search,
     page,
@@ -103,34 +85,41 @@ class StudentsRepository implements IStudentsRepository {
     sortOrder,
   }: StudentSearchType
   ) {
-
-
-    // search 
     const searchValue = search?.trim();
-    // pagination
     const offset = (page - 1) * size;
+    const limit = size;
 
-    const sortByMap = sortBy === 'name' ? users.name : users.email
+    const sortableColumns = {
+      name: users.name,
+      email: users.email,
+    }
 
-    // Define the where clause once
+    const sortColumn =
+      sortableColumns[sortBy ?? "name"]
+
+    const orderByClause =
+      sortOrder === "asc"
+        ? asc(sortColumn)
+        : desc(sortColumn)
+
     const whereClause = searchValue
       ? inArray(
         studentsTable.userId,
         this.db
           .select({ id: users.id })
           .from(users)
-          .where(like(sortByMap, `%${searchValue}%`)),
+          .where(
+            like(sortColumn, `%${searchValue}%`)
+          ),
       )
       : undefined;
 
-
-
-    // Run both queries in parallel to save time
     const [data, totalResult] = await Promise.all([
       this.db.query.studentsTable.findMany({
         where: whereClause,
         with: { user: true },
-        limit: size,
+        orderBy: orderByClause,
+        limit,
         offset,
       }),
       this.db
@@ -139,31 +128,68 @@ class StudentsRepository implements IStudentsRepository {
         .where(whereClause),
     ]);
 
-    const totalCount = Number(totalResult[0]?.total ?? 0);
-    const totalPages = Math.ceil(totalCount / size);
+    return {
+      data,
+      pagination: {
+        totalCount: totalResult[0].total,
+        totalPages: Math.ceil(totalResult[0].total / size),
+      },
+    }
 
-    const data_dtos = data.map(student => student)
-    return { data: data_dtos, pagination: { totalCount, totalPages } };
   }
 
+  // update student query function
 
   async updateStudent(
     id: string,
     data: Partial<AddStudentType>,
   ): Promise<Student | undefined> {
-    const [student] = await this.db
+    const [updatedStudent] = await this.db
       .update(studentsTable)
       .set(data)
       .where(eq(studentsTable.id, id))
       .returning();
-    return student;
+
+    if (!updatedStudent) throw new Error("STUDENT NOT FOUND");
+    return updatedStudent;
   }
 
+  // edit student query function
+
   async deleteStudent(id: string): Promise<Student | undefined> {
-    const [row] = await this.db.delete(studentsTable).where(eq(studentsTable.id, id)).returning();
-    return row;
+    const [deletedStudent] = await this.db.delete(studentsTable).where(eq(studentsTable.id, id)).returning();
+    return deletedStudent;
   }
 
 }
 
 export const studentsRepository = new StudentsRepository(db);
+
+export const getStudentsQueryOptions = ({
+  page,
+  search,
+  size,
+  sortOrder,
+  sortBy,
+}: StudentSearchType) => ({
+  queryKey: ['students', page, search, size, sortOrder, sortBy],
+  queryFn: async () => {
+    const response = await getAllStudentsServerFn({
+      data: {
+        page,
+        search,
+        size,
+        sortOrder,
+        sortBy,
+      },
+    })
+
+    if (response.success)
+      return {
+        data: response.data,
+        pagination: response.pagination,
+      }
+    else throw new Error(response.message)
+  },
+  // placeholderData: keepPreviousData,
+})
