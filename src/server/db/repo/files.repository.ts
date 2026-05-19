@@ -1,8 +1,6 @@
 import { eq } from "drizzle-orm";
 
 import { db } from "../db.js";
-import { filesTable } from "../schemas.js";
-import type { File, NewFile } from "../../types.js";
 
 export async function createFile(data: NewFile): Promise<File[]> {
   const payload = { ...data, id: data.id ?? crypto.randomUUID() };

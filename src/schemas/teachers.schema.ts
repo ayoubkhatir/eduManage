@@ -10,17 +10,15 @@ export const getTeachersSchema = getUsersSchema.extend({
 
 export const addTeacherSchema = z.object({
     schoolId: validCuidSchema,
-    name: z.string().min(2).max(50),
-    email: z.email(),
-    image: z.string(),
-    telNumber: z.string().max(20),
-    gender: genderSchema,
-    address: z.string().min(1),
-    dateOfBirth: z.string().min(1),
     status: statusSchema,
+    address: z.string().nonempty(),
+    dateOfBirth: z.string(),
+    about: z.string(),
+    userId: validCuidSchema,
+    id: validCuidSchema,
+    joiningDate: z.string(),
+
 })
-
-
 
 export const editTeacherSchema = z
     .object({
@@ -103,3 +101,11 @@ export const getTeacherClassesSchema = z.object({
         .default('All'),
 })
 
+
+export const teacherSearchSchema = z.object({
+    search: z.string().default(""),
+    page: z.number().default(1),
+    size: z.number().default(10),
+    sortBy: z.enum(['name', 'email']).default('name'),
+    sortOrder: z.enum(['asc', 'desc']).default('asc'),
+})
