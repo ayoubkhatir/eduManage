@@ -2,6 +2,7 @@ import * as schema from '#/server/db/schema';
 import { classIdSchema, getTeacherClassMarksPageSchema } from '#/schemas/marks.schema';
 import { addTeacherSchema, assignmentIdSchema, assignTeacherSchema, editTeacherSchema, getTeacherClassesSchema, getTeachersSchema, schoolIdSchema, teacherIdSchema, teacherSearchSchema, teacherUserIdSchema, updateTeacherAssignmentSchema } from '#/schemas/teachers.schema';
 import z from "zod";
+import type { AuthUser } from './authTypes';
 
 
 

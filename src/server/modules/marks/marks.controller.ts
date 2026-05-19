@@ -10,19 +10,21 @@ import {
     teacherAssignmentsTable,
     users,
 } from '#/server/db/schema'
-import type {
-    CreateAssessmentSchema,
-    GetAssessmentsByClassSubjectSchema,
-    GetTeacherClassMarksPageSchema,
-    SaveStudentMarksSchema,
-    UpdateAssessmentSchema,
-} from '#/schemas/marks.schema'
+import type { CreateAssessmentSchema, GetAssessmentsByClassSubjectSchema, SaveStudentMarksSchema, UpdateAssessmentSchema } from '#/types/assessmentsTypes'
+import type { GetTeacherClassMarksPageType } from '#/types/teacherTypes'
+// import type {
+//     CreateAssessmentSchema,
+//     GetAssessmentsByClassSubjectSchema,
+//     GetTeacherClassMarksPageSchema,
+//     SaveStudentMarksSchema,
+//     UpdateAssessmentSchema,
+// } from '#/schemas/marks.schema'
 import { and, asc, desc, eq, inArray } from 'drizzle-orm'
 
 class MarksController {
     constructor(private readonly db: Database) { }
 
-    async getTeacherClassMarksPage(input: GetTeacherClassMarksPageSchema) {
+    async getTeacherClassMarksPage(input: GetTeacherClassMarksPageType) {
         const teacherAssignments = await this.db
             .select({
                 assignmentId: teacherAssignmentsTable.id,

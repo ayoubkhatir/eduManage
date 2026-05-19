@@ -38,6 +38,7 @@ class StudentsRepository implements IStudentsRepository {
       .insert(studentsTable)
       .values({
         ...data,
+        userId,
         id: studentId,
       })
       .returning();

@@ -4,11 +4,10 @@ import {
     resourcesTable,
     classesTable,
     gradeSubjectsTable,
-    users,
     subjectsTable,
     studentsTable,
 } from '#/server/db/schema'
-import type { AddResourceSchema, GetResourcesSchema, ResourceDto } from '#/schemas/resources.schema'
+import type { AddResourceSchema, GetResourcesSchema, ResourceDto } from '#/types/resourcesTypes'
 
 function parseSizeToBytes(size: string): number {
     const normalized = size.trim().toUpperCase()

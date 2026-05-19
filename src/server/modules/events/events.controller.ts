@@ -3,7 +3,7 @@ import {
     eventsTable,
     teachersTable,
 } from '#/server/db/schema'
-import type { AddEventSchema, GetEventsSchema } from '#/schemas/events.schema'
+import type { AddEventSchema, GetEventsSchema } from '#/types/eventsTypes';
 import { and, asc, eq } from 'drizzle-orm'
 
 class EventsController {

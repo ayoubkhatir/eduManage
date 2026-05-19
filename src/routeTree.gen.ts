@@ -48,9 +48,6 @@ import { Route as TeacherSubjectsSubjectCodeRouteImport } from './routes/teacher
 import { Route as TeacherNotificationsAddRouteImport } from './routes/teacher/notifications/add'
 import { Route as TeacherNotificationsNotificationIdRouteImport } from './routes/teacher/notifications/$notificationId'
 import { Route as TeacherMarksClassIdRouteImport } from './routes/teacher/marks/$classId'
-import { Route as TeacherClassesAllCollectionsRouteImport } from './routes/teacher/classes/allCollections'
-import { Route as TeacherClassesFolderIdRouteImport } from './routes/teacher/classes/$folderId'
-import { Route as TeacherClassesClassIdRouteImport } from './routes/teacher/classes/$classId'
 import { Route as TeacherAttendanceClassIdRouteImport } from './routes/teacher/attendance/$classId'
 import { Route as StudentSubjectsSubjectCodeRouteImport } from './routes/student/subjects.$subjectCode'
 import { Route as StudentNotificationNotificationIdRouteImport } from './routes/student/notification/$notificationId'
@@ -260,22 +257,6 @@ const TeacherMarksClassIdRoute = TeacherMarksClassIdRouteImport.update({
   path: '/marks/$classId',
   getParentRoute: () => TeacherRoute,
 } as any)
-const TeacherClassesAllCollectionsRoute =
-  TeacherClassesAllCollectionsRouteImport.update({
-    id: '/classes/allCollections',
-    path: '/classes/allCollections',
-    getParentRoute: () => TeacherRoute,
-  } as any)
-const TeacherClassesFolderIdRoute = TeacherClassesFolderIdRouteImport.update({
-  id: '/classes/$folderId',
-  path: '/classes/$folderId',
-  getParentRoute: () => TeacherRoute,
-} as any)
-const TeacherClassesClassIdRoute = TeacherClassesClassIdRouteImport.update({
-  id: '/classes/$classId',
-  path: '/classes/$classId',
-  getParentRoute: () => TeacherRoute,
-} as any)
 const TeacherAttendanceClassIdRoute =
   TeacherAttendanceClassIdRouteImport.update({
     id: '/attendance/$classId',
@@ -362,9 +343,6 @@ export interface FileRoutesByFullPath {
   '/student/notification/$notificationId': typeof StudentNotificationNotificationIdRoute
   '/student/subjects/$subjectCode': typeof StudentSubjectsSubjectCodeRoute
   '/teacher/attendance/$classId': typeof TeacherAttendanceClassIdRoute
-  '/teacher/classes/$classId': typeof TeacherClassesClassIdRoute
-  '/teacher/classes/$folderId': typeof TeacherClassesFolderIdRoute
-  '/teacher/classes/allCollections': typeof TeacherClassesAllCollectionsRoute
   '/teacher/marks/$classId': typeof TeacherMarksClassIdRoute
   '/teacher/notifications/$notificationId': typeof TeacherNotificationsNotificationIdRoute
   '/teacher/notifications/add': typeof TeacherNotificationsAddRoute
@@ -415,9 +393,6 @@ export interface FileRoutesByTo {
   '/student/notification/$notificationId': typeof StudentNotificationNotificationIdRoute
   '/student/subjects/$subjectCode': typeof StudentSubjectsSubjectCodeRoute
   '/teacher/attendance/$classId': typeof TeacherAttendanceClassIdRoute
-  '/teacher/classes/$classId': typeof TeacherClassesClassIdRoute
-  '/teacher/classes/$folderId': typeof TeacherClassesFolderIdRoute
-  '/teacher/classes/allCollections': typeof TeacherClassesAllCollectionsRoute
   '/teacher/marks/$classId': typeof TeacherMarksClassIdRoute
   '/teacher/notifications/$notificationId': typeof TeacherNotificationsNotificationIdRoute
   '/teacher/notifications/add': typeof TeacherNotificationsAddRoute
@@ -469,9 +444,6 @@ export interface FileRoutesById {
   '/student/notification/$notificationId': typeof StudentNotificationNotificationIdRoute
   '/student/subjects/$subjectCode': typeof StudentSubjectsSubjectCodeRoute
   '/teacher/attendance/$classId': typeof TeacherAttendanceClassIdRoute
-  '/teacher/classes/$classId': typeof TeacherClassesClassIdRoute
-  '/teacher/classes/$folderId': typeof TeacherClassesFolderIdRoute
-  '/teacher/classes/allCollections': typeof TeacherClassesAllCollectionsRoute
   '/teacher/marks/$classId': typeof TeacherMarksClassIdRoute
   '/teacher/notifications/$notificationId': typeof TeacherNotificationsNotificationIdRoute
   '/teacher/notifications/add': typeof TeacherNotificationsAddRoute
@@ -524,9 +496,6 @@ export interface FileRouteTypes {
     | '/student/notification/$notificationId'
     | '/student/subjects/$subjectCode'
     | '/teacher/attendance/$classId'
-    | '/teacher/classes/$classId'
-    | '/teacher/classes/$folderId'
-    | '/teacher/classes/allCollections'
     | '/teacher/marks/$classId'
     | '/teacher/notifications/$notificationId'
     | '/teacher/notifications/add'
@@ -577,9 +546,6 @@ export interface FileRouteTypes {
     | '/student/notification/$notificationId'
     | '/student/subjects/$subjectCode'
     | '/teacher/attendance/$classId'
-    | '/teacher/classes/$classId'
-    | '/teacher/classes/$folderId'
-    | '/teacher/classes/allCollections'
     | '/teacher/marks/$classId'
     | '/teacher/notifications/$notificationId'
     | '/teacher/notifications/add'
@@ -630,9 +596,6 @@ export interface FileRouteTypes {
     | '/student/notification/$notificationId'
     | '/student/subjects/$subjectCode'
     | '/teacher/attendance/$classId'
-    | '/teacher/classes/$classId'
-    | '/teacher/classes/$folderId'
-    | '/teacher/classes/allCollections'
     | '/teacher/marks/$classId'
     | '/teacher/notifications/$notificationId'
     | '/teacher/notifications/add'
@@ -947,27 +910,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherMarksClassIdRouteImport
       parentRoute: typeof TeacherRoute
     }
-    '/teacher/classes/allCollections': {
-      id: '/teacher/classes/allCollections'
-      path: '/classes/allCollections'
-      fullPath: '/teacher/classes/allCollections'
-      preLoaderRoute: typeof TeacherClassesAllCollectionsRouteImport
-      parentRoute: typeof TeacherRoute
-    }
-    '/teacher/classes/$folderId': {
-      id: '/teacher/classes/$folderId'
-      path: '/classes/$folderId'
-      fullPath: '/teacher/classes/$folderId'
-      preLoaderRoute: typeof TeacherClassesFolderIdRouteImport
-      parentRoute: typeof TeacherRoute
-    }
-    '/teacher/classes/$classId': {
-      id: '/teacher/classes/$classId'
-      path: '/classes/$classId'
-      fullPath: '/teacher/classes/$classId'
-      preLoaderRoute: typeof TeacherClassesClassIdRouteImport
-      parentRoute: typeof TeacherRoute
-    }
     '/teacher/attendance/$classId': {
       id: '/teacher/attendance/$classId'
       path: '/attendance/$classId'
@@ -1093,9 +1035,6 @@ interface TeacherRouteChildren {
   TeacherCalendarRoute: typeof TeacherCalendarRoute
   TeacherSettingsRoute: typeof TeacherSettingsRoute
   TeacherAttendanceClassIdRoute: typeof TeacherAttendanceClassIdRoute
-  TeacherClassesClassIdRoute: typeof TeacherClassesClassIdRoute
-  TeacherClassesFolderIdRoute: typeof TeacherClassesFolderIdRoute
-  TeacherClassesAllCollectionsRoute: typeof TeacherClassesAllCollectionsRoute
   TeacherMarksClassIdRoute: typeof TeacherMarksClassIdRoute
   TeacherNotificationsNotificationIdRoute: typeof TeacherNotificationsNotificationIdRoute
   TeacherNotificationsAddRoute: typeof TeacherNotificationsAddRoute
@@ -1109,9 +1048,6 @@ const TeacherRouteChildren: TeacherRouteChildren = {
   TeacherCalendarRoute: TeacherCalendarRoute,
   TeacherSettingsRoute: TeacherSettingsRoute,
   TeacherAttendanceClassIdRoute: TeacherAttendanceClassIdRoute,
-  TeacherClassesClassIdRoute: TeacherClassesClassIdRoute,
-  TeacherClassesFolderIdRoute: TeacherClassesFolderIdRoute,
-  TeacherClassesAllCollectionsRoute: TeacherClassesAllCollectionsRoute,
   TeacherMarksClassIdRoute: TeacherMarksClassIdRoute,
   TeacherNotificationsNotificationIdRoute:
     TeacherNotificationsNotificationIdRoute,

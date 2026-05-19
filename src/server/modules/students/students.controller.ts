@@ -59,11 +59,9 @@ class StudentsController {
                     classId: data.classId,
                 })
                 .returning({ id: studentsTable.id })
-            return createdStudent;
             if (!createdStudent) throw new Error("student not created");
+            return createdStudent;
         })
-
-
     }
 
 

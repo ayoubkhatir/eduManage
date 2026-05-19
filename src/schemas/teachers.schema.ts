@@ -1,5 +1,5 @@
 import z from "zod/v4";
-import { getUsersSchema } from "./users.schema";
+import { addUserSchema, getUsersSchema } from "./users.schema";
 import { genderSchema, statusSchema, validCuidSchema } from "./shared.schema";
 import { StatusEnum } from "#/server/db/schema";
 
@@ -7,18 +7,13 @@ export const getTeachersSchema = getUsersSchema.extend({
     subject: z.string().nullable().default(""),
 });
 
-
-
-export const addTeacherSchema = z.object({
+export const addTeacherSchema = addUserSchema.extend({
     schoolId: validCuidSchema,
     status: statusSchema,
     address: z.string().nonempty(),
     dateOfBirth: z.string(),
     about: z.string(),
-    userId: validCuidSchema,
-    id: validCuidSchema,
     joiningDate: z.string(),
-
 })
 
 export const editTeacherSchema = z

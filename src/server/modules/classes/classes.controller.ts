@@ -1,6 +1,6 @@
-import type { AddClassSchema } from "#/schemas/classes.schema";
 import { db, type Database } from "#/server/db/db";
 import { classesTable, users } from "#/server/db/schema";
+import type { AddClassSchema } from "#/types/classesTypes";
 import { eq } from "drizzle-orm";
 
 class ClassesController {

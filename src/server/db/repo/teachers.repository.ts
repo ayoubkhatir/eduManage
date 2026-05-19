@@ -17,6 +17,7 @@ class TeacherRepository implements ITeachersRepository {
   constructor(private readonly db: Database) { }
 
   async createTeacher(data: AddTeacherType): Promise<Teacher[]> {
+    
     const payload = { ...data, id: data.id ?? crypto.randomUUID() };
     const rows = await this.db.insert(teachersTable).values(payload).returning();
     return rows;
