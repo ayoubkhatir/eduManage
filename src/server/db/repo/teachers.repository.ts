@@ -1,16 +1,14 @@
-import { and, eq, inArray, like, sql } from "drizzle-orm";
-
-import { Database, db } from "../db.js";
-import type { NewTeacher, Teacher, TeacherSearchSchema } from "../../types.js";
-import { TeacherWithUser } from "../../modules/teachers/teachers.types.js";
-import { teachersTable, users } from "../schemas.js";
+import type { AddTeacherType, Teacher, TeacherSearchType } from "#/types/teacherTypes";
+import { and, asc, desc, eq, inArray, like, sql } from "drizzle-orm";
+import { teachersTable, users } from "../schema";
+import { db, type Database } from "../db";
 
 export interface ITeachersRepository {
-  createTeacher(data: NewTeacher): Promise<Teacher[]>;
+  createTeacher(data: AddTeacherType): Promise<Teacher[]>;
   findTeacherById(id: string): Promise<Teacher | undefined>;
   findTeacherByUserId(userId: string): Promise<Teacher | undefined>;
-  listTeachers(search_aueries: TeacherSearchSchema & { schoolId: string }): Promise<{ data: TeacherWithUser[]; pagination: { totalCount: number, totalPages: number } }>;
-  updateTeacher(id: string, data: Partial<NewTeacher>): Promise<Teacher | undefined>;
+  listTeachers(search_queries: TeacherSearchType & { schoolId: string }): Promise<{ data: Teacher[]; pagination: { totalCount: number, totalPages: number } }>;
+  updateTeacher(id: string, data: Partial<AddTeacherType>): Promise<Teacher | undefined>;
   deleteTeacher(id: string): Promise<Teacher | undefined>;
   getTotalTeachers(schoolId: string): Promise<number>;
 }
@@ -18,14 +16,15 @@ export interface ITeachersRepository {
 class TeacherRepository implements ITeachersRepository {
   constructor(private readonly db: Database) { }
 
-  async createTeacher(data: NewTeacher): Promise<Teacher[]> {
+  async createTeacher(data: AddTeacherType): Promise<Teacher[]> {
+    
     const payload = { ...data, id: data.id ?? crypto.randomUUID() };
-    const rows = await db.insert(teachersTable).values(payload).returning();
+    const rows = await this.db.insert(teachersTable).values(payload).returning();
     return rows;
   }
 
   async findTeacherById(id: string) {
-    return db.query.teachersTable.findFirst({
+    return this.db.query.teachersTable.findFirst({
       where: eq(teachersTable.id, id),
       with: { user: true },
     });
@@ -34,21 +33,20 @@ class TeacherRepository implements ITeachersRepository {
   async findTeacherByUserId(
     userId: string,
   ) {
-    return db.query.teachersTable.findFirst({
+    return this.db.query.teachersTable.findFirst({
       where: eq(teachersTable.userId, userId),
       with: { user: true },
     });
   }
 
   async listTeachers({
-    schoolId,
     search,
     page,
     size,
     sortBy,
     sortOrder,
-    subject
-  }: TeacherSearchSchema & { schoolId: string }): Promise<{ data: TeacherWithUser[]; pagination: { totalCount: number; totalPages: number; }; }> {
+  }: TeacherSearchType & { schoolId: string }): Promise<{ data: Teacher[]; pagination: { totalCount: number; totalPages: number; }; }> {
+
     const safePage = Math.max(1, page);
     const safeLimit = Math.max(1, size);
     const offset = (safePage - 1) * safeLimit;
@@ -59,7 +57,7 @@ class TeacherRepository implements ITeachersRepository {
         eq(teachersTable.schoolId, schoolId),
         inArray(
           teachersTable.userId,
-          db
+          this.db
             .select({ id: users.id })
             .from(users)
             .where(like(users.name, `%${searchValue}%`)),
@@ -67,7 +65,21 @@ class TeacherRepository implements ITeachersRepository {
       )
       : eq(teachersTable.schoolId, schoolId);
 
-    const totalQuery = db
+    const sortableColumns = {
+      name: users.name,
+      email: users.email,
+    }
+
+    const sortColumn =
+      sortableColumns[sortBy ?? "name"]
+
+    const orderByClause =
+      sortOrder === "asc"
+        ? asc(sortColumn)
+        : desc(sortColumn)
+
+
+    const totalQuery = this.db
       .select({ total: sql<number>`count(*)` })
       .from(teachersTable)
       .where(whereClause);
@@ -75,9 +87,10 @@ class TeacherRepository implements ITeachersRepository {
     const totalCount = Number(totalRow?.total ?? 0);
     const totalPages = Math.ceil(totalCount / safeLimit);
 
-    const data = await db.query.teachersTable.findMany({
+    const data = await this.db.query.teachersTable.findMany({
       where: whereClause,
       with: { user: true },
+      orderBy: orderByClause,
       limit: safeLimit,
       offset,
     });
@@ -89,9 +102,9 @@ class TeacherRepository implements ITeachersRepository {
 
   async updateTeacher(
     id: string,
-    data: Partial<NewTeacher>,
+    data: Partial<AddTeacherType>,
   ): Promise<Teacher | undefined> {
-    const [row] = await db
+    const [row] = await this.db
       .update(teachersTable)
       .set(data)
       .where(eq(teachersTable.id, id))
@@ -100,12 +113,12 @@ class TeacherRepository implements ITeachersRepository {
   }
 
   async deleteTeacher(id: string): Promise<Teacher | undefined> {
-    const [row] = await db.delete(teachersTable).where(eq(teachersTable.id, id)).returning();
+    const [row] = await this.db.delete(teachersTable).where(eq(teachersTable.id, id)).returning();
     return row;
   }
 
   async getTotalTeachers(schoolId: string): Promise<number> {
-    const [row] = await db
+    const [row] = await this.db
       .select({ count: sql<number>`count(*)` })
       .from(teachersTable)
       .where(eq(teachersTable.schoolId, schoolId));

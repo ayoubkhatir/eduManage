@@ -8,7 +8,6 @@ export const getStudentsSchema = getUsersSchema.extend({
 });
 
 export const addStudentSchema = addUserSchema.extend({
-    userId: validCuidSchema,
     schoolId: validCuidSchema,
     gradeId: validCuidSchema,
     classId: validCuidSchema,

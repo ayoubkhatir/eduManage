@@ -1,11 +1,10 @@
-import type { AddTeacherSchema, AssignTeacherSchema, EditTeacherSchema, GetTeacherClassesSchema, GetTeachersSchema } from "#/types/teacherTypes";
 import { db, type Database } from "#/server/db/db";
 import { account, classesTable, gradesTable, StatusEnum, studentsTable, subjectsTable, teacherAssignmentsTable, teachersTable, UserGenderEnum, UserRoleEnum, users } from "#/server/db/schema";
 import { and, asc, count, desc, eq, gte, ilike, inArray, lt, or, SQL } from "drizzle-orm"
-import { TeacherUserDto } from "./teachers.types";
 import { generateTemporaryPassword } from "#/server/utils/temp_password_generator";
 import { handlePassword } from "#/server/utils/handle-password";
 import generateId from "#/server/utils/id_generator";
+import type { AddTeacherType, AssignTeacherType, EditTeacherType, GetTeacherClassesType, GetTeachersType } from "#/types/teacherTypes";
 
 export type CreateTeacherInput = {
     schoolId: string
@@ -55,7 +54,7 @@ class TeachersController {
         status,
         sortBy,
         sortOrder
-    }: GetTeachersSchema) {
+    }: GetTeachersType) {
         const safePage = Math.max(1, page ?? 1)
         const safeSize = Math.max(1, size ?? 10)
         const offset = (safePage - 1) * safeSize
@@ -157,13 +156,10 @@ class TeachersController {
         const totalCount = Number(totalRows[0]?.total ?? 0)
         const totalPages = Math.ceil(totalCount / safeSize)
 
-        const data = rows.map(
-            ({ teacher, user, }) => TeacherUserDto(
-                teacher,
-                user,
-                subjectsByTeacherId.get(teacher.id) ?? [])
-        )
-
+        const data = rows.map(({ teacher, user }) => ({
+            ...user,
+            info: teacher
+        }))
         return {
             data,
             pagination: {
@@ -176,10 +172,10 @@ class TeachersController {
     /**
      * Create user + teacher profile in one transaction
      */
-    async createTeacher(data: AddTeacherSchema) {
+    async createTeacher(data: AddTeacherType) {
+        const userId = crypto.randomUUID();
         const passwordHash = await handlePassword.hash(generateTemporaryPassword(data.name))
 
-        const userId = generateId();
 
         const result = await this.db.transaction(async (tx) => {
             const createdUser = await tx.insert(users).values({
@@ -205,7 +201,6 @@ class TeachersController {
             }).returning()
             console.log(createdAccount)
 
-
             const [createdTeacher] = await tx
                 .insert(teachersTable)
                 .values({
@@ -218,16 +213,8 @@ class TeachersController {
                 })
                 .returning({ id: teachersTable.id })
             console.log({ createdTeacher })
-
-            const teacher = await tx.query.teachersTable.findFirst({
-                where: eq(teachersTable.id, createdTeacher.id),
-                with: {
-                    user: true,
-                }
-            })
-            console.log({ teacher })
-            if (!teacher) throw new Error("Teacher CREATED");
-            return TeacherUserDto(teacher, teacher.user, [])
+            
+            return createdTeacher
         })
 
         return result
@@ -246,7 +233,7 @@ class TeachersController {
                 dateOfBirth: teachersTable.dateOfBirth,
                 joiningDate: teachersTable.joiningDate,
                 status: teachersTable.status,
-                
+
                 username: users.name,
                 email: users.email,
                 telNumber: users.telNumber,
@@ -334,7 +321,7 @@ class TeachersController {
     /**
      * Update both user and teacher tables
      */
-    async updateTeacher(input: EditTeacherSchema) {
+    async updateTeacher(input: EditTeacherType) {
         return await this.db.transaction(async (tx) => {
             const [existingTeacher] = await tx
                 .select({
@@ -603,7 +590,7 @@ class TeachersController {
         }
     }
 
-    async assignTeacherToClassAndSubject(data: AssignTeacherSchema) {
+    async assignTeacherToClassAndSubject(data: AssignTeacherType) {
         console.log({ input: data })
         const teacher = await db.query.teachersTable.findFirst({
             where: and(
@@ -705,7 +692,7 @@ class TeachersController {
         return rows
     }
 
-    async getTeacherClassesDashboard(input: GetTeacherClassesSchema) {
+    async getTeacherClassesDashboard(input: GetTeacherClassesType) {
         const safePage = Math.max(1, input.page ?? 1)
         const safeSize = Math.max(1, input.size ?? 10)
         const offset = (safePage - 1) * safeSize

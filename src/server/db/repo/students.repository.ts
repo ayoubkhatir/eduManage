@@ -38,6 +38,7 @@ class StudentsRepository implements IStudentsRepository {
       .insert(studentsTable)
       .values({
         ...data,
+        userId,
         id: studentId,
       })
       .returning();
@@ -85,9 +86,11 @@ class StudentsRepository implements IStudentsRepository {
     sortOrder,
   }: StudentSearchType
   ) {
+    const safePage = Math.max(1, page);
+    const safeLimit = Math.max(1, size);
+    const offset = (safePage - 1) * safeLimit;
     const searchValue = search?.trim();
-    const offset = (page - 1) * size;
-    const limit = size;
+
 
     const sortableColumns = {
       name: users.name,
@@ -119,7 +122,7 @@ class StudentsRepository implements IStudentsRepository {
         where: whereClause,
         with: { user: true },
         orderBy: orderByClause,
-        limit,
+        limit: safeLimit,
         offset,
       }),
       this.db

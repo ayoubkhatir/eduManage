@@ -1,6 +1,6 @@
 import * as schema from '#/server/db/schema';
 import { classIdSchema, getTeacherClassMarksPageSchema } from '#/schemas/marks.schema';
-import { addTeacherSchema, assignmentIdSchema, assignTeacherSchema, editTeacherSchema, getTeacherClassesSchema, getTeachersSchema, schoolIdSchema, teacherIdSchema, teacherUserIdSchema, updateTeacherAssignmentSchema } from '#/schemas/teachers.schema';
+import { addTeacherSchema, assignmentIdSchema, assignTeacherSchema, editTeacherSchema, getTeacherClassesSchema, getTeachersSchema, schoolIdSchema, teacherIdSchema, teacherSearchSchema, teacherUserIdSchema, updateTeacherAssignmentSchema } from '#/schemas/teachers.schema';
 import z from "zod";
 import type { AuthUser } from './authTypes';
 
@@ -19,33 +19,35 @@ export type TeacherUser = Omit<AuthUser,"info">& {
 
 export type TeacherAssignments = typeof schema.teacherAssignmentsTable.$inferSelect
 
-export type GetTeacherClassMarksPageSchema = z.infer<
+export type GetTeacherClassMarksPageType = z.infer<
     typeof getTeacherClassMarksPageSchema
 >
 
-export type GetTeachersSchema = z.infer<typeof getTeachersSchema>;
+export type GetTeachersType = z.infer<typeof getTeachersSchema>;
 
-export type AddTeacherSchema = z.infer<typeof addTeacherSchema>
+export type AddTeacherType = z.infer<typeof addTeacherSchema>;
 
-export type EditTeacherSchema = z.infer<typeof editTeacherSchema>
+export type EditTeacherType = z.infer<typeof editTeacherSchema>;
 
-export type TeacherIdSchema = z.infer<typeof teacherIdSchema>
+export type TeacherIdType = z.infer<typeof teacherIdSchema>;
 
-export type TeacherUserIdSchema = z.infer<typeof teacherUserIdSchema>
+export type TeacherUserIdType = z.infer<typeof teacherUserIdSchema>;
 
-export type SchoolIdSchema = z.infer<typeof schoolIdSchema>
+export type SchoolIdType = z.infer<typeof schoolIdSchema>;
 
-export type AssignTeacherSchema = z.infer<typeof assignTeacherSchema>
+export type AssignTeacherType = z.infer<typeof assignTeacherSchema>;
 
-export type UpdateTeacherAssignmentSchema = z.infer<
+export type UpdateTeacherAssignmentType = z.infer<
     typeof updateTeacherAssignmentSchema
 >
 
-export type AssignmentIdSchema = z.infer<typeof assignmentIdSchema>
+export type AssignmentIdType = z.infer<typeof assignmentIdSchema>
 
-export type ClassIdSchema = z.infer<typeof classIdSchema>
+export type ClassIdType = z.infer<typeof classIdSchema>
 
-export type GetTeacherClassesSchema = z.infer<typeof getTeacherClassesSchema>
+export type GetTeacherClassesType = z.infer<typeof getTeacherClassesSchema>
+
+export type TeacherSearchType = z.infer<typeof teacherSearchSchema>
 
 export type TeacherClassItem = {
   assignmentId: string

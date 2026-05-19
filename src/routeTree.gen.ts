@@ -48,7 +48,6 @@ import { Route as TeacherSubjectsSubjectCodeRouteImport } from './routes/teacher
 import { Route as TeacherNotificationsAddRouteImport } from './routes/teacher/notifications/add'
 import { Route as TeacherNotificationsNotificationIdRouteImport } from './routes/teacher/notifications/$notificationId'
 import { Route as TeacherMarksClassIdRouteImport } from './routes/teacher/marks/$classId'
-import { Route as TeacherClassesClassIdRouteImport } from './routes/teacher/classes/$classId'
 import { Route as TeacherAttendanceClassIdRouteImport } from './routes/teacher/attendance/$classId'
 import { Route as StudentSubjectsSubjectCodeRouteImport } from './routes/student/subjects.$subjectCode'
 import { Route as StudentNotificationNotificationIdRouteImport } from './routes/student/notification/$notificationId'

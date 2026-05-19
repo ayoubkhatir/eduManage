@@ -1,5 +1,5 @@
 import { enUS } from 'date-fns/locale'
-import { Calendar, Views, dateFnsLocalizer } from 'react-big-calendar'
+import { Calendar, Views, dateFnsLocalizer, type EventPropGetter, type View } from 'react-big-calendar'
 import {
   format,
   getDay,
@@ -10,7 +10,6 @@ import {
   startOfWeek,
 } from 'date-fns'
 import { useMemo, useState, type ReactNode } from 'react'
-import type { EventPropGetter, View } from 'react-big-calendar'
 import type { EventForm } from '@/components/admin/calendar/model'
 import {
   Dialog,
@@ -52,6 +51,8 @@ type CalEvent = Omit<EventForm, 'start' | 'end'> & {
   start: Date
   end: Date
 }
+
+
 
 export function GlobalCalendar({
   isTeacher,

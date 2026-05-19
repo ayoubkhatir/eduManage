@@ -1,5 +1,5 @@
 import z from "zod/v4";
-import { getUsersSchema } from "./users.schema";
+import { addUserSchema, getUsersSchema } from "./users.schema";
 import { genderSchema, statusSchema, validCuidSchema } from "./shared.schema";
 import { StatusEnum } from "#/server/db/schema";
 
@@ -7,21 +7,14 @@ export const getTeachersSchema = getUsersSchema.extend({
     subject: z.string().nullable().default(""),
 });
 
-
-
-export const addTeacherSchema = z.object({
+export const addTeacherSchema = addUserSchema.extend({
     schoolId: validCuidSchema,
-    name: z.string().min(2).max(50),
-    email: z.email(),
-    image: z.string(),
-    telNumber: z.string().max(20),
-    gender: genderSchema,
-    address: z.string().min(1),
-    dateOfBirth: z.string().min(1),
     status: statusSchema,
+    address: z.string().nonempty(),
+    dateOfBirth: z.string(),
+    about: z.string(),
+    joiningDate: z.string(),
 })
-
-
 
 export const editTeacherSchema = z
     .object({
@@ -104,3 +97,11 @@ export const getTeacherClassesSchema = z.object({
         .default('All'),
 })
 
+
+export const teacherSearchSchema = z.object({
+    search: z.string().default(""),
+    page: z.number().default(1),
+    size: z.number().default(10),
+    sortBy: z.enum(['name', 'email']).default('name'),
+    sortOrder: z.enum(['asc', 'desc']).default('asc'),
+})
