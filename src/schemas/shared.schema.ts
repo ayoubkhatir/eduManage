@@ -15,8 +15,8 @@ export const phoneNumberSchema = z.string().regex(/^(?:06|05|07)\d{8}$/, 'Phone 
 
 export const roleSchema = z.enum(UserRoleEnum)
 export const authRoleSchema = z.enum(UserRoleEnum)
-export const genderSchema = z.enum(UserGenderEnum , {
-    error : "Invalid gender"
+export const genderSchema = z.enum(UserGenderEnum, {
+    error: "Invalid gender"
 })
 export const statusSchema = z.enum(StatusEnum)
 

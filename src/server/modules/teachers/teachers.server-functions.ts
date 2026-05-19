@@ -13,9 +13,9 @@ import { createServerFn } from "@tanstack/react-start";
 import { teachersController } from "./teachers.contoller";
 import { paginatedSuccessResponse, successResponse, type APIResponse } from "#/server/utils/response.type";
 import { mapDbError } from "#/server/utils/db_error_handling";
-import type { TeacherUser } from "./teachers.types";
 import { validCuidSchema } from "#/schemas/shared.schema";
 import type { StatusEnum } from "#/server/db/schema";
+import type { TeacherUser } from "#/types/teacherTypes";
 
 export const getTeachersServerFn = createServerFn({ method: "GET" })
     .inputValidator(getTeachersSchema)

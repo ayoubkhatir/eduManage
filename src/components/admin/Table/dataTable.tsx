@@ -1,4 +1,8 @@
-import { flexRender } from '@tanstack/react-table'
+import {
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
 import type { Table as Tab } from '@tanstack/react-table'
 import { Skeleton as BoneyardSkeleton } from 'boneyard-js/react'
 import {
@@ -10,6 +14,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
+import { StudentColumns, TeacherColumns } from './columnsData'
+import type { TeacherUser } from '#/server/modules/teachers/teachers.types'
+import type { StudentUser } from '#/server/modules/students/students.types'
 
 interface DataTableProps<TData> {
   table: Tab<TData>
@@ -27,7 +34,10 @@ export default function DataTable<TData>({ table }: DataTableProps<TData>) {
             >
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id} className="text-slate-700 dark:text-slate-300 font-semibold text-sm">
+                  <TableHead
+                    key={header.id}
+                    className="text-slate-700 dark:text-slate-300 font-semibold text-sm"
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -118,4 +128,27 @@ export function CustomDataTableSkeleton({ rows, cols }: SkeletonTableProps) {
       {renderTablePreview()}
     </BoneyardSkeleton>
   )
+}
+
+// teachers Table
+
+export function TeachersTable({ data }: { data: Array<TeacherUser> }) {
+  const table = useReactTable({
+    data,
+    columns: TeacherColumns,
+    getCoreRowModel: getCoreRowModel(),
+  })
+
+  return <DataTable table={table} />
+}
+
+// students Table
+export function StudentsTable({ data }: { data: Array<StudentUser> }) {
+  const table = useReactTable({
+    data,
+    columns: StudentColumns,
+    getCoreRowModel: getCoreRowModel(),
+  })
+
+  return <DataTable table={table} />
 }

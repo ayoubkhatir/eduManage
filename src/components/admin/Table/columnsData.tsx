@@ -20,14 +20,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import type { StudentUser } from '#/server/modules/students/students.types'
-import type { TeacherUser } from '#/server/modules/teachers/teachers.types'
-import { cld } from '#/lib/cloudinary'
 import { thumbnail } from '@cloudinary/url-gen/actions/resize'
 import { byRadius } from '@cloudinary/url-gen/actions/roundCorners'
 import { AssignTeacherMenuItem } from '../DropDownMenuComp/AssignTeacherMenuItem'
 import { Badge } from '#/components/ui/badge'
 import { StatusEnum, UserGenderEnum } from '#/server/db/schema'
+import ProfilePicGenerator from '../profilePicGenerator'
+import { cld } from '#/lib/cloudinary'
+import type { Student } from '#/types/studentTypes'
+import type { Teacher } from '#/types/teacherTypes'
 
 export function UserAvatar({
   image,
@@ -64,7 +65,7 @@ function ImageColumnUI({ image }: { image: string | null }) {
 }
 
 // definition for the student columns in the student table
-export const StudentColumns: Array<ColumnDef<StudentUser>> = [
+export const StudentColumns: Array<ColumnDef<Student>> = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -224,7 +225,7 @@ export const StudentColumns: Array<ColumnDef<StudentUser>> = [
 ]
 
 // definition for the teacher columns in the teacher table
-export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
+export const TeacherColumns: Array<ColumnDef<Teacher>> = [
   {
     accessorKey: 'imgSrc',
     header: '',
@@ -232,7 +233,11 @@ export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
     cell: ({ row }) => (
       <div className="flex items-center justify-center">
         <div className="relative">
-          <ImageColumnUI image={row.original.image} />
+          <ProfilePicGenerator
+            name={row.original.name}
+            imgSrc={row.original.image}
+          />
+          {/* <ImageColumnUI image={row.original.image} />
           <span
             className={`absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white dark:border-slate-800 ${
               row.original.status === 'Active'
@@ -241,7 +246,7 @@ export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
                   ? 'bg-red-500'
                   : 'bg-yellow-500'
             }`}
-          />
+          /> */}
         </div>
       </div>
     ),
@@ -255,7 +260,8 @@ export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
     cell: ({ row }) => (
       <div className="flex flex-col">
         <span className="font-semibold text-slate-900 dark:text-white">
-          {row.original.name}
+          {getUser}
+          {row.original}
         </span>
         <span className="text-xs text-slate-500 dark:text-slate-400">
           {row.original.id}

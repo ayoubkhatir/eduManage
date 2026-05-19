@@ -1,25 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
-import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { zodValidator } from '@tanstack/zod-adapter'
-import { StudentColumns } from '@/components/admin/Table/columnsData'
-import DataTable, {
-  CustomDataTableSkeleton,
-} from '@/components/admin/Table/dataTable'
 import { CustomPagination } from '@/components/admin/PaginationComp'
 import { SearchInput } from '@/components/admin/SearchInput'
 import { SelectPageSize } from '@/components/admin/SelectPageSize'
 import IndexPageComponent from '@/components/admin/IndexPageComponent'
-import {
-  getAllStudentsServerFn,
-  getStudentsStatsServerFn,
-} from '#/server/modules/students/students.server-functions'
-import type { StudentUser } from '#/server/modules/students/students.types'
-import {
-  getStudentsSchema,
-} from '#/schemas/students.schema'
-import type { GetStudentsSchema } from '#/types/studentTypes'
+import { studentSearchSchema } from '#/schemas/students.schema'
 import {
   Select,
   SelectContent,
@@ -27,12 +14,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '#/components/ui/select'
-import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
-import UICardComponent, {
-  UICardSkeleton,
-  type UICardType,
-} from '#/components/admin/UICard'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
+import { StudentsStatCards } from '#/components/admin/cards/UICard'
+import {
+  CustomDataTableSkeleton,
+  StudentsTable,
+} from '#/components/admin/Table/dataTable'
+import { getAllGradesQueryOptions } from '#/server/db/repo/grades.repository'
+import { getStudentsQueryOptions } from '#/server/db/repo'
 
 // type QueryOptionsType = Filters<StudentModel>
 
@@ -46,53 +35,6 @@ import { useMemo, useState } from 'react'
 //   page: fallback(z.coerce.number().int().positive(), 1).default(1),
 //   size: fallback(z.coerce.number().int().positive(), 10).default(10),
 // })
-const getStudentsQueryOptions = ({
-  page,
-  search,
-  size,
-  status,
-  grade,
-  sortOrder,
-  sortBy,
-  classe,
-  email,
-}: GetStudentsSchema) => ({
-  queryKey: [
-    'students',
-    page,
-    search,
-    size,
-    status,
-    grade,
-    sortOrder,
-    sortBy,
-    classe,
-    email,
-  ],
-  queryFn: async () => {
-    const response = await getAllStudentsServerFn({
-      data: {
-        page,
-        search,
-        size,
-        status,
-        sortOrder,
-        sortBy,
-        grade,
-        classe,
-        email,
-      },
-    })
-
-    if (response.success)
-      return {
-        data: response.data,
-        pagination: response.pagination,
-      }
-    else throw new Error(response.message)
-  },
-  // placeholderData: keepPreviousData,
-})
 
 export const Route = createFileRoute('/admin/students/')({
   component: RouteComponent,
@@ -103,7 +45,7 @@ export const Route = createFileRoute('/admin/students/')({
     context.queryClient.ensureQueryData(getAllGradesQueryOptions())
     context.queryClient.ensureQueryData(getStudentsQueryOptions(deps))
   },
-  validateSearch: zodValidator(getStudentsSchema),
+  validateSearch: zodValidator(studentSearchSchema),
 })
 
 function RouteComponent() {
@@ -170,62 +112,8 @@ function OwnerStudentsContent() {
   )
 }
 
-const getStudentsStatsQueryOptions = () => ({
-  queryKey: ['students', 'stats'],
-  queryFn: async () => {
-    const response = await getStudentsStatsServerFn()
-    if (response.success) return response.data
-    return {
-      totalStudents: 0,
-      totalMonthEnrollments: 0,
-    }
-  },
-})
-
-function StudentsStatCards() {
-  const { data: studentsStat, status: fetchStatus } = useQuery({
-    ...getStudentsStatsQueryOptions(),
-  })
-
-  const cards = useMemo<UICardType[]>(
-    () => [
-      {
-        id: 'total-students',
-        iconName: 'school',
-        iconColor: 'blue',
-        stateIcon: 'trending_up',
-        percentage: 0,
-        cardTitle: 'Total Students',
-        info: studentsStat?.totalStudents ?? 0,
-      },
-      {
-        id: 'month-enrollments',
-        iconName: 'person_add',
-        iconColor: 'green',
-        stateIcon: 'trending_up',
-        percentage: 0,
-        cardTitle: 'Enrollments This Month',
-        info: studentsStat?.totalMonthEnrollments ?? 0,
-      },
-    ],
-    [studentsStat],
-  )
-
-  if (fetchStatus === 'pending') return <UICardSkeleton count={2} />
-  if (fetchStatus === 'error') return null
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {cards.map((card, i) => (
-        <UICardComponent {...card} key={i} />
-      ))}
-    </div>
-  )
-}
-
 function GradesFilter() {
   const navigate = Route.useNavigate()
-  const { grade } = Route.useSearch({ select: (s) => ({ grade: s.grade }) })
   const { data: gradesData, status: fetchStatus } = useQuery(
     getAllGradesQueryOptions(),
   )
@@ -248,7 +136,7 @@ function GradesFilter() {
     <Select
       open={open}
       onOpenChange={setOpen}
-      defaultValue={grade ?? ''}
+      defaultValue={''}
       onValueChange={(v) =>
         navigate({ to: '.', search: (s) => ({ ...s, grade: v }) })
       }
@@ -286,27 +174,13 @@ function GradesFilter() {
 }
 
 function MainPageContent() {
-  const {
-    size,
-    page,
-    search,
-    sortBy,
-    sortOrder,
-    status,
-    grade,
-    email,
-    classe,
-  } = Route.useSearch({
+  const { size, page, search, sortBy, sortOrder } = Route.useSearch({
     select: (s) => ({
       size: s.size,
       page: s.page,
       search: s.search,
       sortBy: s.sortBy,
       sortOrder: s.sortOrder,
-      status: s.status,
-      grade: s.grade,
-      email: s.email,
-      classe: s.classe,
     }),
   })
   const { data: studentsData, status: fetchStatus } = useQuery({
@@ -316,10 +190,6 @@ function MainPageContent() {
       search,
       sortBy,
       sortOrder,
-      status,
-      grade,
-      email,
-      classe,
     }),
     placeholderData: keepPreviousData,
   })
@@ -356,14 +226,4 @@ function MainPageContent() {
       )}
     </>
   )
-}
-
-function StudentsTable({ data }: { data: Array<StudentUser> }) {
-  const table = useReactTable({
-    data,
-    columns: StudentColumns,
-    getCoreRowModel: getCoreRowModel(),
-  })
-
-  return <DataTable table={table} />
 }

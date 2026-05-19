@@ -1,6 +1,6 @@
 type propsType = {
   name: string
-  imgSrc?: string
+  imgSrc: string | null
 }
 
 export default function ProfilePicGenerator({ name, imgSrc }: propsType) {

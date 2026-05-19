@@ -1,34 +1,39 @@
 import { eq } from "drizzle-orm";
-import { Database, db } from "../db.js";
-import { users } from "../schemas.js";
-import type { NewUser, User } from "../../types.js";
+import { db, type Database } from "../db.js";
+import { users } from "../schema.js";
+import type { AuthUser, newAuthUser } from "#/types/authTypes.js";
 
+// the types here should be updated.there is no more user and newUser types
 
 export interface IUsersRepository {
-  createUser(data: NewUser): Promise<User[]>
-  findUserById(id: string): Promise<User | undefined>
-  findUserByUsername(username: string): Promise<User | undefined>
-  findUserByEmail(email: string): Promise<User | undefined>
-  updateUser(id: string, data: Partial<NewUser>): Promise<User | undefined>
-  deleteUser(id: string): Promise<User | undefined>
+  createUser(data: newAuthUser): Promise<AuthUser[]>
+  findUserById(id: string): Promise<AuthUser | undefined>
+  findUserByUsername(username: string): Promise<AuthUser | undefined>
+  findUserByEmail(email: string): Promise<AuthUser | undefined>
+  updateUser(id: string, data: Partial<newAuthUser>): Promise<AuthUser | undefined>
+  deleteUser(id: string): Promise<AuthUser | undefined>
 }
 
 class UsersRepository implements IUsersRepository {
   constructor(private readonly db: Database) { }
 
-  async createUser(data: NewUser): Promise<User[]> {
-    const payload = { ...data, id: data.id ?? crypto.randomUUID() };
+  
+  async createUser(data: newAuthUser): Promise<AuthUser[]> {
+  
+    // the id generation should be handled in the database i guess.
+
+    const payload = { ...data, id: crypto.randomUUID() };
     const rows = await this.db.insert(users).values(payload).returning();
     return rows;
   }
 
-  async findUserById(id: string): Promise<User | undefined> {
+  async findUserById(id: string): Promise<AuthUser | undefined> {
     return this.db.query.users.findFirst({
       where: eq(users.id, id),
     });
   }
 
-  async findUserByEmail(email: string): Promise<User | undefined> {
+  async findUserByEmail(email: string): Promise<AuthUser | undefined> {
     return this.db.query.users.findFirst({
       where: eq(users.email, email),
     });
@@ -36,7 +41,7 @@ class UsersRepository implements IUsersRepository {
 
   async findUserByUsername(
     username: string,
-  ): Promise<User | undefined> {
+  ): Promise<AuthUser | undefined> {
     return this.db.query.users.findFirst({
       where: eq(users.name, username),
     });
@@ -44,8 +49,8 @@ class UsersRepository implements IUsersRepository {
 
   async updateUser(
     id: string,
-    data: Partial<NewUser>,
-  ): Promise<User | undefined> {
+    data: Partial<newAuthUser>,
+  ): Promise<AuthUser | undefined> {
     const [row] = await this.db
       .update(users)
       .set(data)
@@ -54,7 +59,7 @@ class UsersRepository implements IUsersRepository {
     return row;
   }
 
-  async deleteUser(id: string): Promise<User | undefined> {
+  async deleteUser(id: string): Promise<AuthUser | undefined> {
     const [row] = await this.db.delete(users).where(eq(users.id, id)).returning();
     return row;
   }
