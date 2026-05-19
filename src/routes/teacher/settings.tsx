@@ -4,11 +4,11 @@ import {
   getTeacherQueryOptions,
   useUpdateTeacherSettings,
 } from '#/hooks/teachers/hooks'
-import { useSuspenseQuery } from '@tanstack/react-query'
 import { FormProvider } from 'react-hook-form'
 import { UserAvatar } from '#/components/admin/Table/columnsData'
 import { Switch } from '#/components/ui/switch'
-import type { TeacherUser } from '#/server/modules/teachers/teachers.types'
+import type { TeacherUser } from '#/types/teacherTypes'
+import { useAuth } from '#/store/auth_store'
 
 export const Route = createFileRoute('/teacher/settings')({
   component: RouteComponent,
@@ -16,26 +16,25 @@ export const Route = createFileRoute('/teacher/settings')({
     meta: [{ title: 'Teacher | Settings - EduManage' }],
   }),
   loader: async ({ context }) => {
-    const user = context.authState.user
-    if (!user) throw new Error('Unauthorized')
-    const userId = user.id
-    await context.queryClient.prefetchQuery({
-      ...getTeacherQueryOptions({ fetchBy: 'userId', userId }),
-    })
+    // const user = context.authState.user
+    // if (!user) throw new Error('Unauthorized')
+    // const userId = user.id
+    // await context.queryClient.prefetchQuery({
+    //   ...getTeacherQueryOptions({ fetchBy: 'userId', userId }),
+    // })
   },
 })
 
 function RouteComponent() {
-  const { authState } = Route.useRouteContext()
-  const user = authState.user
+  const user = useAuth((s) => s.user) as TeacherUser | null
   if (!user) throw new Error('Unauthorized')
-  const { data: teacherData } = useSuspenseQuery({
-    ...getTeacherQueryOptions({ fetchBy: 'userId', userId: user.id }),
-  })
+  // const { data: teacherData } = useSuspenseQuery({
+  //   ...getTeacherQueryOptions({ fetchBy: 'userId', userId: user.id }),
+  // })
 
   return (
     <Skeleton name="teacher-settings-page" loading={false}>
-      <SettingsComp teacher={teacherData} />
+      <SettingsComp teacher={user} />
     </Skeleton>
   )
 }
@@ -155,7 +154,7 @@ function SettingsComp({ teacher }: { teacher: TeacherUser }) {
                         Date of Birth
                       </label>
                       <div className="flex h-11 items-center justify-between rounded-xl border border-transparent bg-slate-100 px-4 text-sm text-slate-500 dark:bg-slate-800 dark:text-slate-400">
-                        <span>{teacher.dateOfBirth}</span>
+                        <span>{teacher.info?.dateOfBirth}</span>
                         <span className="material-symbols-outlined text-lg">
                           lock
                         </span>
@@ -167,7 +166,7 @@ function SettingsComp({ teacher }: { teacher: TeacherUser }) {
                         Home Address
                       </label>
                       <div className="flex h-11 items-center justify-between rounded-xl border border-transparent bg-slate-100 px-4 text-sm text-slate-500 dark:bg-slate-800 dark:text-slate-400">
-                        <span>{teacher.address}</span>
+                        <span>{teacher.info?.address}</span>
                         <span className="material-symbols-outlined text-lg">
                           lock
                         </span>

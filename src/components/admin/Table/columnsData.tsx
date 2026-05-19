@@ -27,7 +27,7 @@ import { Badge } from '#/components/ui/badge'
 import { StatusEnum, UserGenderEnum } from '#/server/db/schema'
 import ProfilePicGenerator from '../profilePicGenerator'
 import { cld } from '#/lib/cloudinary'
-import type { Student } from '#/types/studentTypes'
+import type {  StudentUser } from '#/types/studentTypes'
 import type { Teacher } from '#/types/teacherTypes'
 
 export function UserAvatar({
@@ -65,7 +65,7 @@ function ImageColumnUI({ image }: { image: string | null }) {
 }
 
 // definition for the student columns in the student table
-export const StudentColumns: Array<ColumnDef<Student>> = [
+export const StudentColumns: Array<ColumnDef<StudentUser>> = [
   {
     id: 'select',
     header: ({ table }) => (

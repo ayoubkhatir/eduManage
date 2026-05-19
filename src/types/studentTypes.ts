@@ -1,8 +1,13 @@
 import * as schema from '#/server/db/schema';
 import { addStudentSchema, editStudentSchema, getStudentsSchema, studentSearchSchema } from '#/schemas/students.schema';
 import z from "zod";
+import type { AuthUser } from './authTypes';
 
 export type Student = typeof schema.studentsTable.$inferSelect
+export type StudentUser = Omit<AuthUser, "info"> & {
+    info: Student
+
+}
 
 export type GetStudentsType = z.infer<typeof getStudentsSchema>;
 

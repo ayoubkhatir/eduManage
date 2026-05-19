@@ -2,7 +2,12 @@ import {getUsersSchema , addUserSchema , editUserSchema } from '#/schemas/users.
 
 import z from 'zod'
 
+import type { AuthUser  , Admin} from './authTypes';
 
+
+export type AdminUser = AuthUser & {
+  info: Admin
+}
 
 export type getUsersSchema = z.infer<typeof getUsersSchema>;
 
