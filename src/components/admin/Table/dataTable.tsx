@@ -14,8 +14,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
-import { TeacherColumns } from './columnsData'
+import { StudentColumns, TeacherColumns } from './columnsData'
 import type { TeacherUser } from '#/server/modules/teachers/teachers.types'
+import type { StudentUser } from '#/server/modules/students/students.types'
 
 interface DataTableProps<TData> {
   table: Tab<TData>
@@ -135,6 +136,17 @@ export function TeachersTable({ data }: { data: Array<TeacherUser> }) {
   const table = useReactTable({
     data,
     columns: TeacherColumns,
+    getCoreRowModel: getCoreRowModel(),
+  })
+
+  return <DataTable table={table} />
+}
+
+// students Table
+export function StudentsTable({ data }: { data: Array<StudentUser> }) {
+  const table = useReactTable({
+    data,
+    columns: StudentColumns,
     getCoreRowModel: getCoreRowModel(),
   })
 

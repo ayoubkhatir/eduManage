@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
-import type { UICardType } from '@/components/admin/UICard'
 import DashboardChart from '@/components/admin/dashboardChart'
-import UICardComponent from '@/components/admin/UICard'
+import type { UICardType } from '#/components/admin/cards/UICard'
+import UICardComponent from '#/components/admin/cards/UICard'
+import ActionCards from '#/components/admin/cards/ActionCards'
 
 export const Route = createFileRoute('/admin/dashboard')({
   component: RouteComponent,
@@ -82,7 +83,7 @@ function RouteComponent() {
           {/* Chart + Quick Actions */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {/* Enrollment Chart */}
-            <section className="lg:col-span-2 rounded-2xl border border-slate-200/70 bg-white p-6 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
+            <section className="lg:col-span-2 rounded-2xl border border-slate-200/70 bg-white p-6 shadow-sm dark:border-white/6 dark:bg-white/2">
               <div className="mb-6 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white">
@@ -107,60 +108,36 @@ function RouteComponent() {
             {/* Side Panel */}
             <section className="flex flex-col gap-6">
               {/* Quick Actions */}
-              <div className="rounded-2xl border border-slate-200/70 bg-white p-6 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
+              <div className="rounded-2xl border border-slate-200/70 bg-white p-6 shadow-sm dark:border-white/6 dark:bg-white/2">
                 <h3 className="mb-4 text-lg font-bold text-slate-900 dark:text-white">
                   Quick Actions
                 </h3>
                 <div className="grid grid-cols-2 gap-3">
-                  <Link
-                    to="/admin/students/add"
-                    className="group flex flex-col items-center justify-center gap-2 rounded-xl border border-slate-100 bg-slate-50 p-4 transition-all hover:border-primary/30 hover:bg-primary/5 hover:text-primary dark:border-slate-700/50 dark:bg-slate-800 dark:hover:border-primary/40 dark:hover:bg-primary/10"
-                  >
-                    <span className="material-symbols-outlined text-3xl text-slate-400 transition-colors group-hover:text-primary dark:text-slate-500">
-                      person_add
-                    </span>
-                    <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
-                      Add Student
-                    </span>
-                  </Link>
-                  <Link
-                    to="/admin/teachers/add"
-                    className="group flex flex-col items-center justify-center gap-2 rounded-xl border border-slate-100 bg-slate-50 p-4 transition-all hover:border-primary/30 hover:bg-primary/5 hover:text-primary dark:border-slate-700/50 dark:bg-slate-800 dark:hover:border-primary/40 dark:hover:bg-primary/10"
-                  >
-                    <span className="material-symbols-outlined text-3xl text-slate-400 transition-colors group-hover:text-primary dark:text-slate-500">
-                      group_add
-                    </span>
-                    <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
-                      Add Teacher
-                    </span>
-                  </Link>
-                  <button
-                    type="button"
-                    className="cursor-pointer group flex flex-col items-center justify-center gap-2 rounded-xl border border-slate-100 bg-slate-50 p-4 transition-all hover:border-primary/30 hover:bg-primary/5 hover:text-primary dark:border-slate-700/50 dark:bg-slate-800 dark:hover:border-primary/40 dark:hover:bg-primary/10"
-                  >
-                    <span className="material-symbols-outlined text-3xl text-slate-400 transition-colors group-hover:text-primary dark:text-slate-500">
-                      campaign
-                    </span>
-                    <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
-                      Announce
-                    </span>
-                  </button>
-                  <button
-                    type="button"
-                    className="cursor-pointer group flex flex-col items-center justify-center gap-2 rounded-xl border border-slate-100 bg-slate-50 p-4 transition-all hover:border-primary/30 hover:bg-primary/5 hover:text-primary dark:border-slate-700/50 dark:bg-slate-800 dark:hover:border-primary/40 dark:hover:bg-primary/10"
-                  >
-                    <span className="material-symbols-outlined text-3xl text-slate-400 transition-colors group-hover:text-primary dark:text-slate-500">
-                      description
-                    </span>
-                    <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
-                      Report
-                    </span>
-                  </button>
+                  <ActionCards
+                    label="Add Teacher"
+                    icon="group_add"
+                    navigateTo="/admin/teachers/add"
+                  />
+                  <ActionCards
+                    label="Add Student"
+                    icon="group_add"
+                    navigateTo="/admin/students/add"
+                  />
+                  <ActionCards
+                    label="description"
+                    icon="group_add"
+                    navigateTo="#"
+                  />
+                  <ActionCards
+                    label="campaign"
+                    icon="group_add"
+                    navigateTo="#"
+                  />
                 </div>
               </div>
 
               {/* System Status */}
-              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-blue-800 p-6 shadow-lg">
+              <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-primary to-blue-800 p-6 shadow-lg">
                 <div className="absolute inset-0 bg-blue-600/10" />
                 <div className="relative z-10">
                   <div className="mb-2 flex items-center gap-2">
@@ -186,8 +163,8 @@ function RouteComponent() {
           </div>
 
           {/* Recent Activities */}
-          <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
-            <div className="flex items-center justify-between border-b border-slate-100 p-6 dark:border-white/[0.06]">
+          <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/6 dark:bg-white/2">
+            <div className="flex items-center justify-between border-b border-slate-100 p-6 dark:border-white/6">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white">
                 Recent Activities
               </h3>
@@ -201,15 +178,15 @@ function RouteComponent() {
             <div className="overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/50 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:border-white/[0.04] dark:bg-white/[0.02] dark:text-slate-400">
+                  <tr className="border-b border-slate-100 bg-slate-50/50 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:border-white/4 dark:bg-white/2 dark:text-slate-400">
                     <th className="px-6 py-4">User / Event</th>
                     <th className="px-6 py-4">Role</th>
                     <th className="px-6 py-4">Action Type</th>
                     <th className="px-6 py-4 text-right">Time</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-white/[0.04]">
-                  <tr className="transition-colors hover:bg-slate-50 dark:hover:bg-white/[0.02] group cursor-pointer">
+                <tbody className="divide-y divide-slate-100 dark:divide-white/4">
+                  <tr className="transition-colors hover:bg-slate-50 dark:hover:bg-white/2 group cursor-pointer">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="flex size-9 items-center justify-center rounded-full bg-indigo-100 text-sm font-bold text-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-300">
@@ -239,7 +216,7 @@ function RouteComponent() {
                       <p className="text-sm text-slate-500">2 mins ago</p>
                     </td>
                   </tr>
-                  <tr className="transition-colors hover:bg-slate-50 dark:hover:bg-white/[0.02] group cursor-pointer">
+                  <tr className="transition-colors hover:bg-slate-50 dark:hover:bg-white/2 group cursor-pointer">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="flex size-9 items-center justify-center rounded-full bg-emerald-100 text-sm font-bold text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-300">
@@ -269,7 +246,7 @@ function RouteComponent() {
                       <p className="text-sm text-slate-500">15 mins ago</p>
                     </td>
                   </tr>
-                  <tr className="transition-colors hover:bg-slate-50 dark:hover:bg-white/[0.02] group cursor-pointer">
+                  <tr className="transition-colors hover:bg-slate-50 dark:hover:bg-white/2 group cursor-pointer">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="flex size-9 items-center justify-center rounded-full bg-orange-100 text-orange-600 dark:bg-orange-900/40 dark:text-orange-300">

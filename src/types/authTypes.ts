@@ -1,7 +1,7 @@
 import type { validCuidSchema } from '#/schemas/shared.schema';
 import * as schema from '#/server/db/schema';
-import type {Student} from "./studentTypes"
-import type {Teacher} from "./teacherTypes"
+import type { Student } from "./studentTypes"
+import type { Teacher } from "./teacherTypes"
 import z from "zod";
 
 
@@ -13,8 +13,10 @@ export type Admin = typeof schema.adminsTable.$inferSelect
 export type AuthUserInfo = Teacher | Student | Admin
 
 export type AuthUser = typeof schema.users.$inferSelect & {
-    info?: AuthUserInfo
+  info?: AuthUserInfo
 }
+
+export type newAuthUser = Omit<AuthUser,"createdAt" | "updatedAt" | "info">
 
 export type UserRole = typeof schema.UserRoleEnum
 export type UserGender = typeof schema.UserGenderEnum
@@ -46,12 +48,12 @@ export type LoginSuccessPayload = {
   redirect?: boolean
   token?: string
   url?: string
-  user?: AuthUser 
+  user?: AuthUser
 }
 
 export type AuthResult = {
   success: boolean
   message?: string
-  status : number
+  status: number
   data?: LoginSuccessPayload
 }

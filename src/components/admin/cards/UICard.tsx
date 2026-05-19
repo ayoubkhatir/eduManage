@@ -1,4 +1,6 @@
+import { getStudentsStatsServerFn } from '#/server/modules/students/students.server-functions'
 import { getTeachersStatsServerFn } from '#/server/modules/teachers/teachers.server-functions'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 
@@ -15,7 +17,15 @@ const getTeacherStatsQueryOptions = () => ({
       }
   },
 })
-import { Skeleton } from '@/components/ui/skeleton'
+
+const iconColorMap: Record<CardColor, string> = {
+  blue: 'bg-blue-50 text-blue-600 dark:bg-blue-500/15 dark:text-blue-400',
+  purple:
+    'bg-purple-50 text-purple-600 dark:bg-purple-500/15 dark:text-purple-400',
+  green: 'bg-green-50 text-green-600 dark:bg-green-500/15 dark:text-green-400',
+  orange:
+    'bg-orange-50 text-orange-600 dark:bg-orange-500/15 dark:text-orange-400',
+}
 
 type CardColor = 'blue' | 'purple' | 'green' | 'orange'
 
@@ -27,15 +37,6 @@ export type UICardType = {
   percentage: number
   cardTitle: string
   info: string | number
-}
-
-const iconColorMap: Record<CardColor, string> = {
-  blue: 'bg-blue-50 text-blue-600 dark:bg-blue-500/15 dark:text-blue-400',
-  purple:
-    'bg-purple-50 text-purple-600 dark:bg-purple-500/15 dark:text-purple-400',
-  green: 'bg-green-50 text-green-600 dark:bg-green-500/15 dark:text-green-400',
-  orange:
-    'bg-orange-50 text-orange-600 dark:bg-orange-500/15 dark:text-orange-400',
 }
 
 export default function UICardComponent({
@@ -94,7 +95,7 @@ export function UICardSkeletonItem() {
         <Skeleton className="h-11 w-11 rounded-xl" />
 
         {/* Percentage badge */}
-        <Skeleton className="h-6 w-16 rounded-full" />
+        {/* <Skeleton className="h-6 w-16 rounded-full" /> */}
       </div>
 
       {/* Title */}
@@ -159,6 +160,59 @@ export function TeachersStatCards() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {cards.map((card, i) => (
+        <UICardComponent {...card} key={i} />
+      ))}
+    </div>
+  )
+}
+
+const getStudentsStatsQueryOptions = () => ({
+  queryKey: ['students', 'stats'],
+  queryFn: async () => {
+    const response = await getStudentsStatsServerFn()
+    if (response.success) return response.data
+    return {
+      totalStudents: 0,
+      totalMonthEnrollments: 0,
+    }
+  },
+})
+
+export function StudentsStatCards() {
+  const { data: studentsStat, status: fetchStatus } = useQuery({
+    ...getStudentsStatsQueryOptions(),
+  })
+
+  const cards = useMemo<UICardType[]>(
+    () => [
+      {
+        id: 'total-students',
+        iconName: 'school',
+        iconColor: 'blue',
+        stateIcon: 'trending_up',
+        percentage: 0,
+        cardTitle: 'Total Students',
+        info: studentsStat?.totalStudents ?? 0,
+      },
+      {
+        id: 'month-enrollments',
+        iconName: 'person_add',
+        iconColor: 'green',
+        stateIcon: 'trending_up',
+        percentage: 0,
+        cardTitle: 'Enrollments This Month',
+        info: studentsStat?.totalMonthEnrollments ?? 0,
+      },
+    ],
+    [studentsStat],
+  )
+
+  if (fetchStatus === 'pending') return <UICardSkeleton count={2} />
+  if (fetchStatus === 'error') return null
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {cards.map((card, i) => (
         <UICardComponent {...card} key={i} />
       ))}

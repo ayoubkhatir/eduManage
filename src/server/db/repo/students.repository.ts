@@ -1,25 +1,77 @@
 import { db, type Database } from "../db.js";
-import { studentsTable, users } from "../schemas.js";
-import type { NewStudent, Student, StudentSearchSchema } from "../../types.js";
-import { eq, inArray, like, sql } from "drizzle-orm";
-import { StudentWithUser } from "../../modules/student/students.types.js";
+import { eq, inArray, like, or, sql } from "drizzle-orm";
+import { studentsTable, UserRoleEnum, users } from "../schema.js";
+import { type AddStudentType, type Student, type StudentSearchType } from "#/types/studentTypes.js";
+
 
 export interface IStudentsRepository {
-  createStudent(data: NewStudent): Promise<Student[]>;
-  findStudentById(id: string): Promise<StudentWithUser | undefined>;
-  findStudentByUserId(userId: string): Promise<StudentWithUser | undefined>;
-  listStudents(search_queries: StudentSearchSchema): Promise<{ data: StudentWithUser[]; pagination: { totalCount: number, totalPages: number } }>;
-  updateStudent(id: string, data: Partial<NewStudent>): Promise<Student | undefined>;
+  createStudent(data: AddStudentType): Promise<Student[]>;
+
+  findStudentById(id: string): Promise<Student | undefined>;
+  findStudentByUserId(userId: string): Promise<Student | undefined>;
+
+  listStudents(search_queries: StudentSearchType): Promise<{ data: Student[]; pagination: { totalCount: number, totalPages: number } }>;
+  updateStudent(id: string, data: Partial<AddStudentType>): Promise<Student | undefined>;
   deleteStudent(id: string): Promise<Student | undefined>;
 }
 
 class StudentsRepository implements IStudentsRepository {
   constructor(private readonly db: Database) { }
 
-  async createStudent(data: NewStudent): Promise<Student[]> {
-    const payload = { ...data, id: data.id ?? crypto.randomUUID() };
-    const rows = await this.db.insert(studentsTable).values(payload).returning();
-    return rows;
+  // type newAuthUser = {
+  //     name: string;
+  //     email: string;
+  //     emailVerified: boolean;
+  //     image: string | null;
+  //     gender: UserGenderEnum;
+  //     telNumber: string | null;
+  //     role: UserRoleEnum;
+  // }
+
+  //     userId: z.ZodCUID2;
+  //     schoolId: z.ZodCUID2;
+  //     gradeId: z.ZodCUID2;
+  //     classId: z.ZodCUID2;
+  //     parentPhoneNumber: z.ZodString;
+  //     parentName: z.ZodString;
+  //     status: z.ZodEnum<{
+  //         Active: "Active";
+  //         Inactive: "Inactive";
+  //         Pending: "Pending";
+  //         New: "New";
+  //     }>;
+  //     address: z.ZodString;
+  //     dateOfBirth: z.ZodString;
+  //     enrollmentDate: z.ZodString;
+  // }, z.core.$strip>
+  // import addStudentSchema
+
+  async createStudent(data: AddStudentType): Promise<Student[]> {
+
+    const userId = crypto.randomUUID();
+    const studentId = crypto.randomUUID();
+
+    const newUser = await this.db.insert(users).values({ id: userId, name: data.name, email: data.email, image: data.image, gender: data.gender, telNumber: data.telNumber, role: UserRoleEnum.STUDENT }).returning();
+
+    if (!newUser) {
+      throw new Error("Failed to create user for student");
+    }
+
+    console.log(newUser);
+
+    const newStudent = await this.db
+      .insert(studentsTable)
+      .values({
+        ...data,
+        id: studentId,
+      })
+      .returning();
+
+    if (!newStudent) {
+      throw new Error("Failed to create student");
+    }
+    console.log(newStudent);
+    return newStudent;
   }
 
   async findStudentById(id: string) {
@@ -27,7 +79,9 @@ class StudentsRepository implements IStudentsRepository {
       where: eq(studentsTable.id, id),
       with: { user: true },
     });
-    return student
+    if (!student) return undefined;
+
+    return student;
   }
 
   async findStudentByUserId(
@@ -37,6 +91,7 @@ class StudentsRepository implements IStudentsRepository {
       where: eq(studentsTable.userId, userId),
       with: { user: true },
     });
+    if (!student) return undefined;
     return student
   }
 
@@ -46,13 +101,16 @@ class StudentsRepository implements IStudentsRepository {
     size,
     sortBy,
     sortOrder,
-    grade,
-    status,
-    schoolId
-  }: StudentSearchSchema
+  }: StudentSearchType
   ) {
-    const offset = (page - 1) * size;
+
+
+    // search 
     const searchValue = search?.trim();
+    // pagination
+    const offset = (page - 1) * size;
+
+    const sortByMap = sortBy === 'name' ? users.name : users.email
 
     // Define the where clause once
     const whereClause = searchValue
@@ -61,9 +119,11 @@ class StudentsRepository implements IStudentsRepository {
         this.db
           .select({ id: users.id })
           .from(users)
-          .where(like(users.name, `%${searchValue}%`)),
+          .where(like(sortByMap, `%${searchValue}%`)),
       )
       : undefined;
+
+
 
     // Run both queries in parallel to save time
     const [data, totalResult] = await Promise.all([
@@ -89,7 +149,7 @@ class StudentsRepository implements IStudentsRepository {
 
   async updateStudent(
     id: string,
-    data: Partial<NewStudent>,
+    data: Partial<AddStudentType>,
   ): Promise<Student | undefined> {
     const [student] = await this.db
       .update(studentsTable)

@@ -1,25 +1,20 @@
-import type { AddStudentSchema, EditStudentSchema, GetStudentsSchema } from "#/schemas/students.schema";
 import { db } from "#/server/db/db";
 import { account, classesTable, StatusEnum, studentsTable, UserRoleEnum, users } from "#/server/db/schema";
 import { and, count, eq, gte, lt } from "drizzle-orm";
 import generateId from "../../utils/id_generator";
 import { generateTemporaryPassword } from "../../utils/temp_password_generator";
-import { StudentUserDto, type StudentUser } from "./students.types";
 import { handlePassword } from "#/server/utils/handle-password";
 import { studentsRepository, type IStudentsRepository } from "#/server/db/repo";
+import { type AddStudentType, type EditStudentType, type StudentSearchType } from "#/types/studentTypes";
 
 class StudentsController {
     constructor(private readonly studentsRepository: IStudentsRepository) { }
 
-    async listStudents(search_queries: GetStudentsSchema) {
+    async listStudents(search_queries: StudentSearchType) {
         return await this.studentsRepository.listStudents(search_queries);
     }
 
-
-
-
-
-    async addStudent(data: AddStudentSchema) {
+    async addStudent(data: AddStudentType) {
         const userId = generateId();
 
         const passwordHash = await handlePassword.hash(generateTemporaryPassword(data.name))
@@ -99,7 +94,7 @@ class StudentsController {
         return this.studentsRepository.findStudentById(studentId)
     }
 
-    async editStudent(data: EditStudentSchema) {
+    async editStudent(data: EditStudentType) {
         const password = generateTemporaryPassword(data.name)
         const passwordHash = await handlePassword.hash(password);
 

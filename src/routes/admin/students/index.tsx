@@ -1,25 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
-import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { zodValidator } from '@tanstack/zod-adapter'
-import { StudentColumns } from '@/components/admin/Table/columnsData'
-import DataTable, {
-  CustomDataTableSkeleton,
-} from '@/components/admin/Table/dataTable'
 import { CustomPagination } from '@/components/admin/PaginationComp'
 import { SearchInput } from '@/components/admin/SearchInput'
 import { SelectPageSize } from '@/components/admin/SelectPageSize'
 import IndexPageComponent from '@/components/admin/IndexPageComponent'
-import {
-  getAllStudentsServerFn,
-  getStudentsStatsServerFn,
-} from '#/server/modules/students/students.server-functions'
-import type { StudentUser } from '#/server/modules/students/students.types'
-import {
-  getStudentsSchema,
-  type GetStudentsSchema,
-} from '#/schemas/students.schema'
+import { getAllStudentsServerFn } from '#/server/modules/students/students.server-functions'
+import { getStudentsSchema } from '#/schemas/students.schema'
 import {
   Select,
   SelectContent,
@@ -28,11 +16,10 @@ import {
   SelectValue,
 } from '#/components/ui/select'
 import { getAllGradesQueryOptions } from '#/services/api/grades.hooks'
-import UICardComponent, {
-  UICardSkeleton,
-  type UICardType,
-} from '#/components/admin/UICard'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
+import type { GetStudentsSchema } from '#/types/studentTypes'
+import { StudentsStatCards } from '#/components/admin/cards/UICard'
+import { CustomDataTableSkeleton, StudentsTable } from '#/components/admin/Table/dataTable'
 
 // type QueryOptionsType = Filters<StudentModel>
 
@@ -170,59 +157,6 @@ function OwnerStudentsContent() {
   )
 }
 
-const getStudentsStatsQueryOptions = () => ({
-  queryKey: ['students', 'stats'],
-  queryFn: async () => {
-    const response = await getStudentsStatsServerFn()
-    if (response.success) return response.data
-    return {
-      totalStudents: 0,
-      totalMonthEnrollments: 0,
-    }
-  },
-})
-
-function StudentsStatCards() {
-  const { data: studentsStat, status: fetchStatus } = useQuery({
-    ...getStudentsStatsQueryOptions(),
-  })
-
-  const cards = useMemo<UICardType[]>(
-    () => [
-      {
-        id: 'total-students',
-        iconName: 'school',
-        iconColor: 'blue',
-        stateIcon: 'trending_up',
-        percentage: 0,
-        cardTitle: 'Total Students',
-        info: studentsStat?.totalStudents ?? 0,
-      },
-      {
-        id: 'month-enrollments',
-        iconName: 'person_add',
-        iconColor: 'green',
-        stateIcon: 'trending_up',
-        percentage: 0,
-        cardTitle: 'Enrollments This Month',
-        info: studentsStat?.totalMonthEnrollments ?? 0,
-      },
-    ],
-    [studentsStat],
-  )
-
-  if (fetchStatus === 'pending') return <UICardSkeleton count={2} />
-  if (fetchStatus === 'error') return null
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {cards.map((card, i) => (
-        <UICardComponent {...card} key={i} />
-      ))}
-    </div>
-  )
-}
-
 function GradesFilter() {
   const navigate = Route.useNavigate()
   const { grade } = Route.useSearch({ select: (s) => ({ grade: s.grade }) })
@@ -356,14 +290,4 @@ function MainPageContent() {
       )}
     </>
   )
-}
-
-function StudentsTable({ data }: { data: Array<StudentUser> }) {
-  const table = useReactTable({
-    data,
-    columns: StudentColumns,
-    getCoreRowModel: getCoreRowModel(),
-  })
-
-  return <DataTable table={table} />
 }

@@ -6,24 +6,14 @@ import { SearchInput } from '@/components/admin/SearchInput'
 import { SelectPageSize } from '@/components/admin/SelectPageSize'
 import IndexPageComponent from '@/components/admin/IndexPageComponent'
 import { zodValidator } from '@tanstack/zod-adapter'
-import {
-  getTeachersServerFn,
-  getTeachersStatsServerFn,
-} from '#/server/modules/teachers/teachers.server-functions'
-import {
-  getTeachersSchema,
-  type GetTeachersSchema,
-} from '#/schemas/teachers.schema'
-import UICardComponent, {
-  UICardSkeleton,
-  type UICardType,
-} from '#/components/admin/UICard'
-import { useMemo } from 'react'
+import { getTeachersServerFn } from '#/server/modules/teachers/teachers.server-functions'
+import { getTeachersSchema } from '#/schemas/teachers.schema'
 import {
   CustomDataTableSkeleton,
   TeachersTable,
 } from '#/components/admin/Table/dataTable'
-import { TeachersStatCards } from '#/components/admin/cards/StatsCards'
+import { TeachersStatCards } from '#/components/admin/cards/UICard'
+import type { GetTeachersSchema } from '#/types/teacherTypes'
 
 const getTeachersQueryOptions = ({
   page,

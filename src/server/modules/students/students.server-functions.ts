@@ -1,12 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
 import { studentsController } from "./students.controller";
 import { paginatedSuccessResponse, successResponse, type APIResponse, type APIErrorResponses } from "#/server/utils/response.type";
-import { addStudentSchema, editStudentSchema, getStudentsSchema } from "#/schemas/students.schema";
+import { addStudentSchema, editStudentSchema, studentSearchSchema } from "#/schemas/students.schema";
 import { validCuidSchema } from "#/schemas/shared.schema";
 import { mapDbError } from "#/server/utils/db_error_handling";
 
 export const getAllStudentsServerFn = createServerFn({ method: "GET" })
-    .inputValidator(getStudentsSchema)
+    .inputValidator(studentSearchSchema)
     .handler(async ({ data: search_queries }) => {
         const { data, pagination } = await studentsController.listStudents(search_queries);
         return paginatedSuccessResponse(data, pagination);
