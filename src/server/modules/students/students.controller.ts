@@ -1,11 +1,11 @@
 import { db } from "#/server/db/db";
-import { account, classesTable, StatusEnum, studentsTable, UserRoleEnum, users } from "#/server/db/schema";
+import { account, classesTable, StatusEnum, studentsTable, teacherAssignmentsRelations, UserRoleEnum, users } from "#/server/db/schema";
 import { and, count, eq, gte, lt } from "drizzle-orm";
 import generateId from "../../utils/id_generator";
 import { generateTemporaryPassword } from "../../utils/temp_password_generator";
 import { handlePassword } from "#/server/utils/handle-password";
 import { studentsRepository, type IStudentsRepository } from "#/server/db/repo";
-import { type AddStudentType, type EditStudentType, type StudentSearchType } from "#/types/studentTypes";
+import { type AddStudentType, type EditStudentType, type StudentSearchType, type StudentUser } from "#/types/studentTypes";
 
 class StudentsController {
     constructor(private readonly studentsRepository: IStudentsRepository) { }
@@ -25,7 +25,7 @@ class StudentsController {
             })
             if (!classe) throw new Error("Classe Not Found");
 
-            await tx.insert(users).values({
+            const [user] = await tx.insert(users).values({
                 id: userId,
                 email: data.email,
                 telNumber: data.telNumber,
@@ -35,7 +35,7 @@ class StudentsController {
                 name: data.name,
                 createdAt: new Date(),
                 updatedAt: new Date(),
-            })
+            }).returning()
 
             await tx.insert(account).values({
                 id: generateId(),
@@ -58,10 +58,16 @@ class StudentsController {
                     userId,
                     classId: data.classId,
                 })
-                .returning({ id: studentsTable.id })
-            if (!createdStudent) throw new Error("student not created");
-            return createdStudent;
+                .returning()
+
+            const result: StudentUser = {
+                ...user,
+                info: createdStudent,
+            }
+
+            return result
         })
+        return student
     }
 
 
