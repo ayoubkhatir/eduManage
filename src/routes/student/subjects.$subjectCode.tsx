@@ -155,7 +155,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getResourcesSchema } from '#/schemas/resources.schema'
 import { columns } from '@/components/resources/columns'
 import { ResourcesTable } from '#/components/teacher/resources/resources-table'
-import { getResourcesQueryOptions } from '#/services/api/resources.hooks'
+import { getResourcesQueryOptions } from '#/hooks/resources/hooks'
 
 export const Route = createFileRoute('/student/subjects/$subjectCode')({
   component: StudentResourcesPage,
@@ -261,7 +261,7 @@ function StudentResourcesContent() {
               })
             },
           }}
-          filters={search}
+          filters={{ ...search, subjectCode }}
           onFilterChange={setFilters}
         />
       )}

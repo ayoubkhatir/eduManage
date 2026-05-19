@@ -2,7 +2,7 @@
 import { create , useStore } from 'zustand'
 import {  useContext } from "react"
 import {AuthStoreContext} from "#/providers/authProvider"
-import type { AuthUser }  from '../../schemas/auth.schema'
+import type { AuthUser }  from '../types/authTypes'
 
 export type AuthState = {
   user: AuthUser | null

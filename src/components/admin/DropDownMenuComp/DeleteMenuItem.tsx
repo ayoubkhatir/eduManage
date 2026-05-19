@@ -12,9 +12,9 @@ import {
   AlertDialogTrigger,
 } from '../../ui/alert-dialog'
 import { DropdownMenuItem } from '../../ui/dropdown-menu'
-import { useDeleteStudent } from '@/services/api/admin/student/hooks'
+import { useDeleteStudent } from '#/hooks/students/hooks'
 import { toast } from 'sonner'
-import { useDeleteTeacher } from '#/services/api/admin/teacher/hooks'
+import { useDeleteTeacher } from '#/hooks/teachers/hooks'
 // import { useDeleteTeacher } from '@/services/api/admin/teacher/hooks'
 
 type Props = {

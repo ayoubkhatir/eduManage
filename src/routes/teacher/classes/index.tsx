@@ -276,7 +276,7 @@ import { Skeleton } from 'boneyard-js/react'
 import { queryOptions, useQuery, keepPreviousData } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { zodValidator } from '@tanstack/zod-adapter'
-import type { GetTeacherClassesSchema } from '#/schemas/teachers.schema'
+import type { GetTeacherClassesSchema  , TeacherClassItem} from '#/types/teacherTypes'
 import { getTeacherClassesSchema } from '../../../schemas/teachers.schema'
 import { getTeacherClassesDashboardServerFn } from '#/server/modules/teachers/teachers.server-functions'
 
@@ -313,20 +313,9 @@ import { getTeacherClassesDashboardServerFn } from '#/server/modules/teachers/te
  * }
  */
 
-type TeacherClassStatus = 'Active' | 'Inactive' | 'Pending' | 'New'
 
-type TeacherClassItem = {
-  assignmentId: string
-  classId: string
-  className: string
-  gradeId: string
-  gradeName: string
-  subjectId: string
-  subjectName: string
-  studentCount: number
-  isPrimaryTeacher: boolean
-  status: TeacherClassStatus
-}
+
+
 
 // async function getTeacherClasses(
 //   search: GetTeacherClassesSchema,
@@ -508,7 +497,7 @@ function TeacherClassesContent() {
       </div>
 
       <div className="px-6 mb-6">
-        <div className="rounded-2xl border border-slate-200/70 bg-white p-4 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
+        <div className="rounded-2xl border border-slate-200/70 bg-white p-4 shadow-sm dark:border-white/6 dark:bg-white/2">
           <div className="flex flex-col lg:flex-row gap-3 lg:items-center lg:justify-between">
             <div className="flex flex-col sm:flex-row gap-3 w-full lg:max-w-3xl">
               <input
@@ -746,7 +735,7 @@ function SummaryCard({
   icon: string
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
+    <div className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm dark:border-white/6 dark:bg-white/2">
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm text-slate-500 dark:text-slate-400">{title}</p>
@@ -764,7 +753,7 @@ function SummaryCard({
 
 function ClassCard({ item }: { item: TeacherClassItem }) {
   return (
-    <div className="group rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-primary/40">
+    <div className="group rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md dark:border-white/6 dark:bg-white/2 dark:hover:border-primary/40">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
@@ -822,6 +811,8 @@ function InfoPill({ label, value }: { label: string; value: string }) {
     </div>
   )
 }
+
+type TeacherClassStatus = TeacherClassItem['status']
 
 function StatusBadge({ status }: { status: TeacherClassStatus }) {
   const map: Record<TeacherClassStatus, string> = {

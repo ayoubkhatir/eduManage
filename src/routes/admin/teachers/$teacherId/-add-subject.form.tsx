@@ -13,8 +13,8 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
-import { getAllGradesQueryOptions } from '#/services/api/grades.hooks'
-import { useAddSubject } from '#/services/api/subjects.hooks'
+import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
+import { useAddSubject } from '#/hooks/subjects/hooks'
 import InputWrapper from '#/components/admin/Wrappers/InputWrapper'
 
 type AddSubjectDialogProps = {

@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
-import { addResourceSchema, getResourcesSchema, type ResourceDto } from '#/schemas/resources.schema'
+import { addResourceSchema, getResourcesSchema, } from '#/schemas/resources.schema'
+import type { ResourceDto } from '#/types/resourcesTypes'
 import { resourcesController } from './resources.controller'
 import {
     paginatedSuccessResponse,

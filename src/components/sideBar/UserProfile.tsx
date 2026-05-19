@@ -1,8 +1,8 @@
 import { Link } from '@tanstack/react-router'
 import { UserAvatar } from '../admin/Table/columnsData'
-import { useLogout } from '#/services/api/auth.hooks'
+import { useLogout } from '#/hooks/auth/hooks'
 import { Loader2Icon, LogOutIcon } from 'lucide-react'
-import type { AuthUser } from '#/schemas/auth.schema'
+import type { AuthUser } from '#/types/authTypes'
 
 export interface UserProfileProps {
   localPath: string

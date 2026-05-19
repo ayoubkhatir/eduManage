@@ -1,5 +1,5 @@
 import {createContext ,  useRef} from "react"
-import { createAuthStore, type AuthStore, type InitialAuthProps  } from "#/services/store/auth_store"
+import { createAuthStore, type AuthStore, type InitialAuthProps  } from "#/store/auth_store"
 
 export const AuthStoreContext = createContext<AuthStore | null>(null)
 

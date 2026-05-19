@@ -2,11 +2,16 @@ import { Link, createFileRoute, notFound } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { Skeleton } from 'boneyard-js/react'
+import {
+  getTeacherQueryOptions,
+  useEditTeacher,
+} from '#/hooks/teachers/hooks'
 import InputWrapper from '@/components/admin/Wrappers/InputWrapper'
 import DatePickerField from '@/components/admin/DatePickerField'
 import SelectWrapper from '@/components/admin/Wrappers/SelectWrapper'
 import { AvatarUploadCard } from '../../students/-student.avatar-editor'
 import ProfilePicGenerator from '#/components/admin/profilePicGenerator'
+import type { TeacherUser } from '#/types/teacherTypes'
 
 export const Route = createFileRoute('/admin/teachers/$teacherId/')({
   component: RouteComponent,

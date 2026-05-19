@@ -1,5 +1,5 @@
 import { ModeToggle } from '#/features/theme/mode-toggle'
-import useWelcomeSideBarStore from '#/services/store/welcome_store'
+import useWelcomeSideBarStore from '#/store/welcome_store'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 import { UserRoleEnum } from '#/server/db/schema'

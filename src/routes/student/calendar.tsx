@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 
-import { useGetEventsOptions } from '@/services/api/getEvents'
+import { useGetEventsOptions } from '#/hooks/events/hooks'
 
 import { GlobalCalendar } from '#/components/teacher-calendar'
 
@@ -32,5 +32,9 @@ function StudentCalendar() {
 }
 
 function StudentCalendarContent() {
-  return <GlobalCalendar className="Class-B" />
+  return (
+    <GlobalCalendar isTeacher={false} rawEvents={[]}>
+      <div className="h-full w-full" />
+    </GlobalCalendar>
+  )
 }

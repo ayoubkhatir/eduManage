@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Link } from '@tanstack/react-router'
 import { UserRoleEnum } from '#/server/db/schema'
-import useWelcomeSideBarStore from '#/services/store/welcome_store'
+import useWelcomeSideBarStore from '#/store/welcome_store'
 
 type WelcomeSideBarProps = {
   onNavigate: (id: string) => void

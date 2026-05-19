@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { NavButton } from './NavButton'
 import { UserProfile } from './UserProfile'
 import { Logo } from '../logo'
-import { useAuth } from '#/services/store/auth_store'
+import { useAuth } from '#/store/auth_store'
 
 export interface SidebarItem {
   name: string

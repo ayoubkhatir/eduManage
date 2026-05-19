@@ -17,9 +17,9 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
-import { getAllGradesQueryOptions } from '#/services/api/grades.hooks'
+import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
 import InputWrapper from '#/components/admin/Wrappers/InputWrapper'
-import { useAddClass } from '#/services/api/classes.hooks'
+import { useAddClass } from '#/hooks/classes/hooks'
 
 type AddClassDialogProps = {
   onCreated?: (classId: string) => void
@@ -41,8 +41,9 @@ export function AddClassDialog({
   buttonVariant = 'default',
 }: AddClassDialogProps) {
   const [open, setOpen] = useState(false)
+  const schoolId = 'r0akyppqt5jl'
 
-  const { form, onSubmit, isPending } = useAddClass((classId) => {
+  const { form, onSubmit, isPending } = useAddClass(schoolId, (classId) => {
     onCreated?.(classId)
     setOpen(false)
   })

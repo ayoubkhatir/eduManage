@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import useSideBarStore from '../services/store/sidebar_show_store'
+import useSideBarStore from '../store/sidebar_show_store'
 import PopUpNotification from './popUpNotification'
 import { ModeToggle } from '@/features/theme/mode-toggle'
 

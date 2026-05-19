@@ -7,7 +7,13 @@ import z from "zod";
 
 
 
+
 export type Teacher = typeof schema.teachersTable.$inferSelect
+
+// * Teacher with user info
+export type TeacherUser = AuthUser & {
+	info: Teacher
+}
 
 export type TeacherAssignments = typeof schema.teacherAssignmentsTable.$inferSelect
 
@@ -41,54 +47,15 @@ export type GetTeacherClassesType = z.infer<typeof getTeacherClassesSchema>
 
 export type TeacherSearchType = z.infer<typeof teacherSearchSchema>
 
-
-
-// export type TeacherUser = {
-//     id: string,
-//     userId: string,
-//     // teacherId: string,
-//     email: string;
-//     emailVerified: boolean;
-//     image: string | null;
-//     name: string;
-//     telNumber: string | null;
-//     role: schema.UserRoleEnum;
-//     createdAt: Date;
-//     updatedAt: Date;
-//     schoolId: string;
-//     gender: schema.UserGenderEnum;
-//     address: string;
-//     subjects: { id: string, name: string }[];
-//     dateOfBirth: string;
-//     joiningDate: string;
-//     status: schema.StatusEnum;
-//     about: string
-// }
-
-// export function TeacherUserDto(
-//     teacher: Teacher,
-//     user: AuthUser,
-//     subjects: { id: string, name: string }[]
-// ): TeacherUser {
-//     return {
-//         id: teacher.id,
-//         address: teacher.address,
-//         createdAt: user.createdAt,
-//         dateOfBirth: teacher.dateOfBirth,
-//         email: user.email,
-//         emailVerified: user.emailVerified,
-//         gender: user.gender,
-//         image: user.image,
-//         name: user.name,
-//         role: user.role,
-//         schoolId: teacher.schoolId,
-//         status: teacher.status,
-//         updatedAt: user.updatedAt,
-//         userId: user.id,
-//         telNumber: user.telNumber,
-//         joiningDate: teacher.joiningDate,
-//         // teacherId: teacher.id,
-//         subjects,
-//         about: teacher.about,
-//     }
-// }
+export type TeacherClassItem = {
+  assignmentId: string
+  classId: string
+  className: string
+  gradeId: string
+  gradeName: string
+  subjectId: string
+  subjectName: string
+  studentCount: number
+  isPrimaryTeacher: boolean
+  status: schema.StatusEnum
+}
