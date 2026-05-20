@@ -1,11 +1,14 @@
 import { useState, useRef, useEffect } from 'react'
 import useSideBarStore from '../store/sidebar_show_store'
-import PopUpNotification from './popUpNotification'
+// import PopUpNotification from './popUpNotification'
 import { ModeToggle } from '@/features/theme/mode-toggle'
 
 function Icon({ name, className = '' }: { name: string; className?: string }) {
   return (
-    <span className={`material-symbols-outlined ${className}`} aria-hidden="true">
+    <span
+      className={`material-symbols-outlined ${className}`}
+      aria-hidden="true"
+    >
       {name}
     </span>
   )
@@ -46,7 +49,10 @@ export default function TopNav() {
           {/* Desktop search bar */}
           <div className="hidden sm:flex">
             <div className="flex h-9 w-80 items-center gap-2 rounded-lg border border-slate-200/70 bg-slate-50/80 px-3 transition-all focus-within:border-primary/50 focus-within:bg-white focus-within:shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02] dark:focus-within:border-primary/40 dark:focus-within:bg-white/[0.04] xl:w-96">
-              <Icon name="search" className="text-[18px] text-slate-400 dark:text-slate-500" />
+              <Icon
+                name="search"
+                className="text-[18px] text-slate-400 dark:text-slate-500"
+              />
               <input
                 className="w-full border-none bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-100 dark:placeholder:text-slate-500"
                 placeholder="Search anything…"
@@ -73,14 +79,16 @@ export default function TopNav() {
 
           <ModeToggle />
 
-          <PopUpNotification />
+          {/* <PopUpNotification /> */}
         </div>
       </header>
 
       {/* Mobile search overlay */}
       <div
         className={`fixed inset-0 z-50 transition-all duration-300 sm:hidden ${
-          searchOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+          searchOpen
+            ? 'pointer-events-auto opacity-100'
+            : 'pointer-events-none opacity-0'
         }`}
         style={{ visibility: searchOpen ? 'visible' : 'hidden' }}
       >
@@ -92,11 +100,16 @@ export default function TopNav() {
 
         <div
           className={`relative mx-4 mt-4 rounded-xl border border-slate-200/80 bg-white p-3 shadow-2xl transition-all duration-300 ease-out dark:border-white/[0.06] dark:bg-[#0d1117] ${
-            searchOpen ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
+            searchOpen
+              ? 'translate-y-0 opacity-100'
+              : '-translate-y-4 opacity-0'
           }`}
         >
           <div className="flex items-center gap-3">
-            <Icon name="search" className="text-[20px] text-slate-400 dark:text-slate-500" />
+            <Icon
+              name="search"
+              className="text-[20px] text-slate-400 dark:text-slate-500"
+            />
             <input
               ref={inputRef}
               className="flex-1 border-none bg-transparent text-base text-slate-900 outline-none placeholder:text-slate-400 dark:text-slate-100 dark:placeholder:text-slate-500"

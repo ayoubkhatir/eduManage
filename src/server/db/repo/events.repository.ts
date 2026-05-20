@@ -2,10 +2,10 @@ import { and, eq, gte, lte } from "drizzle-orm";
 import type { SQL } from "drizzle-orm";
 
 import { db } from "../db.js";
-import { eventsTable } from "../schemas.js";
-import type { Event, NewEvent } from "../../types.js";
+import { classesTable, eventsTable, resourcesTable, subjectsTable } from "../schema.js";
+import type { AddEventType, Event } from "#/types/eventsTypes.js";
 
-export async function createEvent(data: NewEvent): Promise<Event[]> {
+export async function createEvent(data: AddEventType): Promise<Event[]> {
   const payload = { ...data, id: data.id ?? crypto.randomUUID() };
   const rows = await db.insert(eventsTable).values(payload).returning();
   return rows;
@@ -27,19 +27,31 @@ export async function listEvents(filters: {
   const conditions: SQL[] = [];
 
   if (filters.startDate) {
-    conditions.push(gte(eventsTable.date, new Date(filters.startDate)));
+    conditions.push(gte(eventsTable.start, new Date(filters.startDate)));
   }
 
   if (filters.endDate) {
-    conditions.push(lte(eventsTable.date, new Date(filters.endDate)));
+    conditions.push(lte(eventsTable.end, new Date(filters.endDate)));
   }
 
   if (filters.className) {
-    conditions.push(eq(eventsTable.className, filters.className));
+    const classData = await db.query.classesTable.findFirst({
+      where: eq(classesTable.name, filters.className),
+    })
+    if (!classData) { return [] }
+    conditions.push(eq(eventsTable.classId, classData.id));
   }
 
   if (filters.courseId !== undefined) {
-    conditions.push(eq(eventsTable.courseId, filters.courseId));
+    const courseData = await db.query.resourcesTable.findFirst({
+      where: eq(resourcesTable.id, filters.courseId),
+    })
+    if (!courseData) return []
+    const subjectData = await db.query.subjectsTable.findFirst({
+      where: eq(subjectsTable.id, courseData.subjectId),
+    })
+    if (!subjectData) return [];
+    conditions.push(eq(eventsTable.subjectId, subjectData.id));
   }
 
   if (conditions.length === 0) {
@@ -53,7 +65,7 @@ export async function listEvents(filters: {
 
 export async function updateEvent(
   id: string,
-  data: Partial<NewEvent>,
+  data: Partial<AddEventType>,
 ): Promise<Event | undefined> {
   const [row] = await db
     .update(eventsTable)

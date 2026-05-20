@@ -37,20 +37,16 @@ import { Route as PagesCareersRouteImport } from './routes/Pages/careers'
 import { Route as PagesBlogRouteImport } from './routes/Pages/blog'
 import { Route as PagesAboutRouteImport } from './routes/Pages/about'
 import { Route as TeacherSubjectsIndexRouteImport } from './routes/teacher/subjects/index'
-import { Route as TeacherNotificationsIndexRouteImport } from './routes/teacher/notifications/index'
 import { Route as TeacherClassesIndexRouteImport } from './routes/teacher/classes/index'
 import { Route as StudentSubjectsIndexRouteImport } from './routes/student/subjects.index'
-import { Route as StudentNotificationIndexRouteImport } from './routes/student/notification/index'
 import { Route as AdminTeachersIndexRouteImport } from './routes/admin/teachers/index'
 import { Route as AdminStudentsIndexRouteImport } from './routes/admin/students/index'
 import { Route as AdminGradesIndexRouteImport } from './routes/admin/grades/index'
 import { Route as TeacherSubjectsSubjectCodeRouteImport } from './routes/teacher/subjects/$subjectCode'
 import { Route as TeacherNotificationsAddRouteImport } from './routes/teacher/notifications/add'
-import { Route as TeacherNotificationsNotificationIdRouteImport } from './routes/teacher/notifications/$notificationId'
 import { Route as TeacherMarksClassIdRouteImport } from './routes/teacher/marks/$classId'
 import { Route as TeacherAttendanceClassIdRouteImport } from './routes/teacher/attendance/$classId'
 import { Route as StudentSubjectsSubjectCodeRouteImport } from './routes/student/subjects.$subjectCode'
-import { Route as StudentNotificationNotificationIdRouteImport } from './routes/student/notification/$notificationId'
 import { Route as AdminTeachersAddRouteImport } from './routes/admin/teachers/add'
 import { Route as AdminStudentsAddRouteImport } from './routes/admin/students/add'
 import { Route as AdminStudentsStudentIdRouteImport } from './routes/admin/students/$studentId'
@@ -198,12 +194,6 @@ const TeacherSubjectsIndexRoute = TeacherSubjectsIndexRouteImport.update({
   path: '/subjects/',
   getParentRoute: () => TeacherRoute,
 } as any)
-const TeacherNotificationsIndexRoute =
-  TeacherNotificationsIndexRouteImport.update({
-    id: '/notifications/',
-    path: '/notifications/',
-    getParentRoute: () => TeacherRoute,
-  } as any)
 const TeacherClassesIndexRoute = TeacherClassesIndexRouteImport.update({
   id: '/classes/',
   path: '/classes/',
@@ -214,12 +204,6 @@ const StudentSubjectsIndexRoute = StudentSubjectsIndexRouteImport.update({
   path: '/subjects/',
   getParentRoute: () => StudentRoute,
 } as any)
-const StudentNotificationIndexRoute =
-  StudentNotificationIndexRouteImport.update({
-    id: '/notification/',
-    path: '/notification/',
-    getParentRoute: () => StudentRoute,
-  } as any)
 const AdminTeachersIndexRoute = AdminTeachersIndexRouteImport.update({
   id: '/teachers/',
   path: '/teachers/',
@@ -246,12 +230,6 @@ const TeacherNotificationsAddRoute = TeacherNotificationsAddRouteImport.update({
   path: '/notifications/add',
   getParentRoute: () => TeacherRoute,
 } as any)
-const TeacherNotificationsNotificationIdRoute =
-  TeacherNotificationsNotificationIdRouteImport.update({
-    id: '/notifications/$notificationId',
-    path: '/notifications/$notificationId',
-    getParentRoute: () => TeacherRoute,
-  } as any)
 const TeacherMarksClassIdRoute = TeacherMarksClassIdRouteImport.update({
   id: '/marks/$classId',
   path: '/marks/$classId',
@@ -267,12 +245,6 @@ const StudentSubjectsSubjectCodeRoute =
   StudentSubjectsSubjectCodeRouteImport.update({
     id: '/subjects/$subjectCode',
     path: '/subjects/$subjectCode',
-    getParentRoute: () => StudentRoute,
-  } as any)
-const StudentNotificationNotificationIdRoute =
-  StudentNotificationNotificationIdRouteImport.update({
-    id: '/notification/$notificationId',
-    path: '/notification/$notificationId',
     getParentRoute: () => StudentRoute,
   } as any)
 const AdminTeachersAddRoute = AdminTeachersAddRouteImport.update({
@@ -340,20 +312,16 @@ export interface FileRoutesByFullPath {
   '/admin/students/$studentId': typeof AdminStudentsStudentIdRoute
   '/admin/students/add': typeof AdminStudentsAddRoute
   '/admin/teachers/add': typeof AdminTeachersAddRoute
-  '/student/notification/$notificationId': typeof StudentNotificationNotificationIdRoute
   '/student/subjects/$subjectCode': typeof StudentSubjectsSubjectCodeRoute
   '/teacher/attendance/$classId': typeof TeacherAttendanceClassIdRoute
   '/teacher/marks/$classId': typeof TeacherMarksClassIdRoute
-  '/teacher/notifications/$notificationId': typeof TeacherNotificationsNotificationIdRoute
   '/teacher/notifications/add': typeof TeacherNotificationsAddRoute
   '/teacher/subjects/$subjectCode': typeof TeacherSubjectsSubjectCodeRoute
   '/admin/grades/': typeof AdminGradesIndexRoute
   '/admin/students/': typeof AdminStudentsIndexRoute
   '/admin/teachers/': typeof AdminTeachersIndexRoute
-  '/student/notification/': typeof StudentNotificationIndexRoute
   '/student/subjects/': typeof StudentSubjectsIndexRoute
   '/teacher/classes/': typeof TeacherClassesIndexRoute
-  '/teacher/notifications/': typeof TeacherNotificationsIndexRoute
   '/teacher/subjects/': typeof TeacherSubjectsIndexRoute
   '/admin/teachers/$teacherId/assignements': typeof AdminTeachersTeacherIdAssignementsRoute
   '/admin/teachers/$teacherId/': typeof AdminTeachersTeacherIdIndexRoute
@@ -390,20 +358,16 @@ export interface FileRoutesByTo {
   '/admin/students/$studentId': typeof AdminStudentsStudentIdRoute
   '/admin/students/add': typeof AdminStudentsAddRoute
   '/admin/teachers/add': typeof AdminTeachersAddRoute
-  '/student/notification/$notificationId': typeof StudentNotificationNotificationIdRoute
   '/student/subjects/$subjectCode': typeof StudentSubjectsSubjectCodeRoute
   '/teacher/attendance/$classId': typeof TeacherAttendanceClassIdRoute
   '/teacher/marks/$classId': typeof TeacherMarksClassIdRoute
-  '/teacher/notifications/$notificationId': typeof TeacherNotificationsNotificationIdRoute
   '/teacher/notifications/add': typeof TeacherNotificationsAddRoute
   '/teacher/subjects/$subjectCode': typeof TeacherSubjectsSubjectCodeRoute
   '/admin/grades': typeof AdminGradesIndexRoute
   '/admin/students': typeof AdminStudentsIndexRoute
   '/admin/teachers': typeof AdminTeachersIndexRoute
-  '/student/notification': typeof StudentNotificationIndexRoute
   '/student/subjects': typeof StudentSubjectsIndexRoute
   '/teacher/classes': typeof TeacherClassesIndexRoute
-  '/teacher/notifications': typeof TeacherNotificationsIndexRoute
   '/teacher/subjects': typeof TeacherSubjectsIndexRoute
   '/admin/teachers/$teacherId/assignements': typeof AdminTeachersTeacherIdAssignementsRoute
   '/admin/teachers/$teacherId': typeof AdminTeachersTeacherIdIndexRoute
@@ -441,20 +405,16 @@ export interface FileRoutesById {
   '/admin/students/$studentId': typeof AdminStudentsStudentIdRoute
   '/admin/students/add': typeof AdminStudentsAddRoute
   '/admin/teachers/add': typeof AdminTeachersAddRoute
-  '/student/notification/$notificationId': typeof StudentNotificationNotificationIdRoute
   '/student/subjects/$subjectCode': typeof StudentSubjectsSubjectCodeRoute
   '/teacher/attendance/$classId': typeof TeacherAttendanceClassIdRoute
   '/teacher/marks/$classId': typeof TeacherMarksClassIdRoute
-  '/teacher/notifications/$notificationId': typeof TeacherNotificationsNotificationIdRoute
   '/teacher/notifications/add': typeof TeacherNotificationsAddRoute
   '/teacher/subjects/$subjectCode': typeof TeacherSubjectsSubjectCodeRoute
   '/admin/grades/': typeof AdminGradesIndexRoute
   '/admin/students/': typeof AdminStudentsIndexRoute
   '/admin/teachers/': typeof AdminTeachersIndexRoute
-  '/student/notification/': typeof StudentNotificationIndexRoute
   '/student/subjects/': typeof StudentSubjectsIndexRoute
   '/teacher/classes/': typeof TeacherClassesIndexRoute
-  '/teacher/notifications/': typeof TeacherNotificationsIndexRoute
   '/teacher/subjects/': typeof TeacherSubjectsIndexRoute
   '/admin/teachers/$teacherId/assignements': typeof AdminTeachersTeacherIdAssignementsRoute
   '/admin/teachers/$teacherId/': typeof AdminTeachersTeacherIdIndexRoute
@@ -493,20 +453,16 @@ export interface FileRouteTypes {
     | '/admin/students/$studentId'
     | '/admin/students/add'
     | '/admin/teachers/add'
-    | '/student/notification/$notificationId'
     | '/student/subjects/$subjectCode'
     | '/teacher/attendance/$classId'
     | '/teacher/marks/$classId'
-    | '/teacher/notifications/$notificationId'
     | '/teacher/notifications/add'
     | '/teacher/subjects/$subjectCode'
     | '/admin/grades/'
     | '/admin/students/'
     | '/admin/teachers/'
-    | '/student/notification/'
     | '/student/subjects/'
     | '/teacher/classes/'
-    | '/teacher/notifications/'
     | '/teacher/subjects/'
     | '/admin/teachers/$teacherId/assignements'
     | '/admin/teachers/$teacherId/'
@@ -543,20 +499,16 @@ export interface FileRouteTypes {
     | '/admin/students/$studentId'
     | '/admin/students/add'
     | '/admin/teachers/add'
-    | '/student/notification/$notificationId'
     | '/student/subjects/$subjectCode'
     | '/teacher/attendance/$classId'
     | '/teacher/marks/$classId'
-    | '/teacher/notifications/$notificationId'
     | '/teacher/notifications/add'
     | '/teacher/subjects/$subjectCode'
     | '/admin/grades'
     | '/admin/students'
     | '/admin/teachers'
-    | '/student/notification'
     | '/student/subjects'
     | '/teacher/classes'
-    | '/teacher/notifications'
     | '/teacher/subjects'
     | '/admin/teachers/$teacherId/assignements'
     | '/admin/teachers/$teacherId'
@@ -593,20 +545,16 @@ export interface FileRouteTypes {
     | '/admin/students/$studentId'
     | '/admin/students/add'
     | '/admin/teachers/add'
-    | '/student/notification/$notificationId'
     | '/student/subjects/$subjectCode'
     | '/teacher/attendance/$classId'
     | '/teacher/marks/$classId'
-    | '/teacher/notifications/$notificationId'
     | '/teacher/notifications/add'
     | '/teacher/subjects/$subjectCode'
     | '/admin/grades/'
     | '/admin/students/'
     | '/admin/teachers/'
-    | '/student/notification/'
     | '/student/subjects/'
     | '/teacher/classes/'
-    | '/teacher/notifications/'
     | '/teacher/subjects/'
     | '/admin/teachers/$teacherId/assignements'
     | '/admin/teachers/$teacherId/'
@@ -833,13 +781,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherSubjectsIndexRouteImport
       parentRoute: typeof TeacherRoute
     }
-    '/teacher/notifications/': {
-      id: '/teacher/notifications/'
-      path: '/notifications'
-      fullPath: '/teacher/notifications/'
-      preLoaderRoute: typeof TeacherNotificationsIndexRouteImport
-      parentRoute: typeof TeacherRoute
-    }
     '/teacher/classes/': {
       id: '/teacher/classes/'
       path: '/classes'
@@ -852,13 +793,6 @@ declare module '@tanstack/react-router' {
       path: '/subjects'
       fullPath: '/student/subjects/'
       preLoaderRoute: typeof StudentSubjectsIndexRouteImport
-      parentRoute: typeof StudentRoute
-    }
-    '/student/notification/': {
-      id: '/student/notification/'
-      path: '/notification'
-      fullPath: '/student/notification/'
-      preLoaderRoute: typeof StudentNotificationIndexRouteImport
       parentRoute: typeof StudentRoute
     }
     '/admin/teachers/': {
@@ -896,13 +830,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherNotificationsAddRouteImport
       parentRoute: typeof TeacherRoute
     }
-    '/teacher/notifications/$notificationId': {
-      id: '/teacher/notifications/$notificationId'
-      path: '/notifications/$notificationId'
-      fullPath: '/teacher/notifications/$notificationId'
-      preLoaderRoute: typeof TeacherNotificationsNotificationIdRouteImport
-      parentRoute: typeof TeacherRoute
-    }
     '/teacher/marks/$classId': {
       id: '/teacher/marks/$classId'
       path: '/marks/$classId'
@@ -922,13 +849,6 @@ declare module '@tanstack/react-router' {
       path: '/subjects/$subjectCode'
       fullPath: '/student/subjects/$subjectCode'
       preLoaderRoute: typeof StudentSubjectsSubjectCodeRouteImport
-      parentRoute: typeof StudentRoute
-    }
-    '/student/notification/$notificationId': {
-      id: '/student/notification/$notificationId'
-      path: '/notification/$notificationId'
-      fullPath: '/student/notification/$notificationId'
-      preLoaderRoute: typeof StudentNotificationNotificationIdRouteImport
       parentRoute: typeof StudentRoute
     }
     '/admin/teachers/add': {
@@ -1012,19 +932,14 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 interface StudentRouteChildren {
   StudentCalendarRoute: typeof StudentCalendarRoute
   StudentSettingsRoute: typeof StudentSettingsRoute
-  StudentNotificationNotificationIdRoute: typeof StudentNotificationNotificationIdRoute
   StudentSubjectsSubjectCodeRoute: typeof StudentSubjectsSubjectCodeRoute
-  StudentNotificationIndexRoute: typeof StudentNotificationIndexRoute
   StudentSubjectsIndexRoute: typeof StudentSubjectsIndexRoute
 }
 
 const StudentRouteChildren: StudentRouteChildren = {
   StudentCalendarRoute: StudentCalendarRoute,
   StudentSettingsRoute: StudentSettingsRoute,
-  StudentNotificationNotificationIdRoute:
-    StudentNotificationNotificationIdRoute,
   StudentSubjectsSubjectCodeRoute: StudentSubjectsSubjectCodeRoute,
-  StudentNotificationIndexRoute: StudentNotificationIndexRoute,
   StudentSubjectsIndexRoute: StudentSubjectsIndexRoute,
 }
 
@@ -1036,11 +951,9 @@ interface TeacherRouteChildren {
   TeacherSettingsRoute: typeof TeacherSettingsRoute
   TeacherAttendanceClassIdRoute: typeof TeacherAttendanceClassIdRoute
   TeacherMarksClassIdRoute: typeof TeacherMarksClassIdRoute
-  TeacherNotificationsNotificationIdRoute: typeof TeacherNotificationsNotificationIdRoute
   TeacherNotificationsAddRoute: typeof TeacherNotificationsAddRoute
   TeacherSubjectsSubjectCodeRoute: typeof TeacherSubjectsSubjectCodeRoute
   TeacherClassesIndexRoute: typeof TeacherClassesIndexRoute
-  TeacherNotificationsIndexRoute: typeof TeacherNotificationsIndexRoute
   TeacherSubjectsIndexRoute: typeof TeacherSubjectsIndexRoute
 }
 
@@ -1049,12 +962,9 @@ const TeacherRouteChildren: TeacherRouteChildren = {
   TeacherSettingsRoute: TeacherSettingsRoute,
   TeacherAttendanceClassIdRoute: TeacherAttendanceClassIdRoute,
   TeacherMarksClassIdRoute: TeacherMarksClassIdRoute,
-  TeacherNotificationsNotificationIdRoute:
-    TeacherNotificationsNotificationIdRoute,
   TeacherNotificationsAddRoute: TeacherNotificationsAddRoute,
   TeacherSubjectsSubjectCodeRoute: TeacherSubjectsSubjectCodeRoute,
   TeacherClassesIndexRoute: TeacherClassesIndexRoute,
-  TeacherNotificationsIndexRoute: TeacherNotificationsIndexRoute,
   TeacherSubjectsIndexRoute: TeacherSubjectsIndexRoute,
 }
 

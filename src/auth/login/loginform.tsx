@@ -1,13 +1,13 @@
 import { useState } from 'react'
-import { useLogin } from '#/services/api/auth.hooks'
-import type { AuthRole } from '#/schemas/shared.schema'
+import { useLogin } from '#/hooks/auth/hooks'
+import type { UserRole } from '#/types/authTypes'
 
 export default function Loginform({
   redirectTo,
   role,
 }: {
   redirectTo: string
-  role: AuthRole
+  role: UserRole
 }) {
   const [showPassword, setShowPassword] = useState(false)
   const { form, errorMessage, onSubmit } = useLogin(redirectTo, role)
@@ -38,7 +38,9 @@ export default function Loginform({
             {...form.register('email')}
             placeholder="name@school.com"
             type="email"
-            aria-describedby={form.formState.errors.email ? 'email-error' : undefined}
+            aria-describedby={
+              form.formState.errors.email ? 'email-error' : undefined
+            }
           />
         </div>
         {form.formState.errors.email && (
@@ -76,7 +78,9 @@ export default function Loginform({
             {...form.register('password')}
             placeholder="Enter your password"
             type={showPassword ? 'text' : 'password'}
-            aria-describedby={form.formState.errors.password ? 'password-error' : undefined}
+            aria-describedby={
+              form.formState.errors.password ? 'password-error' : undefined
+            }
           />
           <button
             type="button"

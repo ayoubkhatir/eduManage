@@ -1,10 +1,14 @@
-import { useSignup } from '#/services/api/auth.hooks'
+import { useSignup } from '#/hooks/auth/hooks'
 
 export default function Signup() {
   const { form, errorMessage, onSubmit } = useSignup()
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5" noValidate>
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="space-y-5"
+      noValidate
+    >
       {/* Name + School */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>

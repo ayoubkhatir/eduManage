@@ -8,5 +8,5 @@ import * as schema from '#/server/db/schema';
 
 export type Event = typeof schema.eventsTable.$inferSelect
 
-export type GetEventsSchema = z.infer<typeof getEventsSchema> 
-export type AddEventSchema = z.infer<typeof addEventSchema>  
+export type GetEventsType = z.infer<typeof getEventsSchema> 
+export type AddEventType = z.infer<typeof addEventSchema>
