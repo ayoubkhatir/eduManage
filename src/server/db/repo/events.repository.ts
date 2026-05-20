@@ -6,7 +6,7 @@ import { classesTable, eventsTable, resourcesTable, subjectsTable } from "../sch
 import type { AddEventType, Event } from "#/types/eventsTypes.js";
 
 export async function createEvent(data: AddEventType): Promise<Event[]> {
-  const payload = { ...data, id: data.id ?? crypto.randomUUID() };
+  const payload = { ...data, id: crypto.randomUUID() };
   const rows = await db.insert(eventsTable).values(payload).returning();
   return rows;
 }
