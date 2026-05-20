@@ -20,13 +20,13 @@ class StudentsController {
 
         const passwordHash = await handlePassword.hash(generateTemporaryPassword(data.name))
 
-        const student = await db.transaction(async (tx) => {
-            const classe = await tx.query.classesTable.findFirst({
+        try {
+            const classe = await db.query.classesTable.findFirst({
                 where: eq(classesTable.id, data.classId)
             })
             if (!classe) throw new Error("Classe Not Found");
 
-            await tx.insert(users).values({
+            await db.insert(users).values({
                 id: userId,
                 email: data.email,
                 telNumber: data.telNumber,
@@ -38,7 +38,7 @@ class StudentsController {
                 updatedAt: new Date(),
             }).returning()
 
-            await tx.insert(account).values({
+            await db.insert(account).values({
                 id: generateId(),
                 userId,
                 accountId: userId,
@@ -47,7 +47,7 @@ class StudentsController {
                 createdAt: new Date(),
             })
 
-            const [{id : studentId}] = await tx
+            const [{ id: studentId }] = await db
                 .insert(studentsTable)
                 .values({
                     address: data.address,
@@ -59,9 +59,9 @@ class StudentsController {
                     userId,
                     classId: data.classId,
                 })
-                .returning({id: studentsTable.id})
+                .returning({ id: studentsTable.id })
 
-                const student =  await tx.query.studentsTable.findFirst({
+            const student = await db.query.studentsTable.findFirst({
                 where: eq(studentsTable.id, studentId),
                 with: {
                     user: true,
@@ -81,13 +81,13 @@ class StudentsController {
                     }
                 }
             })
-            
-            return student
-            
-        })
-        if (!student) throw new Error("Student Not Created")
-            const studentUser : StudentUser = StudentUserDto(student, student.user, student.class, student.class.grade);
-        return studentUser
+            if (!student) throw new Error("Student Not Created")
+                const studentUser : StudentUser = StudentUserDto(student, student.user, student.class, student.class.grade);
+            return studentUser
+        } catch (error) {
+            await db.delete(users).where(eq(users.id, userId)).catch(() => undefined)
+            throw error
+        }
     }
 
 
@@ -100,71 +100,67 @@ class StudentsController {
         const password = generateTemporaryPassword(data.name)
         const passwordHash = await handlePassword.hash(password);
 
-        const student = await db.transaction(async (tx) => {
-            const foundStudent = await tx.query.studentsTable.findFirst({
-                where: eq(studentsTable.id, data.studentId),
-                columns: { userId: true }
-            });
-            if (!foundStudent) throw new Error("Student not found");
-            const userId = foundStudent.userId;
+        const foundStudent = await db.query.studentsTable.findFirst({
+            where: eq(studentsTable.id, data.studentId),
+            columns: { userId: true }
+        });
+        if (!foundStudent) throw new Error("Student not found");
+        const userId = foundStudent.userId;
 
-            // Update user info
-            await tx
-                .update(users)
-                .set({
-                    email: data.email,
-                    name: data.name,
-                    image: data.image,
-                    emailVerified: false,
-                    telNumber: data.telNumber,
-                    gender: data.gender,
-                })
-                .where(eq(users.id, userId))
-                .returning()
+        await db
+            .update(users)
+            .set({
+                email: data.email,
+                name: data.name,
+                image: data.image,
+                emailVerified: false,
+                telNumber: data.telNumber,
+                gender: data.gender,
+            })
+            .where(eq(users.id, userId))
+            .returning()
 
-            await tx.update(account)
-                .set({
-                    password: passwordHash,
-                })
-                .where(eq(account.userId, userId))
+        await db.update(account)
+            .set({
+                password: passwordHash,
+            })
+            .where(eq(account.userId, userId))
 
 
 
 
-            await tx
-                .update(studentsTable)
-                .set({
-                    address: data.address,
-                    dateOfBirth: data.dateOfBirth,
-                    parentName: data.parentName,
-                    parentPhoneNumber: data.parentPhoneNumber,
-                    status: StatusEnum.NEW,
-                    enrollmentDate: data.enrollmentDate
-                })
-                .where(eq(studentsTable.id, data.studentId))
-                .returning()
-            
-            const student = await tx.query.studentsTable.findFirst({
-                where: eq(studentsTable.id, data.studentId),
-                with: {
-                    user: true,
-                    class: {
-                        columns: {
-                            id: true,
-                            name: true
-                        },
-                        with: {
-                            grade: {
-                                columns: {
-                                    id: true,
-                                    name: true
-                                }
+        await db
+            .update(studentsTable)
+            .set({
+                address: data.address,
+                dateOfBirth: data.dateOfBirth,
+                parentName: data.parentName,
+                parentPhoneNumber: data.parentPhoneNumber,
+                status: StatusEnum.NEW,
+                enrollmentDate: data.enrollmentDate
+            })
+            .where(eq(studentsTable.id, data.studentId))
+            .returning()
+        
+        const student = await db.query.studentsTable.findFirst({
+            where: eq(studentsTable.id, data.studentId),
+            with: {
+                user: true,
+                class: {
+                    columns: {
+                        id: true,
+                        name: true
+                    },
+                    with: {
+                        grade: {
+                            columns: {
+                                id: true,
+                                name: true
                             }
                         }
                     }
                 }
-            })
-            return student
+            }
         })
 
         if (!student) throw new Error("User UPDATED")

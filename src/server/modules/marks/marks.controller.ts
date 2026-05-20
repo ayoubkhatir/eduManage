@@ -319,22 +319,23 @@ class MarksController {
             }
         }
 
-        await this.db.transaction(async (tx) => {
-            const existingRows = await tx
-                .select({
-                    id: studentMarksTable.id,
-                    studentId: studentMarksTable.studentId,
-                })
-                .from(studentMarksTable)
-                .where(eq(studentMarksTable.assessmentId, input.assessmentId))
+        const existingRows = await this.db
+            .select({
+                id: studentMarksTable.id,
+                studentId: studentMarksTable.studentId,
+            })
+            .from(studentMarksTable)
+            .where(eq(studentMarksTable.assessmentId, input.assessmentId))
 
-            const existingMap = new Map(existingRows.map((row) => [row.studentId, row.id]))
+        const existingMap = new Map(existingRows.map((row) => [row.studentId, row.id]))
+        const insertedMarkIds: string[] = []
 
+        try {
             for (const mark of input.marks) {
                 const existingId = existingMap.get(mark.studentId)
 
                 if (existingId) {
-                    await tx
+                    await this.db
                         .update(studentMarksTable)
                         .set({
                             score: mark.absent ? null : (mark.score ?? null),
@@ -344,7 +345,7 @@ class MarksController {
                         })
                         .where(eq(studentMarksTable.id, existingId))
                 } else {
-                    await tx.insert(studentMarksTable).values({
+                    const [createdMark] = await this.db.insert(studentMarksTable).values({
                         schoolId: input.schoolId,
                         assessmentId: input.assessmentId,
                         studentId: mark.studentId,
@@ -352,10 +353,22 @@ class MarksController {
                         absent: mark.absent ?? false,
                         excused: mark.excused ?? false,
                         comment: mark.comment ?? null,
-                    })
+                    }).returning({ id: studentMarksTable.id })
+
+                    if (createdMark) {
+                        insertedMarkIds.push(createdMark.id)
+                    }
                 }
             }
-        })
+        } catch (error) {
+            if (insertedMarkIds.length > 0) {
+                await this.db
+                    .delete(studentMarksTable)
+                    .where(inArray(studentMarksTable.id, insertedMarkIds))
+                    .catch(() => undefined)
+            }
+            throw error
+        }
 
         return await this.getAssessmentMarks(input.assessmentId)
     }

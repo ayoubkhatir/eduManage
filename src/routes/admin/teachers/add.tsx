@@ -7,7 +7,6 @@ import InputWrapper from '@/components/admin/Wrappers/InputWrapper'
 import SelectWrapper from '@/components/admin/Wrappers/SelectWrapper'
 import DatePickerField from '@/components/admin/DatePickerField'
 // import type { AddTeacherSchema } from '#/schemas/teachers.schema'
-import { SimpleImageUpload } from '#/components/cloudinary-uploader'
 import { useAuth } from '#/store/auth_store'
 
 export const Route = createFileRoute('/admin/teachers/add')({
@@ -28,7 +27,7 @@ function RouteComponent() {
     setAllowAccess(!allowAccess)
   }
   const user = useAuth((s) => s.user)
-  const { onSubmit, form } = useAddTeacher(user?.id!)
+  const { onSubmit, form } = useAddTeacher(user?.info?.id ?? '')
 
   
   // const subjects = form.watch('subjects')
@@ -263,6 +262,7 @@ function RouteComponent() {
                             // {...form.register('password')}
                             type={showPassword ? 'text' : 'password'}
                             value="Teacher@2026"
+                            readOnly
                           />
                           <button
                             type="button"

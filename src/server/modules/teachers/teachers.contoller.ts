@@ -1,11 +1,15 @@
 import { db, type Database } from "#/server/db/db";
-import { account, classesTable, gradesTable, StatusEnum, studentsTable, subjectsTable, teacherAssignmentsTable, teachersTable, UserGenderEnum, UserRoleEnum, users } from "#/server/db/schema";
+import { account, adminsTable, classesTable, gradesTable, StatusEnum, studentsTable, subjectsTable, teacherAssignmentsTable, teachersTable, UserGenderEnum, UserRoleEnum, users } from "#/server/db/schema";
 import { and, asc, count, desc, eq, gte, ilike, inArray, lt, or, SQL } from "drizzle-orm"
 import { generateTemporaryPassword } from "#/server/utils/temp_password_generator";
 import { handlePassword } from "#/server/utils/handle-password";
 import generateId from "#/server/utils/id_generator";
 import type { AddTeacherType, AssignTeacherType, EditTeacherType, GetTeacherClassesType, GetTeachersType  } from "#/types/teacherTypes";
 import { TeacherUserDto } from "#/types/teacherTypes";
+
+function toDateOnly(value: string | Date) {
+    return new Date(value).toISOString().slice(0, 10)
+}
 
 export type CreateTeacherInput = {
     schoolId: string
@@ -179,10 +183,19 @@ class TeachersController {
         console.log({ inputData: data })
         const userId = crypto.randomUUID();
         const passwordHash = await handlePassword.hash(generateTemporaryPassword(data.name))
+        const dateOfBirth = toDateOnly(data.dateOfBirth)
+        const joiningDate = toDateOnly(new Date())
 
+        try {
+            const school = await this.db.query.adminsTable.findFirst({
+                where: eq(adminsTable.id, data.schoolId),
+            })
 
-        const result = await this.db.transaction(async (tx) => {
-            const [createdUser] = await tx.insert(users).values({
+            if (!school) {
+                throw new Error("School not found")
+            }
+
+            const [createdUser] = await this.db.insert(users).values({
                 id: userId,
                 email: data.email,
                 name: data.name,
@@ -194,7 +207,7 @@ class TeachersController {
                 updatedAt: new Date(),
             }).returning()
 
-            const createdAccount = await tx.insert(account).values({
+            const createdAccount = await this.db.insert(account).values({
                 id: generateId(),
                 userId,
                 accountId: userId,
@@ -204,23 +217,26 @@ class TeachersController {
             }).returning()
             console.log(createdAccount)
 
-            const [createdTeacher] = await tx
+            const [createdTeacher] = await this.db
                 .insert(teachersTable)
                 .values({
                     schoolId: data.schoolId,
                     userId,
                     address: data.address,
-                    dateOfBirth: data.dateOfBirth,
-                    joiningDate: new Date().toISOString(),
+                    dateOfBirth,
+                    joiningDate,
                     status: data.status ?? "New",
                 })
                 .returning()
             
             
-            return TeacherUserDto(createdTeacher, createdUser, [])
-        })
+            const result = TeacherUserDto(createdTeacher, createdUser, [])
 
-        return result
+            return result
+        } catch (error) {
+            await this.db.delete(users).where(eq(users.id, userId)).catch(() => undefined)
+            throw error
+        }
     }
 
     /**
@@ -325,65 +341,65 @@ class TeachersController {
      * Update both user and teacher tables
      */
     async updateTeacher(input: EditTeacherType) {
-        return await this.db.transaction(async (tx) => {
-            const [existingTeacher] = await tx
-                .select({
-                    id: teachersTable.id,
-                    userId: teachersTable.userId,
-                })
-                .from(teachersTable)
-                .where(eq(teachersTable.id, input.teacherId))
+        const dateOfBirth = toDateOnly(input.dateOfBirth)
 
-            if (!existingTeacher) {
-                throw new Error("Teacher not found")
-            }
+        const [existingTeacher] = await this.db
+            .select({
+                id: teachersTable.id,
+                userId: teachersTable.userId,
+            })
+            .from(teachersTable)
+            .where(eq(teachersTable.id, input.teacherId))
 
-            await tx
-                .update(users)
-                .set({
-                    email: input.email,
-                    name: input.name,
-                    telNumber: input.telNumber,
-                    image: input.image,
-                    gender: input.gender,
-                })
-                .where(eq(users.id, existingTeacher.userId))
+        if (!existingTeacher) {
+            throw new Error("Teacher not found")
+        }
 
-            await tx
-                .update(teachersTable)
-                .set({
-                    status: input.status,
-                    address: input.address,
-                    dateOfBirth: input.dateOfBirth,
-                    about: input.about
-                })
-                .where(eq(teachersTable.id, input.teacherId))
+        await this.db
+            .update(users)
+            .set({
+                email: input.email,
+                name: input.name,
+                telNumber: input.telNumber,
+                image: input.image,
+                gender: input.gender,
+            })
+            .where(eq(users.id, existingTeacher.userId))
 
-            const [updatedTeacher] = await tx
-                .select({
-                    teacherId: teachersTable.id,
-                    schoolId: teachersTable.schoolId,
-                    userId: teachersTable.userId,
-                    address: teachersTable.address,
-                    dateOfBirth: teachersTable.dateOfBirth,
-                    joiningDate: teachersTable.joiningDate,
-                    status: teachersTable.status,
+        await this.db
+            .update(teachersTable)
+            .set({
+                status: input.status,
+                address: input.address,
+                dateOfBirth,
+                about: input.about
+            })
+            .where(eq(teachersTable.id, input.teacherId))
 
-                    username: users.name,
-                    email: users.email,
-                    telNumber: users.telNumber,
-                    gender: users.gender,
-                    image: users.image,
-                    emailVerified: users.emailVerified,
-                    createdAt: users.createdAt,
-                    updatedAt: users.updatedAt,
-                })
-                .from(teachersTable)
-                .innerJoin(users, eq(teachersTable.userId, users.id))
-                .where(eq(teachersTable.id, input.teacherId))
+        const [updatedTeacher] = await this.db
+            .select({
+                teacherId: teachersTable.id,
+                schoolId: teachersTable.schoolId,
+                userId: teachersTable.userId,
+                address: teachersTable.address,
+                dateOfBirth: teachersTable.dateOfBirth,
+                joiningDate: teachersTable.joiningDate,
+                status: teachersTable.status,
 
-            return updatedTeacher ?? null
-        })
+                username: users.name,
+                email: users.email,
+                telNumber: users.telNumber,
+                gender: users.gender,
+                image: users.image,
+                emailVerified: users.emailVerified,
+                createdAt: users.createdAt,
+                updatedAt: users.updatedAt,
+            })
+            .from(teachersTable)
+            .innerJoin(users, eq(teachersTable.userId, users.id))
+            .where(eq(teachersTable.id, input.teacherId))
+
+        return updatedTeacher ?? null
     }
 
     /**
@@ -391,28 +407,26 @@ class TeachersController {
      * Since users is the account root, removing the user is usually cleaner.
      */
     async deleteTeacher(teacherId: string): Promise<void> {
-        await this.db.transaction(async (tx) => {
-            const [teacher] = await tx
-                .select({
-                    userId: teachersTable.userId,
-                })
-                .from(teachersTable)
-                .where(eq(teachersTable.id, teacherId))
+        const [teacher] = await this.db
+            .select({
+                userId: teachersTable.userId,
+            })
+            .from(teachersTable)
+            .where(eq(teachersTable.id, teacherId))
 
-            if (!teacher) {
-                throw new Error("Teacher not found")
-            }
+        if (!teacher) {
+            throw new Error("Teacher not found")
+        }
 
-            await tx
-                .delete(teacherAssignmentsTable)
-                .where(eq(teacherAssignmentsTable.teacherId, teacherId))
+        await this.db
+            .delete(teacherAssignmentsTable)
+            .where(eq(teacherAssignmentsTable.teacherId, teacherId))
 
-            if (teacher.userId) {
-                await tx.delete(users).where(eq(users.id, teacher.userId))
-            } else {
-                await tx.delete(teachersTable).where(eq(teachersTable.id, teacherId))
-            }
-        })
+        if (teacher.userId) {
+            await this.db.delete(users).where(eq(users.id, teacher.userId))
+        } else {
+            await this.db.delete(teachersTable).where(eq(teachersTable.id, teacherId))
+        }
     }
 
     /**

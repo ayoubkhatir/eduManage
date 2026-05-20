@@ -38,9 +38,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     const isPublicPath = PUBLIC_PATHS.has(location.pathname)
 
     if (!authData.token && !isPublicPath) {
-      throw redirect({ to: '/' })
+      console.warn('[ Auth ] No token found, redirecting to login. Path:', location.pathname)
+      throw redirect({ to: '/', replace: true })
     }
-    console.log('Auth data on route load:', authData) 
+    console.log('[ Auth ] Auth data on route load:', authData) 
     return {
       authState: authData,
     }

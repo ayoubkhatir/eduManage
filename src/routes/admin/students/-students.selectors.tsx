@@ -94,7 +94,7 @@ export function StudentClassSelector<
               sideOffset={6}
             >
               {classOptions.map((item, i) => (
-                <div key={typeof item === 'string' ? item : item.label}>
+                <div key={`class-${typeof item === 'string' ? item : item.value}`}>
                   <SelectItem
                     value={typeof item === 'string' ? item : item.value}
                     className="px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-900 text-black dark:text-white cursor-pointer transition-colors"
@@ -103,7 +103,7 @@ export function StudentClassSelector<
                   </SelectItem>
 
                   {classOptions.length !== i + 1 && (
-                    <SelectSeparator className="bg-gray-200 dark:bg-gray-700 my-1" />
+                    <SelectSeparator key={`class-sep-${i}`} className="bg-gray-200 dark:bg-gray-700 my-1" />
                   )}
                 </div>
               ))}
@@ -195,7 +195,7 @@ export function StudentGradeSelector<T extends { gradeId: string }>() {
               sideOffset={6}
             >
               {gradesOptions.map((item, i) => (
-                <div key={typeof item === 'string' ? item : item.label}>
+                <div key={`grade-${typeof item === 'string' ? item : item.value}`}>
                   <SelectItem
                     value={typeof item === 'string' ? item : item.value}
                     className="px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-900 text-black dark:text-white cursor-pointer transition-colors"
@@ -204,7 +204,7 @@ export function StudentGradeSelector<T extends { gradeId: string }>() {
                   </SelectItem>
 
                   {gradesOptions.length !== i + 1 && (
-                    <SelectSeparator className="bg-gray-200 dark:bg-gray-700 my-1" />
+                    <SelectSeparator key={`grade-sep-${i}`} className="bg-gray-200 dark:bg-gray-700 my-1" />
                   )}
                 </div>
               ))}

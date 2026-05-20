@@ -277,8 +277,9 @@ class AuthService {
         setCookie("refreshToken", nextRefreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "strict",
+            sameSite: "lax",
             maxAge: 60 * 60 * 24, // 24 hours (matches SESSION_TTL_MS)
+            path: "/"
         });
 
         return {

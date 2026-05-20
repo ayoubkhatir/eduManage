@@ -5,7 +5,7 @@ import { Switch } from '@/components/ui/switch'
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
 import { UserAvatar } from '#/components/admin/Table/columnsData'
 import { UserRoleEnum } from '#/server/db/schema'
-import type { AuthUser } from '#/schemas/auth.schema'
+import type { AuthUser } from '#/types/authTypes'
 
 function useUpdateSettings() {
   const form = useForm<NewInfoSchema>({

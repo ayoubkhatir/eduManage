@@ -12,8 +12,6 @@ export const addTeacherSchema = addUserSchema.extend({
     status: statusSchema,
     address: z.string().nonempty(),
     dateOfBirth: z.string(),
-    about: z.string(),
-    joiningDate: z.string(),
 })
 
 export const editTeacherSchema = z

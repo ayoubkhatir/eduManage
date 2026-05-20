@@ -19,6 +19,7 @@ import type {
   EditTeacherType,
 } from '#/types/teacherTypes'
 import type { UseFormReturn } from 'react-hook-form'
+import { useEffect } from 'react'
 
 export function useAddTeacher(schoolId: string) {
   const queryClient = useQueryClient()
@@ -40,15 +41,29 @@ export function useAddTeacher(schoolId: string) {
     },
   })
 
+  useEffect(() => {
+    if (!schoolId) {
+      return
+    }
+
+    form.reset({
+      ...form.getValues(),
+      schoolId,
+    })
+  }, [form, schoolId])
+
 
   const { mutate: addTeacher } = useMutation({
     mutationFn: async (data: AddTeacherType) => {
-      try {
-        const response = await addTeacherServerFn({ data })
-        return response
-      } catch (error) {
-        console.log({ errorCatch: error })
-      }
+      const response = await addTeacherServerFn({ data })
+      if (response.success) return response.data
+      const message =
+        'message' in response
+          ? response.message
+          : 'issues' in response
+            ? response.issues.join(', ')
+            : 'Error has occured'
+      throw new Error(message)
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['teachers'] })
@@ -64,8 +79,8 @@ export function useAddTeacher(schoolId: string) {
       onSuccess: () => {
         toast.success("Teacher added")
       },
-      onError: () => {
-        toast.error("Error has occured")
+      onError: (error) => {
+        toast.error(error.message || "Error has occured")
       }
     })
   }

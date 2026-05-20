@@ -186,9 +186,8 @@ class AuthController implements IAuthController {
     async refresh(headers: Headers) {
         const currentRefreshToken = getCookie("refreshToken");
 
-
-
         if (!currentRefreshToken) {
+            console.warn('[ Auth ] No refresh token found in cookies')
             return {
                 success: false,
                 message: "no session token provided",
@@ -201,6 +200,7 @@ class AuthController implements IAuthController {
             const refreshResult = await authService.rotateSessionToken(currentRefreshToken, userAgent);
 
             if (!refreshResult) {
+                console.warn('[ Auth ] Session rotation failed')
                 return {
                     success: false,
                     message: "Invalid or expired session token",
@@ -208,6 +208,7 @@ class AuthController implements IAuthController {
                 };
             }
 
+            console.log('[ Auth ] Session token rotated successfully')
             return {
                 success: true,
                 message: "Session refreshed successfully",
@@ -218,7 +219,7 @@ class AuthController implements IAuthController {
                 }
             };
         } catch (error: any) {
-            console.log("\x1b[36m[server]\x1b[0m " + error)
+            console.error('[ Auth ] Session refresh error:', error)
             return {
                 success: false,
                 message: authService.getErrorMessage(error, "Session refresh failed"),
