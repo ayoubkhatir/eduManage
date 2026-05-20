@@ -1,17 +1,26 @@
 import { db, type Database } from "../db.js";
-import { asc, desc, eq, inArray, like, sql } from "drizzle-orm";
-import { studentsTable, UserRoleEnum, users } from "../schema.js";
-import { type AddStudentType, type Student, type StudentSearchType } from "#/types/studentTypes.js";
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  ilike,
+  or,
+  type SQL,
+} from 'drizzle-orm'
+import { studentsTable, UserRoleEnum, users, classesTable, gradesTable } from "../schema.js";
+import { StudentUserDto, type AddStudentType,  type Student, type StudentSearchType, type StudentUser } from "#/types/studentTypes.js";
 import { getAllStudentsServerFn } from "#/server/modules/students/students.server-functions.js";
 
 
 export interface IStudentsRepository {
-  createStudent(data: AddStudentType): Promise<Student[]>;
+  createStudent(data: AddStudentType): Promise<Student>;
 
-  findStudentById(id: string): Promise<Student | undefined>;
-  findStudentByUserId(userId: string): Promise<Student | undefined>;
+  findStudentById(id: string): Promise<StudentUser | undefined>;
+  findStudentByUserId(userId: string): Promise<StudentUser | undefined>;
 
-  listStudents(search_queries: StudentSearchType): Promise<{ data: Student[]; pagination: { totalCount: number, totalPages: number } }>;
+  listStudents(search_queries: StudentSearchType): Promise<{ data: StudentUser[]; pagination: { totalCount: number, totalPages: number } }>;
   updateStudent(id: string, data: Partial<AddStudentType>): Promise<Student | undefined>;
   deleteStudent(id: string): Promise<Student | undefined>;
 }
@@ -21,7 +30,7 @@ class StudentsRepository implements IStudentsRepository {
 
   // create student query function 
 
-  async createStudent(data: AddStudentType): Promise<Student[]> {
+  async createStudent(data: AddStudentType): Promise<Student> {
 
     const userId = crypto.randomUUID();
     const studentId = crypto.randomUUID();
@@ -34,7 +43,7 @@ class StudentsRepository implements IStudentsRepository {
 
     console.log(newUser);
 
-    const newStudent = await this.db
+    const [newStudent] = await this.db
       .insert(studentsTable)
       .values({
         ...data,
@@ -56,10 +65,26 @@ class StudentsRepository implements IStudentsRepository {
   async findStudentById(id: string) {
     const student = await db.query.studentsTable.findFirst({
       where: eq(studentsTable.id, id),
-      with: { user: true },
+      with: {
+        user: true,
+        class: {
+          columns: {
+            id: true,
+            name: true
+          },
+          with: {
+            grade: {
+              columns: {
+                id: true,
+                name: true
+              }
+            }
+          }
+        }
+      },
     });
     if (!student) return undefined;
-    return student;
+    return StudentUserDto(student, student.user, student.class, student.class.grade);
   }
 
   // find student by user id query function
@@ -69,10 +94,26 @@ class StudentsRepository implements IStudentsRepository {
   ) {
     const student = await this.db.query.studentsTable.findFirst({
       where: eq(studentsTable.userId, userId),
-      with: { user: true },
+      with: {
+        user: true,
+        class: {
+          columns: {
+            id: true,
+            name: true
+          },
+          with: {
+            grade: {
+              columns: {
+                id: true,
+                name: true
+              }
+            }
+          }
+        }
+      },
     });
     if (!student) return undefined;
-    return student
+    return StudentUserDto(student, student.user, student.class, student.class.grade);
   }
 
   // list students query function with search, pagination and sorting
@@ -84,61 +125,84 @@ class StudentsRepository implements IStudentsRepository {
     size,
     sortBy,
     sortOrder,
-  }: StudentSearchType
-  ) {
-    const safePage = Math.max(1, page);
-    const safeLimit = Math.max(1, size);
-    const offset = (safePage - 1) * safeLimit;
-    const searchValue = search?.trim();
+  }: StudentSearchType) {
+    const safePage = Math.max(1, page ?? 1)
+    const safeSize = Math.max(1, size ?? 10)
+    const offset = (safePage - 1) * safeSize
 
+    const conditions: SQL<unknown>[] = []
 
-    const sortableColumns = {
-      name: users.name,
-      email: users.email,
+    const normalizedSearch = search?.trim()
+    
+
+    if (normalizedSearch) {
+      conditions.push(
+        or(
+          ilike(users.name, `%${normalizedSearch}%`),
+          ilike(users.email, `%${normalizedSearch}%`)
+        ) as SQL<unknown>
+      );
     }
 
-    const sortColumn =
-      sortableColumns[sortBy ?? "name"]
+    
 
-    const orderByClause =
-      sortOrder === "asc"
-        ? asc(sortColumn)
-        : desc(sortColumn)
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined
 
-    const whereClause = searchValue
-      ? inArray(
-        studentsTable.userId,
-        this.db
-          .select({ id: users.id })
-          .from(users)
-          .where(
-            like(sortColumn, `%${searchValue}%`)
-          ),
-      )
-      : undefined;
+    const orderColumn =
+      sortBy === 'email' ? users.email : users.name
 
-    const [data, totalResult] = await Promise.all([
-      this.db.query.studentsTable.findMany({
-        where: whereClause,
-        with: { user: true },
-        orderBy: orderByClause,
-        limit: safeLimit,
-        offset,
-      }),
+    const orderDirection =
+      sortOrder === 'desc' ? desc(orderColumn) : asc(orderColumn)
+
+    const [rows, totalResult] = await Promise.all([
       this.db
-        .select({ total: sql<number>`count(*)` })
+        .select({
+          student: studentsTable,
+          user: users,
+          classe: {
+            id: classesTable.id,
+            name: classesTable.name,
+          },
+          grade: {
+            id: gradesTable.id,
+            name: gradesTable.name,
+          },
+        })
         .from(studentsTable)
-        .where(whereClause),
-    ]);
+        .innerJoin(users, eq(studentsTable.userId, users.id))
+        .innerJoin(classesTable, eq(studentsTable.classId, classesTable.id))
+        .innerJoin(gradesTable, eq(classesTable.gradeId, gradesTable.id)).where(whereClause)
+        .orderBy(orderDirection)
+        .limit(safeSize)
+        .offset(offset),
+
+      this.db
+        .select({
+          total: count(),
+        })
+        .from(studentsTable)
+        .innerJoin(users, eq(studentsTable.userId, users.id))
+        .innerJoin(classesTable, eq(studentsTable.classId, classesTable.id))
+        .innerJoin(gradesTable, eq(classesTable.gradeId, gradesTable.id)).where(whereClause),
+    ])
+
+    const totalCount = Number(totalResult[0]?.total ?? 0)
+    const totalPages = Math.ceil(totalCount / safeSize)
+
+    const data = rows.map(({
+      student,
+      user,
+      classe,
+      grade
+    }) => StudentUserDto(student, user, classe, grade))
 
     return {
       data,
       pagination: {
-        totalCount: totalResult[0].total,
-        totalPages: Math.ceil(totalResult[0].total / size),
+        totalCount,
+        totalPages,
       },
     }
-
   }
 
   // update student query function

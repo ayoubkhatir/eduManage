@@ -1202,7 +1202,7 @@ function ClassSelector() {
           <SelectItem value={null as any}>ALL</SelectItem>
           {classesOptions?.map((option) => (
             <SelectItem
-              key={option.label}
+              key={option.value ?? option.label}
               value={option.value}
               className="bg-background-light dark:bg-background-dark"
             >

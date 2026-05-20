@@ -4,7 +4,7 @@ import { genderSchema, statusSchema, validCuidSchema } from "./shared.schema";
 import { StatusEnum } from "#/server/db/schema";
 
 export const getTeachersSchema = getUsersSchema.extend({
-    subject: z.string().nullable().default(""),
+    subject: z.string().nullable().optional(),
 });
 
 export const addTeacherSchema = addUserSchema.extend({

@@ -157,10 +157,12 @@ class TeachersController {
         const totalCount = Number(totalRows[0]?.total ?? 0)
         const totalPages = Math.ceil(totalCount / safeSize)
 
-        const data = rows.map(({ teacher, user }) => ({
-            ...user,
-            info: teacher
-        }))
+        const data = rows.map(
+            ({ teacher, user, }) => TeacherUserDto(
+                teacher,
+                user,
+                subjectsByTeacherId.get(teacher.id) ?? [])
+        )
         return {
             data,
             pagination: {
@@ -174,12 +176,13 @@ class TeachersController {
      * Create user + teacher profile in one transaction
      */
     async createTeacher(data: AddTeacherType) {
+        console.log({ inputData: data })
         const userId = crypto.randomUUID();
         const passwordHash = await handlePassword.hash(generateTemporaryPassword(data.name))
 
 
         const result = await this.db.transaction(async (tx) => {
-            const createdUser = await tx.insert(users).values({
+            const [createdUser] = await tx.insert(users).values({
                 id: userId,
                 email: data.email,
                 name: data.name,
@@ -189,8 +192,7 @@ class TeachersController {
                 gender: data.gender,
                 createdAt: new Date(),
                 updatedAt: new Date(),
-            }).returning({ id: users.id })
-            console.log(createdUser)
+            }).returning()
 
             const createdAccount = await tx.insert(account).values({
                 id: generateId(),
@@ -212,10 +214,10 @@ class TeachersController {
                     joiningDate: new Date().toISOString(),
                     status: data.status ?? "New",
                 })
-                .returning({ id: teachersTable.id })
-            console.log({ createdTeacher })
+                .returning()
             
-            return createdTeacher
+            
+            return TeacherUserDto(createdTeacher, createdUser, [])
         })
 
         return result

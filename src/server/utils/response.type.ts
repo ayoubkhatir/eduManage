@@ -1,4 +1,4 @@
-import type { ApiResponse } from "#/services/api/teacher/types/apiType"
+
 import z, { ZodError } from "zod/v4"
 
 interface SuccessResponse<T> {
@@ -6,6 +6,10 @@ interface SuccessResponse<T> {
     message: string,
     data: T
 }
+
+
+
+export type ApiResponse<T> = SuccessResponse<T> | ErrorResponse
 
 export enum ErrorTypes {
     VALIDATION_ERROR = 'VALIDATION_ERROR',

@@ -20,8 +20,8 @@ export const addEventSchema = z.object({
     description: z.string().trim().optional().default(''),
     color: z.string().trim().default('#2563eb'),
 
-    start: z.string().datetime(),
-    end: z.string().datetime(),
+    start: z.date(),
+    end: z.date(),
 
     allDay: z.boolean().default(false),
     repeatWeekly: z.boolean().default(false),

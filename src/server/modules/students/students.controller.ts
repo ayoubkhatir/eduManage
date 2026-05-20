@@ -4,7 +4,7 @@ import { and, count, eq, gte, lt } from "drizzle-orm";
 import generateId from "../../utils/id_generator";
 import { generateTemporaryPassword } from "../../utils/temp_password_generator";
 import { handlePassword } from "#/server/utils/handle-password";
-import { studentsRepository, type IStudentsRepository } from "#/server/db/repo";
+import { studentsRepository, type IStudentsRepository } from "#/server/db/repo/students.repository";
 import { StudentUserDto,type AddStudentType, type EditStudentType, type StudentSearchType, type StudentUser } from "#/types/studentTypes";
 
 

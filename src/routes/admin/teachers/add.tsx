@@ -96,7 +96,7 @@ function RouteComponent() {
                       Personal Information
                     </h3>
                     <div className="mb-4">
-                      <SimpleImageUpload
+                      {/* <SimpleImageUpload
                         value={form.watch('image')}
                         onChange={(publicId) => {
                           form.setValue('image', publicId, {
@@ -105,7 +105,7 @@ function RouteComponent() {
                             shouldValidate: true,
                           })
                         }}
-                      />
+                      />*/}
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <InputWrapper
@@ -293,12 +293,16 @@ function RouteComponent() {
 
                     <button
                       type="submit"
-                      className="w-full sm:w-auto h-10 px-6 rounded-lg bg-primary hover:bg-blue-600 text-white font-bold text-sm shadow-sm transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                      disabled={form.formState.isSubmitting}
+                      className="w-full sm:w-auto h-10 px-6 rounded-lg bg-primary hover:bg-blue-600 text-white font-bold text-sm shadow-sm transition-colors flex items-center justify-center gap-2 cursor-pointer di"
                     >
                       <span className="material-symbols-outlined text-[18px]">
                         check
                       </span>
-                      Create Teacher Account
+                      {form.formState.isSubmitting
+                        ? 'Creating...'
+                        : 'Create Teacher Account'
+                        }
                     </button>
                   </div>
                 </form>
