@@ -156,12 +156,12 @@ export async function uploadToCloudinary(file: File) {
   formData.append('file', file)
   formData.append(
     'upload_preset',
-    import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'edu_manage',
+    import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
   )
   formData.append('folder', 'avatars')
 
   const response = await fetch(
-    `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dziurs45p'}/image/upload`,
+    `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/raw/upload`,
     {
       method: 'POST',
       body: formData,
@@ -203,12 +203,12 @@ export function SimpleImageUpload({ value, onChange }: Props) {
       formData.append('file', file)
       formData.append(
         'upload_preset',
-        import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'edu_manage',
+        import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
       )
       formData.append('folder', 'avatars')
 
       const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dziurs45p'}/upload`,
+        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/raw/upload`,
         {
           method: 'POST',
           body: formData,
@@ -287,12 +287,12 @@ export function SimpleDocumentUpload({
       formData.append('file', file)
       formData.append(
         'upload_preset',
-        import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'edu_manage',
+        import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
       )
       formData.append('folder', 'documents')
 
       const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dziurs45p'}/upload`,
+        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/raw/upload`,
         {
           method: 'POST',
           body: formData,

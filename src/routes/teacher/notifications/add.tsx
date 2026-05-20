@@ -1,3 +1,4 @@
+//import { createFileRoute } from '@tanstack/react-router'
 // import { createFileRoute } from '@tanstack/react-router'
 // import { Skeleton } from 'boneyard-js/react'
 // import z from 'zod'
@@ -18,24 +19,26 @@
 //   subject: z.string().optional().catch(undefined),
 // })
 
-// export const Route = createFileRoute('/teacher/notifications/add')({
-//   component: RouteComponent,
-//   pendingComponent: AddTeacherNotificationPending,
-//   validateSearch: NotificationSearchSchema,
-//   loaderDeps: ({ search }) => search,
-//   loader: async ({ context, deps }) => {
-//     // await new Promise((resolve) => setTimeout(resolve, 2000))
-//     return Promise.all([
-//       context.queryClient.ensureQueryData(sendToListQueryOptions),
-//       context.queryClient.ensureQueryData(
-//         getTeacherNotificationsQueryOptions(deps),
-//       ),
-//     ])
-//   },
-//   head: () => ({
-//     meta: [{ title: 'Teacher | Add Notification - EduManage' }],
-//   }),
-// })
+//export const Route = createFileRoute('/teacher/notifications/add')({
+
+
+  //   component: RouteComponent,
+  //   pendingComponent: AddTeacherNotificationPending,
+  //   validateSearch: NotificationSearchSchema,
+  //   loaderDeps: ({ search }) => search,
+  //   loader: async ({ context, deps }) => {
+  //     // await new Promise((resolve) => setTimeout(resolve, 2000))
+  //     return Promise.all([
+  //       context.queryClient.ensureQueryData(sendToListQueryOptions),
+  //       context.queryClient.ensureQueryData(
+  //         getTeacherNotificationsQueryOptions(deps),
+  //       ),
+  //     ])
+  //   },
+  //   head: () => ({
+  //     meta: [{ title: 'Teacher | Add Notification - EduManage' }],
+  //   }),
+
 
 // function RouteComponent() {
 //   return (
