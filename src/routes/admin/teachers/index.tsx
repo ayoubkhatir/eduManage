@@ -13,7 +13,7 @@ import {
   TeachersTable,
 } from '#/components/admin/Table/dataTable'
 import { TeachersStatCards } from '#/components/admin/cards/UICard'
-import type { GetTeachersSchema } from '#/types/teacherTypes'
+import type { GetTeachersType} from '#/types/teacherTypes'
 
 const getTeachersQueryOptions = ({
   page,
@@ -24,7 +24,7 @@ const getTeachersQueryOptions = ({
   sortBy,
   email,
   subject,
-}: GetTeachersSchema) => ({
+}: GetTeachersType) => ({
   queryKey: [
     'teachers',
     page,

@@ -20,7 +20,7 @@ import {
   CustomDataTableSkeleton,
   StudentsTable,
 } from '#/components/admin/Table/dataTable'
-import { getAllGradesQueryOptions } from '#/server/db/repo/grades.repository'
+import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
 import { getStudentsQueryOptions } from '#/server/db/repo'
 
 // type QueryOptionsType = Filters<StudentModel>
@@ -117,6 +117,7 @@ function GradesFilter() {
   const { data: gradesData, status: fetchStatus } = useQuery(
     getAllGradesQueryOptions(),
   )
+  const [open, setOpen] = useState(false)
   if (fetchStatus === 'error') return null
   if (fetchStatus === 'pending')
     return (
@@ -130,8 +131,6 @@ function GradesFilter() {
     // { label: 'All', value: null },
     ...gradesData.map((g) => ({ label: g.name, value: g.id })),
   ]
-
-  const [open, setOpen] = useState(false)
   return (
     <Select
       open={open}
@@ -148,7 +147,7 @@ function GradesFilter() {
         <SelectItem value={null as any}>ALL</SelectItem>
         {gradeOptions?.map((option) => (
           <SelectItem
-            key={option.label}
+            key={option.value ?? option.label}
             value={option.value}
             className="bg-background-light dark:bg-background-dark"
           >

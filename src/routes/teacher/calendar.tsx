@@ -570,6 +570,8 @@ import {
   SelectValue,
 } from '#/components/ui/select'
 import { getClassesByTeacherUserIdServerFn } from '#/server/modules/classes/classes.server-functions'
+import type { TeacherUser } from '#/types/teacherTypes'
+import { useAuth } from '#/store/auth_store'
 // import { zodValidator } from '@tanstack/zod-adapter'
 // import z from 'zod/v4'
 
@@ -671,9 +673,9 @@ function useCalendarContext() {
 }
 
 function TeacherCalendarSkeleton() {
-  const { authState } = Route.useRouteContext()
+  const user = useAuth((s) => s.user) as TeacherUser
   const { classId } = Route.useSearch()
-  const user = authState.user
+  
   if (!user) throw new Error('Unauthorized')
   return (
     <CalendarEventsFetchingWrapper
@@ -1200,7 +1202,7 @@ function ClassSelector() {
           <SelectItem value={null as any}>ALL</SelectItem>
           {classesOptions?.map((option) => (
             <SelectItem
-              key={option.label}
+              key={option.value ?? option.label}
               value={option.value}
               className="bg-background-light dark:bg-background-dark"
             >

@@ -1,11 +1,12 @@
 import { db } from "#/server/db/db";
-import { account, classesTable, StatusEnum, studentsTable, teacherAssignmentsRelations, UserRoleEnum, users } from "#/server/db/schema";
+import { account, classesTable, StatusEnum, studentsTable,  UserRoleEnum, users } from "#/server/db/schema";
 import { and, count, eq, gte, lt } from "drizzle-orm";
 import generateId from "../../utils/id_generator";
 import { generateTemporaryPassword } from "../../utils/temp_password_generator";
 import { handlePassword } from "#/server/utils/handle-password";
-import { studentsRepository, type IStudentsRepository } from "#/server/db/repo";
-import { type AddStudentType, type EditStudentType, type StudentSearchType, type StudentUser } from "#/types/studentTypes";
+import { studentsRepository, type IStudentsRepository } from "#/server/db/repo/students.repository";
+import { StudentUserDto,type AddStudentType, type EditStudentType, type StudentSearchType, type StudentUser } from "#/types/studentTypes";
+
 
 class StudentsController {
     constructor(private readonly studentsRepository: IStudentsRepository) { }
@@ -19,13 +20,13 @@ class StudentsController {
 
         const passwordHash = await handlePassword.hash(generateTemporaryPassword(data.name))
 
-        const student = await db.transaction(async (tx) => {
-            const classe = await tx.query.classesTable.findFirst({
+        try {
+            const classe = await db.query.classesTable.findFirst({
                 where: eq(classesTable.id, data.classId)
             })
             if (!classe) throw new Error("Classe Not Found");
 
-            const [user] = await tx.insert(users).values({
+            await db.insert(users).values({
                 id: userId,
                 email: data.email,
                 telNumber: data.telNumber,
@@ -37,7 +38,7 @@ class StudentsController {
                 updatedAt: new Date(),
             }).returning()
 
-            await tx.insert(account).values({
+            await db.insert(account).values({
                 id: generateId(),
                 userId,
                 accountId: userId,
@@ -46,7 +47,7 @@ class StudentsController {
                 createdAt: new Date(),
             })
 
-            const [createdStudent] = await tx
+            const [{ id: studentId }] = await db
                 .insert(studentsTable)
                 .values({
                     address: data.address,
@@ -58,16 +59,35 @@ class StudentsController {
                     userId,
                     classId: data.classId,
                 })
-                .returning()
+                .returning({ id: studentsTable.id })
 
-            const result: StudentUser = {
-                ...user,
-                info: createdStudent,
-            }
-
-            return result
-        })
-        return student
+            const student = await db.query.studentsTable.findFirst({
+                where: eq(studentsTable.id, studentId),
+                with: {
+                    user: true,
+                    class: {
+                        columns: {
+                            id: true,
+                            name: true,
+                        },
+                        with: {
+                            grade: {
+                                columns: {
+                                    id: true,
+                                    name: true
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+            if (!student) throw new Error("Student Not Created")
+                const studentUser : StudentUser = StudentUserDto(student, student.user, student.class, student.class.grade);
+            return studentUser
+        } catch (error) {
+            await db.delete(users).where(eq(users.id, userId)).catch(() => undefined)
+            throw error
+        }
     }
 
 
@@ -80,58 +100,73 @@ class StudentsController {
         const password = generateTemporaryPassword(data.name)
         const passwordHash = await handlePassword.hash(password);
 
-        const student = await db.transaction(async (tx) => {
-            const foundStudent = await tx.query.studentsTable.findFirst({
-                where: eq(studentsTable.id, data.studentId),
-                columns: { userId: true }
-            });
-            if (!foundStudent) throw new Error("Student not found");
-            const userId = foundStudent.userId;
+        const foundStudent = await db.query.studentsTable.findFirst({
+            where: eq(studentsTable.id, data.studentId),
+            columns: { userId: true }
+        });
+        if (!foundStudent) throw new Error("Student not found");
+        const userId = foundStudent.userId;
 
-            const [updatedUser] = await tx
-                .update(users)
-                .set({
-                    email: data.email,
-                    name: data.name,
-                    image: data.image,
-                    emailVerified: false,
-                    telNumber: data.telNumber,
-                    gender: data.gender,
-                })
-                .where(eq(users.id, userId))
-                .returning()
+        await db
+            .update(users)
+            .set({
+                email: data.email,
+                name: data.name,
+                image: data.image,
+                emailVerified: false,
+                telNumber: data.telNumber,
+                gender: data.gender,
+            })
+            .where(eq(users.id, userId))
+            .returning()
 
-            await tx.update(account)
-                .set({
-                    password: passwordHash,
-                })
-                .where(eq(account.userId, userId))
-
+        await db.update(account)
+            .set({
+                password: passwordHash,
+            })
+            .where(eq(account.userId, userId))
 
 
-            console.log({ newUser: updatedUser });
 
-            const [updatedStudent] = await tx
-                .update(studentsTable)
-                .set({
-                    address: data.address,
-                    dateOfBirth: data.dateOfBirth,
-                    parentName: data.parentName,
-                    parentPhoneNumber: data.parentPhoneNumber,
-                    status: StatusEnum.NEW,
-                    enrollmentDate: data.enrollmentDate
-                })
-                .where(eq(studentsTable.id, data.studentId))
-                .returning()
-            console.log({ newStudent: updatedStudent })
-            return updatedStudent
+
+        await db
+            .update(studentsTable)
+            .set({
+                address: data.address,
+                dateOfBirth: data.dateOfBirth,
+                parentName: data.parentName,
+                parentPhoneNumber: data.parentPhoneNumber,
+                status: StatusEnum.NEW,
+                enrollmentDate: data.enrollmentDate
+            })
+            .where(eq(studentsTable.id, data.studentId))
+            .returning()
+        
+        const student = await db.query.studentsTable.findFirst({
+            where: eq(studentsTable.id, data.studentId),
+            with: {
+                user: true,
+                class: {
+                    columns: {
+                        id: true,
+                        name: true
+                    },
+                    with: {
+                        grade: {
+                            columns: {
+                                id: true,
+                                name: true
+                            }
+                        }
+                    }
+                }
+            }
         })
 
         if (!student) throw new Error("User UPDATED")
 
-        const updatedStudent = student
-        console.log(updatedStudent)
-        return updatedStudent
+        const studentWithUser: StudentUser = StudentUserDto(student, student.user, student.class, student.class.grade);
+        return studentWithUser
 
     }
 

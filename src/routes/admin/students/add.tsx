@@ -13,6 +13,7 @@ import {
 } from './-students.selectors'
 import { FormProvider } from 'react-hook-form'
 import { SimpleImageUpload } from '#/components/cloudinary-uploader'
+import { useAuth } from '#/store/auth_store'
 
 export const Route = createFileRoute('/admin/students/add')({
   component: RouteComponent,
@@ -36,7 +37,8 @@ function RouteComponent() {
     setAllowAccess(!allowAccess)
   }
 
-  const { studentForm, onSubmit } = useAddStudent('r0akyppqt5jl')
+  const user = useAuth((s) => s.user)
+  const { studentForm, onSubmit } = useAddStudent(user?.info?.id ?? '')
   return (
     <Skeleton name="admin-add-student-page" loading={false}>
       <FormProvider {...studentForm}>
@@ -71,7 +73,7 @@ function RouteComponent() {
                         Personal Information
                       </h3>
                       <div className="mb-4">
-                        <SimpleImageUpload
+                        {/* <SimpleImageUpload
                           value={studentForm.watch('image')}
                           onChange={(publicId) => {
                             studentForm.setValue('image', publicId, {
@@ -80,7 +82,7 @@ function RouteComponent() {
                               shouldValidate: true,
                             })
                           }}
-                        />
+                        />*/}
                       </div>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <InputWrapper
@@ -223,12 +225,17 @@ function RouteComponent() {
                       </Link>
                       <button
                         type="submit"
+                        disabled={studentForm.formState.isSubmitting}
                         className="w-full sm:w-auto h-10 px-6 rounded-lg bg-primary hover:bg-blue-600 text-white font-bold text-sm shadow-sm transition-colors flex items-center justify-center gap-2 cursor-pointer"
                       >
                         <span className="material-symbols-outlined text-[18px]">
                           check
                         </span>
-                        Create Student Account
+                        {studentForm.formState.isSubmitting
+                          ? 'Creating...'
+                          : 'Create Student Account'
+                          }
+                        
                       </button>
                     </div>
                   </form>

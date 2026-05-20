@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+//import { createFileRoute } from '@tanstack/react-router'
 // import { createFileRoute } from '@tanstack/react-router'
 // import { Skeleton } from 'boneyard-js/react'
 // import z from 'zod'
@@ -19,7 +19,9 @@ import { createFileRoute } from '@tanstack/react-router'
 //   subject: z.string().optional().catch(undefined),
 // })
 
-export const Route = createFileRoute('/teacher/notifications/add')({
+//export const Route = createFileRoute('/teacher/notifications/add')({
+
+
   //   component: RouteComponent,
   //   pendingComponent: AddTeacherNotificationPending,
   //   validateSearch: NotificationSearchSchema,
@@ -36,7 +38,7 @@ export const Route = createFileRoute('/teacher/notifications/add')({
   //   head: () => ({
   //     meta: [{ title: 'Teacher | Add Notification - EduManage' }],
   //   }),
-})
+
 
 // function RouteComponent() {
 //   return (

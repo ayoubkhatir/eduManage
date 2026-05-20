@@ -206,7 +206,6 @@ export function SimpleImageUpload({ value, onChange }: Props) {
         import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
       )
       formData.append('folder', 'avatars')
-      console.log({ formData })
 
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/raw/upload`,
@@ -222,7 +221,6 @@ export function SimpleImageUpload({ value, onChange }: Props) {
       }
 
       const data = await response.json()
-      console.log({ publicId: data.public_id, data })
       onChange(data.public_id)
       setPreviewUrl(data.secure_url)
     } catch (err) {
@@ -267,6 +265,7 @@ type DocumentUploaderProps = Omit<Props, 'onChange'> & {
   }) => void
   label: string
 }
+
 export function SimpleDocumentUpload({
   value,
   onChange,
@@ -306,7 +305,6 @@ export function SimpleDocumentUpload({
       }
 
       const data = await response.json()
-      console.log({ data })
       const { bytes, resource_type, original_filename, url } = data
 
       onChange({

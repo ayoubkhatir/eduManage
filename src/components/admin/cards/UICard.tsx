@@ -160,8 +160,8 @@ export function TeachersStatCards() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {cards.map((card, i) => (
-        <UICardComponent {...card} key={i} />
+      {cards.map((card) => (
+        <UICardComponent {...card} key={card.id} />
       ))}
     </div>
   )
@@ -213,8 +213,8 @@ export function StudentsStatCards() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {cards.map((card, i) => (
-        <UICardComponent {...card} key={i} />
+      {cards.map((card) => (
+        <UICardComponent {...card} key={card.id} />
       ))}
     </div>
   )

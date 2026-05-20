@@ -10,16 +10,18 @@ import {
     getTeacherClassesSchema,
 } from "#/schemas/teachers.schema";
 import { createServerFn } from "@tanstack/react-start";
-import { teachersController } from "./teachers.contoller";
 import { paginatedSuccessResponse, successResponse, type APIResponse } from "#/server/utils/response.type";
+import {teachersController} from "./teachers.contoller";
 import { mapDbError } from "#/server/utils/db_error_handling";
 import { validCuidSchema } from "#/schemas/shared.schema";
 import type { StatusEnum } from "#/server/db/schema";
 import type { TeacherUser } from "#/types/teacherTypes";
 
+
 export const getTeachersServerFn = createServerFn({ method: "GET" })
     .inputValidator(getTeachersSchema)
     .handler(async ({ data: search_queries }) => {
+        const {teachersController} = await import('./teachers.contoller')
         const { data, pagination } = await teachersController.listTeachers(search_queries)
         return paginatedSuccessResponse(data, pagination);
     })
@@ -28,8 +30,9 @@ export const getTeachersServerFn = createServerFn({ method: "GET" })
 export const addTeacherServerFn = createServerFn({ method: 'POST' })
     .inputValidator(addTeacherSchema)
     .handler(async ({ data: body }) => {
-        const data = await teachersController.createTeacher(body)
+        const {teachersController} = await import('./teachers.contoller')
         try {
+            const data = await teachersController.createTeacher(body)
             return successResponse(data) as APIResponse<TeacherUser>
         }
         catch (error) {

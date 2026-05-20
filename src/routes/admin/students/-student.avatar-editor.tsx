@@ -1,12 +1,17 @@
 import { uploadToCloudinary } from '#/components/cloudinary-uploader'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '#/components/ui/dialog'
-import { cld } from '#/lib/cloudinary'
-import { AdvancedImage } from '@cloudinary/react'
-import { thumbnail } from '@cloudinary/url-gen/actions/resize'
-import { byRadius } from '@cloudinary/url-gen/actions/roundCorners'
 import { CameraIcon, Loader2Icon, Trash2Icon, UploadIcon, UserCircleIcon } from 'lucide-react'
 import { useRef, useState } from 'react'
 import type { FieldValues, Path, UseFormReturn } from 'react-hook-form'
+
+function getCloudinaryUrl(publicId: string, size?: number) {
+  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dziurs45p'
+  // If publicId looks like a full URL, return as-is
+  if (/^https?:\/\//i.test(publicId)) return publicId
+
+  const transformation = size ? `c_thumb,w_${size},h_${size},g_face` : ''
+  return `https://res.cloudinary.com/${cloudName}/image/upload/${transformation}/${publicId}`
+}
 
 type AvatarUploadCardProps<T extends FieldValues> = {
   form: UseFormReturn<T>
@@ -87,7 +92,7 @@ export function AvatarUploadCard<T extends FieldValues>({
           <button
             type="button"
             onClick={() => setDialogOpen(true)}
-            className="cursor-pointer group relative cursor-pointer rounded-full focus:outline-none focus:ring-2 focus:ring-primary/40"
+            className="cursor-pointer group relative rounded-full focus:outline-none focus:ring-2 focus:ring-primary/40"
           >
             <div className="overflow-hidden rounded-full">
               {previewUrl ? (
@@ -97,11 +102,9 @@ export function AvatarUploadCard<T extends FieldValues>({
                   className="size-40 rounded-full object-cover"
                 />
               ) : savedPublicId ? (
-                <AdvancedImage
-                  cldImg={cld
-                    .image(savedPublicId)
-                    .resize(thumbnail().width(160).height(160))
-                    .roundCorners(byRadius(999))}
+                <img
+                  src={getCloudinaryUrl(savedPublicId, 160)}
+                  alt="Avatar"
                   className="size-40 rounded-full object-cover"
                 />
               ) : (
@@ -150,11 +153,9 @@ export function AvatarUploadCard<T extends FieldValues>({
                   className="size-36 rounded-full object-cover"
                 />
               ) : savedPublicId ? (
-                <AdvancedImage
-                  cldImg={cld
-                    .image(savedPublicId)
-                    .resize(thumbnail().width(144).height(144))
-                    .roundCorners(byRadius(999))}
+                <img
+                  src={getCloudinaryUrl(savedPublicId, 144)}
+                  alt="Avatar"
                   className="size-36 rounded-full object-cover"
                 />
               ) : (

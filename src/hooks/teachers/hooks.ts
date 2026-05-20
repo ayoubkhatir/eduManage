@@ -6,7 +6,7 @@ import {
 import { useForm } from 'react-hook-form'
 import { addTeacherServerFn, assignTeacherToClassAndSubjectServerFn, deleteTeacherAssignmentServerFn, deleteTeacherServerFn, editTeacherServerFn, getTeacherByIdServerFn, getTeacherByUserIdServerFn } from '#/server/modules/teachers/teachers.server-functions'
 import { addTeacherSchema, assignTeacherSchema, editTeacherSchema } from '#/schemas/teachers.schema'
-import type { TeacherUser } from '#/server/modules/teachers/teachers.types'
+import type { TeacherUser } from '#/types/teacherTypes'
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
 import { toast } from 'sonner'
 import { useNavigate, useRouter } from '@tanstack/react-router'
@@ -14,24 +14,26 @@ import { queryClient } from '#/lib/query-client'
 import { StatusEnum, UserGenderEnum } from '#/server/db/schema'
 import type { APIResponse } from '#/server/utils/response.type'
 import type {
-  AddTeacherSchema,
-  AssignTeacherSchema,
-  EditTeacherSchema,
+  AddTeacherType,
+  AssignTeacherType,
+  EditTeacherType,
 } from '#/types/teacherTypes'
 import type { UseFormReturn } from 'react-hook-form'
+import { useEffect } from 'react'
 
 export function useAddTeacher(schoolId: string) {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const router = useRouter()
-  const form = useForm<AddTeacherSchema>({
+  const form = useForm<AddTeacherType>({
     resolver: standardSchemaResolver(addTeacherSchema),
+    mode: "onBlur",
     defaultValues: {
       status: StatusEnum.NEW,
       name: "New Teacher",
       telNumber: "11111111",
       schoolId,
-      image: "",
+      image: undefined,
       gender: UserGenderEnum.MALE,
       email: "new_teacher@email.com",
       dateOfBirth: new Date().toISOString(),
@@ -39,15 +41,29 @@ export function useAddTeacher(schoolId: string) {
     },
   })
 
+  useEffect(() => {
+    if (!schoolId) {
+      return
+    }
+
+    form.reset({
+      ...form.getValues(),
+      schoolId,
+    })
+  }, [form, schoolId])
+
 
   const { mutate: addTeacher } = useMutation({
-    mutationFn: async (data: AddTeacherSchema) => {
-      try {
-        const response = await addTeacherServerFn({ data })
-        return response
-      } catch (error) {
-        console.log({ errorCatch: error })
-      }
+    mutationFn: async (data: AddTeacherType) => {
+      const response = await addTeacherServerFn({ data })
+      if (response.success) return response.data
+      const message =
+        'message' in response
+          ? response.message
+          : 'issues' in response
+            ? response.issues.join(', ')
+            : 'Error has occured'
+      throw new Error(message)
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['teachers'] })
@@ -57,13 +73,14 @@ export function useAddTeacher(schoolId: string) {
   })
 
 
-  function onSubmit(data: AddTeacherSchema) {
+  function onSubmit(data: AddTeacherType) {
+    console.log({ formData: data })
     addTeacher(data, {
       onSuccess: () => {
         toast.success("Teacher added")
       },
-      onError: () => {
-        toast.error("Error has occured")
+      onError: (error) => {
+        toast.error(error.message || "Error has occured")
       }
     })
   }
@@ -72,18 +89,18 @@ export function useAddTeacher(schoolId: string) {
 }
 
 export function useEditTeacher(editedTeacher: TeacherUser) {
-  const form: UseFormReturn<EditTeacherSchema> = useForm<EditTeacherSchema>({
+  const form: UseFormReturn<EditTeacherType> = useForm<EditTeacherType>({
     defaultValues: {
       teacherId: editedTeacher.id,
       name: editedTeacher.name,
       telNumber: editedTeacher.telNumber ?? '',
-      status: editedTeacher.status,
+      status: editedTeacher.info.status,
       image: editedTeacher.image ?? null,
       gender: editedTeacher.gender,
       email: editedTeacher.email,
-      dateOfBirth: editedTeacher.dateOfBirth,
-      address: editedTeacher.address,
-      about: editedTeacher.about,
+      dateOfBirth: editedTeacher.info.dateOfBirth,
+      address: editedTeacher.info.address,
+      about: editedTeacher.info.about,
     },
     resolver: standardSchemaResolver(editTeacherSchema),
   })
@@ -91,7 +108,7 @@ export function useEditTeacher(editedTeacher: TeacherUser) {
   const queryClient = useQueryClient()
 
   const { mutate: editTeacher } = useMutation({
-    mutationFn: async (data: EditTeacherSchema) => {
+    mutationFn: async (data: EditTeacherType) => {
       try {
         const response = await editTeacherServerFn({ data })
         return response
@@ -105,7 +122,7 @@ export function useEditTeacher(editedTeacher: TeacherUser) {
     },
   })
 
-  function onSubmit(data: EditTeacherSchema) {
+  function onSubmit(data: EditTeacherType) {
     console.log({ formData: data })
     editTeacher(data, {
       onSuccess: () => {
@@ -155,7 +172,7 @@ export const getTeacherQueryOptions = (args: { fetchBy: "userId", userId: string
 })
 
 export function useAssignTeacher(teacherId: string, schoolId: string) {
-  const form = useForm<AssignTeacherSchema>({
+  const form = useForm<AssignTeacherType>({
     defaultValues: {
       teacherId,
       subjectId: "",
@@ -170,7 +187,7 @@ export function useAssignTeacher(teacherId: string, schoolId: string) {
   const queryClient = useQueryClient()
 
   const { mutate: assignTeacher } = useMutation({
-    mutationFn: async (data: AssignTeacherSchema) => {
+    mutationFn: async (data: AssignTeacherType) => {
       const response = await assignTeacherToClassAndSubjectServerFn({ data })
       if (response.success) return response.data
       console.log({ response })
@@ -186,7 +203,7 @@ export function useAssignTeacher(teacherId: string, schoolId: string) {
     }
   })
 
-  async function onSubmit(data: AssignTeacherSchema) {
+  async function onSubmit(data: AssignTeacherType) {
     console.log({ assignData: data })
     assignTeacher(data)
   }
@@ -207,7 +224,7 @@ export function useDeleteTeacherAssignement() {
 }
 
 export function useUpdateTeacherSettings(teacher: TeacherUser) {
-  const form: UseFormReturn<EditTeacherSchema> = useForm<EditTeacherSchema>({
+  const form: UseFormReturn<EditTeacherType> = useForm<EditTeacherType>({
     resolver: standardSchemaResolver(editTeacherSchema),
     defaultValues: {
       teacherId: teacher.id,
@@ -216,15 +233,15 @@ export function useUpdateTeacherSettings(teacher: TeacherUser) {
       image: teacher.image,
       telNumber: teacher.telNumber ?? '',
       gender: teacher.gender,
-      about: teacher.about,
-      address: teacher.address,
-      dateOfBirth: teacher.dateOfBirth,
-      status: teacher.status,
+      about: teacher.info.about,
+      address: teacher.info.address,
+      dateOfBirth: teacher.info.dateOfBirth,
+      status: teacher.info.status,
     }
   })
   const router = useRouter()
   const { mutate: updateTeacherSettings } = useMutation({
-    mutationFn: async (data: EditTeacherSchema) => {
+    mutationFn: async (data: EditTeacherType) => {
       const response = await editTeacherServerFn({ data })
       if (response.success) return response.data
       throw new Error("Error occured")
@@ -232,14 +249,14 @@ export function useUpdateTeacherSettings(teacher: TeacherUser) {
     onSuccess: () => {
       toast.success("Update Success")
       router.invalidate()
-      queryClient.invalidateQueries({ queryKey: ["teachers", teacher.id, `userId-${teacher.userId}`] })
+      queryClient.invalidateQueries({ queryKey: ["teachers", teacher.id, `userId-${teacher.info.userId}`] })
     },
     onError: () => {
       toast.error("Error occured")
     }
   })
   console.log({ errors: form.formState.errors })
-  const onSubmit = async (data: EditTeacherSchema) => {
+  const onSubmit = async (data: EditTeacherType) => {
     updateTeacherSettings(data)
     form.reset()
   }

@@ -13,15 +13,15 @@ import {
   getAllStudentsServerFn,
   getStudentByIdServerFn,
 } from '#/server/modules/students/students.server-functions';
-import type { StudentUser } from '#/server/modules/students/students.types';
+import type { StudentUser } from '#/types/studentTypes';
 import { useNavigate, useRouter } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { addStudentSchema, editStudentSchema } from '#/schemas/students.schema';
-import { UserGenderEnum } from '#/server/db/schema'
+import { StatusEnum, UserGenderEnum } from '#/server/db/schema'
 import type {
-  AddStudentSchema,
-  EditStudentSchema,
-  GetStudentsSchema,
+  AddStudentType,
+  EditStudentType,
+  GetStudentsType,
 } from '#/types/studentTypes'
 
 // add student
@@ -30,9 +30,16 @@ export function useAddStudent(schoolId: string) {
   const router = useRouter()
   const queryClient = useQueryClient()
   const { mutate: addStudent } = useMutation({
-    mutationFn: async (data: AddStudentSchema) => {
+    mutationFn: async (data: AddStudentType) => {
       const response = await addStudentServerFn({ data: data as any })
-      return response
+      if (response.success) return response.data
+      const message =
+        'message' in response
+          ? response.message
+          : 'issues' in response
+            ? response.issues.join(', ')
+            : 'Error has occured'
+      throw new Error(message)
     },
     onSuccess: async () => {
       await queryClient.refetchQueries({ queryKey: ["students"] })
@@ -41,16 +48,16 @@ export function useAddStudent(schoolId: string) {
     }
   })
 
-  const studentForm = useForm<AddStudentSchema>({
+  const studentForm = useForm<AddStudentType>({
     resolver: standardSchemaResolver(addStudentSchema),
     defaultValues: {
       telNumber: "11111111",
-      status: "New",
+      status: StatusEnum.NEW,
       schoolId,
       parentPhoneNumber: "11111111",
       parentName: "Mohammed",
       name: "Abdelouadoud",
-      image: "",
+      image: undefined,
       gender: UserGenderEnum.MALE,
       enrollmentDate: new Date().toISOString(),
       email: "abdelouadoud_student@email.com",
@@ -58,7 +65,7 @@ export function useAddStudent(schoolId: string) {
       address: "Hassi El Ghela"
     }
   })
-  function onSubmit(data: AddStudentSchema) {
+  function onSubmit(data: AddStudentType) {
     addStudent(data, {
       onSuccess: () => {
         toast.success("User Added", { description: "Redirection to students page..." })
@@ -91,7 +98,7 @@ export function useGetStudents({
   page,
   search,
   size,
-}: Partial<GetStudentsSchema>) {
+}: Partial<GetStudentsType>) {
   return useQuery({
     queryKey: ['students', page, search, size],
     queryFn: async () =>
@@ -123,17 +130,18 @@ export function useEditStudent(edited: StudentUser) {
   const queryClient = useQueryClient()
 
   const { mutate: editStudent } = useMutation({
-    mutationFn: async (data: EditStudentSchema) => {
+    mutationFn: async (data: EditStudentType) => {
       const response = await editStudentServerFn({ data })
-      return response
+      if (response.success) return response.data
+      throw new Error("Error occured")
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['students'] })
     },
   })
 
-  function onSubmit(data: EditStudentSchema) {
-    const newData: EditStudentSchema = {
+  function onSubmit(data: EditStudentType) {
+    const newData: EditStudentType = {
       name: data.name,
       email: data.email,
       gradeId: data.gradeId,
@@ -144,7 +152,7 @@ export function useEditStudent(edited: StudentUser) {
       address: data.address,
       dateOfBirth: data.dateOfBirth,
       enrollmentDate: data.enrollmentDate,
-      status: edited.status,
+      status: edited.info.status,
       image: data.image,
       telNumber: data.telNumber,
       studentId: data.studentId
@@ -159,22 +167,22 @@ export function useEditStudent(edited: StudentUser) {
     })
   }
 
-  const studentForm = useForm<EditStudentSchema>({
+  const studentForm = useForm<EditStudentType>({
     defaultValues: {
-      status: edited.status,
-      parentPhoneNumber: edited.parentPhoneNumber,
-      parentName: edited.parentName,
+      status: edited.info.status,
+      parentPhoneNumber: edited.info.parentPhoneNumber,
+      parentName: edited.info.parentName,
       name: edited.name,
       image: edited.image ?? "",
       gender: edited.gender,
       enrollmentDate: new Date().toISOString(),
       email: edited.email,
       dateOfBirth: new Date().toISOString(),
-      address: edited.address,
-      telNumber: edited.telNumber ?? "11111111",
+      address: edited.info.address,
+      telNumber: edited.telNumber!,
       studentId: edited.id,
-      classId: edited.class.id,
-      gradeId: edited.grade.id
+      classId: edited.info.class.id,
+      gradeId: edited.info.grade.id
     },
     resolver: standardSchemaResolver(editStudentSchema),
   })

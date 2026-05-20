@@ -137,7 +137,7 @@ export default function SelectWrapper<T extends FieldValues>({
               sideOffset={6}
             >
               {values.map((item, i) => (
-                <div key={typeof item === 'string' ? item : item.label}>
+                <div key={`select-${typeof item === 'string' ? item : item.value}`}>
                   <SelectItem
                     value={typeof item === 'string' ? item : item.value}
                     className="px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-900 text-black dark:text-white cursor-pointer transition-colors"
@@ -146,7 +146,7 @@ export default function SelectWrapper<T extends FieldValues>({
                   </SelectItem>
 
                   {values.length !== i + 1 && (
-                    <SelectSeparator className="bg-gray-200 dark:bg-gray-700 my-1" />
+                    <SelectSeparator key={`sep-${i}`} className="bg-gray-200 dark:bg-gray-700 my-1" />
                   )}
                 </div>
               ))}

@@ -43,8 +43,8 @@ import { Route as AdminTeachersIndexRouteImport } from './routes/admin/teachers/
 import { Route as AdminStudentsIndexRouteImport } from './routes/admin/students/index'
 import { Route as AdminGradesIndexRouteImport } from './routes/admin/grades/index'
 import { Route as TeacherSubjectsSubjectCodeRouteImport } from './routes/teacher/subjects/$subjectCode'
-import { Route as TeacherNotificationsAddRouteImport } from './routes/teacher/notifications/add'
 import { Route as TeacherMarksClassIdRouteImport } from './routes/teacher/marks/$classId'
+import { Route as TeacherClassesClassIdRouteImport } from './routes/teacher/classes/$classId'
 import { Route as TeacherAttendanceClassIdRouteImport } from './routes/teacher/attendance/$classId'
 import { Route as StudentSubjectsSubjectCodeRouteImport } from './routes/student/subjects.$subjectCode'
 import { Route as AdminTeachersAddRouteImport } from './routes/admin/teachers/add'
@@ -225,14 +225,14 @@ const TeacherSubjectsSubjectCodeRoute =
     path: '/subjects/$subjectCode',
     getParentRoute: () => TeacherRoute,
   } as any)
-const TeacherNotificationsAddRoute = TeacherNotificationsAddRouteImport.update({
-  id: '/notifications/add',
-  path: '/notifications/add',
-  getParentRoute: () => TeacherRoute,
-} as any)
 const TeacherMarksClassIdRoute = TeacherMarksClassIdRouteImport.update({
   id: '/marks/$classId',
   path: '/marks/$classId',
+  getParentRoute: () => TeacherRoute,
+} as any)
+const TeacherClassesClassIdRoute = TeacherClassesClassIdRouteImport.update({
+  id: '/classes/$classId',
+  path: '/classes/$classId',
   getParentRoute: () => TeacherRoute,
 } as any)
 const TeacherAttendanceClassIdRoute =
@@ -314,8 +314,8 @@ export interface FileRoutesByFullPath {
   '/admin/teachers/add': typeof AdminTeachersAddRoute
   '/student/subjects/$subjectCode': typeof StudentSubjectsSubjectCodeRoute
   '/teacher/attendance/$classId': typeof TeacherAttendanceClassIdRoute
+  '/teacher/classes/$classId': typeof TeacherClassesClassIdRoute
   '/teacher/marks/$classId': typeof TeacherMarksClassIdRoute
-  '/teacher/notifications/add': typeof TeacherNotificationsAddRoute
   '/teacher/subjects/$subjectCode': typeof TeacherSubjectsSubjectCodeRoute
   '/admin/grades/': typeof AdminGradesIndexRoute
   '/admin/students/': typeof AdminStudentsIndexRoute
@@ -360,8 +360,8 @@ export interface FileRoutesByTo {
   '/admin/teachers/add': typeof AdminTeachersAddRoute
   '/student/subjects/$subjectCode': typeof StudentSubjectsSubjectCodeRoute
   '/teacher/attendance/$classId': typeof TeacherAttendanceClassIdRoute
+  '/teacher/classes/$classId': typeof TeacherClassesClassIdRoute
   '/teacher/marks/$classId': typeof TeacherMarksClassIdRoute
-  '/teacher/notifications/add': typeof TeacherNotificationsAddRoute
   '/teacher/subjects/$subjectCode': typeof TeacherSubjectsSubjectCodeRoute
   '/admin/grades': typeof AdminGradesIndexRoute
   '/admin/students': typeof AdminStudentsIndexRoute
@@ -407,8 +407,8 @@ export interface FileRoutesById {
   '/admin/teachers/add': typeof AdminTeachersAddRoute
   '/student/subjects/$subjectCode': typeof StudentSubjectsSubjectCodeRoute
   '/teacher/attendance/$classId': typeof TeacherAttendanceClassIdRoute
+  '/teacher/classes/$classId': typeof TeacherClassesClassIdRoute
   '/teacher/marks/$classId': typeof TeacherMarksClassIdRoute
-  '/teacher/notifications/add': typeof TeacherNotificationsAddRoute
   '/teacher/subjects/$subjectCode': typeof TeacherSubjectsSubjectCodeRoute
   '/admin/grades/': typeof AdminGradesIndexRoute
   '/admin/students/': typeof AdminStudentsIndexRoute
@@ -455,8 +455,8 @@ export interface FileRouteTypes {
     | '/admin/teachers/add'
     | '/student/subjects/$subjectCode'
     | '/teacher/attendance/$classId'
+    | '/teacher/classes/$classId'
     | '/teacher/marks/$classId'
-    | '/teacher/notifications/add'
     | '/teacher/subjects/$subjectCode'
     | '/admin/grades/'
     | '/admin/students/'
@@ -501,8 +501,8 @@ export interface FileRouteTypes {
     | '/admin/teachers/add'
     | '/student/subjects/$subjectCode'
     | '/teacher/attendance/$classId'
+    | '/teacher/classes/$classId'
     | '/teacher/marks/$classId'
-    | '/teacher/notifications/add'
     | '/teacher/subjects/$subjectCode'
     | '/admin/grades'
     | '/admin/students'
@@ -547,8 +547,8 @@ export interface FileRouteTypes {
     | '/admin/teachers/add'
     | '/student/subjects/$subjectCode'
     | '/teacher/attendance/$classId'
+    | '/teacher/classes/$classId'
     | '/teacher/marks/$classId'
-    | '/teacher/notifications/add'
     | '/teacher/subjects/$subjectCode'
     | '/admin/grades/'
     | '/admin/students/'
@@ -823,18 +823,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherSubjectsSubjectCodeRouteImport
       parentRoute: typeof TeacherRoute
     }
-    '/teacher/notifications/add': {
-      id: '/teacher/notifications/add'
-      path: '/notifications/add'
-      fullPath: '/teacher/notifications/add'
-      preLoaderRoute: typeof TeacherNotificationsAddRouteImport
-      parentRoute: typeof TeacherRoute
-    }
     '/teacher/marks/$classId': {
       id: '/teacher/marks/$classId'
       path: '/marks/$classId'
       fullPath: '/teacher/marks/$classId'
       preLoaderRoute: typeof TeacherMarksClassIdRouteImport
+      parentRoute: typeof TeacherRoute
+    }
+    '/teacher/classes/$classId': {
+      id: '/teacher/classes/$classId'
+      path: '/classes/$classId'
+      fullPath: '/teacher/classes/$classId'
+      preLoaderRoute: typeof TeacherClassesClassIdRouteImport
       parentRoute: typeof TeacherRoute
     }
     '/teacher/attendance/$classId': {
@@ -950,8 +950,8 @@ interface TeacherRouteChildren {
   TeacherCalendarRoute: typeof TeacherCalendarRoute
   TeacherSettingsRoute: typeof TeacherSettingsRoute
   TeacherAttendanceClassIdRoute: typeof TeacherAttendanceClassIdRoute
+  TeacherClassesClassIdRoute: typeof TeacherClassesClassIdRoute
   TeacherMarksClassIdRoute: typeof TeacherMarksClassIdRoute
-  TeacherNotificationsAddRoute: typeof TeacherNotificationsAddRoute
   TeacherSubjectsSubjectCodeRoute: typeof TeacherSubjectsSubjectCodeRoute
   TeacherClassesIndexRoute: typeof TeacherClassesIndexRoute
   TeacherSubjectsIndexRoute: typeof TeacherSubjectsIndexRoute
@@ -961,8 +961,8 @@ const TeacherRouteChildren: TeacherRouteChildren = {
   TeacherCalendarRoute: TeacherCalendarRoute,
   TeacherSettingsRoute: TeacherSettingsRoute,
   TeacherAttendanceClassIdRoute: TeacherAttendanceClassIdRoute,
+  TeacherClassesClassIdRoute: TeacherClassesClassIdRoute,
   TeacherMarksClassIdRoute: TeacherMarksClassIdRoute,
-  TeacherNotificationsAddRoute: TeacherNotificationsAddRoute,
   TeacherSubjectsSubjectCodeRoute: TeacherSubjectsSubjectCodeRoute,
   TeacherClassesIndexRoute: TeacherClassesIndexRoute,
   TeacherSubjectsIndexRoute: TeacherSubjectsIndexRoute,

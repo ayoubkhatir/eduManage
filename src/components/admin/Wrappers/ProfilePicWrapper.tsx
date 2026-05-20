@@ -68,9 +68,8 @@
 //     </div>
 //   )
 // }
-import { useState } from 'react'
 import type { FieldValues, Path, UseFormReturn } from 'react-hook-form'
-import { CloudinaryUploader } from '#/components/cloudinary-uploader'
+import { SimpleImageUpload } from '#/components/cloudinary-uploader'
 
 type Props<T extends FieldValues> = {
   form: UseFormReturn<T>
@@ -95,72 +94,16 @@ export default function ProfilePicInput<T extends FieldValues>({
 
   return (
     <div className="flex flex-col gap-4">
-      <CloudinaryUploader
-        onSuccess={({ publicId, secureUrl }) => {
+      <SimpleImageUpload
+        value={savedPublicId}
+        onChange={(publicId) => {
           form.setValue(imageField, publicId as T[Path<T>], {
             shouldDirty: true,
             shouldTouch: true,
             shouldValidate: true,
           })
-          setPreviewUrl(secureUrl)
         }}
-      >
-        {({ open, ready }) => (
-          <div className="flex flex-col items-start gap-3">
-            <button
-              type="button"
-              onClick={open}
-              disabled={!ready}
-              className="cursor-pointer relative"
-            >
-              <div className="flex size-32 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-gray-100 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                {previewUrl ? (
-                  <img
-                    src={previewUrl}
-                    alt="Preview"
-                    className="h-full w-full object-cover"
-                  />
-                ) : savedPublicId ? (
-                  <div className="flex h-full w-full items-center justify-center text-xs text-gray-500 px-2 text-center">
-                    Uploaded
-                    <br />
-                    {savedPublicId}
-                  </div>
-                ) : (
-                  <span className="material-symbols-outlined text-4xl text-gray-400">
-                    person_add
-                  </span>
-                )}
-              </div>
-
-              <div className="absolute bottom-0 right-0 rounded-full bg-primary p-2 text-white shadow">
-                <span className="material-symbols-outlined text-[18px]">
-                  edit
-                </span>
-              </div>
-            </button>
-
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={open}
-                disabled={!ready}
-                className="cursor-pointer rounded-lg bg-black px-4 py-2 text-white disabled:opacity-50"
-              >
-                {ready ? 'Upload image' : 'Loading uploader...'}
-              </button>
-
-              <button
-                type="button"
-                onClick={handleRemove}
-                className="cursor-pointer rounded-lg border border-slate-300 bg-slate-100 px-4 py-2 text-sm hover:border-red-400 hover:text-red-500 dark:bg-gray-800 dark:text-white"
-              >
-                Remove
-              </button>
-            </div>
-          </div>
-        )}
-      </CloudinaryUploader>
+      />
     </div>
   )
 }

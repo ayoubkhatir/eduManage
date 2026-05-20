@@ -15,8 +15,8 @@ import {
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 import { StudentColumns, TeacherColumns } from './columnsData'
-import type { TeacherUser } from '#/server/modules/teachers/teachers.types'
-import type { StudentUser } from '#/server/modules/students/students.types'
+import type { TeacherUser } from '#/types/teacherTypes'
+import type { StudentUser } from '#/types/studentTypes'
 
 interface DataTableProps<TData> {
   table: Tab<TData>

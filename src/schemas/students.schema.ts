@@ -11,9 +11,8 @@ export const addStudentSchema = addUserSchema.extend({
     schoolId: validCuidSchema,
     gradeId: validCuidSchema,
     classId: validCuidSchema,
-    parentPhoneNumber: z.string()
-        .regex(/^(?:06|05|07)\d{8}$/, 'Phone number is not valid'),
-    parentName: phoneNumberSchema,
+    parentPhoneNumber: phoneNumberSchema,
+    parentName: z.string().trim().nonempty('Parent name is required'),
     status: statusSchema,
     address: z.string().nonempty(),
     dateOfBirth: z.string(),
