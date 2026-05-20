@@ -156,13 +156,12 @@ export async function uploadToCloudinary(file: File) {
   formData.append('file', file)
   formData.append(
     'upload_preset',
-    // import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
-    'edu_manage',
+    import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'edu_manage',
   )
   formData.append('folder', 'avatars')
 
   const response = await fetch(
-    `https://api.cloudinary.com/v1_1/${'dziurs45p'}/image/upload`,
+    `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dziurs45p'}/image/upload`,
     {
       method: 'POST',
       body: formData,
@@ -204,14 +203,12 @@ export function SimpleImageUpload({ value, onChange }: Props) {
       formData.append('file', file)
       formData.append(
         'upload_preset',
-        // import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
-        'edu_manage',
+        import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'edu_manage',
       )
       formData.append('folder', 'avatars')
-      console.log({ formData })
 
       const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${'dziurs45p'}/upload`,
+        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dziurs45p'}/upload`,
         {
           method: 'POST',
           body: formData,
@@ -224,7 +221,6 @@ export function SimpleImageUpload({ value, onChange }: Props) {
       }
 
       const data = await response.json()
-      console.log({ publicId: data.public_id, data })
       onChange(data.public_id)
       setPreviewUrl(data.secure_url)
     } catch (err) {
@@ -269,6 +265,7 @@ type DocumentUploaderProps = Omit<Props, 'onChange'> & {
   }) => void
   label: string
 }
+
 export function SimpleDocumentUpload({
   value,
   onChange,
@@ -290,13 +287,12 @@ export function SimpleDocumentUpload({
       formData.append('file', file)
       formData.append(
         'upload_preset',
-        // import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
-        'edu_manage',
+        import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'edu_manage',
       )
       formData.append('folder', 'documents')
 
       const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${'dziurs45p'}/upload`,
+        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dziurs45p'}/upload`,
         {
           method: 'POST',
           body: formData,
@@ -309,7 +305,6 @@ export function SimpleDocumentUpload({
       }
 
       const data = await response.json()
-      console.log({ data })
       const { bytes, resource_type, original_filename, url } = data
 
       onChange({

@@ -1,3 +1,9 @@
+// Temporarily disabled for future repair.
+export default function OwnNotificationTable() {
+  return null
+}
+
+/*
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import DOMPurify from 'dompurify'
 
@@ -7,7 +13,7 @@ import type {
   PaginationOptions,
   PaginationState,
 } from '@tanstack/react-table'
-/* filter types*/
+/* filter types
 import type { NotificationFilter } from '../../../services/api/teacher/types/apiType'
 import type {
   Notification,
@@ -46,7 +52,7 @@ export default function OwnNotificationTable({
     useState<Notification | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  /* handling table */
+  /* handling table 
   const tablePagination = {
     pageIndex: Math.max(pagination.pageIndex - 1, 0),
     pageSize: pagination.pageSize,
@@ -174,6 +180,7 @@ export default function OwnNotificationTable({
         cleanedContent: null,
         attachments: Array.from(persistedAttachmentMap.values()),
       }
+    
     }
 
     const parser = new DOMParser()
@@ -470,3 +477,4 @@ export default function OwnNotificationTable({
     </>
   )
 }
+  */

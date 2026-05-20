@@ -11,7 +11,6 @@ import ViewProfileMenuItem from '../DropDownMenuComp/ViewProfileMenuItem'
 import CopyIdMenuItem from '../DropDownMenuComp/CopyIdMenuItem'
 import type { ColumnDef } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
-import { AdvancedImage } from '@cloudinary/react'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
@@ -20,15 +19,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { thumbnail } from '@cloudinary/url-gen/actions/resize'
-import { byRadius } from '@cloudinary/url-gen/actions/roundCorners'
 import { AssignTeacherMenuItem } from '../DropDownMenuComp/AssignTeacherMenuItem'
 import { Badge } from '#/components/ui/badge'
 import { StatusEnum, UserGenderEnum } from '#/server/db/schema'
 import ProfilePicGenerator from '../profilePicGenerator'
-import { cld } from '#/lib/cloudinary'
+// Cloudinary SDKs removed; construct URLs directly when needed
+
+function getCloudinaryUrl(publicId: string, size?: number) {
+  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dziurs45p'
+  if (!publicId) return ''
+  if (/^https?:\/\//i.test(publicId)) return publicId
+  const transformation = size ? `c_thumb,w_${size},h_${size},g_face` : ''
+  return `https://res.cloudinary.com/${cloudName}/image/upload/${transformation}/${publicId}`
+}
 import type {  StudentUser } from '#/types/studentTypes'
-import type { Teacher } from '#/types/teacherTypes'
+import type { TeacherUser } from '#/types/teacherTypes'
 
 export function UserAvatar({
   image,
@@ -38,16 +43,10 @@ export function UserAvatar({
   size: number
 }) {
   return image ? (
-    <AdvancedImage
-      cldImg={cld
-        .image(image)
-        .resize(
-          thumbnail()
-            .width(size * 4)
-            .height(size * 4),
-        )
-        .roundCorners(byRadius(999))}
+    <img
+      src={getCloudinaryUrl(image, size * 4)}
       className={`size-${size} object-cover rounded-full border-2 border-slate-200 dark:border-slate-700 shadow-sm`}
+      alt="avatar"
     />
   ) : (
     <UserCircleIcon
@@ -125,7 +124,7 @@ export const StudentColumns: Array<ColumnDef<StudentUser>> = [
     size: 15,
     cell: ({ row }) => (
       <span className="font-medium text-slate-800 dark:text-slate-200">
-        {row.original.grade.name}
+        {row.original.info.grade.name}
       </span>
     ),
   },
@@ -135,7 +134,7 @@ export const StudentColumns: Array<ColumnDef<StudentUser>> = [
     size: 15,
     cell: ({ row }) => (
       <span className="font-medium text-slate-800 dark:text-slate-200">
-        {row.original.class.name}
+        {row.original.info.class.name}
       </span>
     ),
   },
@@ -147,9 +146,9 @@ export const StudentColumns: Array<ColumnDef<StudentUser>> = [
       const student = row.original
       return (
         <div className="flex flex-col text-sm text-slate-700 dark:text-slate-300">
-          <span className="font-medium">{student.parentName}</span>
+          <span className="font-medium">{student.info.parentName}</span>
           <span className="text-xs text-slate-500 dark:text-slate-400">
-            {student.parentPhoneNumber}
+            {student.info.parentPhoneNumber}
           </span>
         </div>
       )
@@ -162,18 +161,18 @@ export const StudentColumns: Array<ColumnDef<StudentUser>> = [
     cell: ({ row }) => {
       const student = row.original
       const bgColor =
-        student.status === 'Active'
+        student.info.status === 'Active'
           ? 'bg-green-100 text-green-800'
-          : student.status === 'Inactive'
+          : student.info.status === 'Inactive'
             ? 'bg-red-100 text-red-800'
-            : student.status === 'Pending'
+            : student.info.status === 'Pending'
               ? 'bg-yellow-100 text-yellow-800'
               : 'bg-gray-100 text-gray-800'
       return (
         <span
           className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${bgColor} `}
         >
-          {student.status}
+          {student.info.status}
         </span>
       )
     },
@@ -225,7 +224,7 @@ export const StudentColumns: Array<ColumnDef<StudentUser>> = [
 ]
 
 // definition for the teacher columns in the teacher table
-export const TeacherColumns: Array<ColumnDef<Teacher>> = [
+export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
   {
     accessorKey: 'imgSrc',
     header: '',
@@ -260,8 +259,7 @@ export const TeacherColumns: Array<ColumnDef<Teacher>> = [
     cell: ({ row }) => (
       <div className="flex flex-col">
         <span className="font-semibold text-slate-900 dark:text-white">
-          {getUser}
-          {row.original}
+          {row.original.name}
         </span>
         <span className="text-xs text-slate-500 dark:text-slate-400">
           {row.original.id}
@@ -316,7 +314,7 @@ export const TeacherColumns: Array<ColumnDef<Teacher>> = [
     cell: ({ row }) => {
       return (
         <div className="flex flex-wrap gap-1.5 max-w-50">
-          {row.original.subjects.map((s) => (
+          {row.original.info.subjects.map((s) => (
             <Badge
               key={s.id}
               variant="secondary"
@@ -358,9 +356,9 @@ export const TeacherColumns: Array<ColumnDef<Teacher>> = [
       }
 
       const config =
-        teacher.status === StatusEnum.ACTIVE
+        teacher.info.status === StatusEnum.ACTIVE
           ? statusConfig.Active
-          : teacher.status === StatusEnum.INACTIVE
+          : teacher.info.status === StatusEnum.INACTIVE
             ? statusConfig.Inactive
             : statusConfig.Pending
 
@@ -369,7 +367,7 @@ export const TeacherColumns: Array<ColumnDef<Teacher>> = [
           className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${config.bg} ${config.text} ${config.border}`}
         >
           <span className={`h-1.5 w-1.5 rounded-full ${config.dot}`} />
-          {teacher.status}
+          {teacher.info.status}
         </span>
       )
     },

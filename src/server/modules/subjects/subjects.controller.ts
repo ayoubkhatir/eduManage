@@ -1,4 +1,4 @@
-import type { AddSubjectSchema } from "#/schemas/subjects.schema";
+import type { AddSubjectSchema } from "#/types/subjectsTypes";
 import { db, type Database } from "#/server/db/db";
 import { gradesTable, gradeSubjectsTable, StatusEnum, studentsTable, subjectsTable, teachersTable } from "#/server/db/schema";
 import { and, eq, inArray } from "drizzle-orm";

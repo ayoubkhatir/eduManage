@@ -1,3 +1,9 @@
+// Temporarily disabled for future repair.
+export default function NotificationList() {
+  return null
+}
+
+/*
 import { MdOutlineGrade, MdPriorityHigh } from 'react-icons/md'
 import { GiWhiteBook } from 'react-icons/gi'
 import { FaRegCircleUser } from 'react-icons/fa6'
@@ -289,3 +295,4 @@ export default function NotificationList({
     </div>
   )
 }
+*/

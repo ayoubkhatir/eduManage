@@ -20,7 +20,7 @@ import {
   CustomDataTableSkeleton,
   StudentsTable,
 } from '#/components/admin/Table/dataTable'
-import { getAllGradesQueryOptions } from '#/server/db/repo/grades.repository'
+import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
 import { getStudentsQueryOptions } from '#/server/db/repo'
 
 // type QueryOptionsType = Filters<StudentModel>

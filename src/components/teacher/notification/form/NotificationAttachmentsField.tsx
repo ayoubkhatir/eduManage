@@ -1,3 +1,9 @@
+// Temporarily disabled for future repair.
+export const NotificationAttachmentsField = () => {
+  return null
+}
+
+/*
 import { memo } from 'react'
 import type { UseFormRegister } from 'react-hook-form'
 import type { PubNotificationType } from '../pubnotification.schema.ts'
@@ -49,7 +55,7 @@ export const NotificationAttachmentsField = memo(function NotificationAttachment
       {hasAttachments && (
         <button
           type="button"
-          className="cursor-pointer ml-2 mt-2 inline-flex items-center gap-1 rounded-lg border border-slate-300 dark:border-slate-700 px-3 py-2 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 cursor-pointer"
+          className="cursor-pointer ml-2 mt-2 inline-flex items-center gap-1 rounded-lg border border-slate-300 dark:border-slate-700 px-3 py-2 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50"
           onClick={onClearAttachments}
           disabled={isUploading}
         >
@@ -92,7 +98,7 @@ export const NotificationAttachmentsField = memo(function NotificationAttachment
                       type="button"
                       onClick={() => onRemoveAttachment(index)}
                       disabled={isUploading}
-                      className="cursor-pointer size-6 flex items-center justify-center rounded-full text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50 cursor-pointer"
+                      className="cursor-pointer size-6 flex items-center justify-center rounded-full text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50"
                     >
                       <span className="material-symbols-outlined text-[16px]">close</span>
                     </button>
@@ -117,3 +123,4 @@ export const NotificationAttachmentsField = memo(function NotificationAttachment
     </div>
   )
 })
+*/

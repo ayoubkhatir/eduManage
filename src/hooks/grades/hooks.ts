@@ -13,6 +13,7 @@ export const getAllGradesQueryOptions = () => ({
   },
 })
 
+
 export const getAllGradesWithClassesAndSubjectsQueryOptions = () => ({
   queryKey: ['grades', 'grades_classes_subjects'],
   queryFn: async () => {

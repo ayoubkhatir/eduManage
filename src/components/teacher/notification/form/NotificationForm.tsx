@@ -1,4 +1,4 @@
-import { Controller } from 'react-hook-form'
+/*import { Controller } from 'react-hook-form'
 import { NotificationAudienceField } from './NotificationAudienceField'
 import { NotificationAttachmentsField } from './NotificationAttachmentsField'
 import { useNotificationForm } from '@/hooks/teacher/use-notification-form'
@@ -129,7 +129,7 @@ export function NotificationForm({ role }: { role: 'Teacher' | 'Admin' }) {
           <div className="flex gap-3">
             <button
               type="submit"
-              className="cursor-pointer px-4 py-2 bg-primary hover:bg-blue-600 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
+              className="cursor-pointer px-4 py-2 bg-primary hover:bg-blue-600 text-white text-sm font-medium rounded-lg shadow-sm hover:shadow transition-all flex items-center gap-2 disabled:opacity-50 disabled:pointer-events-none"
               disabled={isSubmitting || isPublishPending}
             >
               <span>Publish Now</span>
@@ -148,3 +148,4 @@ export function NotificationForm({ role }: { role: 'Teacher' | 'Admin' }) {
     </>
   )
 }
+*/

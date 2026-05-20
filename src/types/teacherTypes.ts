@@ -13,8 +13,12 @@ export type Teacher = typeof schema.teachersTable.$inferSelect
 
 // * Teacher with user info
 export type TeacherUser = Omit<AuthUser,"info">& {
-	info: Teacher,
-	//subjects: { id: string, name: string }[]
+	info: Teacher & {
+        subjects: {
+            id: string,
+            name: string
+        }[]
+    }
 }
 
 export type TeacherAssignments = typeof schema.teacherAssignmentsTable.$inferSelect
@@ -63,14 +67,17 @@ export type TeacherClassItem = {
 }
 
 
-// export function TeacherUserDto(
-//     teacher: Teacher,
-//     user: AuthUser,
-//     subjects: { id: string, name: string }[]
-// ): TeacherUser {
-//     return {
-//         ...user,
-// 				info: teacher,
-// 				subjects
-//     }
-// 	}
+export function TeacherUserDto(
+    teacher: Teacher,
+    user: AuthUser,
+    subjects: { id: string, name: string }[]
+): TeacherUser {
+    return {
+        ...user,
+			info: {
+                ...teacher,
+                subjects
+            }
+				
+    }
+	}

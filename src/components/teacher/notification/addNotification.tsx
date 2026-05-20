@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+/*import { useCallback, useMemo } from 'react'
 import OwnNotificationTable from './ownNotification-table'
 import { columns } from './columns'
 import { NotificationForm } from './form/NotificationForm'
@@ -132,3 +132,4 @@ export default function AddNotification({
     </main>
   )
 }
+*/

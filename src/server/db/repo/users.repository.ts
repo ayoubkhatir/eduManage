@@ -1,16 +1,16 @@
 import { eq } from "drizzle-orm";
 import { db, type Database } from "../db.js";
 import { users } from "../schema.js";
-import type { AuthUser, newAuthUser } from "#/types/authTypes.js";
+import type { AuthUser } from "#/types/authTypes.js";
 
 // the types here should be updated.there is no more user and newUser types
 
 export interface IUsersRepository {
-  createUser(data: newAuthUser): Promise<AuthUser[]>
+  createUser(data: AuthUser): Promise<AuthUser[]>
   findUserById(id: string): Promise<AuthUser | undefined>
   findUserByUsername(username: string): Promise<AuthUser | undefined>
   findUserByEmail(email: string): Promise<AuthUser | undefined>
-  updateUser(id: string, data: Partial<newAuthUser>): Promise<AuthUser | undefined>
+  updateUser(id: string, data: Partial<AuthUser>): Promise<AuthUser | undefined>
   deleteUser(id: string): Promise<AuthUser | undefined>
 }
 
@@ -18,7 +18,7 @@ class UsersRepository implements IUsersRepository {
   constructor(private readonly db: Database) { }
 
   
-  async createUser(data: newAuthUser): Promise<AuthUser[]> {
+  async createUser(data: AuthUser): Promise<AuthUser[]> {
   
     // the id generation should be handled in the database i guess.
 
@@ -49,7 +49,7 @@ class UsersRepository implements IUsersRepository {
 
   async updateUser(
     id: string,
-    data: Partial<newAuthUser>,
+    data: Partial<AuthUser>,
   ): Promise<AuthUser | undefined> {
     const [row] = await this.db
       .update(users)

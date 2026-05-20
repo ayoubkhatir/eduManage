@@ -1,11 +1,12 @@
 import { db } from "#/server/db/db";
-import { account, classesTable, StatusEnum, studentsTable, teacherAssignmentsRelations, UserRoleEnum, users } from "#/server/db/schema";
+import { account, classesTable, StatusEnum, studentsTable,  UserRoleEnum, users } from "#/server/db/schema";
 import { and, count, eq, gte, lt } from "drizzle-orm";
 import generateId from "../../utils/id_generator";
 import { generateTemporaryPassword } from "../../utils/temp_password_generator";
 import { handlePassword } from "#/server/utils/handle-password";
 import { studentsRepository, type IStudentsRepository } from "#/server/db/repo";
-import { type AddStudentType, type EditStudentType, type StudentSearchType, type StudentUser } from "#/types/studentTypes";
+import { StudentUserDto,type AddStudentType, type EditStudentType, type StudentSearchType, type StudentUser } from "#/types/studentTypes";
+
 
 class StudentsController {
     constructor(private readonly studentsRepository: IStudentsRepository) { }
@@ -25,7 +26,7 @@ class StudentsController {
             })
             if (!classe) throw new Error("Classe Not Found");
 
-            const [user] = await tx.insert(users).values({
+            await tx.insert(users).values({
                 id: userId,
                 email: data.email,
                 telNumber: data.telNumber,
@@ -46,7 +47,7 @@ class StudentsController {
                 createdAt: new Date(),
             })
 
-            const [createdStudent] = await tx
+            const [{id : studentId}] = await tx
                 .insert(studentsTable)
                 .values({
                     address: data.address,
@@ -58,16 +59,35 @@ class StudentsController {
                     userId,
                     classId: data.classId,
                 })
-                .returning()
+                .returning({id: studentsTable.id})
 
-            const result: StudentUser = {
-                ...user,
-                info: createdStudent,
-            }
-
-            return result
+                const student =  await tx.query.studentsTable.findFirst({
+                where: eq(studentsTable.id, studentId),
+                with: {
+                    user: true,
+                    class: {
+                        columns: {
+                            id: true,
+                            name: true,
+                        },
+                        with: {
+                            grade: {
+                                columns: {
+                                    id: true,
+                                    name: true
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+            
+            return student
+            
         })
-        return student
+        if (!student) throw new Error("Student Not Created")
+            const studentUser : StudentUser = StudentUserDto(student, student.user, student.class, student.class.grade);
+        return studentUser
     }
 
 
@@ -88,7 +108,8 @@ class StudentsController {
             if (!foundStudent) throw new Error("Student not found");
             const userId = foundStudent.userId;
 
-            const [updatedUser] = await tx
+            // Update user info
+            await tx
                 .update(users)
                 .set({
                     email: data.email,
@@ -109,9 +130,8 @@ class StudentsController {
 
 
 
-            console.log({ newUser: updatedUser });
 
-            const [updatedStudent] = await tx
+            await tx
                 .update(studentsTable)
                 .set({
                     address: data.address,
@@ -123,15 +143,34 @@ class StudentsController {
                 })
                 .where(eq(studentsTable.id, data.studentId))
                 .returning()
-            console.log({ newStudent: updatedStudent })
-            return updatedStudent
+            
+            const student = await tx.query.studentsTable.findFirst({
+                where: eq(studentsTable.id, data.studentId),
+                with: {
+                    user: true,
+                    class: {
+                        columns: {
+                            id: true,
+                            name: true
+                        },
+                        with: {
+                            grade: {
+                                columns: {
+                                    id: true,
+                                    name: true
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+            return student
         })
 
         if (!student) throw new Error("User UPDATED")
 
-        const updatedStudent = student
-        console.log(updatedStudent)
-        return updatedStudent
+        const studentWithUser: StudentUser = StudentUserDto(student, student.user, student.class, student.class.grade);
+        return studentWithUser
 
     }
 

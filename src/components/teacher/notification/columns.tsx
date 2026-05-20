@@ -1,3 +1,7 @@
+// Temporarily disabled for future repair.
+export const columns = []
+
+/*
 import type { ColumnDef } from '@tanstack/react-table'
 
 import type { Notification } from '@/services/api/teacher/types/modelType'
@@ -117,7 +121,7 @@ export const columns: Array<ColumnDef<Notification>> = [
       return (
         <div className="flex items-center justify-end gap-2">
           <button
-            className="cursor-pointer rounded p-1.5 text-slate-400 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400 transition-colors cursor-pointer"
+            className="cursor-pointer rounded p-1.5 text-slate-400 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400 transition-colors"
             title={`Edit ${id}`}
             type="button"
             onClick={(event) => {
@@ -127,7 +131,7 @@ export const columns: Array<ColumnDef<Notification>> = [
             <span className="material-symbols-outlined text-[20px]">edit</span>
           </button>
           <button
-            className="cursor-pointer rounded p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors cursor-pointer"
+            className="cursor-pointer rounded p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors"
             title={`Delete ${id}`}
             type="button"
             onClick={async (event) => {
@@ -144,3 +148,4 @@ export const columns: Array<ColumnDef<Notification>> = [
     },
   },
 ]
+*/

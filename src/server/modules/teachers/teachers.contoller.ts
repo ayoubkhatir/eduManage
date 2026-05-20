@@ -4,7 +4,8 @@ import { and, asc, count, desc, eq, gte, ilike, inArray, lt, or, SQL } from "dri
 import { generateTemporaryPassword } from "#/server/utils/temp_password_generator";
 import { handlePassword } from "#/server/utils/handle-password";
 import generateId from "#/server/utils/id_generator";
-import type { AddTeacherType, AssignTeacherType, EditTeacherType, GetTeacherClassesType, GetTeachersType } from "#/types/teacherTypes";
+import type { AddTeacherType, AssignTeacherType, EditTeacherType, GetTeacherClassesType, GetTeachersType  } from "#/types/teacherTypes";
+import { TeacherUserDto } from "#/types/teacherTypes";
 
 export type CreateTeacherInput = {
     schoolId: string
