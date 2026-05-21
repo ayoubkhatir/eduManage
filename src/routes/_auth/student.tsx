@@ -1,14 +1,29 @@
-import { Outlet, createFileRoute, useLocation } from '@tanstack/react-router'
+import {
+  Outlet,
+  createFileRoute,
+  redirect,
+  useLocation,
+} from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 import { Fragment } from 'react'
 import { SideBar } from '@/components/sideBar/SideBar'
 import TopNav from '@/components/top_nav'
-import type { StudentUser } from '#/types/studentTypes'
+import { UserRoleEnum } from '#/server/db/schema'
+import { FetchCurrentUserServerFn } from '../-fetchAuthStateInBeforeLoad'
 
 export const Route = createFileRoute('/_auth/student')({
   beforeLoad: async ({ context }) => {
     const { user } = context.authState!
-    const currentUser = user as StudentUser
+    if (user.role !== UserRoleEnum.STUDENT) {
+      throw redirect({
+        to: user.role === UserRoleEnum.ADMIN ? '/admin' : '/teacher',
+      })
+    }
+  },
+  loader: async ({ context }) => {
+    const currentUser = await FetchCurrentUserServerFn({
+      data: context.authState.user!,
+    })
     return { currentUser }
   },
   component: Student,
@@ -28,8 +43,7 @@ const info = {
 }
 
 function Student() {
-  const { currentUser } = Route.useRouteContext()
-
+  const { currentUser } = Route.useLoaderData()
   const location = useLocation()
   const path = location.pathname.split('/')
 
