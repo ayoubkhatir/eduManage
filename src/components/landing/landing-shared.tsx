@@ -250,7 +250,7 @@ export function Footer() {
 /* ─── Page layout (Navbar + content + Footer) ─── */
 export function PageLayout({
   children,
-  name = 'page',
+  // name = 'page',
 }: {
   children: React.ReactNode
   name?: string

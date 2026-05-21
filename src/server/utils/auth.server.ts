@@ -1,9 +1,11 @@
 import { betterAuth } from "better-auth";
 import { openAPI } from "better-auth/plugins";
-import { bearer } from "better-auth/plugins/bearer";
+// import { bearer } from "better-auth/plugins/bearer";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../db/db.ts";
 import { handlePassword } from "./handle-password.ts";
+import { tanstackStartCookies } from "better-auth/tanstack-start";
+import { UserGenderEnum, UserRoleEnum } from "../db/schema.ts";
 
 const baseURL = process.env.BETTER_AUTH_URL;
 const basePath = "/api/better-auth";
@@ -35,20 +37,25 @@ export const auth = betterAuth({
     database: drizzleAdapter(db, {
         provider: "pg",
     }),
-    plugins: [bearer(), openAPI()],
+    // plugins: [bearer(), openAPI(), tanstackStartCookies()],
+    plugins: [openAPI(), tanstackStartCookies()],
+
     user: {
         modelName: "users",
         additionalFields: {
             role: {
-                type: ["Student", "Teacher", "Admin"],
+                type: [UserRoleEnum.STUDENT, UserRoleEnum.TEACHER, UserRoleEnum.ADMIN],
                 required: true,
-                defaultValue: "Admin",
+                defaultValue: UserRoleEnum.ADMIN,
                 input: true,
             },
             gender: {
-                type: ["Male", "Female"],
+                type: [UserGenderEnum.MALE, UserGenderEnum.FEMALE],
                 required: true,
-                defaultValue: "Male",
+                defaultValue: UserGenderEnum.MALE,
+            },
+            telNumber: {
+                type: "string",
             }
         },
     },

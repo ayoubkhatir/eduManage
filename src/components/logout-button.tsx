@@ -1,4 +1,4 @@
-import { useLogout } from '#/services/api/auth.hooks'
+import { useLogout } from '#/hooks/auth/hooks'
 
 export function LogoutButton() {
   const { mutate: logout, isPending } = useLogout()

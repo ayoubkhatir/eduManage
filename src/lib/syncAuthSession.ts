@@ -1,6 +1,17 @@
 import { refreshServerFn } from '#/server/modules/auth/auth.server-function'
-import type { InitialAuthProps } from '#/store/auth_store'
+// import type { InitialAuthProps } from '#/store/auth_store'
 
+import type { AuthUser } from '../types/authTypes'
+
+export type AuthState = {
+  user: AuthUser | null
+  token: string | null
+  setToken: (token: string | null) => void
+  setUser: (user: AuthUser | null) => void
+  logout: () => void
+}
+
+export type InitialAuthProps = Omit<AuthState, 'setToken' | 'setUser' | 'logout'>
 
 export async function syncAuthSession(): Promise<InitialAuthProps> {
 

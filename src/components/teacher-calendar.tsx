@@ -1,13 +1,17 @@
-import { enUS } from 'date-fns/locale'
-import { Calendar, Views, dateFnsLocalizer, type EventPropGetter, type View } from 'react-big-calendar'
+import {
+  Views,
+  // dateFnsLocalizer,
+  // type EventPropGetter,
+  type View,
+} from 'react-big-calendar'
 import {
   format,
-  getDay,
+  // getDay,
   isToday,
   isTomorrow,
-  parse,
+  // parse,
   parseISO,
-  startOfWeek,
+  // startOfWeek,
 } from 'date-fns'
 import { useMemo, useState, type ReactNode } from 'react'
 import type { EventForm } from '@/components/admin/calendar/model'
@@ -17,25 +21,25 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import useGetEvents from '#/hooks/events/hooks'
+// import useGetEvents from '#/hooks/events/hooks'
 
-const locales = { 'en-US': enUS }
+// const locales = { 'en-US': enUS }
 
-const localizer = dateFnsLocalizer({
-  format,
-  parse,
-  startOfWeek,
-  getDay,
-  locales,
-})
+// const localizer = dateFnsLocalizer({
+//   format,
+//   parse,
+//   startOfWeek,
+//   getDay,
+//   locales,
+// })
 
-const eventPropGetter: EventPropGetter<CalEvent> = (event) => ({
-    style: {
-      backgroundColor: event.color,
-      borderColor: event.color,
-      color: '#fff',
-    },
-  })
+// const eventPropGetter: EventPropGetter<CalEvent> = (event) => ({
+//   style: {
+//     backgroundColor: event.color,
+//     borderColor: event.color,
+//     color: '#fff',
+//   },
+// })
 
 const EVENT_COLORS = [
   { label: 'Amber', value: '#f59e0b' },
@@ -51,8 +55,6 @@ type CalEvent = Omit<EventForm, 'start' | 'end'> & {
   start: Date
   end: Date
 }
-
-
 
 export function GlobalCalendar({
   isTeacher,
@@ -100,8 +102,6 @@ export function GlobalCalendar({
     else date.setDate(date.getDate() + dir)
     setSelectedDate(date)
   }
-
-  
 
   return (
     <main className="flex-1 flex flex-col lg:flex-row p-4 md:p-6 gap-4 md:gap-6 min-h-0">
@@ -316,60 +316,60 @@ export function GlobalCalendar({
   )
 }
 
-function TESTING({ teacherUserId }: { teacherUserId: string }) {
-  const { data: events, status: fetchStatus } = useGetEvents(teacherUserId)
-  return (
-    <>
-      {fetchStatus === 'pending' ? (
-        <div className="flex flex-col items-center justify-center flex-1 gap-3 text-slate-400">
-          <span className="material-symbols-outlined animate-spin text-[40px]">
-            progress_activity
-          </span>
-          <p className="text-sm font-medium">Loading events…</p>
-        </div>
-      ) : fetchStatus === 'error' ? (
-        <div className="flex flex-col items-center justify-center flex-1 gap-3 text-red-400">
-          <span className="material-symbols-outlined text-[40px]">error</span>
-          <p className="text-sm font-medium">Failed to load events</p>
-          <p className="text-xs text-slate-400">
-            Check your connection and try again
-          </p>
-        </div>
-      ) : events.length === 0 ? (
-        <div className="flex flex-col items-center justify-center flex-1 gap-3 text-slate-400">
-          <span className="material-symbols-outlined text-[48px]">
-            calendar_month
-          </span>
-          <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">
-            No events scheduled
-          </p>
-          <p className="text-xs">
-            There are no events to display for this period
-          </p>
-        </div>
-      ) : (
-        <div className="admin-big-calendar flex-1 h-full min-h-[52vh]">
-          <Calendar
-            date={selectedDate}
-            events={events}
-            eventPropGetter={eventPropGetter}
-            localizer={localizer}
-            onNavigate={setSelectedDate}
-            onSelectEvent={(event) => {
-              setDetailEvent(event)
-              setDetailOpen(true)
-            }}
-            onView={setView}
-            titleAccessor={(event) =>
-              isTeacher && event.className ? event.className : event.title
-            }
-            step={30}
-            toolbar={false}
-            view={view}
-            views={[Views.MONTH, Views.WEEK, Views.DAY]}
-          />
-        </div>
-      )}
-    </>
-  )
-}
+// function TESTING({ teacherUserId }: { teacherUserId: string }) {
+//   const { data: events, status: fetchStatus } = useGetEvents(teacherUserId)
+//   return (
+//     <>
+//       {fetchStatus === 'pending' ? (
+//         <div className="flex flex-col items-center justify-center flex-1 gap-3 text-slate-400">
+//           <span className="material-symbols-outlined animate-spin text-[40px]">
+//             progress_activity
+//           </span>
+//           <p className="text-sm font-medium">Loading events…</p>
+//         </div>
+//       ) : fetchStatus === 'error' ? (
+//         <div className="flex flex-col items-center justify-center flex-1 gap-3 text-red-400">
+//           <span className="material-symbols-outlined text-[40px]">error</span>
+//           <p className="text-sm font-medium">Failed to load events</p>
+//           <p className="text-xs text-slate-400">
+//             Check your connection and try again
+//           </p>
+//         </div>
+//       ) : events.length === 0 ? (
+//         <div className="flex flex-col items-center justify-center flex-1 gap-3 text-slate-400">
+//           <span className="material-symbols-outlined text-[48px]">
+//             calendar_month
+//           </span>
+//           <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">
+//             No events scheduled
+//           </p>
+//           <p className="text-xs">
+//             There are no events to display for this period
+//           </p>
+//         </div>
+//       ) : (
+//         <div className="admin-big-calendar flex-1 h-full min-h-[52vh]">
+//           {/* <Calendar
+//             date={selectedDate}
+//             events={events}
+//             eventPropGetter={eventPropGetter}
+//             localizer={localizer}
+//             onNavigate={setSelectedDate}
+//             onSelectEvent={(event) => {
+//               setDetailEvent(event)
+//               setDetailOpen(true)
+//             }}
+//             onView={setView}
+//             titleAccessor={(event) =>
+//               isTeacher && event.className ? event.className : event.title
+//             }
+//             step={30}
+//             toolbar={false}
+//             view={view}
+//             views={[Views.MONTH, Views.WEEK, Views.DAY]}
+//           /> */}
+//         </div>
+//       )}
+//     </>
+//   )
+// }

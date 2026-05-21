@@ -3,7 +3,7 @@ import {
     eventsTable,
     teachersTable,
 } from '#/server/db/schema'
-import type { AddEventSchema, GetEventsSchema } from '#/types/eventsTypes';
+import type { AddEventType, GetEventsType } from '#/types/eventsTypes';
 import { and, asc, eq } from 'drizzle-orm'
 
 class EventsController {
@@ -15,7 +15,7 @@ class EventsController {
         isOwner,
         // startDate,
         // endDate,
-    }: GetEventsSchema) {
+    }: GetEventsType) {
         const conditions = []
         let teacherId: string;
         if (!classId && teacherUserId) {
@@ -138,7 +138,7 @@ class EventsController {
         }))
     }
 
-    async createEvent(input: AddEventSchema) {
+    async createEvent(input: AddEventType) {
         const [created] = await this.db
             .insert(eventsTable)
             .values({

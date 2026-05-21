@@ -2,7 +2,8 @@ import { useCallback } from 'react'
 import { NavButton } from './NavButton'
 import { UserProfile } from './UserProfile'
 import { Logo } from '../logo'
-import { useAuth } from '#/store/auth_store'
+import type { AuthUser } from '#/types/authTypes'
+// import { useAuth } from '#/store/auth_store'
 
 export interface SidebarItem {
   name: string
@@ -12,6 +13,7 @@ export interface SidebarItem {
 }
 
 export interface SideBarContentProps {
+  currentUser: AuthUser
   list: Array<SidebarItem>
   handleClick: (key: string) => void
   localPath: string
@@ -21,6 +23,7 @@ export interface SideBarContentProps {
 }
 
 export function SideBarContent({
+  currentUser,
   list,
   handleClick,
   localPath,
@@ -28,7 +31,7 @@ export function SideBarContent({
   setOpen,
   isDesktop,
 }: SideBarContentProps) {
-  const user = useAuth((s) => s.user)
+  // const user = useAuth((s) => s.user)
 
   const handleNavClick = useCallback(
     (itemKey: string) => {
@@ -60,15 +63,17 @@ export function SideBarContent({
               />
             ))
           ) : (
-            <p className="px-3 py-2 text-xs text-slate-400">No items available</p>
+            <p className="px-3 py-2 text-xs text-slate-400">
+              No items available
+            </p>
           )}
         </nav>
       </div>
 
       {/* User Profile */}
-      {user && (
+      {currentUser && (
         <UserProfile
-          user={user}
+          user={currentUser}
           localPath={localPath}
           onProfileClick={handleProfileClick}
         />

@@ -3,9 +3,7 @@ import {
   Scripts,
   createRootRouteWithContext,
   redirect,
-  useLocation,
 } from '@tanstack/react-router'
-import { Skeleton } from 'boneyard-js/react'
 
 // import appCss from '../styles.css?url'
 import '../styles.css'
@@ -20,55 +18,39 @@ import type { ReactNode } from 'react'
 import { queryClient } from '#/lib/query-client'
 import { Toaster } from '#/components/ui/sonner'
 import { ThemeProvider } from '#/features/theme/theme-provider'
-import { syncAuthSession } from '#/lib/syncAuthSession'
-import AuthProvider from '#/providers/authProvider'
+// import AuthProvider from '#/providers/authProvider'
+import { getSession } from '#/lib/auth'
+import type { UserRoleEnum } from '#/server/db/schema'
 
 const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getItem('theme');var mode=(stored==='light'||stored==='dark'||stored==='auto')?stored:'auto';var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=mode==='auto'?(prefersDark?'dark':'light'):mode;var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(resolved);if(mode==='auto'){root.removeAttribute('data-theme')}else{root.setAttribute('data-theme',mode)}root.style.colorScheme=resolved;}catch(e){}})();`
-const PUBLIC_PATHS = new Set([
-  '/', '/log-in', '/sign-up', '/about',
-  '/pricing', '/security', '/changelog',
-  '/careers', '/blog', '/press',
-  '/documentation', '/help', '/community',
-  '/privacy', '/terms', '/cookie-policy', '/licenses',
-])
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  beforeLoad: async ({ location }) => {
-    const authData = await syncAuthSession()
-    const isPublicPath = PUBLIC_PATHS.has(location.pathname)
 
-    if (!authData.token && !isPublicPath) {
-      console.warn('[ Auth ] No token found, redirecting to login. Path:', location.pathname)
-      throw redirect({ to: '/', replace: true })
-    }
-    console.log('[ Auth ] Auth data on route load:', authData) 
-    return {
-      authState: authData,
-    }
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
+  {
+    head: () => ({
+      meta: [
+        {
+          charSet: 'utf-8',
+        },
+        {
+          name: 'viewport',
+          content: 'width=device-width, initial-scale=1',
+        },
+        {
+          title: 'TanStack Start Starter',
+        },
+      ],
+      links: [
+        // {
+        //   rel: 'stylesheet',
+        //   href: appCss,
+        // },
+      ],
+    }),
+
+    shellComponent: RootDocument,
   },
-  head: () => ({
-    meta: [
-      {
-        charSet: 'utf-8',
-      },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
-      },
-      {
-        title: 'TanStack Start Starter',
-      },
-    ],
-    links: [
-      // {
-      //   rel: 'stylesheet',
-      //   href: appCss,
-      // },
-    ],
-  }),
-
-  shellComponent: RootDocument,
-})
+)
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
@@ -76,7 +58,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
-        </head>
+      </head>
       <body
         suppressHydrationWarning
         className="font-sans antialiased wrap-anywhere selection:bg-[rgba(79,184,178,0.24)]"
@@ -94,41 +76,38 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   )
 }
 
-function getRouteSkeletonName(pathname: string) {
-  const uuidPattern =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+// function getRouteSkeletonName(pathname: string) {
+//   const uuidPattern =
+//     /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
-  const parts = pathname
-    .split('/')
-    .filter(Boolean)
-    .map((part) => {
-      if (/^\d+$/.test(part) || uuidPattern.test(part)) {
-        return 'id'
-      }
+//   const parts = pathname
+//     .split('/')
+//     .filter(Boolean)
+//     .map((part) => {
+//       if (/^\d+$/.test(part) || uuidPattern.test(part)) {
+//         return 'id'
+//       }
 
-      const cleaned = part.toLowerCase().replace(/[^a-z0-9-]/g, '')
-      return cleaned || 'segment'
-    })
+//       const cleaned = part.toLowerCase().replace(/[^a-z0-9-]/g, '')
+//       return cleaned || 'segment'
+//     })
 
-  return parts.length ? `route-${parts.join('-')}` : 'route-home'
-}
+//   return parts.length ? `route-${parts.join('-')}` : 'route-home'
+// }
 
 function Root({ children }: { children: ReactNode }) {
-  const location = useLocation()
-  const { authState } = Route.useRouteContext()
-
-  const routeSkeletonName = getRouteSkeletonName(location.pathname)
+  // const routeSkeletonName = getRouteSkeletonName(location.pathname)
   return (
     <>
       {/* <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme"> */}
       <QueryClientProvider client={queryClient}>
-        <AuthProvider initialProps={authState}>
-          <ThemeProvider>
-            <Skeleton name={routeSkeletonName} loading={false}>
-              {children}
-            </Skeleton>
-          </ThemeProvider>
-        </AuthProvider>
+        {/* <AuthProvider initialProps={authState}> */}
+        <ThemeProvider>
+          {/* <Skeleton name={routeSkeletonName} loading={false}> */}
+          {children}
+          {/* </Skeleton> */}
+        </ThemeProvider>
+        {/* </AuthProvider> */}
       </QueryClientProvider>
       {/* </ThemeProvider> */}
     </>

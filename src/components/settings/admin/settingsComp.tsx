@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form'
 import type { NewInfoOwnerFields } from './settings.schema'
 import { Switch } from '@/components/ui/switch'
 import { UserAvatar } from '#/components/admin/Table/columnsData'
-import type { AuthUser } from '#/schemas/auth.schema'
+import type { AuthUser } from '#/types/authTypes'
 
 export default function SettingsComp({ admin }: { admin: AuthUser }) {
   const {

@@ -22,7 +22,6 @@ import {
 import { AssignTeacherMenuItem } from '../DropDownMenuComp/AssignTeacherMenuItem'
 import { Badge } from '#/components/ui/badge'
 import { StatusEnum, UserGenderEnum } from '#/server/db/schema'
-import ProfilePicGenerator from '../profilePicGenerator'
 // Cloudinary SDKs removed; construct URLs directly when needed
 
 function getCloudinaryUrl(publicId: string, size?: number) {
@@ -32,7 +31,7 @@ function getCloudinaryUrl(publicId: string, size?: number) {
   const transformation = size ? `c_thumb,w_${size},h_${size},g_face` : ''
   return `https://res.cloudinary.com/${cloudName}/image/upload/${transformation}/${publicId}`
 }
-import type {  StudentUser } from '#/types/studentTypes'
+import type { StudentUser } from '#/types/studentTypes'
 import type { TeacherUser } from '#/types/teacherTypes'
 
 export function UserAvatar({
@@ -206,11 +205,11 @@ export const StudentColumns: Array<ColumnDef<StudentUser>> = [
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-black" />
 
-              <CopyIdMenuItem role="Student" id={student.id} />
+              <CopyIdMenuItem role="Student" id={student.info.id} />
 
               <DropdownMenuSeparator className="bg-gray-300 dark:bg-gray-700" />
 
-              <ViewProfileMenuItem role="Student" id={student.id} />
+              <ViewProfileMenuItem role="Student" id={student.info.id} />
 
               <DropdownMenuSeparator className="bg-gray-300 dark:bg-gray-700" />
 
@@ -232,12 +231,12 @@ export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
     cell: ({ row }) => (
       <div className="flex items-center justify-center">
         <div className="relative">
-          <ProfilePicGenerator
+          {/* <ProfilePicGenerator
             name={row.original.name}
             imgSrc={row.original.image}
-          />
-          {/* <ImageColumnUI image={row.original.image} />
-          <span
+          /> */}
+          <ImageColumnUI image={row.original.image} />
+          {/* <span
             className={`absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white dark:border-slate-800 ${
               row.original.status === 'Active'
                 ? 'bg-green-500'
@@ -402,13 +401,13 @@ export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-slate-200 dark:bg-slate-700" />
 
-              <CopyIdMenuItem role="Teacher" id={teacher.id} />
+              <CopyIdMenuItem role="Teacher" id={teacher.info.id} />
               <DropdownMenuSeparator className="bg-slate-200 dark:bg-slate-700" />
 
-              <ViewProfileMenuItem role="Teacher" id={teacher.id} />
+              <ViewProfileMenuItem role="Teacher" id={teacher.info.id} />
               <DropdownMenuSeparator className="bg-slate-200 dark:bg-slate-700" />
 
-              <AssignTeacherMenuItem teacherId={teacher.id} />
+              <AssignTeacherMenuItem teacherId={teacher.info.id} />
               <DropdownMenuSeparator className="bg-slate-200 dark:bg-slate-700" />
 
               <DeleteMenuItem role="Teacher" id={teacher.id} />
@@ -421,7 +420,7 @@ export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
 ]
 
 function StudentSortButton({ property }: { property: 'name' | 'email' }) {
-  const Route = getRouteApi('/admin/students/')
+  const Route = getRouteApi('/_auth/admin/students/')
   const navigate = Route.useNavigate()
   const { sortBy, sortOrder } = Route.useSearch({
     select: (s) => ({ sortBy: s.sortBy, sortOrder: s.sortOrder }),
@@ -477,7 +476,7 @@ function StudentSortButton({ property }: { property: 'name' | 'email' }) {
 }
 
 function TeacherSortButton({ property }: { property: 'name' | 'email' }) {
-  const Route = getRouteApi('/admin/teachers/')
+  const Route = getRouteApi('/_auth/admin/teachers/')
   const navigate = Route.useNavigate()
   const { sortBy, sortOrder } = Route.useSearch({
     select: (s) => ({ sortBy: s.sortBy, sortOrder: s.sortOrder }),

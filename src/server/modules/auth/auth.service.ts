@@ -1,17 +1,16 @@
 
 import { db } from "../../db/db.js";
 import { adminsTable, session, UserRoleEnum } from "../../db/schema.js";
-import {  eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { randomBytes, randomUUID } from "node:crypto";
 import { SignJWT } from "jose";
 import { setCookie } from "@tanstack/react-start/server";
 
-type UserRole = "Admin" | "Student" | "Teacher";
 const SESSION_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours instead of 7 days
 const ACCESS_TOKEN_TTL_SECONDS = 15 * 60;
 
-const isUserRole = (role: unknown): role is UserRole => {
-    return role === "Admin" || role === "Student" || role === "Teacher";
+const isUserRole = (role: unknown): role is UserRoleEnum => {
+    return role === UserRoleEnum.ADMIN || role === UserRoleEnum.STUDENT || role === UserRoleEnum.TEACHER;
 };
 
 
@@ -145,28 +144,33 @@ class AuthService {
     }
 
     async rotateSessionToken(currentRefreshToken: string | null, userAgent: string = "") {
-        
-        if (!currentRefreshToken) {
 
+        if (!currentRefreshToken) {
             return null;
         }
+
         const existingSession = await db.query.session.findFirst({
             where: (sessions, { eq }) => eq(sessions.token, currentRefreshToken),
         });
+        console.log({ existingSession })
 
         if (!existingSession) {
-            
             return null;
         }
 
         if (existingSession.expiresAt <= new Date()) {
-            await db.delete(session).where(eq(session.token, currentRefreshToken));
+            // NOT AWAITED
+            console.log("Delete Expired Session")
+            db.delete(session).where(eq(session.token, currentRefreshToken));
+            console.log("Delete Expired Session")
+
             return null;
         }
 
         if (existingSession.userAgent && existingSession.userAgent !== userAgent) {
-            
-            await db.delete(session).where(eq(session.token, currentRefreshToken));
+            // NOT AWAITED
+            console.log('Delete Session if another userAgent')
+            db.delete(session).where(eq(session.token, currentRefreshToken));
             return null;
         }
 
@@ -175,8 +179,10 @@ class AuthService {
                 userId: existingSession.userId,
                 sid: existingSession.id,
             },
-            null,
+            null
         );
+        console.log({ nextRefreshToken, accessToken })
+
         const now = new Date();
         const nextExpiresAt = new Date(now.getTime() + SESSION_TTL_MS);
 
@@ -191,17 +197,21 @@ class AuthService {
             .returning({
                 token: session.token,
                 expiresAt: session.expiresAt,
-            });
-
-        
+            })
+            .then(r => console.log("Update Result", { r }));
 
         const user = await this.findUserById(existingSession.userId);
+        console.log({ user })
+
         if (!user || !isUserRole(user.role)) {
-            await db.delete(session).where(eq(session.id, existingSession.id));
+            // NOT AWAITED
+            console.log("Delete Session if no found user")
+            db.delete(session).where(eq(session.id, existingSession.id));
             return null;
         }
 
         const info = await this.getUserInfo(user.role, user.id);
+        console.log("END INFO", info)
 
         return {
             accessToken,
@@ -212,7 +222,7 @@ class AuthService {
         };
     }
 
-    
+
 
     async getUserInfo(role: UserRoleEnum, userId: string) {
         let info;
@@ -236,6 +246,7 @@ class AuthService {
 
         return info;
     }
+
     async generateToken(
         payload: { userId: string; sid?: string },
         refreshToken: string | null,
@@ -255,7 +266,7 @@ class AuthService {
             throw new Error("Session id not found for access token generation");
         }
 
-        
+
         if (userAgent && sessionId) {
             await db
                 .update(session)
@@ -265,14 +276,14 @@ class AuthService {
 
         const nowInSeconds = Math.floor(Date.now() / 1000);
         const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
-        const accessToken = await new SignJWT({ 
-        userId: payload.userId, 
-        sid: sessionId 
+        const accessToken = await new SignJWT({
+            userId: payload.userId,
+            sid: sessionId
         })
-        .setProtectedHeader({ alg: "HS256" }) // You must explicitly set the algorithm
-        .setIssuedAt(nowInSeconds) 
-        .setExpirationTime(nowInSeconds + ACCESS_TOKEN_TTL_SECONDS)
-        .sign(secret);
+            .setProtectedHeader({ alg: "HS256" }) // You must explicitly set the algorithm
+            .setIssuedAt(nowInSeconds)
+            .setExpirationTime(nowInSeconds + ACCESS_TOKEN_TTL_SECONDS)
+            .sign(secret);
 
         setCookie("refreshToken", nextRefreshToken, {
             httpOnly: true,

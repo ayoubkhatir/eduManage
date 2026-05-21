@@ -1,10 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 import { z } from 'zod'
-import Screen from '../auth/login/components/screen'
-import Login from '../auth/login/components/login'
 import { authRoleSchema } from '#/schemas/shared.schema'
 import { UserRoleEnum } from '#/server/db/schema'
+import Login from '#/auth/login/components/login'
+import Screen from '#/auth/login/components/screen'
 
 const logInSearchSchema = z.object({
   role: authRoleSchema
@@ -16,9 +16,24 @@ const logInSearchSchema = z.object({
 export type logInSearch = z.infer<typeof logInSearchSchema>
 
 export const Route = createFileRoute('/log-in')({
+  beforeLoad: ({ context }) => {
+    const { authState } = context
+    console.log({ authState })
+    if (authState?.user && authState?.user.role) {
+      const role = authState.user.role
+      throw redirect({
+        to:
+          role === UserRoleEnum.ADMIN
+            ? '/admin/dashboard'
+            : role === UserRoleEnum.TEACHER
+              ? '/teacher'
+              : '/student',
+      })
+    }
+  },
   component: login,
   head: () => ({
-    meta: [{ title: ' EduManage | Log-In' }],
+    meta: [{ title: ' EduManage | Log-In' }],
   }),
   validateSearch: (search: Record<string, unknown>): logInSearch =>
     logInSearchSchema.parse(search),

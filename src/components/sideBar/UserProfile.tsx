@@ -18,7 +18,7 @@ export function UserProfile({
   const { mutate: logout, isPending } = useLogout()
 
   return (
-    <div className="flex items-center gap-2.5 rounded-xl border border-slate-200/70 bg-slate-50/60 p-2.5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
+    <div className="flex items-center gap-2.5 rounded-xl border border-slate-200/70 bg-slate-50/60 p-2.5 shadow-sm dark:border-white/6 dark:bg-white/2">
       <Link
         onClick={onProfileClick}
         to={`/${localPath}/settings` as any}
@@ -39,7 +39,7 @@ export function UserProfile({
       <button
         onClick={() => logout()}
         disabled={isPending}
-        className="cursor-pointer flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-red-50 hover:text-red-500 dark:text-slate-500 dark:hover:bg-red-500/10 dark:hover:text-red-400"
+        className="cursor-pointer flex size-8 shrink-0 items-center justify-center rounded-lg text-slate-400 transition-all hover:bg-red-50 hover:text-red-500 dark:text-slate-500 dark:hover:bg-red-500/10 dark:hover:text-red-400"
         aria-label="Logout"
         type="button"
       >

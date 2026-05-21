@@ -1,4 +1,6 @@
 
+import { db } from "#/server/db/db.js";
+import { UserRoleEnum } from "#/server/db/schema.js";
 import { auth } from "../../utils/auth.server.js";
 import type { LoginBody, RegisterBody } from "./auth.schema.js";
 import { authService } from "./auth.service.js";
@@ -17,6 +19,7 @@ interface IAuthController {
 
 
 class AuthController implements IAuthController {
+
     async login(input: LoginBody, headers: Headers) {
 
         try {
@@ -101,7 +104,8 @@ class AuthController implements IAuthController {
                     password,
                     rememberMe,
                     callbackURL,
-                    role: "Admin",
+                    role: UserRoleEnum.ADMIN,
+                    telNumber: null!
                 },
 
             });
@@ -114,7 +118,6 @@ class AuthController implements IAuthController {
                     message: "Registration succeeded but session token is missing",
                     status: 500
                 };
-
             }
 
             const userAgent = headers.get("user-agent") || "";
@@ -251,6 +254,72 @@ class AuthController implements IAuthController {
             message: "Failed to initiate social login",
         }
 
+    }
+
+    async fetchUserRoleData(userId: string, role: UserRoleEnum) {
+        switch (role) {
+            case UserRoleEnum.ADMIN:
+                const admin = await db.query.adminsTable.findFirst({
+                    where: (admins, { eq }) => eq(admins.userId, userId),
+                });
+                return { role, admin: admin!, teacher: null, student: null };
+            case UserRoleEnum.STUDENT:
+                const rawStudent = await db.query.studentsTable.findFirst({
+                    where: (students, { eq }) => eq(students.userId, userId),
+                    with: {
+                        class: {
+                            columns: {
+                                id: true,
+                                name: true
+                            },
+                            with: {
+                                grade: {
+                                    columns: {
+                                        id: true,
+                                        name: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                })!;
+
+                const student = {
+                    ...rawStudent!,
+                    grade: {
+                        id: rawStudent!.class.grade.id,
+                        name: rawStudent!.class.grade.name
+                    },
+                    class: {
+                        id: rawStudent!.class.id,
+                        name: rawStudent!.class.name
+                    },
+                }
+                return { role, admin: null, teacher: null, student: student! };
+            case UserRoleEnum.TEACHER:
+                const rawTeacher = await db.query.teachersTable.findFirst({
+                    where: (teachers, { eq }) => eq(teachers.userId, userId),
+                    with: {
+                        assignments: {
+                            with: {
+                                subject: {
+                                    columns: {
+                                        id: true,
+                                        name: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                })!;
+                const { assignments, ...restRawTeacher } = rawTeacher!;
+                const teacher = { subjects: assignments.map(ass => ass.subject), ...restRawTeacher }
+                return { role, admin: null, teacher: teacher!, student: null };
+            // case UserRoleEnum.STUDENT:
+
+            // case UserRoleEnum.TEACHER:
+            //     return
+        }
     }
 }
 

@@ -12,6 +12,7 @@ export const addTeacherSchema = addUserSchema.extend({
     status: statusSchema,
     address: z.string().nonempty(),
     dateOfBirth: z.string(),
+    about: z.string(),
 })
 
 export const editTeacherSchema = z
@@ -58,6 +59,7 @@ export const assignTeacherSchema = z.object({
     isPrimaryTeacher: z.boolean().optional(),
     status: statusSchema.optional(),
 })
+export type AssignTeacherSchema = z.infer<typeof assignTeacherSchema>
 
 
 
@@ -94,7 +96,7 @@ export const getTeacherClassesSchema = z.object({
         .enum([...Object.values(StatusEnum), "All"])
         .default('All'),
 })
-
+export type GetTeacherClassesSchema = z.infer<typeof getTeacherClassesSchema>
 
 export const teacherSearchSchema = z.object({
     search: z.string().default(""),

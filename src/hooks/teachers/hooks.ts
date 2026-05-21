@@ -55,6 +55,7 @@ export function useAddTeacher(schoolId: string) {
 
   const { mutate: addTeacher } = useMutation({
     mutationFn: async (data: AddTeacherType) => {
+      console.log(data)
       const response = await addTeacherServerFn({ data })
       if (response.success) return response.data
       const message =

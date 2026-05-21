@@ -80,9 +80,7 @@ export const getTeacherClassMarksPageServerFn = createServerFn({
         }
     })
 
-export const createAssessmentServerFn = createServerFn({
-    method: 'POST',
-})
+export const createAssessmentServerFn = createServerFn({ method: 'POST' })
     .inputValidator(createAssessmentSchema)
     .handler(async ({ data }) => {
         try {

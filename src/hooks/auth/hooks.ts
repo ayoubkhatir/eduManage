@@ -4,10 +4,10 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { loginFieldsSchema, signupFieldsSchema , type LoginFields  ,  type SignupFields } from '../../schemas/auth.schema'
-import type { UserRole , AuthResult , LoginRequest , RegisterRequest} from '../../types/authTypes'
-import { useAuth } from "#/store/auth_store"
-import { loginServerFn ,registerServerFn , logoutServerFn  } from "#/server/modules/auth/auth.server-function"
+import { loginFieldsSchema, signupFieldsSchema, type LoginFields, type SignupFields } from '../../schemas/auth.schema'
+import type { UserRole, AuthResult, LoginRequest, RegisterRequest } from '../../types/authTypes'
+// import { useAuth } from "#/store/auth_store"
+import { loginServerFn, registerServerFn, logoutServerFn } from "#/server/modules/auth/auth.server-function"
 
 import type { SubmitHandler } from 'react-hook-form'
 
@@ -15,26 +15,26 @@ import type { SubmitHandler } from 'react-hook-form'
 
 
 export function useLogout() {
-    const navigate = useNavigate()
+  const navigate = useNavigate()
 
-    return useMutation({
-        mutationFn: async () => {
-            const response = await logoutServerFn()
-            if (!response.success) {
-                throw new Error('Failed to logout')
-            }
-            return response.message
-        },
-        onSuccess: () => {
-            navigate({ to: '/' , replace: true})
-        },
-    })
+  return useMutation({
+    mutationFn: async () => {
+      const response = await logoutServerFn()
+      if (!response.success) {
+        throw new Error('Failed to logout')
+      }
+      return response.message
+    },
+    onSuccess: () => {
+      navigate({ to: '/', replace: true })
+    },
+  })
 }
 
 
 export function useLogin(redirectTo: string, role: UserRole) {
-    const navigate = useNavigate()
-    /*error message */
+  const navigate = useNavigate()
+  /*error message */
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   /* validation */
@@ -43,26 +43,26 @@ export function useLogin(redirectTo: string, role: UserRole) {
     mode: 'onSubmit',
     reValidateMode: 'onChange',
   })
-  const setToken = useAuth((s) => s.setToken)
-  const setUser = useAuth((s) => s.setUser)
-  
+  // const setToken = useAuth((s) => s.setToken)
+  // const setUser = useAuth((s) => s.setUser)
+
   const loginMutation = useMutation<AuthResult, never, LoginRequest>({
-      mutationFn: (data : LoginRequest) =>  loginServerFn({data}) ,
-      onSuccess: (result ) => {
-        if (!result.success || !result.data) {
-          return
-        }
-  
-        const payload = result.data
-  
-        setToken(payload.token || null)
-        setUser(payload.user || null)
-      },
-    })
+    mutationFn: (data: LoginRequest) => loginServerFn({ data }),
+    onSuccess: (result) => {
+      if (!result.success || !result.data) {
+        return
+      }
+
+      // const payload = result.data
+
+      // setToken(payload.token || null)
+      // setUser(payload.user || null)
+    },
+  })
 
   /* Submit function */
   const onSubmit: SubmitHandler<LoginFields> = async (data) => {
-    
+
     setErrorMessage(null)
 
     const callbackURL =
@@ -89,47 +89,47 @@ export function useLogin(redirectTo: string, role: UserRole) {
       to:
         redirectTo.startsWith('http://') || redirectTo.startsWith('https://')
           ? (() => {
-              const url = new URL(redirectTo)
-              return `${url.pathname}${url.search}${url.hash}` || '/'
-            })()
+            const url = new URL(redirectTo)
+            return `${url.pathname}${url.search}${url.hash}` || '/'
+          })()
           : redirectTo,
       replace: true,
     })
   }
 
-  return {form , errorMessage , onSubmit  }
+  return { form, errorMessage, onSubmit }
 }
 
 export function useSignup() {
-	const navigate = useNavigate()
-	const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const navigate = useNavigate()
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
 
   const form = useForm<SignupFields>({
     resolver: zodResolver(signupFieldsSchema),
     mode: 'onBlur',
     reValidateMode: 'onChange',
-    
+
   })
-  const setToken = useAuth((s) => s.setToken)
-  const setUser = useAuth((s) => s.setUser)
+  // const setToken = useAuth((s) => s.setToken)
+  // const setUser = useAuth((s) => s.setUser)
 
   const signupMutation = useMutation<AuthResult, never, RegisterRequest>({
-      mutationFn: (data : RegisterRequest) =>  registerServerFn({data}) ,
-      onSuccess: (result ) => {
-        if (!result.success || !result.data) {
-          return
-        }
+    mutationFn: (data: RegisterRequest) => registerServerFn({ data }),
+    onSuccess: (result) => {
+      if (!result.success || !result.data) {
+        return
+      }
 
-        const payload = result.data
+      // const payload = result.data
 
-        setToken(payload.token || null)
-        setUser(payload.user || null)
-      },
-    })
+      // setToken(payload.token || null)
+      // setUser(payload.user || null)
+    },
+  })
 
   const onSubmit: SubmitHandler<SignupFields> = async (data) => {
-    
+
     setErrorMessage(null)
 
     const redirectPath = '/admin/dashboard'
@@ -138,10 +138,10 @@ export function useSignup() {
     const result = await signupMutation.mutateAsync({
       email: data.email,
       password: data.password,
-			fullName: data.fullName,
-			schoolName: data.schoolName,
+      fullName: data.fullName,
+      schoolName: data.schoolName,
       gender: data.gender,
-			confirmPassword: data.confirmPassword,
+      confirmPassword: data.confirmPassword,
       rememberMe: true,
       callbackURL,
     })
@@ -155,5 +155,5 @@ export function useSignup() {
 
     navigate({ to: redirectPath, replace: true })
   }
-	return { form, onSubmit ,errorMessage  }
+  return { form, onSubmit, errorMessage }
 }

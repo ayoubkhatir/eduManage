@@ -1,6 +1,6 @@
 import { ModeToggle } from '#/features/theme/mode-toggle'
 import useWelcomeSideBarStore from '#/store/welcome_store'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, redirect } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 import { UserRoleEnum } from '#/server/db/schema'
 import { useEffect, useState } from 'react'
@@ -10,8 +10,20 @@ import {
   FadeIn,
   Footer,
 } from '#/components/landing/landing-shared'
+import { getSession } from '#/lib/auth'
+
+const getRedirectToFromRole = (role: UserRoleEnum) =>
+  role === UserRoleEnum.ADMIN ? '/admin/dashboard' : `/${role.toLowerCase()}`
 
 export const Route = createFileRoute('/')({
+  beforeLoad: async () => {
+    const authState = await getSession()
+    if (authState && authState.user) {
+      const role = authState.user.role
+      throw redirect({ to: getRedirectToFromRole(role) })
+    }
+  },
+  staticData: true,
   component: App,
   head: () => ({
     meta: [

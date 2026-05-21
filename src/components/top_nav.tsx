@@ -38,7 +38,7 @@ export default function TopNav() {
         <div className="flex items-center gap-3">
           {/* Mobile sidebar toggle */}
           <button
-            className="cursor-pointer flex size-9 cursor-pointer items-center justify-center rounded-lg text-slate-500 transition-all hover:bg-slate-100 active:scale-95 dark:text-slate-400 dark:hover:bg-white/5 lg:hidden"
+            className="flex size-9 cursor-pointer items-center justify-center rounded-lg text-slate-500 transition-all hover:bg-slate-100 active:scale-95 dark:text-slate-400 dark:hover:bg-white/5 lg:hidden"
             onClick={toggleSideBar}
             aria-label="Toggle sidebar"
             type="button"

@@ -3,19 +3,21 @@ import { useLocation, useNavigate } from '@tanstack/react-router'
 import useSideBarStore from '../../store/sidebar_show_store'
 import { SideBarContent, type SidebarItem } from './SideBarContent'
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer'
+import type { AuthUser } from '#/types/authTypes'
 
 function getCurrentSidebarKey(pathname: string) {
-  return pathname.split('/')[2] || 'calendar'
+  return pathname.split('/')[2] || 'dashboard'
 }
 
 export interface SideBarProps {
+  currentUser: AuthUser
   info?: {
     list?: Array<{ name: string; icon: string }>
     layout?: string
   }
 }
 
-export function SideBar({ info }: SideBarProps) {
+export function SideBar({ info, currentUser }: SideBarProps) {
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -47,17 +49,20 @@ export function SideBar({ info }: SideBarProps) {
         <Drawer open={isOpen} onOpenChange={setOpen} direction="left">
           <DrawerTrigger asChild>
             <button
-              className="cursor-pointer fixed top-3 left-3 z-40 flex size-9 cursor-pointer items-center justify-center rounded-lg bg-white/80 text-slate-600 shadow-sm backdrop-blur-sm transition-colors hover:bg-white dark:bg-[#101622]/80 dark:text-slate-400 dark:hover:bg-[#101622]"
+              className="fixed top-3 left-3 z-40 flex size-9 cursor-pointer items-center justify-center rounded-lg bg-white/80 text-slate-600 shadow-sm backdrop-blur-sm transition-colors hover:bg-white dark:bg-[#101622]/80 dark:text-slate-400 dark:hover:bg-[#101622]"
               aria-label="Toggle navigation menu"
               type="button"
             >
-              <span className="material-symbols-outlined text-[22px]">menu</span>
+              <span className="material-symbols-outlined text-[22px]">
+                menu
+              </span>
             </button>
           </DrawerTrigger>
 
-          <DrawerContent className="w-72 border-r border-slate-200/60 bg-white dark:border-white/[0.06] dark:bg-[#0d1117]">
+          <DrawerContent className="w-72 border-r border-slate-200/60 bg-white dark:border-white/6 dark:bg-[#0d1117]">
             <div className="flex h-screen flex-col justify-between p-4">
               <SideBarContent
+                currentUser={currentUser}
                 list={list}
                 handleClick={(key) => {
                   handleClick(key)
@@ -74,9 +79,10 @@ export function SideBar({ info }: SideBarProps) {
       </div>
 
       {/* Desktop: static sidebar */}
-      <aside className="hidden w-64 shrink-0 border-r border-slate-200/60 bg-white dark:border-white/[0.06] dark:bg-[#0d1117] lg:flex lg:flex-col">
+      <aside className="hidden w-64 shrink-0 border-r border-slate-200/60 bg-white dark:border-white/6 dark:bg-[#0d1117] lg:flex lg:flex-col">
         <div className="flex flex-1 flex-col justify-between p-4">
           <SideBarContent
+            currentUser={currentUser}
             list={list}
             handleClick={handleClick}
             localPath={localPath}

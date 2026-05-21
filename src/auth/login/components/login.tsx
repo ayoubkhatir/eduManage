@@ -4,8 +4,8 @@ import { FaMeta } from 'react-icons/fa6'
 import { Link } from '@tanstack/react-router'
 import { UserRoleEnum } from '#/server/db/schema'
 import Loginform from '../loginform'
-import type { logInSearch } from '../../../routes/log-in'
 import { loginOAuthServer } from '#/server/modules/auth/auth.server-function'
+import type { logInSearch } from '#/routes/log-in'
 
 const roleConfig: Record<
   string,
@@ -27,13 +27,13 @@ const roleConfig: Record<
     icon: 'backpack',
   },
 }
+const roles = [
+  UserRoleEnum.ADMIN,
+  UserRoleEnum.TEACHER,
+  UserRoleEnum.STUDENT,
+] as const
 
 export default function Login({ role, redirectTo }: logInSearch) {
-  const roles = [
-    UserRoleEnum.ADMIN,
-    UserRoleEnum.TEACHER,
-    UserRoleEnum.STUDENT,
-  ] as const
   const otherRoles = roles.filter((r) => r !== role)
   const [errorMessageOAuth, setErrorMessageOAuth] = useState<string | null>(
     null,
@@ -57,9 +57,7 @@ export default function Login({ role, redirectTo }: logInSearch) {
 
       window.location.assign(redirectUrl)
     } catch {
-      setErrorMessageOAuth(
-        'Failed to initiate social login. Please try again.',
-      )
+      setErrorMessageOAuth('Failed to initiate social login. Please try again.')
     }
   }
 
@@ -70,7 +68,7 @@ export default function Login({ role, redirectTo }: logInSearch) {
       <div className="mx-auto w-full max-w-sm">
         {/* Logo */}
         <div className="mb-8 flex items-center gap-2.5 lg:hidden">
-          <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-600 text-white shadow-md shadow-primary/25">
+          <div className="flex size-9 items-center justify-center rounded-xl bg-linear-to-br from-primary to-blue-600 text-white shadow-md shadow-primary/25">
             <span className="material-symbols-outlined text-xl">school</span>
           </div>
           <span className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">

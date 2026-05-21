@@ -11,7 +11,7 @@ import {
 } from "#/schemas/teachers.schema";
 import { createServerFn } from "@tanstack/react-start";
 import { paginatedSuccessResponse, successResponse, type APIResponse } from "#/server/utils/response.type";
-import {teachersController} from "./teachers.contoller";
+import { teachersController } from "./teachers.contoller";
 import { mapDbError } from "#/server/utils/db_error_handling";
 import { validCuidSchema } from "#/schemas/shared.schema";
 import type { StatusEnum } from "#/server/db/schema";
@@ -21,7 +21,7 @@ import type { TeacherUser } from "#/types/teacherTypes";
 export const getTeachersServerFn = createServerFn({ method: "GET" })
     .inputValidator(getTeachersSchema)
     .handler(async ({ data: search_queries }) => {
-        const {teachersController} = await import('./teachers.contoller')
+        const { teachersController } = await import('./teachers.contoller')
         const { data, pagination } = await teachersController.listTeachers(search_queries)
         return paginatedSuccessResponse(data, pagination);
     })
@@ -30,8 +30,9 @@ export const getTeachersServerFn = createServerFn({ method: "GET" })
 export const addTeacherServerFn = createServerFn({ method: 'POST' })
     .inputValidator(addTeacherSchema)
     .handler(async ({ data: body }) => {
-        // the real import is at the top this looks like it does nothing 
-        const {teachersController} = await import('./teachers.contoller')
+        // the real import is at the top this looks like it does nothing
+        console.log("data : ", body)
+        // const { teachersController } = await import('./teachers.contoller')
         try {
             const data = await teachersController.createTeacher(body)
             return successResponse(data) as APIResponse<TeacherUser>

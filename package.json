@@ -7,8 +7,12 @@
   },
   "scripts": {
     "dev": "vite dev --port 4000",
-    "build": "vite build",
+    "build": "bun --bun vite build",
+    "tsc": "tsc",
+    "build_preview": "pnpm build && pnpm preview",
+    "build_nitro": "bun --bun run build && pnpm start",
     "preview": "vite preview",
+    "start": "bun run .output/server/index.mjs",
     "test": "vitest run",
     "lint": "eslint",
     "format": "prettier --check .",

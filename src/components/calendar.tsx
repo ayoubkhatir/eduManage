@@ -12,13 +12,13 @@ import {
 import { useMemo, useState } from 'react'
 import type { EventPropGetter, View } from 'react-big-calendar'
 import type { EventForm } from '@/components/admin/calendar/model'
-import useGetEvents from '@/services/api/getEvents'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import useGetEvents from '#/hooks/events/hooks'
 
 const locales = { 'en-US': enUS }
 
