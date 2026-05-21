@@ -6,13 +6,14 @@ import InputWrapper from '@/components/admin/Wrappers/InputWrapper'
 import SelectWrapper from '@/components/admin/Wrappers/SelectWrapper'
 import { useAddStudent } from '#/hooks/students/hooks'
 import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
+import ProfilePicInput from '#/components/admin/Wrappers/ProfilePicWrapper'
+import type { AddStudentType } from '#/types/studentTypes'
 import { getAllClassesQueryOptions } from '#/hooks/classes/hooks'
 import {
   StudentClassSelector,
   StudentGradeSelector,
 } from './-students.selectors'
 import { FormProvider } from 'react-hook-form'
-import { SimpleImageUpload } from '#/components/cloudinary-uploader'
 import { useAuth } from '#/store/auth_store'
 
 export const Route = createFileRoute('/admin/students/add')({
@@ -60,11 +61,7 @@ function RouteComponent() {
                     className="flex flex-col"
                     onSubmit={studentForm.handleSubmit(onSubmit)}
                   >
-                    {/* <ProfilePicWrapper<AddStudentSchema>
-                      form={studentForm}
-                      imageField="image"
-                    /> */}
-
+                    <ProfilePicInput form={studentForm} imageField="image" />
                     <div className="p-8 border-b border-t border-[#f0f2f4] dark:border-gray-800">
                       <h3 className="text-[#111318] dark:text-white text-lg font-bold mb-6 flex items-center gap-2">
                         <span className="material-symbols-outlined text-primary">
@@ -233,9 +230,7 @@ function RouteComponent() {
                         </span>
                         {studentForm.formState.isSubmitting
                           ? 'Creating...'
-                          : 'Create Student Account'
-                          }
-                        
+                          : 'Create Student Account'}
                       </button>
                     </div>
                   </form>

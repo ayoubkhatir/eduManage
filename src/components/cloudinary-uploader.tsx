@@ -151,6 +151,8 @@ export function SimpleCloudinaryUpload({
   )
 }
 
+// the function i need until now 
+
 export async function uploadToCloudinary(file: File) {
   const formData = new FormData()
   formData.append('file', file)
@@ -181,6 +183,8 @@ export async function uploadToCloudinary(file: File) {
   }
 }
 
+//
+
 type Props = {
   value?: string
   onChange: (publicId: string) => void
@@ -190,6 +194,14 @@ export function SimpleImageUpload({ value, onChange }: Props) {
   const [previewUrl, setPreviewUrl] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
+  const displayUrl =
+    previewUrl ||
+    (value
+      ? `https://res.cloudinary.com/${cloudName}/image/upload/c_thumb,w_200,g_face/${value}`
+      : '')
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -208,7 +220,7 @@ export function SimpleImageUpload({ value, onChange }: Props) {
       formData.append('folder', 'avatars')
 
       const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/raw/upload`,
+        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
         {
           method: 'POST',
           body: formData,
@@ -230,28 +242,80 @@ export function SimpleImageUpload({ value, onChange }: Props) {
     }
   }
 
+  const handleRemove = () => {
+    onChange('')
+    setPreviewUrl('')
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
   return (
-    <div className="cursor-pointer flex flex-col gap-3">
-      <label>Image</label>
+    <div className="flex flex-col items-center gap-4">
+      <div className="relative group">
+        <div
+          className="size-28 rounded-full overflow-hidden border-2 border-slate-200 bg-slate-50 transition-colors dark:border-slate-700 dark:bg-slate-800 cursor-pointer"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          {displayUrl ? (
+            <img
+              src={displayUrl}
+              alt="Profile preview"
+              className="size-full object-cover"
+            />
+          ) : (
+            <div className="flex size-full items-center justify-center">
+              <span className="material-symbols-outlined text-3xl text-slate-300 dark:text-slate-600">
+                person
+              </span>
+            </div>
+          )}
+        </div>
+
+        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition-opacity group-hover:opacity-100 cursor-pointer">
+          <span className="material-symbols-outlined text-white text-2xl">
+            {displayUrl ? 'photo_camera' : 'add_a_photo'}
+          </span>
+        </div>
+
+        {loading && (
+          <div className="absolute inset-0 flex items-center justify-center rounded-full bg-white/80 dark:bg-slate-800/80">
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-indigo-500 border-t-transparent" />
+          </div>
+        )}
+      </div>
+
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={loading}
+          className="rounded-lg px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 disabled:opacity-50 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white"
+        >
+          {displayUrl ? 'Change' : 'Upload photo'}
+        </button>
+        {displayUrl && (
+          <>
+            <span className="text-slate-300 dark:text-slate-600">|</span>
+            <button
+              type="button"
+              onClick={handleRemove}
+              disabled={loading}
+              className="rounded-lg px-3 py-1.5 text-xs font-medium text-red-500 transition-colors hover:bg-red-50 disabled:opacity-50 dark:hover:bg-red-500/10"
+            >
+              Remove
+            </button>
+          </>
+        )}
+      </div>
+
       <input
+        ref={fileInputRef}
         type="file"
-        className="border w-fit"
+        className="hidden"
         accept="image/png,image/jpeg,image/webp"
         onChange={handleFileChange}
       />
 
-      {loading && <p>Uploading...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-
-      {previewUrl ? (
-        <img
-          src={previewUrl}
-          alt="Preview"
-          className="h-24 w-24 rounded-full object-cover"
-        />
-      ) : value ? (
-        <p>Saved public_id: {value}</p>
-      ) : null}
+      {error && <p className="text-xs text-red-500">{error}</p>}
     </div>
   )
 }

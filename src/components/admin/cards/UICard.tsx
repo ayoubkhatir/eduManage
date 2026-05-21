@@ -51,38 +51,41 @@ export default function UICardComponent({
   const displayInfo = typeof info === 'number' ? info.toLocaleString() : info
 
   return (
-    <div className="group rounded-2xl border border-slate-200/80 bg-slate-50 p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700 dark:hover:shadow-black/20">
-      <div className="mb-4 flex items-start justify-between gap-4">
-        <div
-          className={`flex h-11 w-11 items-center justify-center rounded-xl transition-transform duration-200 group-hover:scale-105 ${iconColorMap[iconColor]}`}
-        >
-          <span className="material-symbols-outlined text-[22px]">
-            {iconName}
+    <div className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700 dark:bg-slate-800 dark:hover:border-slate-600">
+      <div className="absolute -right-4 -top-4 h-20 w-20 rounded-full bg-gradient-to-br from-transparent to-slate-50/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100 dark:to-slate-700/30" />
+      <div className="relative">
+        <div className="mb-4 flex items-start justify-between gap-4">
+          <div
+            className={`flex h-11 w-11 items-center justify-center rounded-xl transition-transform duration-200 group-hover:scale-110 ${iconColorMap[iconColor]}`}
+          >
+            <span className="material-symbols-outlined text-[22px]">
+              {iconName}
+            </span>
+          </div>
+
+          <span
+            className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${
+              isPositive
+                ? 'bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400'
+                : 'bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-400'
+            }`}
+          >
+            <span className="material-symbols-outlined text-sm">{stateIcon}</span>
+            <span>
+              {isPositive && percentage > 0 ? '+' : ''}
+              {percentage}%
+            </span>
           </span>
         </div>
 
-        <span
-          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${
-            isPositive
-              ? 'bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400'
-              : 'bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-400'
-          }`}
-        >
-          <span className="material-symbols-outlined text-sm">{stateIcon}</span>
-          <span>
-            {isPositive && percentage > 0 ? '+' : ''}
-            {percentage}%
-          </span>
-        </span>
+        <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+          {cardTitle}
+        </p>
+
+        <h3 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+          {displayInfo}
+        </h3>
       </div>
-
-      <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-        {cardTitle}
-      </p>
-
-      <h3 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-        {displayInfo}
-      </h3>
     </div>
   )
 }
@@ -159,7 +162,7 @@ export function TeachersStatCards() {
   if (fetchStatus === 'error') return null
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {cards.map((card) => (
         <UICardComponent {...card} key={card.id} />
       ))}

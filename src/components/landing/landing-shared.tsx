@@ -4,7 +4,13 @@ import { ModeToggle } from '#/features/theme/mode-toggle'
 import { UserRoleEnum } from '#/server/db/schema'
 
 /* ─── Icon ─── */
-export function Icon({ name, className = '' }: { name: string; className?: string }) {
+export function Icon({
+  name,
+  className = '',
+}: {
+  name: string
+  className?: string
+}) {
   return (
     <span className={`material-symbols-outlined ${className}`}>{name}</span>
   )
@@ -143,41 +149,44 @@ export function Footer() {
       links: [
         { label: 'Features', href: '/#features' },
         { label: 'Pricing', href: '/pricing' },
-        { label: 'Security', href: '/security' },
-        { label: 'Changelog', href: '/changelog' },
+        { label: 'Security', href: '/pages/security' },
+        { label: 'Changelog', href: '/pages/changelog' },
       ],
     },
     {
       title: 'Company',
       links: [
-        { label: 'About', href: '/about' },
-        { label: 'Careers', href: '/careers' },
-        { label: 'Blog', href: '/blog' },
-        { label: 'Press', href: '/press' },
+        { label: 'About', href: '/pages/about' },
+        { label: 'Careers', href: '/pages/careers' },
+        { label: 'Blog', href: '/pages/blog' },
+        { label: 'Press', href: '/pages/press' },
       ],
     },
     {
       title: 'Resources',
       links: [
-        { label: 'Documentation', href: '/documentation' },
-        { label: 'Help Center', href: '/help' },
-        { label: 'Community', href: '/community' },
+        { label: 'Documentation', href: '/pages/documentation' },
+        { label: 'Help Center', href: '/pages/help' },
+        { label: 'Community', href: '/pages/community' },
         { label: 'Contact', href: '/#contact' },
       ],
     },
     {
       title: 'Legal',
       links: [
-        { label: 'Privacy', href: '/privacy' },
-        { label: 'Terms', href: '/terms' },
-        { label: 'Cookie Policy', href: '/cookie-policy' },
-        { label: 'Licenses', href: '/licenses' },
+        { label: 'Privacy', href: '/pages/privacy' },
+        { label: 'Terms', href: '/pages/terms' },
+        { label: 'Cookie Policy', href: '/pages/cookie-policy' },
+        { label: 'Licenses', href: '/pages/licenses' },
       ],
     },
   ]
 
   return (
-    <footer id="contact" className="border-t border-slate-200/60 dark:border-white/6border-white/[0.06]">
+    <footer
+      id="contact"
+      className="border-t border-slate-200/60 dark:border-white/6border-white/[0.06]"
+    >
       <Section className="py-16">
         <div className="grid grid-cols-2 gap-10 sm:grid-cols-4 lg:grid-cols-5">
           <div className="col-span-2 sm:col-span-4 lg:col-span-1">
@@ -214,12 +223,12 @@ export function Footer() {
               <ul className="mt-4 flex flex-col gap-3">
                 {col.links.map((link) => (
                   <li key={link.label}>
-                    <a
-                      href={link.href}
+                    <Link
+                      to={'/Pages/about'}
                       className="text-sm text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
                     >
                       {link.label}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -239,7 +248,13 @@ export function Footer() {
 }
 
 /* ─── Page layout (Navbar + content + Footer) ─── */
-export function PageLayout({ children, name = 'page' }: { children: React.ReactNode; name?: string }) {
+export function PageLayout({
+  children,
+  name = 'page',
+}: {
+  children: React.ReactNode
+  name?: string
+}) {
   return (
     <div className="min-h-screen bg-white text-slate-900 antialiased dark:bg-background-dark dark:text-slate-100">
       <Navbar />

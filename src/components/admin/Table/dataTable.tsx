@@ -24,19 +24,19 @@ interface DataTableProps<TData> {
 
 export default function DataTable<TData>({ table }: DataTableProps<TData>) {
   return (
-    <div className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm">
+    <div className="w-full">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow
               key={headerGroup.id}
-              className="border-b border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50"
+              className="border-b border-slate-200 dark:border-slate-700 bg-slate-50/80 dark:bg-slate-800/60"
             >
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead
                     key={header.id}
-                    className="text-slate-700 dark:text-slate-300 font-semibold text-sm"
+                    className="text-slate-600 dark:text-slate-400 font-semibold text-xs uppercase tracking-wider"
                   >
                     {header.isPlaceholder
                       ? null
@@ -56,10 +56,10 @@ export default function DataTable<TData>({ table }: DataTableProps<TData>) {
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && 'selected'}
-                className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-colors"
+                className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition-colors duration-150"
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="py-3">
+                  <TableCell key={cell.id} className="py-3.5">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -69,9 +69,19 @@ export default function DataTable<TData>({ table }: DataTableProps<TData>) {
             <TableRow>
               <TableCell
                 colSpan={table.getAllColumns().length}
-                className="h-24 text-center text-slate-500 dark:text-slate-400"
+                className="h-32 text-center"
               >
-                No results found.
+                <div className="flex flex-col items-center justify-center gap-2">
+                  <span className="material-symbols-outlined text-4xl text-slate-300 dark:text-slate-600">
+                    inbox
+                  </span>
+                  <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                    No results found
+                  </p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500">
+                    Try adjusting your search or filter criteria
+                  </p>
+                </div>
               </TableCell>
             </TableRow>
           )}
@@ -88,13 +98,13 @@ type SkeletonTableProps = {
 
 export function CustomDataTableSkeleton({ rows, cols }: SkeletonTableProps) {
   const renderTablePreview = () => (
-    <div className="overflow-hidden rounded-md border">
+    <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
       <table className="w-full table-auto border-collapse">
-        <thead className="bg-gray-100 dark:bg-slate-800">
+        <thead className="bg-slate-50/80 dark:bg-slate-800/60">
           <tr>
             {Array.from({ length: cols }).map((_, i) => (
-              <th key={i} className="px-4 py-2 text-left">
-                <Skeleton className="h-4 w-20 bg-gray-300 dark:bg-slate-700 rounded animate-pulse" />
+              <th key={i} className="px-4 py-3 text-left">
+                <Skeleton className="h-3 w-16 bg-slate-200 dark:bg-slate-700 rounded" />
               </th>
             ))}
           </tr>
@@ -104,11 +114,11 @@ export function CustomDataTableSkeleton({ rows, cols }: SkeletonTableProps) {
           {Array.from({ length: rows }).map((_, rowIndex) => (
             <tr
               key={rowIndex}
-              className="border-t border-gray-200 dark:border-slate-700"
+              className="border-t border-slate-100 dark:border-slate-700"
             >
               {Array.from({ length: cols }).map((__, colIndex) => (
-                <td key={colIndex} className="px-4 py-2">
-                  <Skeleton className="h-4 bg-gray-200 dark:bg-slate-700 rounded animate-pulse" />
+                <td key={colIndex} className="px-4 py-3">
+                  <Skeleton className="h-4 w-full bg-slate-100 dark:bg-slate-700 rounded" />
                 </td>
               ))}
             </tr>

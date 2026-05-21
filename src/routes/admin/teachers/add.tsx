@@ -2,11 +2,10 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { Skeleton } from 'boneyard-js/react'
 import { useAddTeacher } from '#/hooks/teachers/hooks'
-// import ProfilePicWrapper from '@/components/admin/Wrappers/ProfilePicWrapper'
 import InputWrapper from '@/components/admin/Wrappers/InputWrapper'
 import SelectWrapper from '@/components/admin/Wrappers/SelectWrapper'
 import DatePickerField from '@/components/admin/DatePickerField'
-// import type { AddTeacherSchema } from '#/schemas/teachers.schema'
+import ProfilePicInput from '#/components/admin/Wrappers/ProfilePicWrapper'
 import { useAuth } from '#/store/auth_store'
 
 export const Route = createFileRoute('/admin/teachers/add')({
@@ -29,7 +28,6 @@ function RouteComponent() {
   const user = useAuth((s) => s.user)
   const { onSubmit, form } = useAddTeacher(user?.info?.id ?? '')
 
-  
   // const subjects = form.watch('subjects')
 
   // function addSubjects(subject: string) {
@@ -82,30 +80,17 @@ function RouteComponent() {
                   className="flex flex-col"
                   onSubmit={form.handleSubmit(onSubmit)}
                 >
-                  {/* <ProfilePicWrapper<AddTeacherSchema>
-                    form={form}
-                    imageField="image"
-                  /> */}
+                  <div className="flex flex-col items-center gap-2 border-b border-gray-100 dark:border-gray-800 py-8">
+                    <ProfilePicInput form={form} imageField="image" />
+                  </div>
 
-                  <div className="p-8 border-b border-t border-gray-100 dark:border-gray-800">
+                  <div className="p-8 border-b border-gray-100 dark:border-gray-800">
                     <h3 className="text-neutral-900 dark:text-white text-lg font-bold mb-6 flex items-center gap-2">
                       <span className="material-symbols-outlined text-primary">
                         badge
                       </span>
                       Personal Information
                     </h3>
-                    <div className="mb-4">
-                      {/* <SimpleImageUpload
-                        value={form.watch('image')}
-                        onChange={(publicId) => {
-                          form.setValue('image', publicId, {
-                            shouldDirty: true,
-                            shouldTouch: true,
-                            shouldValidate: true,
-                          })
-                        }}
-                      />*/}
-                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <InputWrapper
                         form={form}
@@ -293,7 +278,6 @@ function RouteComponent() {
 
                     <button
                       type="submit"
-                      disabled={form.formState.isSubmitting}
                       className="w-full sm:w-auto h-10 px-6 rounded-lg bg-primary hover:bg-blue-600 text-white font-bold text-sm shadow-sm transition-colors flex items-center justify-center gap-2 cursor-pointer di"
                     >
                       <span className="material-symbols-outlined text-[18px]">
@@ -301,8 +285,7 @@ function RouteComponent() {
                       </span>
                       {form.formState.isSubmitting
                         ? 'Creating...'
-                        : 'Create Teacher Account'
-                        }
+                        : 'Create Teacher Account'}
                     </button>
                   </div>
                 </form>

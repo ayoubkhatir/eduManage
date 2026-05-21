@@ -5,7 +5,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../db/db.ts";
 import { handlePassword } from "./handle-password.ts";
 
-const baseURL = process.env.BETTER_AUTH_URL || "http://localhost:4000";
+const baseURL = process.env.BETTER_AUTH_URL;
 const basePath = "/api/better-auth";
 const SESSION_EXPIRES_IN_SECONDS = 60 * 60 * 24 * 7;
 const SESSION_UPDATE_AGE_SECONDS = 60 * 60 * 24;

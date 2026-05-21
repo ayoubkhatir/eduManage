@@ -68,8 +68,10 @@
 //     </div>
 //   )
 // }
+
 import type { FieldValues, Path, UseFormReturn } from 'react-hook-form'
 import { SimpleImageUpload } from '#/components/cloudinary-uploader'
+// import { useState } from 'react'
 
 type Props<T extends FieldValues> = {
   form: UseFormReturn<T>
@@ -81,16 +83,16 @@ export default function ProfilePicInput<T extends FieldValues>({
   imageField,
 }: Props<T>) {
   const savedPublicId = form.watch(imageField) as string
-  const [previewUrl, setPreviewUrl] = useState('')
+  // const [previewUrl, setPreviewUrl] = useState('')
 
-  const handleRemove = () => {
-    form.setValue(imageField, '' as T[Path<T>], {
-      shouldDirty: true,
-      shouldTouch: true,
-      shouldValidate: true,
-    })
-    setPreviewUrl('')
-  }
+  // const handleRemove = () => {
+  //   form.setValue(imageField, '' as T[Path<T>], {
+  //     shouldDirty: true,
+  //     shouldTouch: true,
+  //     shouldValidate: true,
+  //   })
+  //   setPreviewUrl('')
+  // }
 
   return (
     <div className="flex flex-col gap-4">

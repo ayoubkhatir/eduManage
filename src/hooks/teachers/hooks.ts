@@ -31,7 +31,7 @@ export function useAddTeacher(schoolId: string) {
     defaultValues: {
       status: StatusEnum.NEW,
       name: "New Teacher",
-      telNumber: "11111111",
+      telNumber: "0675243935",
       schoolId,
       image: undefined,
       gender: UserGenderEnum.MALE,
@@ -78,6 +78,7 @@ export function useAddTeacher(schoolId: string) {
     addTeacher(data, {
       onSuccess: () => {
         toast.success("Teacher added")
+        console.log("teacher added")
       },
       onError: (error) => {
         toast.error(error.message || "Error has occured")

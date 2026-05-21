@@ -90,23 +90,29 @@ function AdminTeachersContent() {
     select: (s) => ({ search: s.search, size: s.size }),
   })
   return (
-    <div className="flex-1 w-full overflow-y-auto overflow-x-auto flex flex-col gap-4">
+    <div className="flex-1 w-full overflow-y-auto overflow-x-auto flex flex-col gap-6">
       <IndexPageComponent role="Teacher">
         <TeachersStatCards />
-        <div className="flex items-center justify-between">
-          <SearchInput
-            placeholder="Search by email or name"
-            value={search}
-            onSearch={(value) =>
-              navigate({
-                search: (s) => ({
-                  ...s,
-                  search: value,
-                }),
-              })
-            }
-          />
-          <div className="flex items-center gap-4">
+
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="relative flex-1 max-w-sm">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px] pointer-events-none">
+              search
+            </span>
+            <SearchInput
+              placeholder="Search by email or name"
+              value={search}
+              onSearch={(value) =>
+                navigate({
+                  search: (s) => ({
+                    ...s,
+                    search: value,
+                  }),
+                })
+              }
+            />
+          </div>
+          <div className="flex items-center gap-3">
             <SelectPageSize
               value={size}
               onChange={(value) =>
@@ -159,17 +165,34 @@ function MainPageContent() {
       {fetchStatus === 'pending' ? (
         <CustomDataTableSkeleton rows={size} cols={6} />
       ) : fetchStatus === 'error' ? (
-        <p>Error</p>
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <span className="material-symbols-outlined text-5xl text-red-400 mb-3">
+            error_outline
+          </span>
+          <p className="text-lg font-medium text-slate-700 dark:text-slate-300">
+            Failed to load teachers
+          </p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Please try again later
+          </p>
+        </div>
       ) : (
-        <>
-          <TeachersTable data={teachersData.data} />
-          <div className="flex items-center justify-between">
-            <p className="w-fit">
+        <div className="space-y-4">
+          <div className="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900 overflow-hidden">
+            <TeachersTable data={teachersData.data} />
+          </div>
+          <div className="flex flex-col-reverse items-center justify-between gap-3 sm:flex-row">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
               Showing{' '}
-              {size > teachersData.pagination.totalCount
-                ? teachersData.pagination.totalCount
-                : size}{' '}
-              of {teachersData.pagination.totalCount}
+              <span className="font-medium text-slate-700 dark:text-slate-300">
+                {size > teachersData.pagination.totalCount
+                  ? teachersData.pagination.totalCount
+                  : size}
+              </span>{' '}
+              of{' '}
+              <span className="font-medium text-slate-700 dark:text-slate-300">
+                {teachersData.pagination.totalCount}
+              </span>
             </p>
             <CustomPagination
               currentPage={page}
@@ -181,7 +204,7 @@ function MainPageContent() {
               }
             />
           </div>
-        </>
+        </div>
       )}
     </>
   )

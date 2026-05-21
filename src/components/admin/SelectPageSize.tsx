@@ -24,20 +24,20 @@ export function SelectPageSize({
       defaultValue={value ? `${value}` : '10'}
       onValueChange={(v) => onChange(Number(v))}
     >
-      <SelectTrigger className="w-45">
-        <SelectValue placeholder="Select a size" />
+      <SelectTrigger className="h-9 w-16 rounded-lg border border-slate-200 bg-white text-sm text-slate-700 shadow-none transition-colors hover:bg-slate-50 focus:ring-0 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700">
+        <SelectValue placeholder="Size" />
       </SelectTrigger>
-      <SelectContent className="bg-background-light dark:bg-background-dark dark:text-white">
+      <SelectContent className="bg-white dark:bg-slate-800 dark:text-white border-slate-200 dark:border-slate-700">
         {options.map((sizeOption) => (
           <Fragment key={sizeOption}>
             <SelectItem
               value={`${sizeOption}`}
-              className="bg-background-light dark:bg-background-dark"
+              className="focus:bg-slate-100 dark:focus:bg-slate-700"
             >
               {sizeOption}
             </SelectItem>
             {sizeOption !== options[options.length - 1] && (
-              <SelectSeparator className=" dark:bg-white bg-black" />
+              <SelectSeparator className="bg-slate-100 dark:bg-slate-700" />
             )}
           </Fragment>
         ))}

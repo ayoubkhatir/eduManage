@@ -1,18 +1,12 @@
 import { Link } from '@tanstack/react-router'
 
 export default function AddButton({ role }: { role: string }) {
-  return role.toLowerCase() === 'student' ? (
-    <Link to="/admin/students/add">
-      <button className="cursor-pointer flex items-center justify-center gap-2 bg-primary hover:bg-blue-700 text-white font-semibold py-2.5 px-6 rounded-lg transition-all shadow-sm shadow-blue-500/30 active:scale-95 cursor-pointer">
-        <span className="material-symbols-outlined text-[20px]">add</span>
-        <span>Add New Student</span>
-      </button>
-    </Link>
-  ) : (
-    <Link to="/admin/teachers/add">
-      <button className="cursor-pointer flex items-center justify-center gap-2 bg-primary hover:bg-blue-700 text-white font-semibold py-2.5 px-6 rounded-lg shadow-sm shadow-blue-500/30 active:scale-95 cursor-pointer">
-        <span className="material-symbols-outlined text-[20px]">add</span>
-        <span className="font-medium">Add New Teacher</span>
+  const isStudent = role.toLowerCase() === 'student'
+  return (
+    <Link to={isStudent ? '/admin/students/add' : '/admin/teachers/add'}>
+      <button className="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-blue-500/20 transition-all duration-200 hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg hover:shadow-blue-500/30 active:scale-95 dark:from-blue-500 dark:to-indigo-500 dark:hover:from-blue-600 dark:hover:to-indigo-600">
+        <span className="material-symbols-outlined text-[18px]">add</span>
+        <span>Add New {isStudent ? 'Student' : 'Teacher'}</span>
       </button>
     </Link>
   )

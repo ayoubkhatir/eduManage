@@ -30,6 +30,7 @@ export const getTeachersServerFn = createServerFn({ method: "GET" })
 export const addTeacherServerFn = createServerFn({ method: 'POST' })
     .inputValidator(addTeacherSchema)
     .handler(async ({ data: body }) => {
+        // the real import is at the top this looks like it does nothing 
         const {teachersController} = await import('./teachers.contoller')
         try {
             const data = await teachersController.createTeacher(body)
