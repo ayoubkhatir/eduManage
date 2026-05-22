@@ -46,8 +46,14 @@ import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
 import { AddSubjectDialog } from './-add-subject.form'
 import type { StatusEnum } from '#/server/db/schema'
 import { UserAvatar } from '#/components/admin/Table/columnsData'
-import { StudentClassSelector, StudentGradeSelector } from '../../students/-students.selectors'
-import { assignTeacherSchema, type AssignTeacherSchema } from '#/schemas/teachers.schema'
+import {
+  StudentClassSelector,
+  StudentGradeSelector,
+} from '../../students/-students.selectors'
+import {
+  assignTeacherSchema,
+  type AssignTeacherSchema,
+} from '#/schemas/teachers.schema'
 
 export const Route = createFileRoute(
   '/_auth/admin/teachers/$teacherId/assignements',
@@ -121,23 +127,6 @@ function TeacherAssignmentsPage() {
                 <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
                   <aside className="order-1 lg:order-2 lg:w-72">
                     <div className="flex flex-col items-center gap-4 rounded-2xl border border-[#f0f2f4] bg-[#f8f9fc] p-6 dark:border-gray-800 dark:bg-[#151a25]">
-                      {/* <div className="flex size-28 items-center justify-center overflow-hidden rounded-full bg-[#eef2f7] dark:bg-gray-800">
-                        {teacherData.image ? (
-                          <AdvancedImage
-                            cldImg={cld
-                              .image(teacherData.image)
-                              .resize(
-                                thumbnail()
-                                  .width(28 * 4)
-                                  .height(28 * 4),
-                              )
-                              .roundCorners(byRadius(999))}
-                            className="size-28 object-cover"
-                          />
-                        ) : (
-                          <UserCircleIcon className="size-28" />
-                        )}
-                      </div> */}
                       <UserAvatar image={teacherData.image} size={28} />
 
                       <p className="text-center text-sm font-medium text-[#111318] dark:text-white">

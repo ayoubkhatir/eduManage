@@ -126,9 +126,6 @@ class StudentsController {
             })
             .where(eq(account.userId, userId))
 
-
-
-
         await db
             .update(studentsTable)
             .set({
@@ -163,7 +160,7 @@ class StudentsController {
             }
         })
 
-        if (!student) throw new Error("User UPDATED")
+        if (!student) throw new Error("Student not found");
 
         const studentWithUser: StudentUser = StudentUserDto(student, student.user, student.class, student.class.grade);
         return studentWithUser

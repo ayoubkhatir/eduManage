@@ -1,16 +1,11 @@
 import { Link, createFileRoute, notFound } from '@tanstack/react-router'
-import { useState } from 'react'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { Skeleton } from 'boneyard-js/react'
-import {
-  getTeacherQueryOptions,
-  useEditTeacher,
-} from '#/hooks/teachers/hooks'
+import { getTeacherQueryOptions, useEditTeacher } from '#/hooks/teachers/hooks'
 import InputWrapper from '@/components/admin/Wrappers/InputWrapper'
 import DatePickerField from '@/components/admin/DatePickerField'
 import SelectWrapper from '@/components/admin/Wrappers/SelectWrapper'
 import { AvatarUploadCard } from '../../students/-student.avatar-editor'
-import ProfilePicGenerator from '#/components/admin/profilePicGenerator'
 import type { TeacherUser } from '#/types/teacherTypes'
 
 export const Route = createFileRoute('/_auth/admin/teachers/$teacherId/')({
@@ -74,12 +69,7 @@ function OwnerTeacherDetailContent() {
 }
 
 function EditTeacherForm({ teacherData }: { teacherData: TeacherUser }) {
-  const [allowAccess, setAllowAccess] = useState(true)
-
-  function toggleAllowAccess() {
-    setAllowAccess(!allowAccess)
-  }
-  const { form: teacherForm, onSubmit } = useEditTeacher(teacherData)
+  const { teacherForm, onSubmit } = useEditTeacher(teacherData)
   return (
     <form
       className="flex flex-col"
@@ -95,21 +85,6 @@ function EditTeacherForm({ teacherData }: { teacherData: TeacherUser }) {
           {/* Avatar panel */}
           <aside className="order-1 lg:order-2">
             <div className="flex flex-col items-center gap-4 rounded-2xl border border-[#f0f2f4] bg-[#f8f9fc] p-6 dark:border-gray-800 dark:bg-[#151a25]">
-              <ProfilePicGenerator
-                name={teacherData.name}
-                imgSrc={teacherData.image}
-              />
-              {/* {teacherData.image ? (
-                <AdvancedImage
-                  cldImg={cld
-                    .image(teacherData.image)
-                    .resize(thumbnail().width(160).height(160))
-                    .roundCorners(byRadius(999))}
-                  className="size-40 rounded-full object-cover"
-                />
-              ) : (
-                <UserCircleIcon className="size-40 text-gray-300 dark:text-gray-600" />
-              )} */}
               <AvatarUploadCard
                 form={teacherForm}
                 imageField="image"
@@ -181,50 +156,6 @@ function EditTeacherForm({ teacherData }: { teacherData: TeacherUser }) {
           />
         </div>
       </div>
-
-      {/* <div className="p-8 border-b border-[#f0f2f4] dark:border-gray-800">
-        <h3 className="text-[#111318] dark:text-white text-lg font-bold mb-6 flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary">school</span>
-          Academic Information
-        </h3>
-      </div> */}
-
-      <div className="p-8">
-        <h3 className="text-[#111318] dark:text-white text-lg font-bold mb-6 flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary">lock</span>
-          Account Settings
-        </h3>
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-lg bg-[#f0f2f4] dark:bg-gray-800">
-            <div>
-              <p className="text-[#111318] dark:text-white font-medium">
-                System Access
-              </p>
-              <p className="text-[#616f89] dark:text-gray-400 text-sm">
-                Allow this teacher to log in to the portal.
-              </p>
-            </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                checked={allowAccess}
-                onChange={toggleAllowAccess}
-                className="sr-only peer"
-                type="checkbox"
-              />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 dark:peer-focus:ring-primary/30 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
-            </label>
-          </div>
-
-          {/* <InputWrapper
-                      form={teacherForm}
-                      name="temporaryPassword"
-                      label="Temporary Password"
-                      placeholder="Enter temporary password"
-                      type={showPassword ? 'text' : 'password'}
-                    /> */}
-        </div>
-      </div>
-
       <div className="p-6 bg-[#f8f9fc] dark:bg-[#151a25] border-t border-[#f0f2f4] dark:border-gray-800 flex flex-col-reverse sm:flex-row items-center justify-end gap-4 rounded-b-xl">
         <Link to="/admin/teachers">
           <button

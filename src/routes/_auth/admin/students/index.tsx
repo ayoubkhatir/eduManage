@@ -23,19 +23,6 @@ import {
 import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
 import { getStudentsQueryOptions } from '#/server/db/repo'
 
-// type QueryOptionsType = Filters<StudentModel>
-
-// const StudentSearchSchema = z.object({
-//   search: fallback(z.string(), '').default(''),
-//   email: fallback(z.string().email(), '').default(''),
-//   status: fallback(z.string(), '').default(''),
-//   grade: fallback(z.string(), '').default(''),
-//   sortBy: fallback(z.enum(['name', 'email']), 'name').default('name'),
-//   sortOrder: fallback(z.enum(['asc', 'desc']).nullable(), 'asc').default('asc'),
-//   page: fallback(z.coerce.number().int().positive(), 1).default(1),
-//   size: fallback(z.coerce.number().int().positive(), 10).default(10),
-// })
-
 export const Route = createFileRoute('/_auth/admin/students/')({
   component: RouteComponent,
   pendingComponent: OwnerStudentsPending,

@@ -90,8 +90,9 @@ export function useAddTeacher(schoolId: string) {
   return { form, onSubmit }
 }
 
+
 export function useEditTeacher(editedTeacher: TeacherUser) {
-  const form: UseFormReturn<EditTeacherType> = useForm<EditTeacherType>({
+  const teacherForm: UseFormReturn<EditTeacherType> = useForm<EditTeacherType>({
     defaultValues: {
       teacherId: editedTeacher.id,
       name: editedTeacher.name,
@@ -136,7 +137,7 @@ export function useEditTeacher(editedTeacher: TeacherUser) {
     })
   }
 
-  return { form, onSubmit }
+  return { teacherForm, onSubmit }
 }
 
 
