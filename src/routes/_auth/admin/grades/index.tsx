@@ -48,7 +48,7 @@ function RouteComponent() {
                   Browse grades with their classes and subjects.
                 </p>
               </div>
-              <AddGradeDialog schoolId={adminId} />
+              <AddGradeDialog schoolId={adminId} triggerClassName='text-white bg-primary hover:bg-primary/80 dark:bg-primary dark:hover:bg-primary/80 cursor-pointer'/>
             </div>
 
             {/* Content */}

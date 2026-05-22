@@ -3,6 +3,7 @@ import { getRequestHeaders } from "@tanstack/react-start/server"
 import { loginSchema, registerSchema } from "./auth.schema";
 import { authController } from "./auth.controller";
 import { z } from "zod";
+import { auth } from "#/server/utils/auth.server";
 
 
 
@@ -22,9 +23,10 @@ export const registerServerFn = createServerFn({ method: "POST" })
     })
 
 export const logoutServerFn = createServerFn({ method: "POST" })
-    .handler(() => {
+    .handler(async () => {
         const headers = getRequestHeaders();
-        return authController.logout(headers)
+        // return authController.logout(headers)
+        return await auth.api.signOut({ headers })
     })
 
 export const refreshServerFn = createServerFn({ method: "POST" })
