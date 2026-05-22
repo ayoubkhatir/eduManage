@@ -99,7 +99,7 @@ function RouteComponent() {
 
           {/* Stats cards */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
+            <div className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm dark:border-white/6 dark:bg-white/2">
               <div className="flex items-center gap-3">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
                   <span className="material-symbols-outlined">campaign</span>
@@ -114,7 +114,7 @@ function RouteComponent() {
                 </div>
               </div>
             </div>
-            <div className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
+            <div className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm dark:border-white/6 dark:bg-white/2">
               <div className="flex items-center gap-3">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400">
                   <span className="material-symbols-outlined">
@@ -131,7 +131,7 @@ function RouteComponent() {
                 </div>
               </div>
             </div>
-            <div className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
+            <div className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm dark:border-white/6 dark:bg-white/2">
               <div className="flex items-center gap-3">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
                   <span className="material-symbols-outlined">visibility</span>
@@ -149,7 +149,7 @@ function RouteComponent() {
           </div>
 
           {/* Search & filters */}
-          <div className="flex flex-col gap-3 rounded-2xl border border-slate-200/70 bg-white p-3 shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02] sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 rounded-2xl border border-slate-200/70 bg-white p-3 shadow-sm dark:border-white/6 dark:bg-white/2 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex h-10 w-full items-center gap-2 rounded-xl border border-transparent bg-slate-50 px-3 transition-all focus-within:border-primary sm:w-80 dark:bg-slate-800/50">
               <span className="material-symbols-outlined text-slate-400 dark:text-slate-500">
                 search
@@ -174,7 +174,7 @@ function RouteComponent() {
               </select>
               <button
                 type="button"
-                className="cursor-pointer flex h-10 cursor-pointer items-center gap-1 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm font-medium text-slate-600 transition-colors hover:border-primary/30 hover:bg-primary/5 hover:text-primary focus:border-primary dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-primary/40 dark:hover:bg-primary/10 dark:hover:text-primary"
+                className="cursor-pointer flex h-10 items-center gap-1 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm font-medium text-slate-600 transition-colors hover:border-primary/30 hover:bg-primary/5 hover:text-primary focus:border-primary dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-primary/40 dark:hover:bg-primary/10 dark:hover:text-primary"
                 title="Sort by Date"
               >
                 <span className="material-symbols-outlined text-xl">sort</span>
