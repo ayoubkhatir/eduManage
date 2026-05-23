@@ -23,6 +23,7 @@ import { Route as AuthStudentCalendarRouteImport } from './routes/_auth/student/
 import { Route as AuthAdminSettingsRouteImport } from './routes/_auth/admin/settings'
 import { Route as AuthAdminDashboardRouteImport } from './routes/_auth/admin/dashboard'
 import { Route as AuthAdminCreatAnnouncementRouteImport } from './routes/_auth/admin/creatAnnouncement'
+import { Route as AuthAdminCalendarRouteImport } from './routes/_auth/admin/calendar'
 import { Route as AuthAdminAnnouncementsRouteImport } from './routes/_auth/admin/announcements'
 import { Route as AuthPagesTermsRouteImport } from './routes/_auth/Pages/terms'
 import { Route as AuthPagesSecurityRouteImport } from './routes/_auth/Pages/security'
@@ -130,6 +131,11 @@ const AuthAdminCreatAnnouncementRoute =
     path: '/creatAnnouncement',
     getParentRoute: () => AuthAdminRoute,
   } as any)
+const AuthAdminCalendarRoute = AuthAdminCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => AuthAdminRoute,
+} as any)
 const AuthAdminAnnouncementsRoute = AuthAdminAnnouncementsRouteImport.update({
   id: '/announcements',
   path: '/announcements',
@@ -345,6 +351,7 @@ export interface FileRoutesByFullPath {
   '/Pages/security': typeof AuthPagesSecurityRoute
   '/Pages/terms': typeof AuthPagesTermsRoute
   '/admin/announcements': typeof AuthAdminAnnouncementsRouteWithChildren
+  '/admin/calendar': typeof AuthAdminCalendarRoute
   '/admin/creatAnnouncement': typeof AuthAdminCreatAnnouncementRoute
   '/admin/dashboard': typeof AuthAdminDashboardRoute
   '/admin/settings': typeof AuthAdminSettingsRoute
@@ -396,6 +403,7 @@ export interface FileRoutesByTo {
   '/Pages/security': typeof AuthPagesSecurityRoute
   '/Pages/terms': typeof AuthPagesTermsRoute
   '/admin/announcements': typeof AuthAdminAnnouncementsRouteWithChildren
+  '/admin/calendar': typeof AuthAdminCalendarRoute
   '/admin/creatAnnouncement': typeof AuthAdminCreatAnnouncementRoute
   '/admin/dashboard': typeof AuthAdminDashboardRoute
   '/admin/settings': typeof AuthAdminSettingsRoute
@@ -449,6 +457,7 @@ export interface FileRoutesById {
   '/_auth/Pages/security': typeof AuthPagesSecurityRoute
   '/_auth/Pages/terms': typeof AuthPagesTermsRoute
   '/_auth/admin/announcements': typeof AuthAdminAnnouncementsRouteWithChildren
+  '/_auth/admin/calendar': typeof AuthAdminCalendarRoute
   '/_auth/admin/creatAnnouncement': typeof AuthAdminCreatAnnouncementRoute
   '/_auth/admin/dashboard': typeof AuthAdminDashboardRoute
   '/_auth/admin/settings': typeof AuthAdminSettingsRoute
@@ -502,6 +511,7 @@ export interface FileRouteTypes {
     | '/Pages/security'
     | '/Pages/terms'
     | '/admin/announcements'
+    | '/admin/calendar'
     | '/admin/creatAnnouncement'
     | '/admin/dashboard'
     | '/admin/settings'
@@ -553,6 +563,7 @@ export interface FileRouteTypes {
     | '/Pages/security'
     | '/Pages/terms'
     | '/admin/announcements'
+    | '/admin/calendar'
     | '/admin/creatAnnouncement'
     | '/admin/dashboard'
     | '/admin/settings'
@@ -605,6 +616,7 @@ export interface FileRouteTypes {
     | '/_auth/Pages/security'
     | '/_auth/Pages/terms'
     | '/_auth/admin/announcements'
+    | '/_auth/admin/calendar'
     | '/_auth/admin/creatAnnouncement'
     | '/_auth/admin/dashboard'
     | '/_auth/admin/settings'
@@ -739,6 +751,13 @@ declare module '@tanstack/react-router' {
       path: '/creatAnnouncement'
       fullPath: '/admin/creatAnnouncement'
       preLoaderRoute: typeof AuthAdminCreatAnnouncementRouteImport
+      parentRoute: typeof AuthAdminRoute
+    }
+    '/_auth/admin/calendar': {
+      id: '/_auth/admin/calendar'
+      path: '/calendar'
+      fullPath: '/admin/calendar'
+      preLoaderRoute: typeof AuthAdminCalendarRouteImport
       parentRoute: typeof AuthAdminRoute
     }
     '/_auth/admin/announcements': {
@@ -1013,6 +1032,7 @@ const AuthAdminAnnouncementsRouteWithChildren =
 
 interface AuthAdminRouteChildren {
   AuthAdminAnnouncementsRoute: typeof AuthAdminAnnouncementsRouteWithChildren
+  AuthAdminCalendarRoute: typeof AuthAdminCalendarRoute
   AuthAdminCreatAnnouncementRoute: typeof AuthAdminCreatAnnouncementRoute
   AuthAdminDashboardRoute: typeof AuthAdminDashboardRoute
   AuthAdminSettingsRoute: typeof AuthAdminSettingsRoute
@@ -1029,6 +1049,7 @@ interface AuthAdminRouteChildren {
 
 const AuthAdminRouteChildren: AuthAdminRouteChildren = {
   AuthAdminAnnouncementsRoute: AuthAdminAnnouncementsRouteWithChildren,
+  AuthAdminCalendarRoute: AuthAdminCalendarRoute,
   AuthAdminCreatAnnouncementRoute: AuthAdminCreatAnnouncementRoute,
   AuthAdminDashboardRoute: AuthAdminDashboardRoute,
   AuthAdminSettingsRoute: AuthAdminSettingsRoute,

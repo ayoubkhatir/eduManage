@@ -65,25 +65,6 @@ export function AnnouncementForm() {
 
           <div className="flex flex-col gap-2">
             <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              Status
-            </label>
-            <select
-              {...register('status')}
-              className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary"
-            >
-              <option value="DRAFT">Draft</option>
-              <option value="PUBLISHED">Published</option>
-              <option value="ARCHIVED">Archived</option>
-            </select>
-            {errors.status && (
-              <span className="text-xs text-red-500 mt-1">
-                {errors.status.message}
-              </span>
-            )}
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
               Content
             </label>
             <Controller
