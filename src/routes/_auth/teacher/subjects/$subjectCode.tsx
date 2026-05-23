@@ -27,6 +27,7 @@ import { addResourceServerFn } from '#/server/modules/resources/resources.server
 import { toast } from 'sonner'
 import { useState } from 'react'
 import { SimpleDocumentUpload } from '#/components/cloudinary-uploader'
+import { motion } from 'framer-motion'
 import z from 'zod'
 import type { AddResourceSchema } from '#/types/resourcesTypes'
 
@@ -103,7 +104,7 @@ function StudentResourcesContent() {
   }
 
   return (
-    <main className="flex-1 overflow-y-auto bg-background-light p-4 dark:bg-background-dark md:p-8">
+    <motion.main initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex-1 overflow-y-auto bg-background-light p-4 dark:bg-background-dark md:p-8">
       <div className="mb-8 flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <div className="flex items-center justify-between flex-1">
           <div>
@@ -124,7 +125,7 @@ function StudentResourcesContent() {
       </div>
 
       {status === 'pending' ? (
-        <div className="text-sm text-slate-500">Loading resources...</div>
+        <div className="text-sm text-muted-foreground">Loading resources...</div>
       ) : status === 'error' ? (
         <div className="text-sm text-red-500">Failed to load resources.</div>
       ) : (
@@ -150,7 +151,7 @@ function StudentResourcesContent() {
           onFilterChange={setFilters}
         />
       )}
-    </main>
+    </motion.main>
   )
 }
 function useAddResource(
@@ -268,7 +269,7 @@ function AddResourceDialog({
             {/* <input
               type="file"
               placeholder="Algebra Basics.pdf"
-              className="h-11 rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none focus:border-primary dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+              className="h-11 rounded-xl border border-border bg-card px-3 text-sm outline-none focus:border-primary"
             /> */}
             <SimpleDocumentUpload
               label="File"
@@ -286,7 +287,7 @@ function AddResourceDialog({
               type="text"
               placeholder="Algebra Basics.pdf"
               {...form.register('fileName')}
-              className="h-11 rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none focus:border-primary dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+              className="h-11 rounded-xl border border-border bg-card px-3 text-sm outline-none focus:border-primary"
             />
             {form.formState.errors.fileName ? (
               <p className="text-sm text-red-500">
@@ -309,7 +310,7 @@ function AddResourceDialog({
                   },
                 )
               }
-              className="h-11 rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none focus:border-primary dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+              className="h-11 rounded-xl border border-border bg-card px-3 text-sm outline-none focus:border-primary"
             >
               {Object.values(ResourceTypeEnum).map((type) => (
                 <option key={type} value={type}>
@@ -330,7 +331,7 @@ function AddResourceDialog({
               type="text"
               placeholder="2.4 MB"
               {...form.register('size')}
-              className="h-11 rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none focus:border-primary dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+              className="h-11 rounded-xl border border-border bg-card px-3 text-sm outline-none focus:border-primary"
             />
             {form.formState.errors.size ? (
               <p className="text-sm text-red-500">
@@ -345,7 +346,7 @@ function AddResourceDialog({
               type="text"
               placeholder="https://..."
               {...form.register('fileUrl')}
-              className="h-11 rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none focus:border-primary dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+              className="h-11 rounded-xl border border-border bg-card px-3 text-sm outline-none focus:border-primary"
             />
             {form.formState.errors.fileUrl ? (
               <p className="text-sm text-red-500">
@@ -364,7 +365,7 @@ function AddResourceDialog({
                   shouldDirty: true,
                 })
               }
-              className="h-11 rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none focus:border-primary dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+              className="h-11 rounded-xl border border-border bg-card px-3 text-sm outline-none focus:border-primary"
             >
               <option value="class">Class</option>
               <option value="subject">Subject</option>
@@ -391,7 +392,7 @@ function AddResourceDialog({
                   },
                 )
               }
-              className="h-11 rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none focus:border-primary dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+              className="h-11 rounded-xl border border-border bg-card px-3 text-sm outline-none focus:border-primary"
             >
               {Object.values(StatusEnum).map((status) => (
                 <option key={status} value={status}>
@@ -418,7 +419,7 @@ function AddResourceDialog({
                   shouldDirty: true,
                 })
               }
-              className="h-11 rounded-lg border border-slate-300 bg-white px-3 text-sm outline-none focus:border-primary dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+              className="h-11 rounded-xl border border-border bg-card px-3 text-sm outline-none focus:border-primary"
             />
             {form.formState.errors.classId ? (
               <p className="text-sm text-red-500">
@@ -433,7 +434,7 @@ function AddResourceDialog({
               rows={4}
               placeholder="Short note about this resource..."
               {...form.register('description')}
-              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-primary dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+              className="rounded-xl border border-border bg-card px-3 py-2 text-sm outline-none focus:border-primary"
             />
             {form.formState.errors.description ? (
               <p className="text-sm text-red-500">

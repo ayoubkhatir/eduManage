@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import { addEventSchema, getEventsSchema } from '#/schemas/events.schema'
+import { addEventSchema, getEventsSchema, editEventSchema, deleteEventSchema } from '#/schemas/events.schema'
 import { eventsController } from './events.controller'
 import { successResponse, type APIResponse } from '#/server/utils/response.type'
 import { mapDbError } from '#/server/utils/db_error_handling'
@@ -54,5 +54,27 @@ export const addEventServerFn = createServerFn({ method: 'POST' })
                 repeatWeekly: boolean;
                 isClass: boolean;
             }>
+        }
+    })
+
+export const editEventServerFn = createServerFn({ method: 'POST' })
+    .inputValidator(editEventSchema)
+    .handler(async ({ data }) => {
+        try {
+            return (successResponse(await eventsController.updateEvent(data.id, data.data)) as any)
+        } catch (error) {
+            console.log("\x1b[36m[server]\x1b[0m " + error)
+            return mapDbError(error)
+        }
+    })
+
+export const deleteEventServerFn = createServerFn({ method: 'POST' })
+    .inputValidator(deleteEventSchema)
+    .handler(async ({ data }) => {
+        try {
+            return (successResponse(await eventsController.deleteEvent(data)) as any)
+        } catch (error) {
+            console.log("\x1b[36m[server]\x1b[0m " + error)
+            return mapDbError(error)
         }
     })

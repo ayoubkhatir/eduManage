@@ -2,7 +2,6 @@ import {
   HeadContent,
   Scripts,
   createRootRouteWithContext,
-  redirect,
 } from '@tanstack/react-router'
 
 // import appCss from '../styles.css?url'
@@ -18,9 +17,6 @@ import type { ReactNode } from 'react'
 import { queryClient } from '#/lib/query-client'
 import { Toaster } from '#/components/ui/sonner'
 import { ThemeProvider } from '#/features/theme/theme-provider'
-// import AuthProvider from '#/providers/authProvider'
-import { getSession } from '#/lib/auth'
-import type { UserRoleEnum } from '#/server/db/schema'
 
 const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getItem('theme');var mode=(stored==='light'||stored==='dark'||stored==='auto')?stored:'auto';var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=mode==='auto'?(prefersDark?'dark':'light'):mode;var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(resolved);if(mode==='auto'){root.removeAttribute('data-theme')}else{root.setAttribute('data-theme',mode)}root.style.colorScheme=resolved;}catch(e){}})();`
 
@@ -95,21 +91,21 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 //   return parts.length ? `route-${parts.join('-')}` : 'route-home'
 // }
 
+import { AnimatePresence } from 'framer-motion'
+
+
 function Root({ children }: { children: ReactNode }) {
-  // const routeSkeletonName = getRouteSkeletonName(location.pathname)
+  
+
   return (
     <>
-      {/* <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme"> */}
       <QueryClientProvider client={queryClient}>
-        {/* <AuthProvider initialProps={authState}> */}
         <ThemeProvider>
-          {/* <Skeleton name={routeSkeletonName} loading={false}> */}
-          {children}
-          {/* </Skeleton> */}
+          <AnimatePresence mode="wait">
+              {children}
+          </AnimatePresence>
         </ThemeProvider>
-        {/* </AuthProvider> */}
       </QueryClientProvider>
-      {/* </ThemeProvider> */}
     </>
   )
 }

@@ -46,14 +46,9 @@ import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
 import { AddSubjectDialog } from './-add-subject.form'
 import type { StatusEnum } from '#/server/db/schema'
 import { UserAvatar } from '#/components/admin/Table/columnsData'
-import {
-  StudentClassSelector,
-  StudentGradeSelector,
-} from '../../students/-students.selectors'
-import {
-  assignTeacherSchema,
-  type AssignTeacherSchema,
-} from '#/schemas/teachers.schema'
+import { StudentClassSelector, StudentGradeSelector } from '../../students/-students.selectors'
+import { assignTeacherSchema, type AssignTeacherSchema } from '#/schemas/teachers.schema'
+import { motion } from 'framer-motion'
 
 export const Route = createFileRoute(
   '/_auth/admin/teachers/$teacherId/assignements',
@@ -101,7 +96,7 @@ function TeacherAssignmentsPage() {
   if (fetchStatus === 'error' || !teacherData) throw notFound()
   const ref = useRef<HTMLFormElement | null>(null)
   return (
-    <div className="flex h-full w-full">
+    <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex h-full w-full">
       <main className="relative flex min-w-0 flex-1 flex-col overflow-hidden bg-background-light dark:bg-background-dark">
         <div className="flex-1 overflow-x-hidden p-8 pb-32">
           <div className="flex flex-col gap-6 pb-12">
@@ -115,7 +110,7 @@ function TeacherAssignmentsPage() {
               </p>
             </div>
 
-            <div className="overflow-hidden rounded-xl border border-[#f0f2f4] bg-white shadow-sm dark:border-gray-800 dark:bg-surface-dark">
+            <div className="overflow-hidden rounded-xl border border-[#f0f2f4] bg-card shadow-sm dark:border-gray-800 dark:bg-surface-dark">
               <div className="border-b border-[#f0f2f4] p-8 dark:border-gray-800">
                 <h3 className="mb-6 flex items-center gap-2 text-lg font-bold text-[#111318] dark:text-white">
                   <span className="material-symbols-outlined text-primary">
@@ -127,6 +122,23 @@ function TeacherAssignmentsPage() {
                 <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
                   <aside className="order-1 lg:order-2 lg:w-72">
                     <div className="flex flex-col items-center gap-4 rounded-2xl border border-[#f0f2f4] bg-[#f8f9fc] p-6 dark:border-gray-800 dark:bg-[#151a25]">
+                      {/* <div className="flex size-28 items-center justify-center overflow-hidden rounded-full bg-[#eef2f7] dark:bg-gray-800">
+                        {teacherData.image ? (
+                          <AdvancedImage
+                            cldImg={cld
+                              .image(teacherData.image)
+                              .resize(
+                                thumbnail()
+                                  .width(28 * 4)
+                                  .height(28 * 4),
+                              )
+                              .roundCorners(byRadius(999))}
+                            className="size-28 object-cover"
+                          />
+                        ) : (
+                          <UserCircleIcon className="size-28" />
+                        )}
+                      </div> */}
                       <UserAvatar image={teacherData.image} size={28} />
 
                       <p className="text-center text-sm font-medium text-[#111318] dark:text-white">
@@ -188,7 +200,7 @@ function TeacherAssignmentsPage() {
           </div>
         </div>
       </main>
-    </div>
+    </motion.div>
   )
 }
 assignTeacherSchema
@@ -273,7 +285,7 @@ function getTeacherAssignmentColumns(
       accessorKey: 'subjectName',
       header: 'Subject',
       cell: ({ row }) => (
-        <span className="font-medium text-slate-900 dark:text-white">
+        <span className="font-medium text-foreground dark:text-white">
           {row.original.subjectName}
         </span>
       ),
@@ -282,7 +294,7 @@ function getTeacherAssignmentColumns(
       accessorKey: 'gradeName',
       header: 'Grade',
       cell: ({ row }) => (
-        <span className="text-slate-700 dark:text-slate-300">
+        <span className="text-foreground dark:text-slate-300">
           {row.original.gradeName}
         </span>
       ),
@@ -291,7 +303,7 @@ function getTeacherAssignmentColumns(
       accessorKey: 'className',
       header: 'Class',
       cell: ({ row }) => (
-        <span className="text-slate-700 dark:text-slate-300">
+        <span className="text-foreground dark:text-slate-300">
           {row.original.className}
         </span>
       ),
@@ -305,7 +317,7 @@ function getTeacherAssignmentColumns(
             Primary
           </span>
         ) : (
-          <span className="inline-block rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+          <span className="inline-block rounded-full bg-muted px-3 py-1 text-xs font-semibold text-foreground dark:bg-card dark:text-slate-300">
             Regular
           </span>
         ),
@@ -354,9 +366,9 @@ function getTeacherAssignmentColumns(
 
               <DropdownMenuContent
                 align="end"
-                className="min-w-44 bg-white dark:bg-slate-800"
+                className="min-w-44 bg-card dark:bg-card"
               >
-                <DropdownMenuLabel className="text-black dark:text-white">
+                <DropdownMenuLabel className="text-foreground dark:text-white">
                   Actions
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-black" />
@@ -374,7 +386,7 @@ function getTeacherAssignmentColumns(
                           <Trash2Icon className="h-6 w-6" />
                         </AlertDialogMedia>
                         <AlertDialogTitle>Delete Assignement?</AlertDialogTitle>
-                        <AlertDialogDescription className="text-slate-700 dark:text-slate-300">
+                        <AlertDialogDescription className="text-foreground dark:text-slate-300">
                           This will permanently delete this assignement record.
                           This action cannot be undone.
                         </AlertDialogDescription>
@@ -484,7 +496,7 @@ function IsPrimaryTeacherCheckboxInput() {
         Assignment Type
       </label>
 
-      <div className="flex h-11 items-center rounded-lg bg-[#f0f2f4] px-4 dark:bg-gray-800">
+      <div className="flex h-11 items-center rounded-xl bg-[#f0f2f4] px-4 dark:bg-gray-800">
         <label className="flex cursor-pointer items-center gap-3">
           <input
             type="checkbox"

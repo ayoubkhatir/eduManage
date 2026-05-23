@@ -291,10 +291,17 @@ function CTA() {
   )
 }
 
+import { motion } from 'framer-motion'
+
 function RouteComponent() {
   return (
     <Skeleton name="about" loading={false}>
-      <div className="min-h-screen bg-white text-slate-900 antialiased dark:bg-background-dark dark:text-slate-100">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
+        className="min-h-screen bg-background text-foreground antialiased"
+      >
         <Navbar />
         <main>
           <Hero />
@@ -305,7 +312,7 @@ function RouteComponent() {
           <CTA />
         </main>
         <Footer />
-      </div>
+      </motion.div>
     </Skeleton>
   )
 }

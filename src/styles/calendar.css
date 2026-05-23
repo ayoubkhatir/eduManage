@@ -171,9 +171,30 @@
   pointer-events: auto;
 }
 
-/* ── Centered "+" hover hint on the full day card (OWNER CALENDAR ONLY) ── */
-.admin-calendar-view .rbc-day-bg::after {
+
+.admin-calendar-view .admin .rbc-day-bg::after {
   content: '+';
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 22px;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.15s,
+    transform 0.15s;
+  transform: scale(0.7);
+}
+.admin-calendar-view .other .rbc-day-bg::after {
+  content: '';
   position: absolute;
   bottom: 8px;
   right: 8px;
@@ -198,6 +219,7 @@
   opacity: 0.9;
   transform: scale(1);
 }
+
 
 /* ── date-cell cursor ── */
 .admin-big-calendar .rbc-date-cell {
@@ -507,3 +529,6 @@
   background: #4d88f0;
   color: #fff;
 }
+
+
+/* * Teacher and student calendar view */

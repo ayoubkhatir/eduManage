@@ -14,6 +14,7 @@ type EventDetailDialogProps = {
   onOpenChange: (open: boolean) => void
   onEdit: () => void
   onDelete: (id: string | undefined) => void
+  readOnly?: boolean
 }
 
 function EventDetailDialogComponent({
@@ -22,6 +23,7 @@ function EventDetailDialogComponent({
   onOpenChange,
   onEdit,
   onDelete,
+  readOnly = false,
 }: EventDetailDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -91,22 +93,24 @@ function EventDetailDialogComponent({
               )}
             </div>
 
-            <div className="flex gap-2 mt-4">
-              <button
-                type="button"
-                className="cursor-pointer flex-1 py-2 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary/90 active:scale-95 transition-all cursor-pointer"
-                onClick={onEdit}
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                className="cursor-pointer px-4 py-2 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm font-bold hover:bg-red-100 dark:hover:bg-red-900/40 transition-all cursor-pointer"
-                onClick={() => onDelete(event.id)}
-              >
-                {event.repeatWeekly ? 'Delete all' : 'Delete'}
-              </button>
-            </div>
+            {!readOnly && (
+              <div className="flex gap-2 mt-4">
+                <button
+                  type="button"
+                  className="flex-1 py-2 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary/90 active:scale-95 transition-all cursor-pointer"
+                  onClick={onEdit}
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  className="px-4 py-2 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm font-bold hover:bg-red-100 dark:hover:bg-red-900/40 transition-all cursor-pointer"
+                  onClick={() => onDelete(event.id)}
+                >
+                  {event.repeatWeekly ? 'Delete all' : 'Delete'}
+                </button>
+              </div>
+            )}
           </>
         )}
       </DialogContent>

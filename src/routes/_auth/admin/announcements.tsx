@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 import type { AnnouncementCardType } from '@/components/admin/announcementCard'
 import AnnouncementCard from '@/components/admin/announcementCard'
+import { motion } from 'framer-motion'
 
 export const Route = createFileRoute('/_auth/admin/announcements')({
   component: RouteComponent,
@@ -85,36 +86,36 @@ function RouteComponent() {
 
   return (
     <Skeleton name="admin-announcements-page" loading={false}>
-      <div className="flex-1 overflow-y-auto p-6 pt-2">
+      <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex-1 overflow-y-auto p-6 pt-2">
         <div className="mx-auto flex max-w-7xl flex-col gap-6">
           {/* Page heading */}
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
               Announcements
             </h1>
-            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            <p className="mt-1 text-sm text-muted-foreground">
               Manage and broadcast school-wide updates.
             </p>
           </div>
 
           {/* Stats cards */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm dark:border-white/6 dark:bg-white/2">
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
               <div className="flex items-center gap-3">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
                   <span className="material-symbols-outlined">campaign</span>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                    Published
-                  </p>
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white">
-                    5
-                  </p>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Published
+                    </p>
+                    <p className="text-2xl font-bold text-foreground">
+                      5
+                    </p>
                 </div>
               </div>
             </div>
-            <div className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm dark:border-white/6 dark:bg-white/2">
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
               <div className="flex items-center gap-3">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400">
                   <span className="material-symbols-outlined">
@@ -122,25 +123,25 @@ function RouteComponent() {
                   </span>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                  <p className="text-sm font-medium text-muted-foreground">
                     Drafts
                   </p>
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white">
+                  <p className="text-2xl font-bold text-foreground">
                     2
                   </p>
                 </div>
               </div>
             </div>
-            <div className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm dark:border-white/6 dark:bg-white/2">
+            <div className="rounded-2xl border border-border bg-card p-5 shadow-sm">
               <div className="flex items-center gap-3">
                 <div className="flex size-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400">
                   <span className="material-symbols-outlined">visibility</span>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                  <p className="text-sm font-medium text-muted-foreground">
                     Total Views
                   </p>
-                  <p className="text-2xl font-bold text-slate-900 dark:text-white">
+                  <p className="text-2xl font-bold text-foreground">
                     1.2k
                   </p>
                 </div>
@@ -149,32 +150,32 @@ function RouteComponent() {
           </div>
 
           {/* Search & filters */}
-          <div className="flex flex-col gap-3 rounded-2xl border border-slate-200/70 bg-white p-3 shadow-sm dark:border-white/6 dark:bg-white/2 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex h-10 w-full items-center gap-2 rounded-xl border border-transparent bg-slate-50 px-3 transition-all focus-within:border-primary sm:w-80 dark:bg-slate-800/50">
-              <span className="material-symbols-outlined text-slate-400 dark:text-slate-500">
+          <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-3 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex h-10 w-full items-center gap-2 rounded-xl border border-transparent bg-muted px-3 transition-all focus-within:border-primary sm:w-80">
+              <span className="material-symbols-outlined text-muted-foreground">
                 search
               </span>
               <input
-                className="w-full border-none bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400 dark:text-white dark:placeholder:text-slate-500"
+                className="w-full border-none bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
                 placeholder="Search by title or content..."
               />
             </div>
 
             <div className="flex gap-2 overflow-x-auto">
-              <select className="h-10 cursor-pointer rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-600 outline-none transition-colors hover:border-primary/30 hover:bg-primary/5 focus:border-primary dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-primary/40 dark:hover:bg-primary/10">
+              <select className="h-10 cursor-pointer rounded-xl border border-border bg-muted px-4 text-sm font-medium text-muted-foreground outline-none transition-colors hover:border-primary/30 hover:bg-primary/5 focus:border-primary">
                 <option>All Status</option>
                 <option>Published</option>
                 <option>Draft</option>
                 <option>Archived</option>
               </select>
-              <select className="h-10 cursor-pointer rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-600 outline-none transition-colors hover:border-primary/30 hover:bg-primary/5 focus:border-primary dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-primary/40 dark:hover:bg-primary/10">
+              <select className="h-10 cursor-pointer rounded-xl border border-border bg-muted px-4 text-sm font-medium text-muted-foreground outline-none transition-colors hover:border-primary/30 hover:bg-primary/5 focus:border-primary">
                 <option>All School</option>
                 <option>Teachers Only</option>
                 <option>Students &amp; Parents</option>
               </select>
               <button
                 type="button"
-                className="cursor-pointer flex h-10 items-center gap-1 rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm font-medium text-slate-600 transition-colors hover:border-primary/30 hover:bg-primary/5 hover:text-primary focus:border-primary dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-primary/40 dark:hover:bg-primary/10 dark:hover:text-primary"
+                className="cursor-pointer flex h-10 items-center gap-1 rounded-xl border border-border bg-muted px-3 text-sm font-medium text-muted-foreground transition-colors hover:border-primary/30 hover:bg-primary/5 hover:text-primary focus:border-primary"
                 title="Sort by Date"
               >
                 <span className="material-symbols-outlined text-xl">sort</span>
@@ -184,7 +185,7 @@ function RouteComponent() {
 
           {/* Announcement list */}
           <div className="flex flex-col gap-4">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+            <h3 className="text-lg font-bold text-foreground">
               Recent Updates
             </h3>
 
@@ -196,7 +197,7 @@ function RouteComponent() {
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
     </Skeleton>
   )
 }

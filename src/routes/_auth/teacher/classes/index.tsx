@@ -90,10 +90,10 @@
 //       <div className="px-6 py-4">
 //         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
 //           <div className="flex flex-col gap-1">
-//             <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+//             <h1 className="text-3xl font-bold tracking-tight text-foreground dark:text-white">
 //               Resource Management Dashboard
 //             </h1>
-//             <p className="text-slate-500 dark:text-slate-400 max-w-2xl">
+//             <p className="text-muted-foreground max-w-2xl">
 //               Upload new content, manage collections, and track shared
 //               resources.
 //             </p>
@@ -104,10 +104,10 @@
 //         <div className="px-6 mb-8">
 //           <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 //             <div>
-//               <h4 className="font-semibold text-slate-900 dark:text-white">
+//               <h4 className="font-semibold text-foreground dark:text-white">
 //                 {isFoldersError ? "Couldn't load folders" : 'No folders found'}
 //               </h4>
-//               <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+//               <p className="text-sm text-muted-foreground mt-1">
 //                 {isFoldersError
 //                   ? "We couldn't get folder data. Please try again or refresh the page."
 //                   : 'You need at least one folder to upload a resource. Please refresh and try again.'}
@@ -142,7 +142,7 @@
 //       )}
 
 //       <div className="px-6 mb-8">
-//         <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-4 flex items-center justify-between">
+//         <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-4 flex items-center justify-between">
 //           <span>Collections</span>
 //           <Link
 //             to={'/teacher/classes/allCollections'}
@@ -154,10 +154,10 @@
 //         {isFoldersError ? (
 //           <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 //             <div>
-//               <h4 className="font-semibold text-slate-900 dark:text-white">
+//               <h4 className="font-semibold text-foreground dark:text-white">
 //                 Couldn&apos;t load folders
 //               </h4>
-//               <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+//               <p className="text-sm text-muted-foreground mt-1">
 //                 We couldn&apos;t get folder data. Please try again or refresh
 //                 the page.
 //               </p>
@@ -181,10 +181,10 @@
 //         ) : !isFoldersLoading && !hasFolders ? (
 //           <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 //             <div>
-//               <h4 className="font-semibold text-slate-900 dark:text-white">
+//               <h4 className="font-semibold text-foreground dark:text-white">
 //                 No folders found
 //               </h4>
-//               <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+//               <p className="text-sm text-muted-foreground mt-1">
 //                 Folder data is empty. Please refresh and try again.
 //               </p>
 //             </div>
@@ -223,10 +223,10 @@
 //                           folder
 //                         </span>
 //                       </div>
-//                       <h4 className="font-semibold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+//                       <h4 className="font-semibold text-foreground dark:text-white group-hover:text-primary transition-colors">
 //                         {folder.name}
 //                       </h4>
-//                       <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+//                       <p className="text-xs text-muted-foreground mt-1">
 //                         {folder.filesCount} files • {folder.sizeMB}MB
 //                       </p>
 //                     </div>
@@ -242,7 +242,7 @@
 //         )}
 //       </div>
 //       <div className="sticky top-0 z-10 bg-background-light dark:bg-background-dark/95 backdrop-blur px-6 py-2 pb-6">
-//         <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-4 flex items-center justify-between">
+//         <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-4 flex items-center justify-between">
 //           <span>All Resources</span>
 //         </h3>
 //       </div>
@@ -279,6 +279,7 @@ import { zodValidator } from '@tanstack/zod-adapter'
 import type { TeacherClassItem } from '#/types/teacherTypes'
 import { getTeacherClassesDashboardServerFn } from '#/server/modules/teachers/teachers.server-functions'
 import { getTeacherClassesSchema, type GetTeacherClassesSchema } from '#/schemas/teachers.schema'
+import { motion } from 'framer-motion'
 
 /**
  * Route: /teacher/classes
@@ -436,14 +437,14 @@ function TeacherClassesContent() {
   }, [classes])
 
   return (
-    <main className="flex-1 flex flex-col min-w-0">
+    <motion.main initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex-1 flex flex-col min-w-0">
       <div className="px-6 py-4 pt-2">
         <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground dark:text-white sm:text-3xl">
               My Classes
             </h1>
-            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 max-w-2xl">
+            <p className="mt-1 text-sm text-muted-foreground max-w-2xl">
               View all classes assigned to you, grouped by grade and subject,
               with student counts and quick access to details.
             </p>
@@ -453,13 +454,13 @@ function TeacherClassesContent() {
             <button
               onClick={() => refetch()}
               disabled={isFetching}
-              className="cursor-pointer rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:border-slate-300 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="cursor-pointer rounded-xl border border-border px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:border-border dark:border-border dark:text-slate-300 dark:hover:bg-accent disabled:opacity-60 disabled:cursor-not-allowed"
             >
               Refresh
             </button>
             <button
               onClick={refreshPage}
-              className="cursor-pointer rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-slate-800 active:scale-[0.98] dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+              className="cursor-pointer rounded-xl bg-primary px-4 py-2 text-sm font-medium text-white transition-all hover:bg-primary/90 active:scale-[0.98] dark:bg-white dark:text-slate-900 dark:hover:bg-accent"
             >
               Revalidate
             </button>
@@ -493,14 +494,14 @@ function TeacherClassesContent() {
       </div>
 
       <div className="px-6 mb-6">
-        <div className="rounded-2xl border border-slate-200/70 bg-white p-4 shadow-sm dark:border-white/6 dark:bg-white/2">
+        <div className="rounded-2xl border border-border/70 bg-card p-4 shadow-sm dark:border-white/6 dark:bg-white/2">
           <div className="flex flex-col lg:flex-row gap-3 lg:items-center lg:justify-between">
             <div className="flex flex-col sm:flex-row gap-3 w-full lg:max-w-3xl">
               <input
                 value={filters.search}
                 onChange={(e) => setFilters({ search: e.target.value })}
                 placeholder="Search by grade, class, or subject..."
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-primary focus:bg-white dark:border-slate-700 dark:bg-slate-800/50 dark:placeholder:text-slate-500 dark:focus:border-primary dark:focus:bg-slate-800"
+                className="w-full rounded-xl border border-border bg-muted px-3 py-2.5 text-sm outline-none transition-all placeholder:text-muted-foreground focus:border-primary focus:bg-card dark:border-border dark:bg-card/50 dark:placeholder:text-muted-foreground dark:focus:border-primary dark:focus:bg-card"
               />
 
               <select
@@ -510,7 +511,7 @@ function TeacherClassesContent() {
                     status: e.target.value as GetTeacherClassesSchema['status'],
                   })
                 }
-                className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm outline-none transition-all focus:border-primary dark:border-slate-700 dark:bg-slate-800/50 dark:focus:border-primary"
+                className="rounded-xl border border-border bg-muted px-3 py-2.5 text-sm outline-none transition-all focus:border-primary dark:border-border dark:bg-card/50 dark:focus:border-primary"
               >
                 <option value="all">All statuses</option>
                 <option value="Active">Active</option>
@@ -522,7 +523,7 @@ function TeacherClassesContent() {
               <select
                 value={filters.size}
                 onChange={(e) => setFilters({ size: Number(e.target.value) })}
-                className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm outline-none transition-all focus:border-primary dark:border-slate-700 dark:bg-slate-800/50 dark:focus:border-primary"
+                className="rounded-xl border border-border bg-muted px-3 py-2.5 text-sm outline-none transition-all focus:border-primary dark:border-border dark:bg-card/50 dark:focus:border-primary"
               >
                 <option value={8}>8 / page</option>
                 <option value={12}>12 / page</option>
@@ -530,7 +531,7 @@ function TeacherClassesContent() {
               </select>
             </div>
 
-            <div className="text-sm text-slate-400 dark:text-slate-500">
+            <div className="text-sm text-muted-foreground">
               {rowCount} assignment{rowCount === 1 ? '' : 's'}
             </div>
           </div>
@@ -539,12 +540,12 @@ function TeacherClassesContent() {
 
       {isError ? (
         <div className="px-6 mb-8">
-          <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="rounded-xl border border-border dark:border-border bg-card dark:bg-card p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h4 className="font-semibold text-slate-900 dark:text-white">
+              <h4 className="font-semibold text-foreground dark:text-white">
                 Couldn&apos;t load classes
               </h4>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 We couldn&apos;t fetch your assigned classes. Try again or
                 revalidate the route.
               </p>
@@ -554,7 +555,7 @@ function TeacherClassesContent() {
               <button
                 onClick={() => refetch()}
                 disabled={isFetching}
-                className="cursor-pointer rounded-lg border border-slate-300 dark:border-slate-600 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-60"
+                className="cursor-pointer rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground dark:text-slate-200 hover:bg-accent dark:hover:bg-accent disabled:opacity-60"
               >
                 Try again
               </button>
@@ -572,14 +573,14 @@ function TeacherClassesContent() {
           <div className="px-6 mb-8">
             <Skeleton name="teacher-classes-grid" loading={isLoading && !data}>
               {classes.length === 0 ? (
-                <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-8 text-center">
-                  <span className="material-symbols-outlined text-4xl text-slate-400 mb-2">
+                <div className="rounded-xl border border-border dark:border-border bg-card dark:bg-card p-8 text-center">
+                  <span className="material-symbols-outlined text-4xl text-muted-foreground mb-2">
                     school
                   </span>
-                  <h4 className="font-semibold text-slate-900 dark:text-white">
+                  <h4 className="font-semibold text-foreground dark:text-white">
                     No assigned classes found
                   </h4>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                  <p className="text-sm text-muted-foreground mt-1">
                     No class assignments match your current filters.
                   </p>
                 </div>
@@ -588,10 +589,10 @@ function TeacherClassesContent() {
                   {Object.entries(groupedByGrade).map(([gradeName, items]) => (
                     <section key={gradeName}>
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                        <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
                           {gradeName}
                         </h3>
-                        <span className="text-xs text-slate-500 dark:text-slate-400">
+                        <span className="text-xs text-muted-foreground">
                           {items.length} assignment
                           {items.length === 1 ? '' : 's'}
                         </span>
@@ -610,36 +611,36 @@ function TeacherClassesContent() {
           </div>
 
           <div className="px-6 pb-12 mb-4">
-            <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden">
-              <div className="px-4 py-4 border-b border-slate-200 dark:border-slate-700">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+            <div className="rounded-xl border border-border dark:border-border bg-card dark:bg-card overflow-hidden">
+              <div className="px-4 py-4 border-b border-border dark:border-border">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
                   Class Assignments Table
                 </h3>
               </div>
 
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-slate-50 dark:bg-slate-900/40">
+                  <thead className="bg-muted dark:bg-card/40">
                     <tr className="text-left">
-                      <th className="px-4 py-3 font-semibold text-slate-600 dark:text-slate-300">
+                      <th className="px-4 py-3 font-semibold text-muted-foreground">
                         Grade
                       </th>
-                      <th className="px-4 py-3 font-semibold text-slate-600 dark:text-slate-300">
+                      <th className="px-4 py-3 font-semibold text-muted-foreground">
                         Class
                       </th>
-                      <th className="px-4 py-3 font-semibold text-slate-600 dark:text-slate-300">
+                      <th className="px-4 py-3 font-semibold text-muted-foreground">
                         Subject
                       </th>
-                      <th className="px-4 py-3 font-semibold text-slate-600 dark:text-slate-300">
+                      <th className="px-4 py-3 font-semibold text-muted-foreground">
                         Students
                       </th>
-                      <th className="px-4 py-3 font-semibold text-slate-600 dark:text-slate-300">
+                      <th className="px-4 py-3 font-semibold text-muted-foreground">
                         Role
                       </th>
-                      <th className="px-4 py-3 font-semibold text-slate-600 dark:text-slate-300">
+                      <th className="px-4 py-3 font-semibold text-muted-foreground">
                         Status
                       </th>
-                      <th className="px-4 py-3 font-semibold text-slate-600 dark:text-slate-300 text-right">
+                      <th className="px-4 py-3 font-semibold text-muted-foreground text-right">
                         Actions
                       </th>
                     </tr>
@@ -649,7 +650,7 @@ function TeacherClassesContent() {
                     {classes.map((item) => (
                       <tr
                         key={item.assignmentId}
-                        className="border-t border-slate-200 dark:border-slate-700"
+                        className="border-t border-border"
                       >
                         <td className="px-4 py-3">{item.gradeName}</td>
                         <td className="px-4 py-3">{item.className}</td>
@@ -677,7 +678,7 @@ function TeacherClassesContent() {
                       <tr>
                         <td
                           colSpan={7}
-                          className="px-4 py-10 text-center text-slate-500 dark:text-slate-400"
+                          className="px-4 py-10 text-center text-muted-foreground"
                         >
                           No class assignments to display.
                         </td>
@@ -687,8 +688,8 @@ function TeacherClassesContent() {
                 </table>
               </div>
 
-              <div className="flex items-center justify-between px-4 py-4 border-t border-slate-200 dark:border-slate-700">
-                <div className="text-sm text-slate-500 dark:text-slate-400">
+              <div className="flex items-center justify-between px-4 py-4 border-t border-border">
+                <div className="text-sm text-muted-foreground">
                   Page {filters.page} of {totalPages}
                 </div>
 
@@ -698,7 +699,7 @@ function TeacherClassesContent() {
                     onClick={() =>
                       setFilters({ page: (filters.page || 1) - 1 })
                     }
-                    className="cursor-pointer rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="cursor-pointer rounded-lg border border-border px-3 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Previous
                   </button>
@@ -707,7 +708,7 @@ function TeacherClassesContent() {
                     onClick={() =>
                       setFilters({ page: (filters.page || 1) + 1 })
                     }
-                    className="cursor-pointer rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="cursor-pointer rounded-lg border border-border px-3 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Next
                   </button>
@@ -717,7 +718,7 @@ function TeacherClassesContent() {
           </div>
         </>
       )}
-    </main>
+    </motion.main>
   )
 }
 
@@ -731,11 +732,11 @@ function SummaryCard({
   icon: string
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm dark:border-white/6 dark:bg-white/2">
+    <div className="rounded-2xl border border-border/70 bg-card p-5 shadow-sm dark:border-white/6 dark:bg-white/2">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm text-slate-500 dark:text-slate-400">{title}</p>
-          <h3 className="mt-1 text-2xl font-bold text-slate-900 dark:text-white">
+          <p className="text-sm text-muted-foreground">{title}</p>
+          <h3 className="mt-1 text-2xl font-bold text-foreground dark:text-white">
             {value}
           </h3>
         </div>
@@ -749,16 +750,16 @@ function SummaryCard({
 
 function ClassCard({ item }: { item: TeacherClassItem }) {
   return (
-    <div className="group rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md dark:border-white/6 dark:bg-white/2 dark:hover:border-primary/40">
+    <div className="group rounded-2xl border border-border/70 bg-card p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md dark:border-white/6 dark:bg-white/2 dark:hover:border-primary/40">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             {item.gradeName}
           </p>
-          <h4 className="mt-1 text-lg font-semibold text-slate-900 dark:text-white">
+          <h4 className="mt-1 text-lg font-semibold text-foreground dark:text-white">
             Class {item.className}
           </h4>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          <p className="mt-1 text-sm text-muted-foreground">
             {item.subjectName}
           </p>
         </div>
@@ -786,7 +787,7 @@ function ClassCard({ item }: { item: TeacherClassItem }) {
         <Link
           to="/teacher/attendance/$classId"
           params={{ classId: item.classId }}
-          className="text-sm text-slate-500 transition-colors hover:text-primary dark:text-slate-400"
+          className="text-sm text-muted-foreground transition-colors hover:text-primary"
         >
           Attendance
         </Link>
@@ -797,11 +798,11 @@ function ClassCard({ item }: { item: TeacherClassItem }) {
 
 function InfoPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl bg-slate-50 px-3 py-2.5 dark:bg-slate-800/50">
-      <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+    <div className="rounded-xl bg-muted px-3 py-2.5 dark:bg-card/50">
+      <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
         {label}
       </p>
-      <p className="mt-0.5 font-medium text-slate-900 dark:text-white">
+      <p className="mt-0.5 font-medium text-foreground dark:text-white">
         {value}
       </p>
     </div>
