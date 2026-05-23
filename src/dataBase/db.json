@@ -270,9 +270,7 @@
     {
       "id": "TCH-2024-002",
       "name": "Michael Brown",
-      "subjects": [
-        "Chemistry"
-      ],
+      "subjects": ["Chemistry"],
       "gender": "male",
       "departement": "science",
       "email": "michael.brown@example.com",
@@ -286,9 +284,7 @@
     {
       "id": "TCH-2024-003",
       "name": "Emily Davis",
-      "subjects": [
-        "English"
-      ],
+      "subjects": ["English"],
       "gender": "female",
       "departement": "literature",
       "email": "emily.davis@example.com",
@@ -302,9 +298,7 @@
     {
       "id": "TCH-2024-004",
       "name": "David Wilson",
-      "subjects": [
-        "History"
-      ],
+      "subjects": ["History"],
       "gender": "male",
       "departement": "history",
       "email": "david.wilson@example.com",
@@ -318,9 +312,7 @@
     {
       "id": "TCH-2024-005",
       "name": "Olivia Martinez",
-      "subjects": [
-        "Biology"
-      ],
+      "subjects": ["Biology"],
       "gender": "female",
       "departement": "science",
       "email": "olivia.martinez@example.com",
@@ -334,9 +326,7 @@
     {
       "id": "TCH-2024-006",
       "name": "James Anderson",
-      "subjects": [
-        "Geography"
-      ],
+      "subjects": ["Geography"],
       "gender": "male",
       "departement": "geography",
       "email": "james.anderson@example.com",
@@ -350,9 +340,7 @@
     {
       "id": "TCH-2024-007",
       "name": "Sophia Thomas",
-      "subjects": [
-        "Computer Science"
-      ],
+      "subjects": ["Computer Science"],
       "gender": "female",
       "departement": "computer science",
       "email": "sophia.thomas@example.com",
@@ -366,9 +354,7 @@
     {
       "id": "TCH-2024-008",
       "name": "William Jackson",
-      "subjects": [
-        "Physical Education"
-      ],
+      "subjects": ["Physical Education"],
       "gender": "male",
       "departement": "sports",
       "email": "william.jackson@example.com",
@@ -382,9 +368,7 @@
     {
       "id": "TCH-2024-009",
       "name": "Ava White",
-      "subjects": [
-        "Art"
-      ],
+      "subjects": ["Art"],
       "gender": "female",
       "departement": "arts",
       "email": "ava.white@example.com",
@@ -398,10 +382,7 @@
     {
       "id": "TCH-2024-010",
       "name": "Ayoub",
-      "subjects": [
-        "math",
-        "science"
-      ],
+      "subjects": ["math", "science"],
       "gender": "male",
       "departement": "math",
       "email": "ayoubhello1234@email.com",
@@ -415,10 +396,7 @@
     {
       "id": "TCH-2024-011",
       "name": "Khatir Ayoub",
-      "subjects": [
-        "math",
-        "science"
-      ],
+      "subjects": ["math", "science"],
       "gender": "male",
       "departement": "math",
       "email": "hellothere@email.com",
@@ -432,10 +410,7 @@
     {
       "id": "TCH-2024-012",
       "name": "Ayoub",
-      "subjects": [
-        "math",
-        "science"
-      ],
+      "subjects": ["math", "science"],
       "gender": "male",
       "departement": "math",
       "email": "hellothere@email.com",
@@ -449,9 +424,7 @@
     {
       "id": "TCH-2024-013",
       "name": "Daniel Clark",
-      "subjects": [
-        "Physics"
-      ],
+      "subjects": ["Physics"],
       "gender": "male",
       "departement": "science",
       "email": "daniel.clark@example.com",
@@ -465,9 +438,7 @@
     {
       "id": "TCH-2024-014",
       "name": "Isabella Moore",
-      "subjects": [
-        "Philosophy"
-      ],
+      "subjects": ["Philosophy"],
       "gender": "female",
       "departement": "literature",
       "email": "isabella.moore@example.com",
@@ -486,10 +457,7 @@
       "number": "+213555002",
       "password": "Teacher@2026",
       "address": "hai saada",
-      "subjects": [
-        "math",
-        "science"
-      ],
+      "subjects": ["math", "science"],
       "departement": "literature",
       "dateOfBirth": "2026-03-03",
       "joiningDate": "2026-03-03",
@@ -503,10 +471,7 @@
       "number": "+213555002",
       "password": "Teacher@2026",
       "address": "hai saada",
-      "subjects": [
-        "math",
-        "science"
-      ],
+      "subjects": ["math", "science"],
       "departement": "literature",
       "dateOfBirth": "2026-03-03",
       "joiningDate": "2026-03-03",
@@ -585,10 +550,7 @@
       "title": "School Closure Due to Heavy Snow",
       "content": "Due to severe weather conditions, the campus will be closed tomorrow, Jan 15th.",
       "subject": "Administrative Office",
-      "sendTo": [
-        "Teachers",
-        "Students"
-      ],
+      "sendTo": ["Teachers", "Students"],
       "time": "10 mins ago",
       "read": true
     },
@@ -598,9 +560,7 @@
       "title": "Mid-Term Exam Schedule",
       "content": "The draft schedule for mid-terms is now available for review by department heads.",
       "subject": "Exams Department",
-      "sendTo": [
-        "Teachers"
-      ],
+      "sendTo": ["Teachers"],
       "time": "1 hour ago",
       "read": true
     },
@@ -610,9 +570,7 @@
       "title": "Annual Sports Day Registration",
       "content": "Students must register for events by Friday. Please distribute forms.",
       "subject": "Student Affairs",
-      "sendTo": [
-        "Students"
-      ],
+      "sendTo": ["Students"],
       "time": "4d ago",
       "read": true
     },
@@ -622,10 +580,7 @@
       "title": "Internet Service Interruption",
       "content": "Campus internet will be unavailable from 2 PM to 4 PM for maintenance.",
       "subject": "IT Department",
-      "sendTo": [
-        "Teachers",
-        "Students"
-      ],
+      "sendTo": ["Teachers", "Students"],
       "time": "1d ago",
       "read": true
     },
@@ -635,9 +590,7 @@
       "title": "Gradebook Submission Reminder",
       "content": "Please submit all pending gradebook updates before Friday noon.",
       "subject": "Academic Affairs",
-      "sendTo": [
-        "Teachers"
-      ],
+      "sendTo": ["Teachers"],
       "time": "2d ago",
       "read": true
     }
@@ -995,6 +948,67 @@
       "sizeMB": 8,
       "createdAt": "2023-10-05T12:00:00Z",
       "updatedAt": "2023-10-20T12:00:00Z"
+    }
+  ],
+  "announcements": [
+    {
+      "id": "1",
+      "audience": "All School",
+      "authorName": "You",
+      "title": "End of Term Exams Schedule",
+      "content": "The final exam schedule for the Fall 2023 term has been released. Please review the dates carefully. All grades must be submitted by Dec 20th. Make sure to communicate this to your students early.",
+      "publishedAt": "Oct 24, 2023"
+    },
+    {
+      "id": "2",
+      "audience": "Teachers",
+      "authorName": "Mr. Smith",
+      "title": "Staff Meeting Reminder - November",
+      "content": "Just a reminder that our monthly staff meeting will be held next Tuesday in the main hall. Agenda includes curriculum updates and holiday planning.",
+      "publishedAt": "Nov 1, 2023"
+    },
+    {
+      "id": "3",
+      "audience": "Students",
+      "authorName": "Administration",
+      "title": "Science Fair Registration Open",
+      "content": "Students can now register for the annual Science Fair. Forms are available at the front desk or can be downloaded from the student portal.",
+      "publishedAt": "Oct 20, 2023"
+    },
+    {
+      "id": "4",
+      "audience": "All School",
+      "authorName": "Admin Team",
+      "title": "Holiday Closure Notice",
+      "content": "The school will be closed on Sept 25th for a public holiday. Classes will resume as normal on Sept 26th.",
+      "publishedAt": "Sept 15, 2023"
+    },
+    {
+      "id": "5",
+      "title": "GGGG",
+      "content": "<p>FFFFFFFFFFFFFFF</p>",
+      "audience": "Teachers",
+      "status": "DRAFT",
+      "authorName": "Administration",
+      "publishedAt": "11/04/2026"
+    },
+    {
+      "id": "6",
+      "title": "asdfgh",
+      "content": "<p>asdfghjk</p>",
+      "audience": "All School",
+      "status": "DRAFT",
+      "authorName": "Administration",
+      "publishedAt": "13/04/2026"
+    },
+    {
+      "id": "7",
+      "title": "sdfgh",
+      "content": "<p>asdfghjsdfghjk</p>",
+      "audience": "Students",
+      "status": "DRAFT",
+      "authorName": "Administration",
+      "publishedAt": "20/04/2026"
     }
   ]
 }
