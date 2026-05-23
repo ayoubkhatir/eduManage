@@ -1,11 +1,11 @@
 import { db } from "#/server/db/db";
-import { account, classesTable, StatusEnum, studentsTable,  UserRoleEnum, users } from "#/server/db/schema";
+import { account, classesTable, StatusEnum, studentsTable, UserRoleEnum, users } from "#/server/db/schema";
 import { and, count, eq, gte, lt } from "drizzle-orm";
 import generateId from "../../utils/id_generator";
 import { generateTemporaryPassword } from "../../utils/temp_password_generator";
 import { handlePassword } from "#/server/utils/handle-password";
 import { studentsRepository, type IStudentsRepository } from "#/server/db/repo/students.repository";
-import { StudentUserDto,type AddStudentType, type EditStudentType, type StudentSearchType, type StudentUser } from "#/types/studentTypes";
+import { StudentUserDto, type AddStudentType, type EditStudentType, type StudentSearchType, type StudentUser } from "#/types/studentTypes";
 
 
 class StudentsController {
@@ -82,7 +82,7 @@ class StudentsController {
                 }
             })
             if (!student) throw new Error("Student Not Created")
-                const studentUser : StudentUser = StudentUserDto(student, student.user, student.class, student.class.grade);
+            const studentUser: StudentUser = StudentUserDto(student, student.user, student.class, student.class.grade);
             return studentUser
         } catch (error) {
             await db.delete(users).where(eq(users.id, userId)).catch(() => undefined)
@@ -97,7 +97,7 @@ class StudentsController {
 
 
     async editStudent(data: EditStudentType) {
-        const password = generateTemporaryPassword(data.name)
+        const password = data.name // just the name of the user 
         const passwordHash = await handlePassword.hash(password);
 
         const foundStudent = await db.query.studentsTable.findFirst({
@@ -138,7 +138,7 @@ class StudentsController {
             })
             .where(eq(studentsTable.id, data.studentId))
             .returning()
-        
+
         const student = await db.query.studentsTable.findFirst({
             where: eq(studentsTable.id, data.studentId),
             with: {

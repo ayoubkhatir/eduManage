@@ -39,12 +39,21 @@ export enum UserGenderEnum {
 export const userGendersList = Object.values(UserGenderEnum) as [UserGenderEnum, ...UserGenderEnum[]]
 export const dbGenderEnum = pgEnum("gender", userGendersList);
 
+export enum AnnouncementAudienceEnum {
+  ALL = "All",
+  TEACHERS = "Teachers",
+  STUDENTS = "Students"
+}
+
+export const announcementAudienceList = Object.values(AnnouncementAudienceEnum) as [AnnouncementAudienceEnum, ...AnnouncementAudienceEnum[]]
+export const dbAnnouncementAudienceEnum = pgEnum("announcement_audience", announcementAudienceList);
+
 export const users = pgTable("users", {
   id: text("id").primaryKey().$defaultFn(() => generateId()).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
-  gender : dbGenderEnum("gender").notNull(),
+  gender: dbGenderEnum("gender").notNull(),
   name: varchar("name", { length: 50 }).notNull(),
   telNumber: varchar("tel_number", { length: 20 }),
   role: dbRoleEnum("role").notNull(),
@@ -55,12 +64,13 @@ export const users = pgTable("users", {
     .notNull(),
 });
 
-export const usersRelations = relations(users, ({ one , many}) => ({
+export const usersRelations = relations(users, ({ one, many }) => ({
   student: one(studentsTable),
   teacher: one(teachersTable),
   admin: one(adminsTable),
   sessions: many(session),
   accounts: many(account),
+  announcements: many(announcementsTable),
 }));
 
 export const adminsTable = pgTable("admins", {
@@ -708,6 +718,50 @@ export const resourcesRelations = relations(resourcesTable, ({ one }) => ({
     references: [teachersTable.id],
   }),
 }))
+
+
+export const announcementsTable = pgTable(
+  'announcements',
+  {
+    id: text('id').primaryKey().$defaultFn(() => generateId()).notNull(),
+    schoolId: text('school_id').notNull().references(() => adminsTable.id, { onDelete: 'cascade' }),
+    authorId: text('author_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+    title: varchar('title', { length: 255 }).notNull(),
+    description: text('description').notNull().default(''),
+    // status: dbStatusEnum('status').notNull().default(StatusEnum.NEW).$type<StatusEnum>(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+    audience: dbAnnouncementAudienceEnum('audience').notNull().default(AnnouncementAudienceEnum.ALL).$type<AnnouncementAudienceEnum>(),
+  },
+  (table) => ({
+    announcementScopedUnique: uniqueIndex('announcements_school_title_unique').on(
+      table.schoolId,
+      table.authorId,
+      table.title,
+    ),
+  }),
+)
+
+export const announcementsRelations = relations(announcementsTable, ({ one }) => ({
+  school: one(adminsTable, {
+    fields: [announcementsTable.schoolId],
+    references: [adminsTable.id],
+  }),
+  author: one(users, {
+    fields: [announcementsTable.authorId],
+    references: [users.id],
+  }),
+}))
+
+
+
+
+
+
+
 
 
 // Better Auth tables

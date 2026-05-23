@@ -154,8 +154,8 @@ import { useQuery } from '@tanstack/react-query'
 
 import { getResourcesSchema } from '#/schemas/resources.schema'
 import { columns } from '@/components/resources/columns'
-import { ResourcesTable } from '#/components/teacher/resources/resources-table'
 import { getResourcesQueryOptions } from '#/hooks/resources/hooks'
+import { ResourcesTable } from '#/components/teacher/resources/resources-table'
 
 export const Route = createFileRoute('/_auth/student/subjects/$subjectCode')({
   component: StudentResourcesPage,

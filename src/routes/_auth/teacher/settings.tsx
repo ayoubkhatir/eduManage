@@ -5,21 +5,28 @@ import { FormProvider } from 'react-hook-form'
 import { UserAvatar } from '#/components/admin/Table/columnsData'
 import { Switch } from '#/components/ui/switch'
 import type { TeacherUser } from '#/types/teacherTypes'
+import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
 // import { useAuth } from '#/store/auth_store'
 
 export const Route = createFileRoute('/_auth/teacher/settings')({
   component: RouteComponent,
+  loader: async ({ context }) => {
+    const currentUser = (await FetchCurrentUserServerFn({
+      data: context.authState.user!,
+    })) as TeacherUser
+    return { currentUser }
+  },
   head: () => ({
     meta: [{ title: 'Teacher | Settings - EduManage' }],
   }),
-  loader: async () => {
-    // const user = context.authState.user
-    // if (!user) throw new Error('Unauthorized')
-    // const userId = user.id
-    // await context.queryClient.prefetchQuery({
-    //   ...getTeacherQueryOptions({ fetchBy: 'userId', userId }),
-    // })
-  },
+  // loader: async () => {
+  // const user = context.authState.user
+  // if (!user) throw new Error('Unauthorized')
+  // const userId = user.id
+  // await context.queryClient.prefetchQuery({
+  //   ...getTeacherQueryOptions({ fetchBy: 'userId', userId }),
+  // })
+  // },
 })
 
 function RouteComponent() {
@@ -29,7 +36,7 @@ function RouteComponent() {
   //   ...getTeacherQueryOptions({ fetchBy: 'userId', userId: user.id }),
   // })
 
-  const { currentUser } = Route.useRouteContext()
+  const { currentUser } = Route.useLoaderData()
   return (
     <Skeleton name="teacher-settings-page" loading={false}>
       <SettingsComp teacher={currentUser} />
@@ -192,8 +199,8 @@ function SettingsComp({ teacher }: { teacher: TeacherUser }) {
               </section>
 
               {/* Academic Details */}
-              <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
-                <div className="border-b border-slate-100 p-6 dark:border-white/[0.06]">
+              <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/6 dark:bg-white/2">
+                <div className="border-b border-slate-100 p-6 dark:border-white/6">
                   <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                     Academic Details
                   </h2>
@@ -225,8 +232,8 @@ function SettingsComp({ teacher }: { teacher: TeacherUser }) {
               </section>
 
               {/* Notification Preferences */}
-              <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
-                <div className="border-b border-slate-100 p-6 dark:border-white/[0.06]">
+              <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/6 dark:bg-white/2">
+                <div className="border-b border-slate-100 p-6 dark:border-white/6">
                   <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                     Notification Preferences
                   </h2>
@@ -234,7 +241,7 @@ function SettingsComp({ teacher }: { teacher: TeacherUser }) {
                     Choose how you want to be notified about school activities.
                   </p>
                 </div>
-                <div className="divide-y divide-slate-100 p-6 dark:divide-white/[0.06]">
+                <div className="divide-y divide-slate-100 p-6 dark:divide-white/6">
                   <div className="flex items-center justify-between py-4">
                     <div>
                       <p className="text-sm font-medium text-slate-900 dark:text-white">
