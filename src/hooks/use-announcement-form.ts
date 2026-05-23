@@ -5,38 +5,33 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import type { SubmitHandler } from 'react-hook-form'
-import type { AnnouncementFormType } from '@/components/admin/Announcement/announcement-form.schema'
-import { getAnnouncementFormSchema } from '@/components/admin/Announcement/announcement-form.schema'
+import { createAnnouncementServerFn } from '#/server/modules/announcement/announcement.server-functions'
+import type { CreateAnnouncementType } from '#/types/announcementTypes'
+import type { AdminUser } from '#/types/usersTypes'
+import { createAnnouncementSchema } from '#/schemas/announcement.schema'
+import { AnnouncementAudienceEnum, UserRoleEnum } from '#/server/db/schema'
+import type { TeacherUser } from '#/types/teacherTypes'
 
-interface AnnouncementPayload {
-  title: string
-  content: string
-  audience: 'All School' | 'Students' | 'Teachers'
-  status: 'PUBLISHED' | 'DRAFT' | 'ARCHIVED'
-  authorName: string
-  publishedAt: string
-}
+// const createAnnouncement = async (payload: AnnouncementPayload) => {
+//   const response = await fetch('http://localhost:4000/announcements', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify({
+//       ...payload,
+//       id: Date.now().toString(),
+//     }),
+//   })
 
-const createAnnouncement = async (payload: AnnouncementPayload) => {
-  const response = await fetch('http://localhost:4000/announcements', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      ...payload,
-      id: Date.now().toString(),
-    }),
-  })
+//   if (!response.ok) {
+//     throw new Error('Failed to create announcement')
+//   }
 
-  if (!response.ok) {
-    throw new Error('Failed to create announcement')
-  }
+//   return response.json()
+// }
 
-  return response.json()
-}
-
-export function useAnnouncementForm() {
+export function useAnnouncementForm(user: TeacherUser | AdminUser) {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
@@ -45,21 +40,28 @@ export function useAnnouncementForm() {
     control,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
-  } = useForm<AnnouncementFormType>({
-    resolver: zodResolver(getAnnouncementFormSchema()),
+    watch,
+    formState
+  } = useForm<CreateAnnouncementType>({
+    resolver: zodResolver(createAnnouncementSchema),
     mode: 'onSubmit',
     reValidateMode: 'onChange',
     defaultValues: {
       title: '',
-      content: '',
-      audience: 'All School',
-      status: 'DRAFT',
+      description: '',
+      audience: AnnouncementAudienceEnum.ALL,
+      authorId: user.id,
+      schoolId: user.role === UserRoleEnum.ADMIN ? user.info.id : UserRoleEnum.TEACHER ? user.info.id : ""
+      // BECAUSE THE COMPILER THINK role CAN BE ALSO A STUDENT, BUT IN THIS CASE THE user IS ONLY A TEACHER OR ADMIN
     },
   })
 
   const createAnnouncementMutation = useMutation({
-    mutationFn: (data: AnnouncementPayload) => createAnnouncement(data),
+    mutationFn: async (data: CreateAnnouncementType) => {
+      const response = await createAnnouncementServerFn({ data })
+      if (!response.success) throw new Error(response.errorType)
+      return response.data
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['announcements'] })
       toast.success('Announcement created successfully!')
@@ -69,20 +71,19 @@ export function useAnnouncementForm() {
       toast.error('Failed to create announcement. Please try again.')
     },
   })
+  console.log({ formState, values: watch() })
 
-  const onSubmit: SubmitHandler<AnnouncementFormType> = useCallback(
+  const onSubmit: SubmitHandler<CreateAnnouncementType> = useCallback(
     async (data) => {
-      await createAnnouncementMutation.mutateAsync({
-        ...data,
-        authorName: 'Administration',
-        publishedAt: new Date().toLocaleDateString(),
-      })
+      await createAnnouncementMutation.mutateAsync(data)
+      // authorId: user.info.id, // TODO: Get current user
+      // schoolId: user.info.id,
 
       reset({
         title: '',
-        content: '',
-        audience: 'All School',
-        status: 'DRAFT',
+        description: '',
+        audience: AnnouncementAudienceEnum.ALL,
+        // status: 'DRAFT',
       })
     },
     [createAnnouncementMutation, reset],
@@ -92,8 +93,8 @@ export function useAnnouncementForm() {
     register,
     control,
     handleSubmit,
-    errors,
-    isSubmitting,
+    errors: formState.errors,
+    isSubmitting: formState.isSubmitting,
     onSubmit,
     isLoading: createAnnouncementMutation.isPending,
     isError: createAnnouncementMutation.isError,

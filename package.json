@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "vite dev --port 4000",
-    "build": "bun --bun vite build",
+    "build": "vite build",
     "tsc": "tsc",
     "build_preview": "pnpm build && pnpm preview",
     "build_nitro": "bun --bun run build && pnpm start",

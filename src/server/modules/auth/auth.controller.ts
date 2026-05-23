@@ -1,6 +1,7 @@
 
 import { db } from "#/server/db/db.js";
 import { UserRoleEnum } from "#/server/db/schema.js";
+import type { ID } from "#/types/authTypes.js";
 import { auth } from "../../utils/auth.server.js";
 import type { LoginBody, RegisterBody } from "./auth.schema.js";
 import { authService } from "./auth.service.js";
@@ -256,7 +257,11 @@ class AuthController implements IAuthController {
 
     }
 
-    async fetchUserRoleData(userId: string, role: UserRoleEnum) {
+    // async fetchSchoolID(userId: ID) {
+        
+    // }
+
+    async fetchUserRoleData(userId: ID, role: UserRoleEnum) {
         switch (role) {
             case UserRoleEnum.ADMIN:
                 const admin = await db.query.adminsTable.findFirst({

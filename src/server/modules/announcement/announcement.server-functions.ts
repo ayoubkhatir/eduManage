@@ -1,14 +1,50 @@
 import { createAnnouncementSchema } from "#/schemas/announcement.schema";
-import { successResponse } from "#/server/utils/response.type";
+import { internalServerErrorResponse, successResponse, type APIResponse } from "#/server/utils/response.type";
 import { createServerFn } from "@tanstack/react-start";
 import { announcementsController } from "./announcement.controller";
 import { validCuidSchema } from "#/schemas/shared.schema";
+import type { AnnouncementWithAuthor } from "#/types/announcementTypes";
 
 
 export const createAnnouncementServerFn = createServerFn({ method: "POST" })
     .inputValidator(createAnnouncementSchema)
-    .handler(({ data }) => successResponse(announcementsController.createAnnouncement(data)))
+    .handler(({ data }) => {
+        try {
+            return successResponse(announcementsController.createAnnouncement(data)) as APIResponse<{
+                id: string;
+            }[]>
+        } catch (e) {
+            console.log({ error: e })
+            return internalServerErrorResponse() as APIResponse<{
+                id: string;
+            }[]>
+        }
+    })
 
 export const getAnnouncementsServerFn = createServerFn({ method: "GET" })
     .inputValidator(validCuidSchema)
-    .handler(({ data: schoolId }) => successResponse(announcementsController.getAnnouncementsBySchool(schoolId)))
+    .handler(({ data: schoolId }) => {
+        try {
+            return successResponse(announcementsController.getAnnouncementsBySchool(schoolId)) as APIResponse<AnnouncementWithAuthor[]>
+        } catch (error) {
+            console.log({ error })
+            return internalServerErrorResponse() as APIResponse<AnnouncementWithAuthor[]>
+        }
+    })
+
+
+export const getAnnouncementByIdServerFn = createServerFn({ method: "GET" })
+    .inputValidator(validCuidSchema)
+    .handler(({ data: AnnouncementId }) => successResponse(announcementsController.getAnnouncementByTitleSlug(AnnouncementId)))
+
+
+export const getAnnouncementByTitleSlugServerFn = createServerFn({ method: "GET" })
+    .inputValidator(validCuidSchema)
+    .handler(({ data: AnnouncementTitleSlug }) => {
+        try {
+            return successResponse(announcementsController.getAnnouncementByTitleSlug(AnnouncementTitleSlug)) as APIResponse<AnnouncementWithAuthor>
+        } catch (error) {
+            console.log({ error })
+            return internalServerErrorResponse() as APIResponse<AnnouncementWithAuthor>
+        }
+    })

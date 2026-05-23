@@ -1,23 +1,25 @@
-import { useQuery } from '@tanstack/react-query'
-import {
-  getAllAnnouncementsServerFn,
-  getAnnouncementByIdServerFn,
-} from '#/server/modules/announcment/announcement.server-functions'
-import type { AnnouncementModel } from '@/schemas/announcement.schemas'
+// import {
+//   getAllAnnouncementsServerFn,
+//   getAnnouncementByIdServerFn,
+// } from '#/server/modules/announcment/announcement.server-functions'
+// import type { AnnouncementModel } from '@/schemas/announcement.schemas'
+import { getAnnouncementByIdServerFn, getAnnouncementByTitleSlugServerFn, getAnnouncementsServerFn } from '#/server/modules/announcement/announcement.server-functions'
 
-interface AnnouncementFilters {
-  search?: string
-}
+// interface AnnouncementFilters {
+//   search?: string
+// }
 
 export const getAnnouncementsListQueryOptions = (
-  filters?: AnnouncementFilters,
+  schoolId: string
+  // filters?: AnnouncementFilters,
 ) => ({
-  queryKey: ['announcements', filters],
+  queryKey: ['announcements', schoolId],//filters],
   queryFn: async () => {
     try {
-      const response = await getAllAnnouncementsServerFn({
-        data: filters || {},
+      const response = await getAnnouncementsServerFn({
+        data: schoolId,
       })
+      //filters || {}
       console.log('Announcements response:', response)
 
       if (response.success && response.data) {
@@ -31,26 +33,19 @@ export const getAnnouncementsListQueryOptions = (
   },
 })
 
-export function useGetAnnouncements(filters?: AnnouncementFilters) {
-  return useQuery({
-    ...getAnnouncementsListQueryOptions(filters),
-    retry: false,
-  })
-}
-
 export const getAnnouncementQueryOptions = (announcementId: string) => ({
-  queryKey: ['announcement', announcementId],
+  queryKey: ['announcement', "announcementId", announcementId],
   queryFn: async () => {
     try {
       const response = await getAnnouncementByIdServerFn({
         data: announcementId,
       })
-      console.log('Announcement response:', response)
 
-      if (response.success && response.data) {
-        return response.data
+      if (!response.success) {
+        throw new Error('Announcement not found')
       }
-      return null
+
+      return response.data
     } catch (error) {
       console.error('Error fetching announcement:', error)
       throw error
@@ -58,9 +53,22 @@ export const getAnnouncementQueryOptions = (announcementId: string) => ({
   },
 })
 
-export function useGetAnnouncement(id: string) {
-  return useQuery({
-    ...getAnnouncementQueryOptions(id),
-    retry: false,
-  })
-}
+export const getAnnouncementByTitleQueryOptions = (announcementTitleSlug: string) => ({
+  queryKey: ['announcement', "announcementTitleSlug", announcementTitleSlug],
+  queryFn: async () => {
+    try {
+      const response = await getAnnouncementByTitleSlugServerFn({
+        data: announcementTitleSlug,
+      })
+
+      if (!response.success) {
+        throw new Error('Announcement not found')
+      }
+
+      return response.data
+    } catch (error) {
+      console.error('Error fetching announcement:', error)
+      throw error
+    }
+  },
+})

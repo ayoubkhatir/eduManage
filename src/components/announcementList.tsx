@@ -1,16 +1,20 @@
-import { useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import Loading from './loading'
-import type { AnnouncementModel } from '@/schemas/announcement.schemas'
+// import type { AnnouncementModel } from '@/schemas/announcement.schemas'
 import { stripHtmlTags } from '@/lib/utils'
-import { useGetAnnouncements } from '@/hooks/admin/hooks'
+import type { AnnouncementWithAuthor } from '#/types/announcementTypes'
+import { getAnnouncementsListQueryOptions } from '#/hooks/admin/hooks'
+import { useQuery } from '@tanstack/react-query'
+import { UserGenderEnum } from '#/server/db/schema'
 
 export type AnnouncementListProps = {
-  data?: Array<AnnouncementModel>
+  data?: Array<AnnouncementWithAuthor>
   isLoading?: boolean
   error?: any
   selectedAudience: string
   searchText?: string
   detailTo?: string
+  schoolId: string
 }
 
 const getAudienceColors = (audience: string) => {
@@ -52,7 +56,7 @@ const getAudienceColors = (audience: string) => {
 }
 
 const filterAnnouncements = (
-  data: Array<AnnouncementModel>,
+  data: Array<AnnouncementWithAuthor>,
   searchText = '',
   selectedAudience = 'All School',
 ) => {
@@ -70,7 +74,7 @@ const filterAnnouncements = (
     // Filter by search text :
     if (!lowerSearch) return true
 
-    const cleanContent = stripHtmlTags(announcement.content)
+    const cleanContent = stripHtmlTags(announcement.description)
     const haystack =
       `${announcement.title} ${cleanContent} ${announcement.audience}`.toLowerCase()
     return haystack.includes(lowerSearch)
@@ -83,15 +87,16 @@ export default function AnnouncementList({
   error: propError,
   searchText = '',
   selectedAudience = 'All School',
-  detailTo = '/admin/announcements',
+  // detailTo = '/admin/announcements',
+  schoolId,
 }: AnnouncementListProps) {
-  const navigate = useNavigate()
-  const announcementsQuery = useGetAnnouncements(
-    searchText ? { search: searchText } : {},
+  const announcementsQuery = useQuery(
+    getAnnouncementsListQueryOptions(schoolId),
+    // searchText ? { search: searchText } : {},
   )
   const isLoading = propIsLoading || announcementsQuery.isLoading
   const error = propError || announcementsQuery.error
-  const data = propData || announcementsQuery.data
+  const data = propData || announcementsQuery.data // || propData
 
   if (isLoading) {
     return (
@@ -142,72 +147,81 @@ export default function AnnouncementList({
 
   return (
     <div className="flex flex-col gap-4">
-      {filteredData.map((announcement: AnnouncementModel) => {
+      {filteredData.map((announcement) => {
         const audienceColors = getAudienceColors(announcement.audience)
 
         return (
-          <div
-            key={announcement.id}
-            role="button"
-            tabIndex={0}
-            onClick={() =>
-              navigate({
-                to: '/admin/announcements/$announcementId',
-                params: { announcementId: announcement.id },
-              })
-            }
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault()
-                navigate({
-                  to: '/admin/announcements/$announcementId',
-                  params: { announcementId: announcement.id },
-                })
-              }
-            }}
-            className={`group relative flex flex-col md:flex-row gap-6 p-6 rounded-xl bg-white dark:bg-[#1e293b] border-l-4 ${audienceColors.border} shadow-sm hover:shadow-md cursor-pointer`}
-            style={{ transition: 'box-shadow 0.2s ease-in-out' }}
+          <Link
+            to={`/admin/announcements/$announcementTitleSlug`}
+            params={{ announcementTitleSlug: announcement.slug }}
+            key={announcement.slug}
           >
-            <div className="flex-1 flex flex-col gap-3">
-              <div className="flex items-center gap-3 flex-wrap">
-                <span
-                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${audienceColors.bg} ${audienceColors.text} ${audienceColors.darkBg} ${audienceColors.darkText} ${audienceColors.ring} ${audienceColors.border}`}
-                >
-                  {announcement.audience}
-                </span>
+            <div
+              role="button"
+              tabIndex={0}
+              // onClick={() =>
+              //   navigate({
+              //     to: '/admin/announcements/$announcementId',
+              //     params: { announcementId: announcement.id },
+              //   })
+              // }
+              // onKeyDown={(e) => {
+              //   if (e.key === 'Enter' || e.key === ' ') {
+              //     e.preventDefault()
+              //     navigate({
+              //       to: '/admin/announcements/$announcementId',
+              //       params: { announcementId: announcement.id },
+              //     })
+              //   }
+              // }}
+              className={`group relative flex flex-col md:flex-row gap-6 p-6 rounded-xl bg-white dark:bg-[#1e293b] border-l-4 ${audienceColors.border} shadow-sm hover:shadow-md cursor-pointer`}
+              style={{ transition: 'box-shadow 0.2s ease-in-out' }}
+            >
+              <div className="flex-1 flex flex-col gap-3">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <span
+                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${audienceColors.bg} ${audienceColors.text} ${audienceColors.darkBg} ${audienceColors.darkText} ${audienceColors.ring} ${audienceColors.border}`}
+                  >
+                    {announcement.audience}
+                  </span>
+                </div>
+
+                <h4 className="text-xl font-bold text-slate-900 dark:text-white">
+                  {announcement.title}
+                </h4>
+
+                <p className="text-slate-600 dark:text-[#9da6b9] line-clamp-2">
+                  {stripHtmlTags(announcement.description)}
+                </p>
+
+                <div className="flex items-center gap-4 mt-1 text-sm text-slate-400 dark:text-slate-500 flex-wrap">
+                  <span className="flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[16px]">
+                      calendar_today
+                    </span>
+                    {announcement.createdAt.toISOString().split('T')[0]}
+                  </span>
+
+                  <span className="flex items-center gap-1">
+                    <span className="material-symbols-outlined text-[16px]">
+                      person
+                    </span>
+                    {announcement.author.gender === UserGenderEnum.MALE
+                      ? 'Mr'
+                      : 'Ms'
+                      }
+                    {announcement.author.name}({announcement.author.role})
+                  </span>
+                </div>
               </div>
 
-              <h4 className="text-xl font-bold text-slate-900 dark:text-white">
-                {announcement.title}
-              </h4>
-
-              <p className="text-slate-600 dark:text-[#9da6b9] line-clamp-2">
-                {stripHtmlTags(announcement.content)}
-              </p>
-
-              <div className="flex items-center gap-4 mt-1 text-sm text-slate-400 dark:text-slate-500 flex-wrap">
-                <span className="flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[16px]">
-                    calendar_today
-                  </span>
-                  {announcement.publishedAt}
-                </span>
-
-                <span className="flex items-center gap-1">
-                  <span className="material-symbols-outlined text-[16px]">
-                    person
-                  </span>
-                  Posted by {announcement.authorName}
+              <div className="hidden md:flex shrink-0 items-center self-center">
+                <span className="material-symbols-outlined text-gray-400 group-hover:text-black dark:text-[#4b5563] dark:group-hover:text-white">
+                  chevron_right
                 </span>
               </div>
             </div>
-
-            <div className="hidden md:flex shrink-0 items-center self-center">
-              <span className="material-symbols-outlined text-gray-400 group-hover:text-black dark:text-[#4b5563] dark:group-hover:text-white">
-                chevron_right
-              </span>
-            </div>
-          </div>
+          </Link>
         )
       })}
     </div>

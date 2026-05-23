@@ -727,6 +727,7 @@ export const announcementsTable = pgTable(
     schoolId: text('school_id').notNull().references(() => adminsTable.id, { onDelete: 'cascade' }),
     authorId: text('author_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
     title: varchar('title', { length: 255 }).notNull(),
+    slug: text('slug').notNull(),
     description: text('description').notNull().default(''),
     // status: dbStatusEnum('status').notNull().default(StatusEnum.NEW).$type<StatusEnum>(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
@@ -755,13 +756,6 @@ export const announcementsRelations = relations(announcementsTable, ({ one }) =>
     references: [users.id],
   }),
 }))
-
-
-
-
-
-
-
 
 
 // Better Auth tables

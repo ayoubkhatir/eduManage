@@ -1,19 +1,28 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useState } from 'react'
 import AnnouncementList from '@/components/announcementList'
 import { motion } from 'framer-motion'
+import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
+import type { AdminUser } from '#/types/usersTypes'
 
 export const Route = createFileRoute('/_auth/admin/announcements')({
   component: Announcement,
+  loader: async ({ context }) => {
+    const currentUser = (await FetchCurrentUserServerFn({
+      data: context.authState.user!,
+    })) as AdminUser
+    return { currentUser }
+  },
   head: () => ({
     meta: [{ title: 'Owner | Announcements - EduManage' }],
   }),
 })
 
 function Announcement() {
-  const navigate = useNavigate()
   const [searchText, setSearchText] = useState('')
   const [selectedAudience, setSelectedAudience] = useState('All School')
+  const { currentUser } = Route.useLoaderData()
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -31,14 +40,15 @@ function Announcement() {
               Manage and broadcast school-wide updates.
             </p>
           </div>
-
-          <button
-            onClick={() => navigate({ to: '/admin/creatAnnouncement' })}
-            className="flex shrink-0 items-center gap-2 justify-center rounded-lg h-8 px-5 py-6  bg-primary  hover:bg-blue-700 dark:hover:bg-blue-500 text-white text-md font-bold active:scale-95 cursor-pointer"
+          <Link
+            to="/admin/createAnnouncement"
+            className="flex items-center gap-2 justify-center rounded-lg h-8 px-5 py-6  bg-primary  hover:bg-blue-700 dark:hover:bg-blue-500 text-white text-md font-bold active:scale-95 cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[18px]">add</span>
-            <span>Create Announcement</span>
-          </button>
+            <button className="flex shrink-0 items-center gap-2 justify-center rounded-lg h-8 px-5 py-6  bg-primary  hover:bg-blue-700 dark:hover:bg-blue-500 text-white text-md font-bold active:scale-95 cursor-pointer">
+              <span className="material-symbols-outlined text-[18px]">add</span>
+              <span>Create Announcement</span>
+            </button>
+          </Link>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-[#1e293b] shadow-sm border border-slate-200 dark:border-slate-800">
@@ -113,6 +123,7 @@ function Announcement() {
       <AnnouncementList
         searchText={searchText}
         selectedAudience={selectedAudience}
+        schoolId={currentUser.info.id}
       />
 
       <div className="flex justify-center py-8">

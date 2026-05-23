@@ -1,0 +1,1 @@
+ALTER TABLE "announcements" ADD COLUMN "slug" text NOT NULL;

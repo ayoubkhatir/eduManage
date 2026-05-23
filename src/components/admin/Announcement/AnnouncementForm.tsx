@@ -1,8 +1,10 @@
 import { Controller } from 'react-hook-form'
 import QuillEditor from '@/components/ui/quillEditor'
 import { useAnnouncementForm } from '@/hooks/use-announcement-form'
+import type { AdminUser } from '#/types/usersTypes'
+import { announcementAudienceList } from '#/server/db/schema'
 
-export function AnnouncementForm() {
+export function AnnouncementForm({ user }: { user: AdminUser }) {
   const {
     register,
     control,
@@ -12,8 +14,10 @@ export function AnnouncementForm() {
     onSubmit,
     isLoading,
     isError,
-  } = useAnnouncementForm()
+  } = useAnnouncementForm(user)
 
+
+  
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full">
@@ -52,9 +56,14 @@ export function AnnouncementForm() {
               {...register('audience')}
               className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary"
             >
-              <option value="All School">All School</option>
+              {announcementAudienceList.map((audience) => (
+                <option key={audience} value={audience}>
+                  {audience}
+                </option>
+              ))}
+              {/* <option value="All School">All School</option>
               <option value="Students">Students</option>
-              <option value="Teachers">Teachers</option>
+              <option value="Teachers">Teachers</option> */}
             </select>
             {errors.audience && (
               <span className="text-xs text-red-500 mt-1">
@@ -63,7 +72,7 @@ export function AnnouncementForm() {
             )}
           </div>
 
-          <div className="flex flex-col gap-2">
+          {/* <div className="flex flex-col gap-2">
             <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
               Status
             </label>
@@ -80,23 +89,23 @@ export function AnnouncementForm() {
                 {errors.status.message}
               </span>
             )}
-          </div>
+          </div> */}
 
           <div className="flex flex-col gap-2">
             <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
               Content
             </label>
             <Controller
-              name="content"
+              name="description"
               control={control}
               defaultValue=""
               render={({ field }) => (
                 <QuillEditor value={field.value} onChange={field.onChange} />
               )}
             />
-            {errors.content && (
+            {errors.description && (
               <span className="text-xs text-red-500 mt-1">
-                {errors.content.message}
+                {errors.description.message}
               </span>
             )}
           </div>
