@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import AnnouncementList from '@/components/announcementList'
+import { motion } from 'framer-motion'
 
 export const Route = createFileRoute('/_auth/admin/announcements')({
   component: Announcement,
@@ -14,7 +15,12 @@ function Announcement() {
   const [searchText, setSearchText] = useState('')
   const [selectedAudience, setSelectedAudience] = useState('All School')
   return (
-    <div className="flex-1 py-8 px-4 sm:px-8 flex flex-col w-full overflow-y-auto gap-8 relative">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="flex-1 py-8 px-4 sm:px-8 flex flex-col w-full overflow-y-auto gap-8 relative"
+    >
       <div className="flex flex-col gap-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="flex flex-col gap-2">
@@ -112,6 +118,6 @@ function Announcement() {
       <div className="flex justify-center py-8">
         <p className="text-[#4b5563] text-md">End of Announcements</p>
       </div>
-    </div>
+    </motion.div>
   )
 }

@@ -100,9 +100,14 @@ export const StudentColumns: Array<ColumnDef<StudentUser>> = [
     },
     size: 20,
     cell: ({ row }) => (
-      <span className="font-medium text-slate-900 dark:text-white">
-        {row.original.name}
-      </span>
+      <div className="flex flex-col">
+        <span className="text-sm text-slate-700 dark:text-slate-300">
+          {row.original.name}
+        </span>
+        <span className="text-xs text-slate-500 dark:text-slate-400">
+          {row.original.id}
+        </span>
+      </div>
     ),
   },
   {
@@ -112,8 +117,15 @@ export const StudentColumns: Array<ColumnDef<StudentUser>> = [
     },
     size: 28,
     cell: ({ row }) => (
-      <div className="text-sm text-slate-700 dark:text-slate-300 truncate w-full">
-        {row.original.email}
+      <div className="flex flex-col">
+        <span className="text-sm text-slate-700 dark:text-slate-300">
+          {row.original.email}
+        </span>
+        {row.original.telNumber && (
+          <span className="text-xs text-slate-500 dark:text-slate-400">
+            {row.original.telNumber}
+          </span>
+        )}
       </div>
     ),
   },
@@ -159,18 +171,40 @@ export const StudentColumns: Array<ColumnDef<StudentUser>> = [
     size: 10,
     cell: ({ row }) => {
       const student = row.original
-      const bgColor =
+
+      const statusConfig = {
+        Active: {
+          bg: 'bg-emerald-50 dark:bg-emerald-950/50',
+          text: 'text-emerald-700 dark:text-emerald-400',
+          border: 'border-emerald-200 dark:border-emerald-800',
+          dot: 'bg-emerald-500',
+        },
+        Inactive: {
+          bg: 'bg-red-50 dark:bg-red-950/50',
+          text: 'text-red-700 dark:text-red-400',
+          border: 'border-red-200 dark:border-red-800',
+          dot: 'bg-red-500',
+        },
+        Pending: {
+          bg: 'bg-amber-50 dark:bg-amber-950/50',
+          text: 'text-amber-700 dark:text-amber-400',
+          border: 'border-amber-200 dark:border-amber-800',
+          dot: 'bg-amber-500',
+        },
+      }
+
+      const config =
         student.info.status === 'Active'
-          ? 'bg-green-100 text-green-800'
+          ? statusConfig.Active
           : student.info.status === 'Inactive'
-            ? 'bg-red-100 text-red-800'
-            : student.info.status === 'Pending'
-              ? 'bg-yellow-100 text-yellow-800'
-              : 'bg-gray-100 text-gray-800'
+            ? statusConfig.Inactive
+            : statusConfig.Pending
+
       return (
         <span
-          className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${bgColor} `}
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${config.bg} ${config.text} ${config.border}`}
         >
+          <span className={`h-1.5 w-1.5 rounded-full ${config.dot}`} />
           {student.info.status}
         </span>
       )
@@ -188,8 +222,9 @@ export const StudentColumns: Array<ColumnDef<StudentUser>> = [
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                variant="outline"
-                className=" h-8 w-8 p-0 hover:bg-slate-200 dark:hover:bg-slate-700"
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400"
               >
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
@@ -198,20 +233,18 @@ export const StudentColumns: Array<ColumnDef<StudentUser>> = [
 
             <DropdownMenuContent
               align="end"
-              className="w-44 bg-white dark:bg-slate-800"
+              className="min-w-44 w-fit bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700"
             >
-              <DropdownMenuLabel className="text-black dark:text-white">
+              <DropdownMenuLabel className="text-slate-900 dark:text-white font-semibold">
                 Actions
               </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-black" />
+              <DropdownMenuSeparator className="bg-slate-200 dark:bg-slate-700" />
 
               <CopyIdMenuItem role="Student" id={student.info.id} />
-
-              <DropdownMenuSeparator className="bg-gray-300 dark:bg-gray-700" />
+              <DropdownMenuSeparator className="bg-slate-200 dark:bg-slate-700" />
 
               <ViewProfileMenuItem role="Student" id={student.info.id} />
-
-              <DropdownMenuSeparator className="bg-gray-300 dark:bg-gray-700" />
+              <DropdownMenuSeparator className="bg-slate-200 dark:bg-slate-700" />
 
               <DeleteMenuItem role="Student" id={student.id} />
             </DropdownMenuContent>
@@ -429,7 +462,7 @@ function StudentSortButton({ property }: { property: 'name' | 'email' }) {
   if (sortBy !== property) {
     return (
       <Button
-        className="capitalize"
+        className="capitalize font-semibold text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
         variant="ghost"
         onClick={() =>
           navigate({
@@ -444,15 +477,15 @@ function StudentSortButton({ property }: { property: 'name' | 'email' }) {
         }
       >
         {property}
-        <ArrowUpDown className="ml-2 h-4 w-4 rotate-180" />
+        <ArrowUpDown className="ml-2 h-3.5 w-3.5 opacity-50" />
       </Button>
     )
   }
 
   return (
     <Button
-      className="capitalize"
-      variant="default"
+      className="capitalize font-semibold text-sm text-indigo-600 dark:text-indigo-400"
+      variant="ghost"
       onClick={() =>
         navigate({
           // replace: true,
@@ -467,9 +500,9 @@ function StudentSortButton({ property }: { property: 'name' | 'email' }) {
     >
       {property}
       {sortOrder === 'asc' ? (
-        <MoveUpIcon className="ml-2 h-4 w-4" />
+        <MoveUpIcon className="ml-2 h-3.5 w-3.5" />
       ) : (
-        <MoveDownIcon className="ml-2 h-4 w-4" />
+        <MoveDownIcon className="ml-2 h-3.5 w-3.5" />
       )}
     </Button>
   )

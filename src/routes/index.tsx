@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { ModeToggle } from '#/features/theme/mode-toggle'
 import useWelcomeSideBarStore from '#/store/welcome_store'
 import { createFileRoute, Link, redirect } from '@tanstack/react-router'
@@ -53,20 +54,23 @@ function Navbar() {
   ]
 
   return (
-    <header
+    <motion.header
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'border-b border-slate-200/60 bg-white/80 dark:border-white/6 dark:bg-background-dark/80 backdrop-blur-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]'
+          ? 'border-b border-border/60 bg-background/80 backdrop-blur-xl shadow-sm'
           : 'border-b border-transparent bg-transparent'
       }`}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <a href="#" className="flex items-center gap-2.5 group">
-          <div className="flex size-9 items-center justify-center rounded-lg bg-primary text-white shadow-md shadow-primary/20 transition-transform group-hover:scale-105">
+          <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary-soft text-white shadow-md shadow-primary/20 transition-all group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-primary/30">
             <Icon name="school" className="text-xl" />
           </div>
-          <span className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">
+          <span className="text-lg font-bold tracking-tight text-foreground">
             EduManage
           </span>
         </a>
@@ -77,7 +81,7 @@ function Navbar() {
             <a
               key={l.label}
               href={l.href}
-              className="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+              className="rounded-xl px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:text-foreground hover:bg-accent"
             >
               {l.label}
             </a>
@@ -93,12 +97,12 @@ function Navbar() {
               role: UserRoleEnum.ADMIN,
               redirectTo: '/admin/dashboard',
             }}
-            className="hidden sm:inline-flex items-center rounded-full bg-primary px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-primary/25 transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5"
+            className="hidden sm:inline-flex items-center rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow-sm shadow-primary/20 transition-all hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-0.5 active:scale-95"
           >
             Sign in
           </Link>
           <button
-            className="cursor-pointer rounded-lg p-2 text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white md:hidden"
+            className="cursor-pointer rounded-xl p-2 text-muted-foreground transition-all hover:text-foreground hover:bg-accent md:hidden"
             onClick={toggleSideBar}
             aria-label="Open menu"
           >
@@ -106,7 +110,7 @@ function Navbar() {
           </button>
         </div>
       </div>
-    </header>
+    </motion.header>
   )
 }
 
@@ -293,19 +297,19 @@ function Stats() {
   ]
 
   return (
-    <div className="border-y border-slate-200/60 bg-slate-50/50 dark:border-white/6border-white/[0.06] dark:bg-white/2">
+    <div className="border-y border-border/60 bg-muted/30">
       <Section>
         <div className="grid grid-cols-1 gap-6 py-14 sm:grid-cols-3">
           {items.map((s, i) => (
             <FadeIn key={s.label} delay={i * 100}>
               <div className="flex flex-col items-center gap-3 text-center">
-                <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary dark:bg-primary/10">
+                <div className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                   <Icon name={s.icon} className="text-2xl" />
                 </div>
-                <p className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                <p className="text-4xl font-extrabold tracking-tight text-foreground">
                   {s.value}
                 </p>
-                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                <p className="text-sm font-medium text-muted-foreground">
                   {s.label}
                 </p>
               </div>
@@ -704,7 +708,12 @@ function CTA() {
 function App() {
   return (
     <Skeleton name="landing-page" loading={false}>
-      <div className="min-h-screen bg-white text-slate-900 antialiased dark:bg-background-dark dark:text-slate-100">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="min-h-screen bg-background text-foreground antialiased"
+      >
         <Navbar />
         <MobileSidebar />
         <main>
@@ -717,7 +726,7 @@ function App() {
           <CTA />
         </main>
         <Footer />
-      </div>
+      </motion.div>
     </Skeleton>
   )
 }

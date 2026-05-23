@@ -8,7 +8,7 @@ export function RightPanel() {
       <div className="mx-auto w-full max-w-md">
         {/* Mobile logo */}
         <div className="mb-8 flex items-center gap-2.5 lg:hidden">
-          <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-blue-600 text-white shadow-md shadow-primary/25">
+          <div className="flex size-9 items-center justify-center rounded-xl bg-linear-to-br from-primary to-blue-600 text-white shadow-md shadow-primary/25">
             <span className="material-symbols-outlined text-xl">school</span>
           </div>
           <span className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">

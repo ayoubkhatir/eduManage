@@ -15,6 +15,7 @@ import {
   saveStudentMarksServerFn,
 } from '@/server/modules/marks/marks.server-functions'
 import { AssessmentTypeEnum, StatusEnum } from '#/server/db/schema'
+import { motion } from 'framer-motion'
 
 type AssessmentMarksData = {
   assessment: {
@@ -272,7 +273,7 @@ function RouteComponent() {
   const maxScore = assessmentMarksQuery.data?.assessment.maxScore ?? 20
 
   return (
-    <main className="flex-1 min-w-0 ">
+    <motion.main initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex-1 min-w-0 ">
       <div className="px-6 py-6 space-y-6">
         <div className="flex flex-col gap-3">
           <Link
@@ -283,27 +284,27 @@ function RouteComponent() {
             ← Back to class
           </Link>
 
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6">
+          <div className="rounded-2xl border border-border dark:border-border bg-card dark:bg-card p-6">
             <div className="flex flex-col xl:flex-row xl:items-start xl:justify-between gap-4">
               <div>
-                <p className="text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400">
+                <p className="text-xs uppercase tracking-widest text-muted-foreground">
                   Marks Management
                 </p>
-                <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white mt-1">
+                <h1 className="text-3xl font-bold tracking-tight text-foreground dark:text-white mt-1">
                   {classInfo
                     ? `${classInfo.gradeName} - Class ${classInfo.className}`
                     : 'Class Gradebook'}
                 </h1>
-                <p className="text-slate-500 dark:text-slate-400 mt-2">
+                <p className="text-muted-foreground mt-2">
                   Create assessments and record marks for students in this
                   class.
                 </p>
               </div>
 
-              <div className="text-sm text-slate-500 dark:text-slate-400">
+              <div className="text-sm text-muted-foreground">
                 {assessmentMarksQuery.data?.assessment ? (
-                  <div className="rounded-xl bg-slate-50 dark:bg-slate-900/40 px-4 py-3">
-                    <div className="font-medium text-slate-900 dark:text-white">
+                  <div className="rounded-xl bg-muted dark:bg-card/40 px-4 py-3">
+                    <div className="font-medium text-foreground dark:text-white">
                       {assessmentMarksQuery.data.assessment.title}
                     </div>
                     <div className="mt-1">
@@ -353,8 +354,8 @@ function RouteComponent() {
 
               <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
                 <section className="xl:col-span-2 space-y-6">
-                  <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5">
-                    <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+                  <div className="rounded-2xl border border-border dark:border-border bg-card dark:bg-card p-5">
+                    <h2 className="text-lg font-semibold text-foreground dark:text-white">
                       Assessment Setup
                     </h2>
 
@@ -363,7 +364,7 @@ function RouteComponent() {
                         <select
                           value={selectedSubjectId}
                           onChange={(e) => setSelectedSubjectId(e.target.value)}
-                          className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent px-3 py-2"
+                          className="w-full rounded-lg border border-border bg-transparent px-3 py-2"
                         >
                           {assignments.map((assignment) => (
                             <option
@@ -383,7 +384,7 @@ function RouteComponent() {
                         <select
                           value={selectedPeriodId}
                           onChange={(e) => setSelectedPeriodId(e.target.value)}
-                          className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent px-3 py-2"
+                          className="w-full rounded-lg border border-border bg-transparent px-3 py-2"
                         >
                           <option value="">All periods</option>
                           {(pageData?.periods ?? []).map((period) => (
@@ -400,7 +401,7 @@ function RouteComponent() {
                           onChange={(e) =>
                             setSelectedAssessmentId(e.target.value)
                           }
-                          className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent px-3 py-2"
+                          className="w-full rounded-lg border border-border bg-transparent px-3 py-2"
                         >
                           <option value="">Select assessment</option>
                           {assessments.map((assessment) => (
@@ -413,8 +414,8 @@ function RouteComponent() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5">
-                    <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+                  <div className="rounded-2xl border border-border dark:border-border bg-card dark:bg-card p-5">
+                    <h2 className="text-lg font-semibold text-foreground dark:text-white">
                       Create New Assessment
                     </h2>
 
@@ -428,7 +429,7 @@ function RouteComponent() {
                               title: e.target.value,
                             }))
                           }
-                          className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent px-3 py-2"
+                          className="w-full rounded-lg border border-border bg-transparent px-3 py-2"
                           placeholder="Math Test 1"
                         />
                       </Field>
@@ -442,7 +443,7 @@ function RouteComponent() {
                               type: e.target.value,
                             }))
                           }
-                          className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent px-3 py-2"
+                          className="w-full rounded-lg border border-border bg-transparent px-3 py-2"
                         >
                           <option value="Homework">Homework</option>
                           <option value="Quiz">Quiz</option>
@@ -464,7 +465,7 @@ function RouteComponent() {
                               maxScore: Number(e.target.value),
                             }))
                           }
-                          className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent px-3 py-2"
+                          className="w-full rounded-lg border border-border bg-transparent px-3 py-2"
                         />
                       </Field>
 
@@ -479,7 +480,7 @@ function RouteComponent() {
                               weight: Number(e.target.value),
                             }))
                           }
-                          className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent px-3 py-2"
+                          className="w-full rounded-lg border border-border bg-transparent px-3 py-2"
                         />
                       </Field>
 
@@ -493,7 +494,7 @@ function RouteComponent() {
                               assessmentDate: e.target.value,
                             }))
                           }
-                          className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent px-3 py-2"
+                          className="w-full rounded-lg border border-border bg-transparent px-3 py-2"
                         />
                       </Field>
 
@@ -509,7 +510,7 @@ function RouteComponent() {
                               notes: e.target.value,
                             }))
                           }
-                          className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent px-3 py-2"
+                          className="w-full rounded-lg border border-border bg-transparent px-3 py-2"
                           placeholder="Optional notes"
                         />
                       </Field>
@@ -532,12 +533,12 @@ function RouteComponent() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden">
-                    <div className="px-5 py-4 border-b border-slate-200 dark:border-slate-700">
-                      <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+                  <div className="rounded-2xl border border-border dark:border-border bg-card dark:bg-card overflow-hidden">
+                    <div className="px-5 py-4 border-b border-border">
+                      <h2 className="text-lg font-semibold text-foreground dark:text-white">
                         Student Marks
                       </h2>
-                      <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                      <p className="text-sm text-muted-foreground mt-1">
                         Enter scores out of {maxScore}. Mark students absent
                         where needed.
                       </p>
@@ -569,7 +570,7 @@ function RouteComponent() {
                       <>
                         <div className="overflow-x-auto">
                           <table className="w-full text-sm">
-                            <thead className="bg-slate-50 dark:bg-slate-900/40">
+                            <thead className="bg-muted dark:bg-card/40">
                               <tr className="text-left">
                                 <th className="px-4 py-3 font-semibold">
                                   Student
@@ -601,7 +602,7 @@ function RouteComponent() {
                                   return (
                                     <tr
                                       key={entry.studentId}
-                                      className="border-t border-slate-200 dark:border-slate-700"
+                                      className="border-t border-border"
                                     >
                                       <td className="px-4 py-3">
                                         <div className="flex items-center gap-3">
@@ -619,10 +620,10 @@ function RouteComponent() {
                                             </div>
                                           )}
                                           <div>
-                                            <div className="font-medium text-slate-900 dark:text-white">
+                                            <div className="font-medium text-foreground dark:text-white">
                                               {entry.name}
                                             </div>
-                                            <div className="text-xs text-slate-500 dark:text-slate-400">
+                                            <div className="text-xs text-muted-foreground">
                                               {entry.email}
                                             </div>
                                           </div>
@@ -645,7 +646,7 @@ function RouteComponent() {
                                               },
                                             }))
                                           }
-                                          className="w-24 rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent px-3 py-2 disabled:opacity-50"
+                                          className="w-24 rounded-lg border border-border bg-transparent px-3 py-2 disabled:opacity-50"
                                         />
                                       </td>
 
@@ -696,7 +697,7 @@ function RouteComponent() {
                                               },
                                             }))
                                           }
-                                          className="w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-transparent px-3 py-2"
+                                          className="w-full rounded-lg border border-border bg-transparent px-3 py-2"
                                           placeholder="Optional comment"
                                         />
                                       </td>
@@ -708,7 +709,7 @@ function RouteComponent() {
                           </table>
                         </div>
 
-                        <div className="flex justify-end px-5 py-4 border-t border-slate-200 dark:border-slate-700">
+                        <div className="flex justify-end px-5 py-4 border-t border-border">
                           <button
                             onClick={() => saveMarksMutation.mutate()}
                             disabled={saveMarksMutation.isPending}
@@ -725,8 +726,8 @@ function RouteComponent() {
                 </section>
 
                 <aside className="space-y-6">
-                  <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5">
-                    <h3 className="font-semibold text-slate-900 dark:text-white">
+                  <div className="rounded-2xl border border-border dark:border-border bg-card dark:bg-card p-5">
+                    <h3 className="font-semibold text-foreground dark:text-white">
                       Current Selection
                     </h3>
 
@@ -757,11 +758,11 @@ function RouteComponent() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5">
-                    <h3 className="font-semibold text-slate-900 dark:text-white">
+                  <div className="rounded-2xl border border-border dark:border-border bg-card dark:bg-card p-5">
+                    <h3 className="font-semibold text-foreground dark:text-white">
                       Tips
                     </h3>
-                    <ul className="mt-3 text-sm text-slate-500 dark:text-slate-400 space-y-2">
+                    <ul className="mt-3 text-sm text-muted-foreground space-y-2">
                       <li>
                         Use one assessment per test, quiz, exam, or homework.
                       </li>
@@ -777,7 +778,7 @@ function RouteComponent() {
           )}
         </Skeleton>
       </div>
-    </main>
+    </motion.main>
   )
 }
 
@@ -792,7 +793,7 @@ function Field({
 }) {
   return (
     <div className={className}>
-      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+      <label className="block text-sm font-medium text-foreground dark:text-slate-300 mb-2">
         {label}
       </label>
       {children}
@@ -810,11 +811,11 @@ function SummaryCard({
   icon: string
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5">
+    <div className="rounded-2xl border border-border dark:border-border bg-card dark:bg-card p-5">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm text-slate-500 dark:text-slate-400">{title}</p>
-          <h3 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+          <p className="text-sm text-muted-foreground">{title}</p>
+          <h3 className="text-2xl font-bold text-foreground dark:text-white mt-1">
             {value}
           </h3>
         </div>
@@ -827,8 +828,8 @@ function SummaryCard({
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between gap-4">
-      <span className="text-slate-500 dark:text-slate-400">{label}</span>
-      <span className="font-medium text-slate-900 dark:text-white text-right">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-medium text-foreground dark:text-white text-right">
         {value}
       </span>
     </div>
@@ -871,13 +872,13 @@ function EmptyState({
 }) {
   return (
     <div className="py-10 text-center">
-      <span className="material-symbols-outlined text-4xl text-slate-400">
+      <span className="material-symbols-outlined text-4xl text-muted-foreground">
         {icon}
       </span>
-      <h4 className="mt-3 font-semibold text-slate-900 dark:text-white">
+      <h4 className="mt-3 font-semibold text-foreground dark:text-white">
         {title}
       </h4>
-      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+      <p className="mt-1 text-sm text-muted-foreground">
         {description}
       </p>
     </div>

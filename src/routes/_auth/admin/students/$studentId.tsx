@@ -15,6 +15,7 @@ import {
 } from './-students.selectors'
 import { FormProvider } from 'react-hook-form'
 import { AvatarUploadCard } from './-student.avatar-editor'
+import { motion } from 'framer-motion'
 
 export const Route = createFileRoute('/_auth/admin/students/$studentId')({
   component: RouteComponent,
@@ -69,7 +70,7 @@ function OwnerStudentDetailContent() {
   }
 
   return (
-    <div className="flex h-full w-full">
+    <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex h-full w-full">
       <main className="flex-1 flex flex-col h-full min-w-0 bg-background-light dark:bg-background-dark overflow-hidden relative">
         <div className="flex-1 overflow-x-hidden p-8 pb-32">
           <div className="flex flex-col gap-6 pb-12">
@@ -81,7 +82,7 @@ function OwnerStudentDetailContent() {
                 Edit the informations below and press submit to accept changes
               </p>
             </div>
-            <div className="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-[#f0f2f4] dark:border-gray-800 overflow-hidden">
+            <div className="bg-card dark:bg-surface-dark rounded-xl shadow-sm border border-[#f0f2f4] dark:border-gray-800 overflow-hidden">
               <FormProvider {...studentForm}>
                 <form
                   className="flex flex-col"
@@ -315,7 +316,7 @@ function OwnerStudentDetailContent() {
                       Account Settings
                     </h3>
                     <div className="flex flex-col gap-4">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-lg bg-[#f0f2f4] dark:bg-gray-800">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-[#f0f2f4] dark:bg-gray-800">
                         <div>
                           <p className="text-[#111318] dark:text-white font-medium">
                             System Access
@@ -386,6 +387,6 @@ function OwnerStudentDetailContent() {
           </div>
         </div>
       </main>
-    </div>
+    </motion.div>
   )
 }

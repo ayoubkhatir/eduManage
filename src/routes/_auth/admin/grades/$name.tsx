@@ -7,6 +7,7 @@ import { AddClassDialog } from '../teachers/$teacherId/-add-class.form-dialog'
 import { AddSubjectDialog } from '../teachers/$teacherId/-add-subject.form'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
 import type { AdminUser } from '#/types/usersTypes'
+import { motion } from 'framer-motion'
 // import { useAuth } from '#/store/auth_store'
 
 export const Route = createFileRoute('/_auth/admin/grades/$name')({
@@ -49,7 +50,7 @@ function RouteComponent() {
 
   if (!grade) {
     return (
-      <div className="flex h-full w-full overflow-y-hidden">
+      <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex h-full w-full overflow-y-hidden">
         <main className="flex flex-1 flex-col bg-background-light dark:bg-background-dark">
           <div className="flex-1 overflow-x-hidden p-6">
             <div className="mx-auto flex max-w-7xl flex-col gap-6">
@@ -60,25 +61,25 @@ function RouteComponent() {
                 ← Back to grades
               </Link>
 
-              <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center dark:border-slate-700 dark:bg-slate-900">
-                <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
+              <div className="rounded-2xl border border-dashed border-border bg-card p-10 text-center dark:border-border dark:bg-card">
+                <h1 className="text-2xl font-bold text-foreground dark:text-white">
                   Grade not found
                 </h1>
-                <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                <p className="mt-2 text-sm text-muted-foreground">
                   We couldn&apos;t find a grade matching “{name}”.
                 </p>
               </div>
             </div>
           </div>
         </main>
-      </div>
+      </motion.div>
     )
   }
 
   const isActive = grade.status === 'Active'
 
   return (
-    <div className="flex h-full w-full overflow-y-hidden">
+    <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex h-full w-full overflow-y-hidden">
       <main className="flex flex-1 flex-col bg-background-light dark:bg-background-dark">
         <div className="flex-1 overflow-x-hidden p-6">
           <div className="mx-auto flex max-w-7xl flex-col gap-6">
@@ -89,11 +90,11 @@ function RouteComponent() {
               ← Back to grades
             </Link>
 
-            <section className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:p-8">
+            <section className="rounded-3xl border border-border/80 bg-card p-6 shadow-sm dark:border-border dark:bg-card md:p-8">
               <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-3">
-                    <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white md:text-4xl">
+                    <h1 className="text-3xl font-bold tracking-tight text-foreground dark:text-white md:text-4xl">
                       {grade.name}
                     </h1>
                     <Badge
@@ -108,7 +109,7 @@ function RouteComponent() {
                     </Badge>
                   </div>
 
-                  <p className="mt-3 max-w-2xl text-sm text-slate-500 dark:text-slate-400 md:text-base">
+                  <p className="mt-3 max-w-2xl text-sm text-muted-foreground md:text-base">
                     Overview of classes and subjects assigned to this grade.
                   </p>
 
@@ -132,19 +133,19 @@ function RouteComponent() {
 
             <section className="grid grid-cols-1 gap-6 xl:grid-cols-3">
               <div className="xl:col-span-2 space-y-6">
-                <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <div className="rounded-2xl border border-border/80 bg-card p-6 shadow-sm dark:border-border dark:bg-card">
                   <div className="mb-5 flex items-center justify-between gap-4">
                     <div>
-                      <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                      <h2 className="text-xl font-bold text-foreground dark:text-white">
                         Classes
                       </h2>
-                      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                      <p className="mt-1 text-sm text-muted-foreground">
                         All classes currently linked to this grade.
                       </p>
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <div className="rounded-xl bg-slate-100 px-3 py-2 text-sm font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                      <div className="rounded-xl bg-muted px-3 py-2 text-sm font-medium text-foreground dark:bg-card dark:text-slate-300">
                         {grade.classes.length} total
                       </div>
                       <AddClassDialog
@@ -163,19 +164,19 @@ function RouteComponent() {
                       {grade.classes.map((classe) => (
                         <div
                           key={classe.id}
-                          className="rounded-2xl border border-slate-200/80 bg-slate-50 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm dark:border-slate-800 dark:bg-slate-800/50 dark:hover:border-slate-700"
+                          className="rounded-2xl border border-border/80 bg-muted p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm dark:border-border dark:bg-card/50 dark:hover:border-border"
                         >
                           <div className="flex items-start justify-between gap-3">
                             <div>
-                              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+                              <h3 className="text-lg font-semibold text-foreground dark:text-white">
                                 Class {classe.name}
                               </h3>
-                              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                              <p className="mt-1 text-sm text-muted-foreground">
                                 Belongs to grade {grade.name}
                               </p>
                             </div>
 
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-slate-700 shadow-sm dark:bg-slate-900 dark:text-slate-300">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-card text-foreground shadow-sm dark:bg-card dark:text-slate-300">
                               <span className="material-symbols-outlined">
                                 groups
                               </span>
@@ -187,13 +188,13 @@ function RouteComponent() {
                   )}
                 </div>
 
-                <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <div className="rounded-2xl border border-border/80 bg-card p-6 shadow-sm dark:border-border dark:bg-card">
                   <div className="mb-5 flex items-center justify-between gap-4">
                     <div>
-                      <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                      <h2 className="text-xl font-bold text-foreground dark:text-white">
                         Subjects
                       </h2>
-                      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                      <p className="mt-1 text-sm text-muted-foreground">
                         Curriculum subjects available in this grade.
                       </p>
                     </div>
@@ -221,10 +222,10 @@ function RouteComponent() {
                         >
                           <div className="flex items-start justify-between gap-3">
                             <div>
-                              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+                              <h3 className="text-lg font-semibold text-foreground dark:text-white">
                                 {subject.name}
                               </h3>
-                              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                              <p className="mt-1 text-sm text-muted-foreground">
                                 {subject.code
                                   ? `Code: ${subject.code}`
                                   : 'No code'}
@@ -245,8 +246,8 @@ function RouteComponent() {
               </div>
 
               <aside className="space-y-6">
-                <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                <div className="rounded-2xl border border-border/80 bg-card p-6 shadow-sm dark:border-border dark:bg-card">
+                  <h2 className="text-lg font-bold text-foreground dark:text-white">
                     Quick Summary
                   </h2>
 
@@ -276,21 +277,21 @@ function RouteComponent() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                <div className="rounded-2xl border border-border/80 bg-card p-6 shadow-sm dark:border-border dark:bg-card">
+                  <h2 className="text-lg font-bold text-foreground dark:text-white">
                     Class Names
                   </h2>
 
                   <div className="mt-4 flex flex-wrap gap-2">
                     {grade.classes.length === 0 ? (
-                      <p className="text-sm text-slate-500 dark:text-slate-400">
+                      <p className="text-sm text-muted-foreground">
                         No classes available.
                       </p>
                     ) : (
                       grade.classes.map((classe) => (
                         <span
                           key={classe.id}
-                          className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                          className="inline-flex items-center rounded-full bg-muted px-3 py-1 text-xs font-medium text-foreground dark:bg-card dark:text-slate-300"
                         >
                           {classe.name}
                         </span>
@@ -299,26 +300,26 @@ function RouteComponent() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                <div className="rounded-2xl border border-border/80 bg-card p-6 shadow-sm dark:border-border dark:bg-card">
+                  <h2 className="text-lg font-bold text-foreground dark:text-white">
                     Subject Codes
                   </h2>
 
                   <div className="mt-4 space-y-2">
                     {grade.subjects.length === 0 ? (
-                      <p className="text-sm text-slate-500 dark:text-slate-400">
+                      <p className="text-sm text-muted-foreground">
                         No subjects available.
                       </p>
                     ) : (
                       grade.subjects.map((subject) => (
                         <div
                           key={subject.id}
-                          className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-800/60"
+                          className="flex items-center justify-between rounded-xl bg-muted px-3 py-2 dark:bg-card/60"
                         >
-                          <span className="text-sm font-medium text-slate-700 dark:text-slate-200">
+                          <span className="text-sm font-medium text-foreground dark:text-slate-200">
                             {subject.name}
                           </span>
-                          <span className="text-xs text-slate-500 dark:text-slate-400">
+                          <span className="text-xs text-muted-foreground">
                             {subject.code ?? '—'}
                           </span>
                         </div>
@@ -331,7 +332,7 @@ function RouteComponent() {
           </div>
         </div>
       </main>
-    </div>
+    </motion.div>
   )
 }
 
@@ -341,11 +342,11 @@ function normalizeGradeName(value: string) {
 
 function StatPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl bg-slate-100 px-4 py-3 dark:bg-slate-800/70">
-      <p className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
+    <div className="rounded-xl bg-muted px-4 py-3 dark:bg-card/70">
+      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
         {label}
       </p>
-      <p className="mt-1 text-lg font-bold text-slate-900 dark:text-white">
+      <p className="mt-1 text-lg font-bold text-foreground dark:text-white">
         {value}
       </p>
     </div>
@@ -363,11 +364,11 @@ function SummaryRow({
 }) {
   return (
     <div className="flex items-center justify-between gap-4">
-      <span className="text-sm text-slate-500 dark:text-slate-400">
+      <span className="text-sm text-muted-foreground">
         {label}
       </span>
       <span
-        className={`text-sm font-semibold text-slate-900 dark:text-white ${valueClassName ?? ''}`}
+        className={`text-sm font-semibold text-foreground dark:text-white ${valueClassName ?? ''}`}
       >
         {value}
       </span>
@@ -377,21 +378,21 @@ function SummaryRow({
 
 function EmptyBlock({ message }: { message: string }) {
   return (
-    <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center dark:border-slate-700 dark:bg-slate-800/40">
-      <p className="text-sm text-slate-500 dark:text-slate-400">{message}</p>
+    <div className="rounded-2xl border border-dashed border-border bg-muted p-8 text-center dark:border-border dark:bg-card/40">
+      <p className="text-sm text-muted-foreground">{message}</p>
     </div>
   )
 }
 
 function GradeDetailsSkeleton() {
   return (
-    <div className="flex h-full w-full overflow-y-hidden">
+    <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex h-full w-full overflow-y-hidden">
       <main className="flex flex-1 flex-col bg-background-light dark:bg-background-dark">
         <div className="flex-1 overflow-x-hidden p-6">
           <div className="mx-auto flex max-w-7xl flex-col gap-6">
             <Skeleton className="h-5 w-32" />
 
-            <div className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:p-8">
+            <div className="rounded-3xl border border-border/80 bg-card p-6 shadow-sm dark:border-border dark:bg-card md:p-8">
               <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
                 <div className="space-y-3">
                   <Skeleton className="h-10 w-48" />
@@ -408,7 +409,7 @@ function GradeDetailsSkeleton() {
 
             <section className="grid grid-cols-1 gap-6 xl:grid-cols-3">
               <div className="xl:col-span-2 space-y-6">
-                <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <div className="rounded-2xl border border-border/80 bg-card p-6 shadow-sm dark:border-border dark:bg-card">
                   <div className="mb-5 flex items-center justify-between">
                     <div className="space-y-2">
                       <Skeleton className="h-7 w-28" />
@@ -424,7 +425,7 @@ function GradeDetailsSkeleton() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <div className="rounded-2xl border border-border/80 bg-card p-6 shadow-sm dark:border-border dark:bg-card">
                   <div className="mb-5 flex items-center justify-between">
                     <div className="space-y-2">
                       <Skeleton className="h-7 w-32" />
@@ -450,6 +451,6 @@ function GradeDetailsSkeleton() {
           </div>
         </div>
       </main>
-    </div>
+    </motion.div>
   )
 }

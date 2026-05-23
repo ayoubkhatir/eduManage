@@ -156,6 +156,7 @@ import { getResourcesSchema } from '#/schemas/resources.schema'
 import { columns } from '@/components/resources/columns'
 import { ResourcesTable } from '#/components/teacher/resources/resources-table'
 import { getResourcesQueryOptions } from '#/hooks/resources/hooks'
+import { motion } from 'framer-motion'
 
 export const Route = createFileRoute('/_auth/student/subjects/$subjectCode')({
   component: StudentResourcesPage,
@@ -225,7 +226,7 @@ function StudentResourcesContent() {
   }
 
   return (
-    <main className="flex-1 overflow-y-auto bg-background-light p-4 dark:bg-background-dark md:p-8">
+    <motion.main initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex-1 overflow-y-auto bg-background-light p-4 dark:bg-background-dark md:p-8">
       <div className="mb-8 flex flex-col justify-between gap-6 md:flex-row md:items-end">
         <div>
           <h1 className="text-3xl font-black tracking-tight text-[#0d121b] dark:text-white md:text-4xl">
@@ -239,7 +240,7 @@ function StudentResourcesContent() {
       </div>
 
       {status === 'pending' ? (
-        <div className="text-sm text-slate-500">Loading resources...</div>
+        <div className="text-sm text-muted-foreground">Loading resources...</div>
       ) : status === 'error' ? (
         <div className="text-sm text-red-500">Failed to load resources.</div>
       ) : (
@@ -265,6 +266,6 @@ function StudentResourcesContent() {
           onFilterChange={setFilters}
         />
       )}
-    </main>
+    </motion.main>
   )
 }

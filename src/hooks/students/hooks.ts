@@ -126,14 +126,37 @@ export function useGetStudents({
 
 // edit student information
 export function useEditStudent(edited: StudentUser) {
-  const router = useRouter()
+  const studentForm = useForm<EditStudentType>({
+    defaultValues: {
+      status: edited.info.status,
+      parentPhoneNumber: edited.info.parentPhoneNumber,
+      parentName: edited.info.parentName,
+      name: edited.name,
+      image: edited.image ?? "",
+      gender: edited.gender,
+      enrollmentDate: new Date().toISOString(),
+      email: edited.email,
+      dateOfBirth: new Date().toISOString(),
+      address: edited.info.address,
+      telNumber: edited.telNumber!,
+      studentId: edited.id,
+      classId: edited.info.class.id,
+      gradeId: edited.info.grade.id
+    },
+    resolver: standardSchemaResolver(editStudentSchema),
+  })
+
   const queryClient = useQueryClient()
 
   const { mutate: editStudent } = useMutation({
     mutationFn: async (data: EditStudentType) => {
-      const response = await editStudentServerFn({ data })
-      if (response.success) return response.data
-      throw new Error("Error occured")
+      try {
+        const response = await editStudentServerFn({ data })
+        return response;
+      } catch (error) {
+        console.log({ error })
+      }
+
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['students'] })
@@ -161,31 +184,12 @@ export function useEditStudent(edited: StudentUser) {
     editStudent(newData, {
       onSuccess: () => {
         toast.success("Edit User Success")
-        router.invalidate()
-
+      },
+      onError: () => {
+        toast.error("Error occured")
       }
     })
   }
-
-  const studentForm = useForm<EditStudentType>({
-    defaultValues: {
-      status: edited.info.status,
-      parentPhoneNumber: edited.info.parentPhoneNumber,
-      parentName: edited.info.parentName,
-      name: edited.name,
-      image: edited.image ?? "",
-      gender: edited.gender,
-      enrollmentDate: new Date().toISOString(),
-      email: edited.email,
-      dateOfBirth: new Date().toISOString(),
-      address: edited.info.address,
-      telNumber: edited.telNumber!,
-      studentId: edited.id,
-      classId: edited.info.class.id,
-      gradeId: edited.info.grade.id
-    },
-    resolver: standardSchemaResolver(editStudentSchema),
-  })
 
   return { studentForm, onSubmit }
 }

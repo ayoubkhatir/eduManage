@@ -43,6 +43,8 @@ const info = {
   ],
 }
 
+import { motion } from 'framer-motion'
+
 function Teacher() {
   const { currentUser } = Route.useLoaderData()
 
@@ -51,13 +53,13 @@ function Teacher() {
 
   return (
     <Skeleton name="teacher-layout" loading={false}>
-      <div className="flex h-screen overflow-hidden bg-background-light text-slate-900 dark:bg-background-dark dark:text-slate-100">
+      <div className="flex h-screen overflow-hidden bg-background text-slate-900 dark:text-slate-100">
         <SideBar currentUser={currentUser} info={info} />
-        <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
+        <main className="relative flex min-w-0 flex-1 flex-col overflow-y-auto">
           <TopNav />
           {/* Breadcrumb */}
           <nav
-            className="flex items-center gap-1.5 px-6 pt-4 pb-1 text-sm font-medium"
+            className="flex items-center gap-2 px-6 pt-5 pb-2 text-sm font-medium"
             aria-label="Breadcrumb"
           >
             {path
@@ -66,15 +68,15 @@ function Teacher() {
               .map((segment, i, arr) => (
                 <Fragment key={i}>
                   {i > 0 && (
-                    <span className="text-slate-300 dark:text-slate-600 select-none">
-                      /
-                    </span>
+                    <svg className="size-3.5 shrink-0 text-slate-400 dark:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
                   )}
                   <span
                     className={
                       i === arr.length - 1
-                        ? 'text-slate-900 dark:text-white capitalize'
-                        : 'text-slate-500 dark:text-slate-400 capitalize'
+                        ? 'text-foreground font-semibold capitalize tracking-tight'
+                        : 'text-muted-foreground capitalize'
                     }
                   >
                     {segment.replace(/-/g, ' ')}
@@ -82,7 +84,7 @@ function Teacher() {
                 </Fragment>
               ))}
           </nav>
-          <Outlet />
+            <Outlet />
         </main>
       </div>
     </Skeleton>

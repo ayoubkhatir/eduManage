@@ -14,6 +14,7 @@ import type { SubmitHandler } from 'react-hook-form'
 
 
 
+
 export function useLogout() {
   const navigate = useNavigate()
 
@@ -23,7 +24,7 @@ export function useLogout() {
       if (!response.success) {
         throw new Error('Failed to logout')
       }
-      return response.message
+      return ""//response.message
     },
     onSuccess: () => {
       navigate({ to: '/', replace: true })
