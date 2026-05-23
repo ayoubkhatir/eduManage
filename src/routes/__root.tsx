@@ -90,21 +90,21 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 //   return parts.length ? `route-${parts.join('-')}` : 'route-home'
 // }
 
+import { AnimatePresence } from 'framer-motion'
+
+
 function Root({ children }: { children: ReactNode }) {
-  // const routeSkeletonName = getRouteSkeletonName(location.pathname)
+  
+
   return (
     <>
-      {/* <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme"> */}
       <QueryClientProvider client={queryClient}>
-        {/* <AuthProvider initialProps={authState}> */}
         <ThemeProvider>
-          {/* <Skeleton name={routeSkeletonName} loading={false}> */}
-          {children}
-          {/* </Skeleton> */}
+          <AnimatePresence mode="wait">
+              {children}
+          </AnimatePresence>
         </ThemeProvider>
-        {/* </AuthProvider> */}
       </QueryClientProvider>
-      {/* </ThemeProvider> */}
     </>
   )
 }

@@ -1,109 +1,135 @@
-// import { useMemo } from 'react'
-// import type { OwnerEvent } from './model'
-// // import { useGetTeachers } from '@/services/api/admin/teacher/hooks'
-// import { useGetStudents } from '@/services/api/admin/student/hooks'
-// import useGetEvents from '@/services/api/getEvents'
+import { useMemo } from 'react'
+import type { OwnerEvent } from './model'
+import useGetEvents from '@/hooks/events/hooks'
+import { useGetStudents } from '@/hooks/students/hooks'
+import { useQuery } from '@tanstack/react-query'
+import { getAllTeachersServerFn } from '#/server/modules/teachers/teachers.server-functions'
 
-// type ApiEvent = Omit<OwnerEvent, 'start' | 'end'> & {
-//   start: string | Date
-//   end: string | Date
-// }
+type ApiEvent = Omit<OwnerEvent, 'start' | 'end'> & {
+	start: string | Date
+	end: string | Date
+}
 
-// export function useAdminCalendarData() {
-//   // const { data: { data: teachersData } = { data: [] } } = useGetTeachers()
-//   const { data: { data: studentsData } = { data: [] } } = useGetStudents({})
+export function useAdminCalendarData(schoolId?: string) {
+	const { data: studentsResp } = useGetStudents({})
+	const studentsData = studentsResp?.data ?? []
 
-//   const {
-//     data: eventsData,
-//     isLoading: isEventsLoading,
-//     isError: isEventsError,
-//   } = useGetEvents(undefined, undefined, true)
+	const { data: teachersResp } = useQuery({
+		queryKey: ['teachers', 'calendar-options', schoolId],
+		queryFn: async () => {
+			if (!schoolId) return []
+			const response = await getAllTeachersServerFn({ data: { schoolId } })
+			return response.success ? response.data : []
+		},
+		enabled: !!schoolId,
+	})
 
-//   const events = useMemo<Array<OwnerEvent>>(
-//     () =>
-//       (eventsData ?? []).map((ev: ApiEvent) => ({
-//         ...ev,
-//         start: new Date(ev.start),
-//         end: new Date(ev.end),
-//       })),
-//     [eventsData],
-//   )
+	const {
+		data: eventsData,
+		isLoading: isEventsLoading,
+		isError: isEventsError,
+	} = useGetEvents(undefined, undefined, true)
 
-//   const teacherNames: Array<string> = useMemo(
-//     () =>
-//       teachersData
-//         .map((t: { id: string; name: string }) => t.name)
-//         .filter(Boolean),
-//     [teachersData],
-//   )
+	const events = useMemo<Array<OwnerEvent>>(
+		() =>
+			(eventsData ?? []).map((ev: ApiEvent) => ({
+				...ev,
+				start: new Date(ev.start),
+				end: new Date(ev.end),
+			})),
+		[eventsData],
+	)
 
-//   const classOptions: Array<string> = useMemo(() => {
-//     const grades: Array<string> = studentsData.map(
-//       (s: { grade: string }) => s.grade,
-//     )
-//     return Array.from(new Set(grades)).sort()
-//   }, [studentsData])
+	const teacherNames: Array<string> = useMemo(() => {
+		const names = (teachersResp ?? [])
+			.map((teacher: any) => teacher.username)
+			.filter(Boolean)
+		return Array.from(new Set(names)).sort()
+	}, [teachersResp])
 
-//   const displayEvents = useMemo(() => {
-//     const WEEK_MS = 7 * 24 * 60 * 60 * 1000
-//     const windowStart = new Date()
-//     windowStart.setFullYear(windowStart.getFullYear() - 1)
-//     const windowEnd = new Date()
-//     windowEnd.setFullYear(windowEnd.getFullYear() + 1)
+	const classOptions: Array<string> = useMemo(() => {
+		const classNames: Array<string> = studentsData
+			.map((student: any) => student.info?.class?.name)
+			.filter(Boolean)
+		return Array.from(new Set(classNames)).sort()
+	}, [studentsData])
 
-//     const result: Array<OwnerEvent> = []
-//     for (const ev of events) {
-//       if (!ev.repeatWeekly) {
-//         result.push(ev)
-//         continue
-//       }
+	const classLookup = useMemo(() => {
+		const lookup = new Map<string, string>()
+		for (const student of studentsData as Array<any>) {
+			const className = student.info?.class?.name
+			const classId = student.info?.class?.id
+			if (className && classId && !lookup.has(className)) {
+				lookup.set(className, classId)
+			}
+		}
+		return lookup
+	}, [studentsData])
 
-//       const durationMs = ev.end.getTime() - ev.start.getTime()
-//       let cur = new Date(ev.start)
+	const teacherLookup = useMemo(() => {
+		const lookup = new Map<string, string>()
+		for (const teacher of (teachersResp ?? []) as Array<any>) {
+			if (teacher.username && teacher.teacherId && !lookup.has(teacher.username)) {
+				lookup.set(teacher.username, teacher.teacherId)
+			}
+		}
+		return lookup
+	}, [teachersResp])
 
-//       if (cur < windowStart) {
-//         const weeks = Math.ceil(
-//           (windowStart.getTime() - cur.getTime()) / WEEK_MS,
-//         )
-//         cur = new Date(cur.getTime() + weeks * WEEK_MS)
-//       }
+	const displayEvents = useMemo(() => {
+		const WEEK_MS = 7 * 24 * 60 * 60 * 1000
+		const windowStart = new Date()
+		windowStart.setFullYear(windowStart.getFullYear() - 1)
+		const windowEnd = new Date()
+		windowEnd.setFullYear(windowEnd.getFullYear() + 1)
 
-//       while (cur <= windowEnd) {
-//         result.push({
-//           ...ev,
-//           start: new Date(cur),
-//           end: new Date(cur.getTime() + durationMs),
-//         })
-//         cur = new Date(cur.getTime() + WEEK_MS)
-//       }
-//     }
+		const result: Array<OwnerEvent> = []
+		for (const ev of events) {
+			if (!ev.repeatWeekly) {
+				result.push(ev)
+				continue
+			}
 
-//     return result
-//   }, [events])
+			const durationMs = ev.end.getTime() - ev.start.getTime()
+			let cur = new Date(ev.start)
 
-//   const upcomingEvents = useMemo(() => {
-//     const now = new Date()
-//     const todayStart = new Date(
-//       now.getFullYear(),
-//       now.getMonth(),
-//       now.getDate(),
-//     )
-//     const tomorrowEnd = new Date(
-//       todayStart.getTime() + 2 * 24 * 60 * 60 * 1000 - 1,
-//     )
+			if (cur < windowStart) {
+				const weeks = Math.ceil((windowStart.getTime() - cur.getTime()) / WEEK_MS)
+				cur = new Date(cur.getTime() + weeks * WEEK_MS)
+			}
 
-//     return [...displayEvents]
-//       .filter((e) => e.start <= tomorrowEnd && e.end >= todayStart)
-//       .sort((a, b) => a.start.getTime() - b.start.getTime())
-//   }, [displayEvents])
+			while (cur <= windowEnd) {
+				result.push({
+					...ev,
+					start: new Date(cur),
+					end: new Date(cur.getTime() + durationMs),
+				})
+				cur = new Date(cur.getTime() + WEEK_MS)
+			}
+		}
 
-//   return {
-//     classOptions,
-//     displayEvents,
-//     events,
-//     isEventsError,
-//     isEventsLoading,
-//     teacherNames,
-//     upcomingEvents,
-//   }
-// }
+		return result
+	}, [events])
+
+	const upcomingEvents = useMemo(() => {
+		const now = new Date()
+		const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+		const tomorrowEnd = new Date(todayStart.getTime() + 2 * 24 * 60 * 60 * 1000 - 1)
+
+		return [...displayEvents]
+			.filter((e) => e.start <= tomorrowEnd && e.end >= todayStart)
+			.sort((a, b) => a.start.getTime() - b.start.getTime())
+	}, [displayEvents])
+
+	return {
+		classOptions,
+		classLookup,
+		displayEvents,
+		events,
+		isEventsError,
+		isEventsLoading,
+		teacherNames,
+		teacherLookup,
+		upcomingEvents,
+	}
+}

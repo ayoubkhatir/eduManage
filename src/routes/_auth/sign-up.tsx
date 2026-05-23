@@ -10,15 +10,22 @@ export const Route = createFileRoute('/_auth/sign-up')({
   }),
 })
 
+import { motion } from 'framer-motion'
+
 function RouteComponent() {
   return (
     <Skeleton name="signup-page" loading={false}>
-      <div className="bg-white dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased selection:bg-primary selection:text-white h-screen overflow-hidden overflow-x-hidden">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
+        className="bg-background text-foreground antialiased h-screen overflow-hidden overflow-x-hidden relative"
+      >
         <div className="flex h-full w-full flex-row">
           <LeftPanel />
           <RightPanel />
         </div>
-      </div>
+      </motion.div>
     </Skeleton>
   )
 }

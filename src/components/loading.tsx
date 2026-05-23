@@ -1,5 +1,4 @@
-import Lottie from 'lottie-react'
-import loading from '../assets/animation/sandy_loading.json'
+import { Loader2Icon } from 'lucide-react'
 import { cn } from '../lib/utils'
 
 export type LoadingProps = {
@@ -13,8 +12,6 @@ export default function Loading({
   text = 'Loading...',
   description = 'Please wait while we fetch the data for you.',
 }: LoadingProps) {
-
-
   return (
     <div
       className={cn(
@@ -22,9 +19,11 @@ export default function Loading({
         className,
       )}
     >
-      <Lottie animationData={loading} loop={true} className="h-32 w-32" />
+      <Loader2Icon className="h-16 w-16 animate-spin text-primary" aria-hidden />
       {text ? (
-        <h2 className="text-center text-lg font-semibold text-black dark:text-white">{text}</h2>
+        <h2 className="text-center text-lg font-semibold text-black dark:text-white">
+          {text}
+        </h2>
       ) : null}
       {description ? (
         <p className="max-w-sm text-center text-muted-foreground text-gray-600 dark:text-gray-400">

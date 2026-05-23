@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 import { PageLayout, Section, FadeIn } from '#/components/landing/landing-shared'
@@ -10,6 +11,7 @@ export const Route = createFileRoute('/_auth/Pages/terms')({
 function RouteComponent() {
   return (
     <Skeleton name="terms" loading={false}>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4 }}>
       <PageLayout>
         <div className="relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28">
           <div className="pointer-events-none absolute inset-0">
@@ -55,6 +57,7 @@ function RouteComponent() {
           </Section>
         </div>
       </PageLayout>
+      </motion.div>
     </Skeleton>
   )
 }

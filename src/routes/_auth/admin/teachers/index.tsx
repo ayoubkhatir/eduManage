@@ -14,6 +14,7 @@ import {
 } from '#/components/admin/Table/dataTable'
 import { TeachersStatCards } from '#/components/admin/cards/UICard'
 import type { GetTeachersType } from '#/types/teacherTypes'
+import { motion } from 'framer-motion'
 
 const getTeachersQueryOptions = ({
   page,
@@ -93,13 +94,13 @@ function AdminTeachersContent() {
     select: (s) => ({ search: s.search, size: s.size }),
   })
   return (
-    <div className="flex-1 w-full overflow-y-auto overflow-x-auto flex flex-col gap-6">
+    <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex-1 w-full overflow-y-auto overflow-x-auto flex flex-col gap-6">
       <IndexPageComponent role="Teacher">
         <TeachersStatCards />
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="relative flex-1 max-w-sm">
-            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px] pointer-events-none">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-[20px] pointer-events-none">
               search
             </span>
             <SearchInput
@@ -132,7 +133,7 @@ function AdminTeachersContent() {
 
         <MainPageContent />
       </IndexPageComponent>
-    </div>
+    </motion.div>
   )
 }
 
@@ -172,28 +173,28 @@ function MainPageContent() {
           <span className="material-symbols-outlined text-5xl text-red-400 mb-3">
             error_outline
           </span>
-          <p className="text-lg font-medium text-slate-700 dark:text-slate-300">
+          <p className="text-lg font-medium text-foreground">
             Failed to load teachers
           </p>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-sm text-muted-foreground">
             Please try again later
           </p>
         </div>
       ) : (
         <div className="space-y-4">
-          <div className="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900 overflow-hidden">
+          <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
             <TeachersTable data={teachersData.data} />
           </div>
           <div className="flex flex-col-reverse items-center justify-between gap-3 sm:flex-row">
-            <p className="text-sm text-slate-500 dark:text-slate-400">
+            <p className="text-sm text-muted-foreground">
               Showing{' '}
-              <span className="font-medium text-slate-700 dark:text-slate-300">
+              <span className="font-medium text-foreground">
                 {size > teachersData.pagination.totalCount
                   ? teachersData.pagination.totalCount
                   : size}
               </span>{' '}
               of{' '}
-              <span className="font-medium text-slate-700 dark:text-slate-300">
+              <span className="font-medium text-foreground">
                 {teachersData.pagination.totalCount}
               </span>
             </p>

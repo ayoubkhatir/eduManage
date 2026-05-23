@@ -1,9 +1,3 @@
-// Temporarily disabled for future repair.
-export default function NotificationList() {
-  return null
-}
-
-/*
 import { MdOutlineGrade, MdPriorityHigh } from 'react-icons/md'
 import { GiWhiteBook } from 'react-icons/gi'
 import { FaRegCircleUser } from 'react-icons/fa6'
@@ -16,9 +10,9 @@ import type {
   NotificationListProps,
   ResourceCard,
   TypeTabFilter,
-} from '@/services/api/student/types/apiType'
-import { useNotifications } from '@/services/api/student/notification/notification'
-import useGetTeacherNotifications from '@/services/api/teacher/notification/hooks'
+} from '@/types/notificationTypes'
+// import { useNotifications } from '@/services/api/student/notification/notification'
+// import useGetTeacherNotifications from '@/services/api/teacher/notification/hooks'
 
 const getIcon = (iconType: string) => {
   switch (iconType) {
@@ -295,4 +289,3 @@ export default function NotificationList({
     </div>
   )
 }
-*/

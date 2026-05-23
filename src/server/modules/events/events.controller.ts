@@ -160,6 +160,20 @@ class EventsController {
 
         return created
     }
+
+    async updateEvent(id: string, data: Partial<AddEventType>) {
+        const [row] = await this.db
+            .update(eventsTable)
+            .set(data as any)
+            .where(eq(eventsTable.id, id))
+            .returning()
+        return row
+    }
+
+    async deleteEvent(id: string) {
+        const [row] = await this.db.delete(eventsTable).where(eq(eventsTable.id, id)).returning()
+        return row
+    }
 }
 
 export const eventsController = new EventsController(db)

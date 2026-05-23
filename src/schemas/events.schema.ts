@@ -29,3 +29,10 @@ export const addEventSchema = z.object({
     status: statusSchema
 })
 
+export const editEventSchema = z.object({
+    id: z.string().min(1),
+    data: addEventSchema.partial(),
+})
+
+export const deleteEventSchema = z.string().min(1)
+
