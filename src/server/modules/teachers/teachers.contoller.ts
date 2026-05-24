@@ -401,7 +401,7 @@ class TeachersController {
             .innerJoin(users, eq(teachersTable.userId, users.id))
             .where(eq(teachersTable.id, input.teacherId))
 
-        return updatedTeacher ?? null
+        return updatedTeacher
     }
 
     /**

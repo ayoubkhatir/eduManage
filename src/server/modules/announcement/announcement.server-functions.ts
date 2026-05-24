@@ -1,12 +1,9 @@
-import { createAnnouncementSchema } from "#/schemas/announcement.schema";
+import { createAnnouncementSchema, getAnnouncementsSchema } from "#/schemas/announcement.schema";
 import { internalServerErrorResponse, successResponse, type APIResponse } from "#/server/utils/response.type";
 import { createServerFn } from "@tanstack/react-start";
 import { announcementsController } from "./announcement.controller";
 import { validCuidSchema, validSlugSchema } from "#/schemas/shared.schema";
 import type { AnnouncementWithAuthor } from "#/types/announcementTypes";
-import { z } from "zod/v4";
-import { AnnouncementAudienceEnum } from "#/server/db/schema";
-
 
 export const createAnnouncementServerFn = createServerFn({ method: "POST" })
     .inputValidator(createAnnouncementSchema)
@@ -23,23 +20,6 @@ export const createAnnouncementServerFn = createServerFn({ method: "POST" })
         }
     })
 
-export const getAnnouncementsFiltersSchema = z.object({
-    search: z.string().default(''),
-    audience: z
-        .enum(AnnouncementAudienceEnum)
-        .default(AnnouncementAudienceEnum.ALL),
-})
-export type GetAnnouncementsFiltersSchema = z.infer<typeof getAnnouncementsFiltersSchema>
-
-
-const getAnnouncementsSchema = z.object({
-    schoolId: validCuidSchema,
-    filters: getAnnouncementsFiltersSchema.default({
-        search: '',
-        audience: AnnouncementAudienceEnum.ALL
-    })
-})
-export type GetAnnouncementsSchema = z.infer<typeof getAnnouncementsSchema>
 
 export const getAnnouncementsServerFn = createServerFn({ method: "GET" })
     .inputValidator(getAnnouncementsSchema)

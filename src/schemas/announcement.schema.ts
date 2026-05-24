@@ -11,3 +11,19 @@ export const createAnnouncementSchema = z.object({
 })
 
 
+
+export const getAnnouncementsFiltersSchema = z.object({
+    search: z.string().default(''),
+    audience: z
+        .enum(AnnouncementAudienceEnum)
+        .default(AnnouncementAudienceEnum.PUBLIC),
+})
+
+
+export const getAnnouncementsSchema = z.object({
+    schoolId: validCuidSchema,
+    filters: getAnnouncementsFiltersSchema.default({
+        search: '',
+        audience: AnnouncementAudienceEnum.PUBLIC
+    })
+})

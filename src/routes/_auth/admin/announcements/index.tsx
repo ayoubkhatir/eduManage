@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Suspense, useState } from 'react'
+import { Suspense } from 'react'
 import AnnouncementsList from '#/components/announcementsList'
 import { motion } from 'framer-motion'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
@@ -14,10 +14,8 @@ import {
   AnnouncementAudienceEnum,
   announcementAudienceList,
 } from '#/server/db/schema'
-import { z } from 'zod/v4'
-import useDebounce from '#/hooks/use-debounce'
 import { SearchInput } from '#/components/admin/SearchInput'
-import { getAnnouncementsFiltersSchema } from '#/server/modules/announcement/announcement.server-functions'
+import { getAnnouncementsFiltersSchema } from '#/schemas/announcement.schema'
 
 export const Route = createFileRoute('/_auth/admin/announcements/')({
   component: Announcement,
@@ -77,42 +75,7 @@ function Announcement() {
             </button>
           </Link>
         </div>
-        {/* <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-[#1e293b] shadow-sm border border-slate-200 dark:border-slate-800">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-500">
-                <span className="material-symbols-outlined">campaign</span>
-              </div>
-              <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
-                Active Posts
-              </p>
-            </div>
-            <p className="text-3xl font-bold leading-tight mt-2">5</p>
-          </div>
-          <div className="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-[#1e293b] shadow-sm border border-slate-200 dark:border-slate-800">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-amber-500/10 text-amber-500">
-                <span className="material-symbols-outlined">edit_document</span>
-              </div>
-              <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
-                Drafts
-              </p>
-            </div>
-            <p className="text-3xl font-bold leading-tight mt-2">2</p>
-          </div>
-          <div className="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-[#1e293b] shadow-sm border border-slate-200 dark:border-slate-800">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-blue-500/10 text-blue-500">
-                <span className="material-symbols-outlined">visibility</span>
-              </div>
-              <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
-                Total Views
-              </p>
-            </div>
-            <p className="text-3xl font-bold leading-tight mt-2">1.2k</p>
-          </div>
-        </div>
-      */}
+
         <Suspense fallback={<UICardSkeleton count={3} />}>
           <AnnouncementsStatCards
             schoolId={currentUser.info.id}
@@ -136,10 +99,7 @@ function Announcement() {
           />
         </div>
         <div className="flex gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
-          <AudienceSelect
-          // selectedAudience={selectedAudience}
-          // setSelectedAudience={setSelectedAudience}
-          />
+          <AudienceSelect />
         </div>
       </div>
       <Suspense
@@ -154,8 +114,6 @@ function Announcement() {
         }
       >
         <AnnouncementsList
-          // searchText={searchText}
-          // selectedAudience={selectedAudience}
           schoolId={currentUser.info.id}
           filters={{ search, audience }}
         />
@@ -190,7 +148,7 @@ function AudienceSelect() {
               e.target.value as AnnouncementAudienceEnum,
             )
               ? (e.target.value as AnnouncementAudienceEnum)
-              : AnnouncementAudienceEnum.ALL,
+              : AnnouncementAudienceEnum.PUBLIC,
           }),
         })
       }

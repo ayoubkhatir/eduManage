@@ -40,7 +40,7 @@ export const userGendersList = Object.values(UserGenderEnum) as [UserGenderEnum,
 export const dbGenderEnum = pgEnum("gender", userGendersList);
 
 export enum AnnouncementAudienceEnum {
-  ALL = "All",
+  PUBLIC = "Public",
   TEACHERS = "Teachers",
   STUDENTS = "Students"
 }
@@ -735,7 +735,7 @@ export const announcementsTable = pgTable(
       .defaultNow()
       .$onUpdate(() => new Date())
       .notNull(),
-    audience: dbAnnouncementAudienceEnum('audience').notNull().default(AnnouncementAudienceEnum.ALL).$type<AnnouncementAudienceEnum>(),
+    audience: dbAnnouncementAudienceEnum('audience').notNull().default(AnnouncementAudienceEnum.PUBLIC).$type<AnnouncementAudienceEnum>(),
   },
   (table) => ({
     announcementScopedUnique: uniqueIndex('announcements_school_title_unique').on(

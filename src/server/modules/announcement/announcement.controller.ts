@@ -1,10 +1,8 @@
 import { db } from "#/server/db/db";
-import { adminsTable, announcementsTable, users } from "#/server/db/schema";
+import { adminsTable, AnnouncementAudienceEnum, announcementsTable, users } from "#/server/db/schema";
 import { ToSlug } from "#/server/utils/Slugify";
-import type { AnnouncementWithAuthor, CreateAnnouncementType } from "#/types/announcementTypes";
+import type { AnnouncementWithAuthor, CreateAnnouncementType, GetAnnouncementsFiltersSchema } from "#/types/announcementTypes";
 import { and, eq, ilike, or } from "drizzle-orm";
-import type { GetAnnouncementsFiltersSchema } from "./announcement.server-functions";
-
 
 class AnnouncementController {
     async createAnnouncement({ audience, authorId, description, schoolId, title }: CreateAnnouncementType) {
@@ -41,12 +39,37 @@ class AnnouncementController {
         const announcements: AnnouncementWithAuthor[] = await db.query.announcementsTable.findMany({
             where: and(
                 eq(announcementsTable.schoolId, schoolId),
-                eq(announcementsTable.audience, filters.audience),
-                or(
-                    ilike(announcementsTable.title, `%${filters.search}%`),
-                    ilike(announcementsTable.slug, `%${filters.search}%`),
-                    ilike(announcementsTable.description, `%${filters.search}%`)
-                )),
+                filters.audience !== AnnouncementAudienceEnum.PUBLIC
+                    ? eq(
+                        announcementsTable.audience,
+                        filters.audience,
+                    )
+                    : undefined,
+                filters.search
+                    ? or(
+                        ilike(
+                            announcementsTable.title,
+                            `%${filters.search}%`,
+                        ),
+
+                        ilike(
+                            announcementsTable.slug,
+                            `%${filters.search}%`,
+                        ),
+
+                        ilike(
+                            announcementsTable.description,
+                            `%${filters.search}%`,
+                        ),
+                    )
+                    : undefined,
+                // eq(announcementsTable.audience, filters.audience),
+                // or(
+                //     ilike(announcementsTable.title, `%${filters.search}%`),
+                //     ilike(announcementsTable.slug, `%${filters.search}%`),
+                //     ilike(announcementsTable.description, `%${filters.search}%`)
+                //  )
+            ),
             limit: 10,
             with: {
                 author: {

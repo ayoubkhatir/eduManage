@@ -1,4 +1,4 @@
-import type { createAnnouncementSchema } from "#/schemas/announcement.schema";
+import type { createAnnouncementSchema, getAnnouncementsFiltersSchema, getAnnouncementsSchema } from "#/schemas/announcement.schema";
 import { announcementsTable, UserGenderEnum, UserRoleEnum } from "#/server/db/schema";
 import { z } from "zod/v4";
 
@@ -25,3 +25,7 @@ export type GetAnnouncementType = {
     createdAt: Date,
     updatedAt: Date
 }
+
+export type GetAnnouncementsFiltersSchema = z.infer<typeof getAnnouncementsFiltersSchema>
+
+export type GetAnnouncementsSchema = z.infer<typeof getAnnouncementsSchema>
