@@ -139,7 +139,7 @@ export function useEditStudent(edited: StudentUser) {
       dateOfBirth: new Date().toISOString(),
       address: edited.info.address,
       telNumber: edited.telNumber!,
-      studentId: edited.id,
+      studentId: edited.info.id,
       classId: edited.info.class.id,
       gradeId: edited.info.grade.id
     },

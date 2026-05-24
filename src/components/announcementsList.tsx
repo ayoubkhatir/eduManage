@@ -1,11 +1,10 @@
 import { Link } from '@tanstack/react-router'
 // import type { AnnouncementModel } from '@/schemas/announcement.schemas'
 import { stripHtmlTags } from '@/lib/utils'
-import type { AnnouncementWithAuthor } from '#/types/announcementTypes'
 import { getAnnouncementsListQueryOptions } from '#/hooks/admin/hooks'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { UserGenderEnum } from '#/server/db/schema'
-import type { GetAnnouncementsFiltersSchema } from '#/server/modules/announcement/announcement.server-functions'
+import type { GetAnnouncementsFiltersSchema } from '#/types/announcementTypes'
 
 export type AnnouncementListProps = {
   // data?: Array<AnnouncementWithAuthor>

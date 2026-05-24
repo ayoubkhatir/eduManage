@@ -246,7 +246,7 @@ export const StudentColumns: Array<ColumnDef<StudentUser>> = [
               <ViewProfileMenuItem role="Student" id={student.info.id} />
               <DropdownMenuSeparator className="bg-slate-200 dark:bg-slate-700" />
 
-              <DeleteMenuItem role="Student" id={student.id} />
+              <DeleteMenuItem role="Student" id={student.info.id} />
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -443,7 +443,7 @@ export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
               <AssignTeacherMenuItem teacherId={teacher.info.id} />
               <DropdownMenuSeparator className="bg-slate-200 dark:bg-slate-700" />
 
-              <DeleteMenuItem role="Teacher" id={teacher.id} />
+              <DeleteMenuItem role="Teacher" id={teacher.info.id} />
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
