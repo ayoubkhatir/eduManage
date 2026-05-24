@@ -1,20 +1,21 @@
 import { Link } from '@tanstack/react-router'
-import Loading from './loading'
 // import type { AnnouncementModel } from '@/schemas/announcement.schemas'
 import { stripHtmlTags } from '@/lib/utils'
 import type { AnnouncementWithAuthor } from '#/types/announcementTypes'
 import { getAnnouncementsListQueryOptions } from '#/hooks/admin/hooks'
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { UserGenderEnum } from '#/server/db/schema'
+import type { GetAnnouncementsFiltersSchema } from '#/server/modules/announcement/announcement.server-functions'
 
 export type AnnouncementListProps = {
-  data?: Array<AnnouncementWithAuthor>
-  isLoading?: boolean
-  error?: any
-  selectedAudience: string
-  searchText?: string
-  detailTo?: string
+  // data?: Array<AnnouncementWithAuthor>
+  // isLoading?: boolean
+  // error?: any
+  // selectedAudience: string
+  // searchText?: string
+  // detailTo?: string
   schoolId: string
+  filters: GetAnnouncementsFiltersSchema
 }
 
 const getAudienceColors = (audience: string) => {
@@ -55,62 +56,46 @@ const getAudienceColors = (audience: string) => {
   }
 }
 
-const filterAnnouncements = (
-  data: Array<AnnouncementWithAuthor>,
-  searchText = '',
-  selectedAudience = 'All School',
-) => {
-  const lowerSearch = searchText.trim().toLowerCase()
+// const filterAnnouncements = (
+//   data: Array<AnnouncementWithAuthor>,
+//   searchText = '',
+//   selectedAudience = 'All School',
+// ) => {
+//   const lowerSearch = searchText.trim().toLowerCase()
 
-  return data.filter((announcement) => {
-    // Filter by audience :
-    if (
-      selectedAudience !== 'All School' &&
-      announcement.audience !== selectedAudience
-    ) {
-      return false
-    }
+//   return data.filter((announcement) => {
+//     // Filter by audience :
+//     if (
+//       selectedAudience !== 'All School' &&
+//       announcement.audience !== selectedAudience
+//     ) {
+//       return false
+//     }
 
-    // Filter by search text :
-    if (!lowerSearch) return true
+//     // Filter by search text :
+//     if (!lowerSearch) return true
 
-    const cleanContent = stripHtmlTags(announcement.description)
-    const haystack =
-      `${announcement.title} ${cleanContent} ${announcement.audience}`.toLowerCase()
-    return haystack.includes(lowerSearch)
-  })
-}
+//     const cleanContent = stripHtmlTags(announcement.description)
+//     const haystack =
+//       `${announcement.title} ${cleanContent} ${announcement.audience}`.toLowerCase()
+//     return haystack.includes(lowerSearch)
+//   })
+// }
 
-export default function AnnouncementList({
-  data: propData,
-  isLoading: propIsLoading,
-  error: propError,
-  searchText = '',
-  selectedAudience = 'All School',
-  // detailTo = '/admin/announcements',
+export default function AnnouncementsList({
   schoolId,
+  filters,
 }: AnnouncementListProps) {
-  const announcementsQuery = useQuery(
-    getAnnouncementsListQueryOptions(schoolId),
+  const { status, data } = useSuspenseQuery(
+    getAnnouncementsListQueryOptions(schoolId, filters),
     // searchText ? { search: searchText } : {},
   )
-  const isLoading = propIsLoading || announcementsQuery.isLoading
-  const error = propError || announcementsQuery.error
-  const data = propData || announcementsQuery.data // || propData
+  console.log({ data })
+  // const isLoading = propIsLoading || announcementsQuery.isLoading
+  // const error = propError || announcementsQuery.error
+  // const data = propData || announcementsQuery.data // || propData
 
-  if (isLoading) {
-    return (
-      <div className="h-full w-full flex items-center justify-center">
-        <Loading
-          className="h-[80%] w-[80%] p-10"
-          text="loading..."
-          description="Please wait while we fetch the announcements for you."
-        />
-      </div>
-    )
-  }
-
-  if (error) {
+  if (status === 'error') {
     return (
       <p className="text-[#4c669a] dark:text-[#9da6b9] text-center py-10 pl-8 text-base font-normal">
         Something went wrong.
@@ -118,7 +103,7 @@ export default function AnnouncementList({
     )
   }
 
-  if (!data || data.length === 0) {
+  if (data.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-32 text-center px-4">
         <div className="size-12 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400 mb-3">
@@ -133,21 +118,21 @@ export default function AnnouncementList({
     )
   }
 
-  const filteredData = filterAnnouncements(data, searchText, selectedAudience)
+  // const filteredData = filterAnnouncements(data, searchText, selectedAudience)
 
-  if (filteredData.length === 0) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <p className="text-[#4b5563] dark:text-[#9da6b9]">
-          No announcements match your filters.
-        </p>
-      </div>
-    )
-  }
+  // if (filteredData.length === 0) {
+  //   return (
+  //     <div className="flex items-center justify-center py-20">
+  //       <p className="text-[#4b5563] dark:text-[#9da6b9]">
+  //         No announcements match your filters.
+  //       </p>
+  //     </div>
+  //   )
+  // }
 
   return (
     <div className="flex flex-col gap-4">
-      {filteredData.map((announcement) => {
+      {data.map((announcement) => {
         const audienceColors = getAudienceColors(announcement.audience)
 
         return (
@@ -208,8 +193,7 @@ export default function AnnouncementList({
                     </span>
                     {announcement.author.gender === UserGenderEnum.MALE
                       ? 'Mr'
-                      : 'Ms'
-                      }
+                      : 'Ms'}
                     {announcement.author.name}({announcement.author.role})
                   </span>
                 </div>

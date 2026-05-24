@@ -24,7 +24,6 @@ import { Route as AuthAdminSettingsRouteImport } from './routes/_auth/admin/sett
 import { Route as AuthAdminDashboardRouteImport } from './routes/_auth/admin/dashboard'
 import { Route as AuthAdminCreateAnnouncementRouteImport } from './routes/_auth/admin/createAnnouncement'
 import { Route as AuthAdminCalendarRouteImport } from './routes/_auth/admin/calendar'
-import { Route as AuthAdminAnnouncementsRouteImport } from './routes/_auth/admin/announcements'
 import { Route as AuthPagesTermsRouteImport } from './routes/_auth/Pages/terms'
 import { Route as AuthPagesSecurityRouteImport } from './routes/_auth/Pages/security'
 import { Route as AuthPagesPrivacyRouteImport } from './routes/_auth/Pages/privacy'
@@ -46,6 +45,7 @@ import { Route as AuthStudentNotificationIndexRouteImport } from './routes/_auth
 import { Route as AuthAdminTeachersIndexRouteImport } from './routes/_auth/admin/teachers/index'
 import { Route as AuthAdminStudentsIndexRouteImport } from './routes/_auth/admin/students/index'
 import { Route as AuthAdminGradesIndexRouteImport } from './routes/_auth/admin/grades/index'
+import { Route as AuthAdminAnnouncementsIndexRouteImport } from './routes/_auth/admin/announcements/index'
 import { Route as AuthTeacherSubjectsSubjectCodeRouteImport } from './routes/_auth/teacher/subjects/$subjectCode'
 import { Route as AuthTeacherMarksClassIdRouteImport } from './routes/_auth/teacher/marks/$classId'
 import { Route as AuthTeacherClassesClassIdRouteImport } from './routes/_auth/teacher/classes/$classId'
@@ -56,8 +56,7 @@ import { Route as AuthAdminTeachersAddRouteImport } from './routes/_auth/admin/t
 import { Route as AuthAdminStudentsAddRouteImport } from './routes/_auth/admin/students/add'
 import { Route as AuthAdminStudentsStudentIdRouteImport } from './routes/_auth/admin/students/$studentId'
 import { Route as AuthAdminGradesNameRouteImport } from './routes/_auth/admin/grades/$name'
-import { Route as AuthAdminAnnouncementsAnnouncementTitleSlugRouteImport } from './routes/_auth/admin/announcements.$announcementTitleSlug'
-import { Route as AuthAdminAnnouncementsAnnouncementIdRouteImport } from './routes/_auth/admin/announcements.$announcementId'
+import { Route as AuthAdminAnnouncementsAnnouncementTitleSlugRouteImport } from './routes/_auth/admin/announcements/$announcementTitleSlug'
 import { Route as AuthAdminTeachersTeacherIdIndexRouteImport } from './routes/_auth/admin/teachers/$teacherId/index'
 import { Route as AuthAdminTeachersTeacherIdAssignementsRouteImport } from './routes/_auth/admin/teachers/$teacherId/assignements'
 
@@ -134,11 +133,6 @@ const AuthAdminCreateAnnouncementRoute =
 const AuthAdminCalendarRoute = AuthAdminCalendarRouteImport.update({
   id: '/calendar',
   path: '/calendar',
-  getParentRoute: () => AuthAdminRoute,
-} as any)
-const AuthAdminAnnouncementsRoute = AuthAdminAnnouncementsRouteImport.update({
-  id: '/announcements',
-  path: '/announcements',
   getParentRoute: () => AuthAdminRoute,
 } as any)
 const AuthPagesTermsRoute = AuthPagesTermsRouteImport.update({
@@ -249,6 +243,12 @@ const AuthAdminGradesIndexRoute = AuthAdminGradesIndexRouteImport.update({
   path: '/grades/',
   getParentRoute: () => AuthAdminRoute,
 } as any)
+const AuthAdminAnnouncementsIndexRoute =
+  AuthAdminAnnouncementsIndexRouteImport.update({
+    id: '/announcements/',
+    path: '/announcements/',
+    getParentRoute: () => AuthAdminRoute,
+  } as any)
 const AuthTeacherSubjectsSubjectCodeRoute =
   AuthTeacherSubjectsSubjectCodeRouteImport.update({
     id: '/subjects/$subjectCode',
@@ -306,15 +306,9 @@ const AuthAdminGradesNameRoute = AuthAdminGradesNameRouteImport.update({
 } as any)
 const AuthAdminAnnouncementsAnnouncementTitleSlugRoute =
   AuthAdminAnnouncementsAnnouncementTitleSlugRouteImport.update({
-    id: '/$announcementTitleSlug',
-    path: '/$announcementTitleSlug',
-    getParentRoute: () => AuthAdminAnnouncementsRoute,
-  } as any)
-const AuthAdminAnnouncementsAnnouncementIdRoute =
-  AuthAdminAnnouncementsAnnouncementIdRouteImport.update({
-    id: '/$announcementId',
-    path: '/$announcementId',
-    getParentRoute: () => AuthAdminAnnouncementsRoute,
+    id: '/announcements/$announcementTitleSlug',
+    path: '/announcements/$announcementTitleSlug',
+    getParentRoute: () => AuthAdminRoute,
   } as any)
 const AuthAdminTeachersTeacherIdIndexRoute =
   AuthAdminTeachersTeacherIdIndexRouteImport.update({
@@ -350,7 +344,6 @@ export interface FileRoutesByFullPath {
   '/Pages/privacy': typeof AuthPagesPrivacyRoute
   '/Pages/security': typeof AuthPagesSecurityRoute
   '/Pages/terms': typeof AuthPagesTermsRoute
-  '/admin/announcements': typeof AuthAdminAnnouncementsRouteWithChildren
   '/admin/calendar': typeof AuthAdminCalendarRoute
   '/admin/createAnnouncement': typeof AuthAdminCreateAnnouncementRoute
   '/admin/dashboard': typeof AuthAdminDashboardRoute
@@ -359,7 +352,6 @@ export interface FileRoutesByFullPath {
   '/student/settings': typeof AuthStudentSettingsRoute
   '/teacher/calendar': typeof AuthTeacherCalendarRoute
   '/teacher/settings': typeof AuthTeacherSettingsRoute
-  '/admin/announcements/$announcementId': typeof AuthAdminAnnouncementsAnnouncementIdRoute
   '/admin/announcements/$announcementTitleSlug': typeof AuthAdminAnnouncementsAnnouncementTitleSlugRoute
   '/admin/grades/$name': typeof AuthAdminGradesNameRoute
   '/admin/students/$studentId': typeof AuthAdminStudentsStudentIdRoute
@@ -371,6 +363,7 @@ export interface FileRoutesByFullPath {
   '/teacher/classes/$classId': typeof AuthTeacherClassesClassIdRoute
   '/teacher/marks/$classId': typeof AuthTeacherMarksClassIdRoute
   '/teacher/subjects/$subjectCode': typeof AuthTeacherSubjectsSubjectCodeRoute
+  '/admin/announcements/': typeof AuthAdminAnnouncementsIndexRoute
   '/admin/grades/': typeof AuthAdminGradesIndexRoute
   '/admin/students/': typeof AuthAdminStudentsIndexRoute
   '/admin/teachers/': typeof AuthAdminTeachersIndexRoute
@@ -402,7 +395,6 @@ export interface FileRoutesByTo {
   '/Pages/privacy': typeof AuthPagesPrivacyRoute
   '/Pages/security': typeof AuthPagesSecurityRoute
   '/Pages/terms': typeof AuthPagesTermsRoute
-  '/admin/announcements': typeof AuthAdminAnnouncementsRouteWithChildren
   '/admin/calendar': typeof AuthAdminCalendarRoute
   '/admin/createAnnouncement': typeof AuthAdminCreateAnnouncementRoute
   '/admin/dashboard': typeof AuthAdminDashboardRoute
@@ -411,7 +403,6 @@ export interface FileRoutesByTo {
   '/student/settings': typeof AuthStudentSettingsRoute
   '/teacher/calendar': typeof AuthTeacherCalendarRoute
   '/teacher/settings': typeof AuthTeacherSettingsRoute
-  '/admin/announcements/$announcementId': typeof AuthAdminAnnouncementsAnnouncementIdRoute
   '/admin/announcements/$announcementTitleSlug': typeof AuthAdminAnnouncementsAnnouncementTitleSlugRoute
   '/admin/grades/$name': typeof AuthAdminGradesNameRoute
   '/admin/students/$studentId': typeof AuthAdminStudentsStudentIdRoute
@@ -423,6 +414,7 @@ export interface FileRoutesByTo {
   '/teacher/classes/$classId': typeof AuthTeacherClassesClassIdRoute
   '/teacher/marks/$classId': typeof AuthTeacherMarksClassIdRoute
   '/teacher/subjects/$subjectCode': typeof AuthTeacherSubjectsSubjectCodeRoute
+  '/admin/announcements': typeof AuthAdminAnnouncementsIndexRoute
   '/admin/grades': typeof AuthAdminGradesIndexRoute
   '/admin/students': typeof AuthAdminStudentsIndexRoute
   '/admin/teachers': typeof AuthAdminTeachersIndexRoute
@@ -456,7 +448,6 @@ export interface FileRoutesById {
   '/_auth/Pages/privacy': typeof AuthPagesPrivacyRoute
   '/_auth/Pages/security': typeof AuthPagesSecurityRoute
   '/_auth/Pages/terms': typeof AuthPagesTermsRoute
-  '/_auth/admin/announcements': typeof AuthAdminAnnouncementsRouteWithChildren
   '/_auth/admin/calendar': typeof AuthAdminCalendarRoute
   '/_auth/admin/createAnnouncement': typeof AuthAdminCreateAnnouncementRoute
   '/_auth/admin/dashboard': typeof AuthAdminDashboardRoute
@@ -465,7 +456,6 @@ export interface FileRoutesById {
   '/_auth/student/settings': typeof AuthStudentSettingsRoute
   '/_auth/teacher/calendar': typeof AuthTeacherCalendarRoute
   '/_auth/teacher/settings': typeof AuthTeacherSettingsRoute
-  '/_auth/admin/announcements/$announcementId': typeof AuthAdminAnnouncementsAnnouncementIdRoute
   '/_auth/admin/announcements/$announcementTitleSlug': typeof AuthAdminAnnouncementsAnnouncementTitleSlugRoute
   '/_auth/admin/grades/$name': typeof AuthAdminGradesNameRoute
   '/_auth/admin/students/$studentId': typeof AuthAdminStudentsStudentIdRoute
@@ -477,6 +467,7 @@ export interface FileRoutesById {
   '/_auth/teacher/classes/$classId': typeof AuthTeacherClassesClassIdRoute
   '/_auth/teacher/marks/$classId': typeof AuthTeacherMarksClassIdRoute
   '/_auth/teacher/subjects/$subjectCode': typeof AuthTeacherSubjectsSubjectCodeRoute
+  '/_auth/admin/announcements/': typeof AuthAdminAnnouncementsIndexRoute
   '/_auth/admin/grades/': typeof AuthAdminGradesIndexRoute
   '/_auth/admin/students/': typeof AuthAdminStudentsIndexRoute
   '/_auth/admin/teachers/': typeof AuthAdminTeachersIndexRoute
@@ -510,7 +501,6 @@ export interface FileRouteTypes {
     | '/Pages/privacy'
     | '/Pages/security'
     | '/Pages/terms'
-    | '/admin/announcements'
     | '/admin/calendar'
     | '/admin/createAnnouncement'
     | '/admin/dashboard'
@@ -519,7 +509,6 @@ export interface FileRouteTypes {
     | '/student/settings'
     | '/teacher/calendar'
     | '/teacher/settings'
-    | '/admin/announcements/$announcementId'
     | '/admin/announcements/$announcementTitleSlug'
     | '/admin/grades/$name'
     | '/admin/students/$studentId'
@@ -531,6 +520,7 @@ export interface FileRouteTypes {
     | '/teacher/classes/$classId'
     | '/teacher/marks/$classId'
     | '/teacher/subjects/$subjectCode'
+    | '/admin/announcements/'
     | '/admin/grades/'
     | '/admin/students/'
     | '/admin/teachers/'
@@ -562,7 +552,6 @@ export interface FileRouteTypes {
     | '/Pages/privacy'
     | '/Pages/security'
     | '/Pages/terms'
-    | '/admin/announcements'
     | '/admin/calendar'
     | '/admin/createAnnouncement'
     | '/admin/dashboard'
@@ -571,7 +560,6 @@ export interface FileRouteTypes {
     | '/student/settings'
     | '/teacher/calendar'
     | '/teacher/settings'
-    | '/admin/announcements/$announcementId'
     | '/admin/announcements/$announcementTitleSlug'
     | '/admin/grades/$name'
     | '/admin/students/$studentId'
@@ -583,6 +571,7 @@ export interface FileRouteTypes {
     | '/teacher/classes/$classId'
     | '/teacher/marks/$classId'
     | '/teacher/subjects/$subjectCode'
+    | '/admin/announcements'
     | '/admin/grades'
     | '/admin/students'
     | '/admin/teachers'
@@ -615,7 +604,6 @@ export interface FileRouteTypes {
     | '/_auth/Pages/privacy'
     | '/_auth/Pages/security'
     | '/_auth/Pages/terms'
-    | '/_auth/admin/announcements'
     | '/_auth/admin/calendar'
     | '/_auth/admin/createAnnouncement'
     | '/_auth/admin/dashboard'
@@ -624,7 +612,6 @@ export interface FileRouteTypes {
     | '/_auth/student/settings'
     | '/_auth/teacher/calendar'
     | '/_auth/teacher/settings'
-    | '/_auth/admin/announcements/$announcementId'
     | '/_auth/admin/announcements/$announcementTitleSlug'
     | '/_auth/admin/grades/$name'
     | '/_auth/admin/students/$studentId'
@@ -636,6 +623,7 @@ export interface FileRouteTypes {
     | '/_auth/teacher/classes/$classId'
     | '/_auth/teacher/marks/$classId'
     | '/_auth/teacher/subjects/$subjectCode'
+    | '/_auth/admin/announcements/'
     | '/_auth/admin/grades/'
     | '/_auth/admin/students/'
     | '/_auth/admin/teachers/'
@@ -758,13 +746,6 @@ declare module '@tanstack/react-router' {
       path: '/calendar'
       fullPath: '/admin/calendar'
       preLoaderRoute: typeof AuthAdminCalendarRouteImport
-      parentRoute: typeof AuthAdminRoute
-    }
-    '/_auth/admin/announcements': {
-      id: '/_auth/admin/announcements'
-      path: '/announcements'
-      fullPath: '/admin/announcements'
-      preLoaderRoute: typeof AuthAdminAnnouncementsRouteImport
       parentRoute: typeof AuthAdminRoute
     }
     '/_auth/Pages/terms': {
@@ -914,6 +895,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthAdminGradesIndexRouteImport
       parentRoute: typeof AuthAdminRoute
     }
+    '/_auth/admin/announcements/': {
+      id: '/_auth/admin/announcements/'
+      path: '/announcements'
+      fullPath: '/admin/announcements/'
+      preLoaderRoute: typeof AuthAdminAnnouncementsIndexRouteImport
+      parentRoute: typeof AuthAdminRoute
+    }
     '/_auth/teacher/subjects/$subjectCode': {
       id: '/_auth/teacher/subjects/$subjectCode'
       path: '/subjects/$subjectCode'
@@ -986,17 +974,10 @@ declare module '@tanstack/react-router' {
     }
     '/_auth/admin/announcements/$announcementTitleSlug': {
       id: '/_auth/admin/announcements/$announcementTitleSlug'
-      path: '/$announcementTitleSlug'
+      path: '/announcements/$announcementTitleSlug'
       fullPath: '/admin/announcements/$announcementTitleSlug'
       preLoaderRoute: typeof AuthAdminAnnouncementsAnnouncementTitleSlugRouteImport
-      parentRoute: typeof AuthAdminAnnouncementsRoute
-    }
-    '/_auth/admin/announcements/$announcementId': {
-      id: '/_auth/admin/announcements/$announcementId'
-      path: '/$announcementId'
-      fullPath: '/admin/announcements/$announcementId'
-      preLoaderRoute: typeof AuthAdminAnnouncementsAnnouncementIdRouteImport
-      parentRoute: typeof AuthAdminAnnouncementsRoute
+      parentRoute: typeof AuthAdminRoute
     }
     '/_auth/admin/teachers/$teacherId/': {
       id: '/_auth/admin/teachers/$teacherId/'
@@ -1015,34 +996,17 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AuthAdminAnnouncementsRouteChildren {
-  AuthAdminAnnouncementsAnnouncementIdRoute: typeof AuthAdminAnnouncementsAnnouncementIdRoute
-  AuthAdminAnnouncementsAnnouncementTitleSlugRoute: typeof AuthAdminAnnouncementsAnnouncementTitleSlugRoute
-}
-
-const AuthAdminAnnouncementsRouteChildren: AuthAdminAnnouncementsRouteChildren =
-  {
-    AuthAdminAnnouncementsAnnouncementIdRoute:
-      AuthAdminAnnouncementsAnnouncementIdRoute,
-    AuthAdminAnnouncementsAnnouncementTitleSlugRoute:
-      AuthAdminAnnouncementsAnnouncementTitleSlugRoute,
-  }
-
-const AuthAdminAnnouncementsRouteWithChildren =
-  AuthAdminAnnouncementsRoute._addFileChildren(
-    AuthAdminAnnouncementsRouteChildren,
-  )
-
 interface AuthAdminRouteChildren {
-  AuthAdminAnnouncementsRoute: typeof AuthAdminAnnouncementsRouteWithChildren
   AuthAdminCalendarRoute: typeof AuthAdminCalendarRoute
   AuthAdminCreateAnnouncementRoute: typeof AuthAdminCreateAnnouncementRoute
   AuthAdminDashboardRoute: typeof AuthAdminDashboardRoute
   AuthAdminSettingsRoute: typeof AuthAdminSettingsRoute
+  AuthAdminAnnouncementsAnnouncementTitleSlugRoute: typeof AuthAdminAnnouncementsAnnouncementTitleSlugRoute
   AuthAdminGradesNameRoute: typeof AuthAdminGradesNameRoute
   AuthAdminStudentsStudentIdRoute: typeof AuthAdminStudentsStudentIdRoute
   AuthAdminStudentsAddRoute: typeof AuthAdminStudentsAddRoute
   AuthAdminTeachersAddRoute: typeof AuthAdminTeachersAddRoute
+  AuthAdminAnnouncementsIndexRoute: typeof AuthAdminAnnouncementsIndexRoute
   AuthAdminGradesIndexRoute: typeof AuthAdminGradesIndexRoute
   AuthAdminStudentsIndexRoute: typeof AuthAdminStudentsIndexRoute
   AuthAdminTeachersIndexRoute: typeof AuthAdminTeachersIndexRoute
@@ -1051,15 +1015,17 @@ interface AuthAdminRouteChildren {
 }
 
 const AuthAdminRouteChildren: AuthAdminRouteChildren = {
-  AuthAdminAnnouncementsRoute: AuthAdminAnnouncementsRouteWithChildren,
   AuthAdminCalendarRoute: AuthAdminCalendarRoute,
   AuthAdminCreateAnnouncementRoute: AuthAdminCreateAnnouncementRoute,
   AuthAdminDashboardRoute: AuthAdminDashboardRoute,
   AuthAdminSettingsRoute: AuthAdminSettingsRoute,
+  AuthAdminAnnouncementsAnnouncementTitleSlugRoute:
+    AuthAdminAnnouncementsAnnouncementTitleSlugRoute,
   AuthAdminGradesNameRoute: AuthAdminGradesNameRoute,
   AuthAdminStudentsStudentIdRoute: AuthAdminStudentsStudentIdRoute,
   AuthAdminStudentsAddRoute: AuthAdminStudentsAddRoute,
   AuthAdminTeachersAddRoute: AuthAdminTeachersAddRoute,
+  AuthAdminAnnouncementsIndexRoute: AuthAdminAnnouncementsIndexRoute,
   AuthAdminGradesIndexRoute: AuthAdminGradesIndexRoute,
   AuthAdminStudentsIndexRoute: AuthAdminStudentsIndexRoute,
   AuthAdminTeachersIndexRoute: AuthAdminTeachersIndexRoute,

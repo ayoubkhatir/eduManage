@@ -2,7 +2,7 @@ import { StatusEnum, UserGenderEnum, UserRoleEnum } from "#/server/db/schema";
 import z from "zod/v4";
 
 export const validCuidSchema = z.cuid2();
-
+export const validSlugSchema = (error = "Invalid slug") => z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, { error });
 
 export const paginationQueriesSchema = z.object({
     search: z.string().trim().default(""),

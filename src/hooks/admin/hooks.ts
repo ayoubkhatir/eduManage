@@ -1,22 +1,29 @@
+import type { AnnouncementAudienceEnum } from '#/server/db/schema'
 import { getAnnouncementByIdServerFn, getAnnouncementByTitleSlugServerFn, getAnnouncementsServerFn } from '#/server/modules/announcement/announcement.server-functions'
 
+export type AnnouncementsListFilters = {
+  audience: AnnouncementAudienceEnum,
+  search: string
+}
+
 export const getAnnouncementsListQueryOptions = (
-  schoolId: string
-  // filters?: AnnouncementFilters,
+  schoolId: string,
+  filters: AnnouncementsListFilters
 ) => ({
-  queryKey: ['announcements', schoolId],//filters],
+  queryKey: ['announcements', schoolId, filters],
   queryFn: async () => {
     try {
       const response = await getAnnouncementsServerFn({
-        data: schoolId,
+        data: { schoolId, filters },
       })
       //filters || {}
       console.log('Announcements response:', response)
 
-      if (response.success && response.data) {
-        return response.data
+      if (!response.success) {
+        throw new Error("Error when fetching announcements")
+
       }
-      return []
+      return response.data
     } catch (error) {
       console.error('Error fetching announcements:', error)
       throw error
@@ -25,7 +32,7 @@ export const getAnnouncementsListQueryOptions = (
 })
 
 export const getAnnouncementQueryOptions = (announcementId: string) => ({
-  queryKey: ['announcement', "announcementId", announcementId],
+  queryKey: ['announcements', "announcementId", announcementId],
   queryFn: async () => {
     try {
       const response = await getAnnouncementByIdServerFn({
@@ -44,8 +51,8 @@ export const getAnnouncementQueryOptions = (announcementId: string) => ({
   },
 })
 
-export const getAnnouncementByTitleQueryOptions = (announcementTitleSlug: string) => ({
-  queryKey: ['announcement', "announcementTitleSlug", announcementTitleSlug],
+export const getAnnouncementByTitleSlugQueryOptions = (announcementTitleSlug: string) => ({
+  queryKey: ['announcements', "announcementTitleSlug", announcementTitleSlug],
   queryFn: async () => {
     try {
       const response = await getAnnouncementByTitleSlugServerFn({
@@ -65,7 +72,7 @@ export const getAnnouncementByTitleQueryOptions = (announcementTitleSlug: string
 })
 
 export const getAnnouncementByIdQueryOptions = (announcementId: string) => ({
-  queryKey: ['announcement', "announcementId", announcementId],
+  queryKey: ['announcements', "announcementId", announcementId],
   queryFn: async () => {
     try {
       const response = await getAnnouncementByIdServerFn({

@@ -39,7 +39,7 @@ import { motion } from 'framer-motion'
 
 export const Route = createFileRoute('/_auth/admin/students/')({
   component: RouteComponent,
-  pendingComponent: OwnerStudentsPending,
+  pendingComponent: AdminStudentsPending,
   loaderDeps: ({ search }) => search,
   loader: async ({ context, deps }) => {
     // // await new Promise((resolve) => setTimeout(resolve, 2000))
@@ -52,20 +52,20 @@ export const Route = createFileRoute('/_auth/admin/students/')({
 function RouteComponent() {
   return (
     <Skeleton name="admin-students-page" loading={false}>
-      <OwnerStudentsContent />
+      <AdminStudentsContent />
     </Skeleton>
   )
 }
 
-function OwnerStudentsPending() {
+function AdminStudentsPending() {
   return (
     <Skeleton name="admin-students-page" loading>
-      <OwnerStudentsContent />
+      <AdminStudentsContent />
     </Skeleton>
   )
 }
 
-function OwnerStudentsContent() {
+function AdminStudentsContent() {
   const navigate = Route.useNavigate()
 
   const { size, search } = Route.useSearch({

@@ -2,19 +2,20 @@ import { db } from "#/server/db/db";
 import { adminsTable, announcementsTable, users } from "#/server/db/schema";
 import { ToSlug } from "#/server/utils/Slugify";
 import type { AnnouncementWithAuthor, CreateAnnouncementType } from "#/types/announcementTypes";
-import { eq } from "drizzle-orm";
+import { and, eq, ilike, or } from "drizzle-orm";
+import type { GetAnnouncementsFiltersSchema } from "./announcement.server-functions";
 
 
 class AnnouncementController {
-    async createAnnouncement(announcement: CreateAnnouncementType) {
+    async createAnnouncement({ audience, authorId, description, schoolId, title }: CreateAnnouncementType) {
         const school = await db.query.adminsTable.findFirst({
-            where: eq(adminsTable.id, announcement.schoolId),
+            where: eq(adminsTable.id, schoolId),
         })
         if (!school) {
             throw new Error("School not found");
         }
         const author = await db.query.users.findFirst({
-            where: eq(users.id, announcement.authorId),
+            where: eq(users.id, authorId),
         })
 
         if (!author) {
@@ -24,20 +25,28 @@ class AnnouncementController {
         const announcementId = await db
             .insert(announcementsTable)
             .values({
-                schoolId: announcement.schoolId,
-                authorId: announcement.authorId,
-                title: announcement.title,
-                description: announcement.description,
-                slug: ToSlug(announcement.title),
+                schoolId,
+                authorId,
+                title,
+                description,
+                audience,
+                slug: ToSlug(title),
             })
             .returning({ id: announcementsTable.id })
 
         return announcementId
     }
 
-    async getAnnouncementsBySchool(schoolId: string) {
+    async getAnnouncementsBySchool(schoolId: string, filters: GetAnnouncementsFiltersSchema) {
         const announcements: AnnouncementWithAuthor[] = await db.query.announcementsTable.findMany({
-            where: eq(announcementsTable.schoolId, schoolId),
+            where: and(
+                eq(announcementsTable.schoolId, schoolId),
+                eq(announcementsTable.audience, filters.audience),
+                or(
+                    ilike(announcementsTable.title, `%${filters.search}%`),
+                    ilike(announcementsTable.slug, `%${filters.search}%`),
+                    ilike(announcementsTable.description, `%${filters.search}%`)
+                )),
             limit: 10,
             with: {
                 author: {

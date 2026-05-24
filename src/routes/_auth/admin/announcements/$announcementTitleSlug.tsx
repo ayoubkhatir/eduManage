@@ -1,8 +1,8 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import Loading from '@/components/loading'
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { getAnnouncementQueryOptions } from '#/hooks/admin/hooks'
+import { getAnnouncementByTitleSlugQueryOptions } from '#/hooks/admin/hooks'
 import NotificationDetail from '#/components/notificationDetail'
+import Loading from '#/components/loading'
 
 export const Route = createFileRoute(
   '/_auth/admin/announcements/$announcementTitleSlug',
@@ -20,14 +20,22 @@ export const Route = createFileRoute(
   head: () => ({
     meta: [{ title: 'Owner | Announcement - EduManage' }],
   }),
+
+  loader: async ({ context, params }) => {
+    await context.queryClient.ensureQueryData({
+      ...getAnnouncementByTitleSlugQueryOptions(params.announcementTitleSlug),
+    })
+  },
 })
 
 function AnnouncementDetailPage() {
   const { announcementTitleSlug } = Route.useParams()
 
-  const { data, status } = useSuspenseQuery(
-    getAnnouncementQueryOptions(announcementTitleSlug),
-  )
+  const { data: announcement, status } = useSuspenseQuery({
+    ...getAnnouncementByTitleSlugQueryOptions(announcementTitleSlug),
+  })
+
+  console.log({ announcement })
 
   if (status === 'error') {
     return (
@@ -55,8 +63,8 @@ function AnnouncementDetailPage() {
         </span>
         Back to announcements
       </Link>
-      <NotificationDetail notificationId={data.id}></NotificationDetail>
-
+      <NotificationDetail announcement={announcement}></NotificationDetail>
+      {/* notificationId={data.id} */}
       {/* 
       <article className="max-w-3xl rounded-xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-[#1e293b]">
         <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700 dark:bg-slate-700 dark:text-slate-200">

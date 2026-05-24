@@ -1,7 +1,10 @@
+import { getAnnouncementsListQueryOptions } from '#/hooks/admin/hooks'
+import type { GetAnnouncementsFiltersSchema } from '#/server/modules/announcement/announcement.server-functions'
 import { getStudentsStatsServerFn } from '#/server/modules/students/students.server-functions'
 import { getTeachersStatsServerFn } from '#/server/modules/teachers/teachers.server-functions'
+import type { ID } from '#/types/authTypes'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 
 const getTeacherStatsQueryOptions = () => ({
@@ -70,7 +73,9 @@ export default function UICardComponent({
                 : 'bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-400'
             }`}
           >
-            <span className="material-symbols-outlined text-sm">{stateIcon}</span>
+            <span className="material-symbols-outlined text-sm">
+              {stateIcon}
+            </span>
             <span>
               {isPositive && percentage > 0 ? '+' : ''}
               {percentage}%
@@ -216,6 +221,63 @@ export function StudentsStatCards() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {cards.map((card) => (
+        <UICardComponent {...card} key={card.id} />
+      ))}
+    </div>
+  )
+}
+
+export function AnnouncementsStatCards({
+  schoolId,
+  filters,
+}: {
+  schoolId: ID
+  filters: GetAnnouncementsFiltersSchema
+}) {
+  const { data: announcements, status: fetchStatus } = useSuspenseQuery(
+    getAnnouncementsListQueryOptions(schoolId, filters),
+  )
+
+  console.log({ announcements, fetchStatus })
+  if (fetchStatus === 'error') return null
+  const cards = useMemo<UICardType[]>(
+    () => [
+      {
+        id: 'active-posts',
+        iconName: 'campaign',
+        iconColor: 'green',
+        stateIcon: 'trending_up',
+        percentage: 12,
+        cardTitle: 'Active Posts',
+        info: announcements.length ?? 0,
+      },
+
+      {
+        id: 'draft-posts',
+        iconName: 'edit_document',
+        iconColor: 'orange',
+        stateIcon: 'trending_down',
+        percentage: -3,
+        cardTitle: 'Drafts',
+        info: 0,
+      },
+
+      {
+        id: 'total-views',
+        iconName: 'visibility',
+        iconColor: 'blue',
+        stateIcon: 'trending_up',
+        percentage: 24,
+        cardTitle: 'Total Views',
+        info: '1.2k',
+      },
+    ],
+    [announcements, fetchStatus],
+  )
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {cards.map((card) => (
         <UICardComponent {...card} key={card.id} />
       ))}

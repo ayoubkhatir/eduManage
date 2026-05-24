@@ -1,16 +1,41 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useState } from 'react'
-import AnnouncementList from '@/components/announcementList'
+import { Suspense, useState } from 'react'
+import AnnouncementsList from '#/components/announcementsList'
 import { motion } from 'framer-motion'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
 import type { AdminUser } from '#/types/usersTypes'
+import Loading from '#/components/loading'
+import { getAnnouncementsListQueryOptions } from '#/hooks/admin/hooks'
+import {
+  AnnouncementsStatCards,
+  UICardSkeleton,
+} from '#/components/admin/cards/UICard'
+import {
+  AnnouncementAudienceEnum,
+  announcementAudienceList,
+} from '#/server/db/schema'
+import { z } from 'zod/v4'
+import useDebounce from '#/hooks/use-debounce'
+import { SearchInput } from '#/components/admin/SearchInput'
+import { getAnnouncementsFiltersSchema } from '#/server/modules/announcement/announcement.server-functions'
 
-export const Route = createFileRoute('/_auth/admin/announcements')({
+export const Route = createFileRoute('/_auth/admin/announcements/')({
   component: Announcement,
-  loader: async ({ context }) => {
+
+  validateSearch: getAnnouncementsFiltersSchema,
+
+  loaderDeps: ({ search }) => search,
+  loader: async ({ context, deps }) => {
     const currentUser = (await FetchCurrentUserServerFn({
       data: context.authState.user!,
     })) as AdminUser
+
+    context.queryClient.ensureQueryData({
+      ...getAnnouncementsListQueryOptions(currentUser.id, {
+        search: deps.search,
+        audience: deps.audience,
+      }),
+    })
     return { currentUser }
   },
   head: () => ({
@@ -19,9 +44,11 @@ export const Route = createFileRoute('/_auth/admin/announcements')({
 })
 
 function Announcement() {
-  const [searchText, setSearchText] = useState('')
-  const [selectedAudience, setSelectedAudience] = useState('All School')
   const { currentUser } = Route.useLoaderData()
+  const navigate = Route.useNavigate()
+  const { search, audience } = Route.useSearch({
+    select: (s) => ({ search: s.search, audience: s.audience }),
+  })
 
   return (
     <motion.div
@@ -50,7 +77,7 @@ function Announcement() {
             </button>
           </Link>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-[#1e293b] shadow-sm border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-500">
@@ -85,50 +112,94 @@ function Announcement() {
             <p className="text-3xl font-bold leading-tight mt-2">1.2k</p>
           </div>
         </div>
+      */}
+        <Suspense fallback={<UICardSkeleton count={3} />}>
+          <AnnouncementsStatCards
+            schoolId={currentUser.info.id}
+            filters={{ audience, search }}
+          />
+        </Suspense>
       </div>
       <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-white dark:bg-[#1e293b] p-2 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
         <div className="w-full md:w-96">
-          <label className="group relative flex w-full md:max-w-md items-center">
-            <span className="absolute left-4 text-[#9da6b9] group-focus-within:text-primary">
-              <span className="material-symbols-outlined text-[24px]">
-                search
-              </span>
-            </span>
-            <input
-              type="text"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              placeholder="Search notification history..."
-              className="bg-gray-200 dark:bg-[#282e39] border border-gray-300 h-12 w-full rounded-xl dark:border-gray-700 focus:border-primary focus:bg-gray-300 dark:focus:bg-surface-dark focus:ring-0 pl-12 pr-4 text-[#0d121b] dark:text-white placeholder-[#6b7280] text-base"
-            />
-          </label>
+          <SearchInput
+            placeholder="Search"
+            value={search}
+            onSearch={(value) =>
+              navigate({
+                search: (s) => ({
+                  ...s,
+                  search: value,
+                }),
+              })
+            }
+          />
         </div>
         <div className="flex gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
-          <select
-            className="flex items-center h-12 rounded-lg border-none bg-gray-100 px-4 py-0 pr-8 pl-8 text-sm font-medium text-slate-500 
-    focus:ring-0 border-slate-100 dark:border-gray-700/50  dark:text-white  dark:bg-[#1E2532] hover:bg-primary/5 dark:hover:bg-primary/10 hover:border-primary/30 dark:hover:border-primary/40 hover:text-primary dark:hover:text-blue-400 group cursor-pointer"
-            style={{
-              transition:
-                'background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out',
-            }}
-            value={selectedAudience}
-            onChange={(e) => setSelectedAudience(e.target.value)}
-          >
-            <option>All School</option>
-            <option>Teachers</option>
-            <option>Students</option>
-          </select>
+          <AudienceSelect
+          // selectedAudience={selectedAudience}
+          // setSelectedAudience={setSelectedAudience}
+          />
         </div>
       </div>
-      <AnnouncementList
-        searchText={searchText}
-        selectedAudience={selectedAudience}
-        schoolId={currentUser.info.id}
-      />
+      <Suspense
+        fallback={
+          <div className="h-full w-full flex items-center justify-center">
+            <Loading
+              className="h-[80%] w-[80%] p-10"
+              text="loading..."
+              description="Please wait while we fetch the announcements for you."
+            />
+          </div>
+        }
+      >
+        <AnnouncementsList
+          // searchText={searchText}
+          // selectedAudience={selectedAudience}
+          schoolId={currentUser.info.id}
+          filters={{ search, audience }}
+        />
+      </Suspense>
 
       <div className="flex justify-center py-8">
         <p className="text-[#4b5563] text-md">End of Announcements</p>
       </div>
     </motion.div>
+  )
+}
+
+function AudienceSelect() {
+  const navigate = Route.useNavigate()
+  const audience = Route.useSearch({ select: (s) => s.audience })
+
+  return (
+    <select
+      className="flex items-center h-12 rounded-lg border-none bg-gray-100 px-4 py-0 pr-8 pl-8 text-sm font-medium text-slate-500 
+    focus:ring-0 border-slate-100 dark:border-gray-700/50  dark:text-white  dark:bg-[#1E2532] hover:bg-primary/5 dark:hover:bg-primary/10 hover:border-primary/30 dark:hover:border-primary/40 hover:text-primary dark:hover:text-blue-400 group cursor-pointer"
+      style={{
+        transition:
+          'background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out',
+      }}
+      value={audience}
+      onChange={(e) =>
+        navigate({
+          to: '.',
+          search: (s) => ({
+            ...s,
+            audience: announcementAudienceList.includes(
+              e.target.value as AnnouncementAudienceEnum,
+            )
+              ? (e.target.value as AnnouncementAudienceEnum)
+              : AnnouncementAudienceEnum.ALL,
+          }),
+        })
+      }
+    >
+      {announcementAudienceList.map((audience) => (
+        <option key={audience} value={audience}>
+          {audience}
+        </option>
+      ))}
+    </select>
   )
 }
