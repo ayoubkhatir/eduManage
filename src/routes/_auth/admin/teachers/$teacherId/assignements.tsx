@@ -9,7 +9,6 @@ import {
   useDeleteTeacherAssignement,
 } from '#/hooks/teachers/hooks'
 import SelectWrapper from '#/components/admin/Wrappers/SelectWrapper'
-import { getAllSubjectsServerFn } from '#/server/modules/subjects/subjects.server-functions'
 import { FormProvider, useFormContext } from 'react-hook-form'
 import {
   getCoreRowModel,
@@ -46,9 +45,15 @@ import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
 import { AddSubjectDialog } from './-add-subject.form'
 import type { StatusEnum } from '#/server/db/schema'
 import { UserAvatar } from '#/components/admin/Table/columnsData'
-import { StudentClassSelector, StudentGradeSelector } from '../../students/-students.selectors'
-import { assignTeacherSchema, type AssignTeacherSchema } from '#/schemas/teachers.schema'
+import {
+  StudentClassSelector,
+  StudentGradeSelector,
+} from '../../students/-students.selectors'
+import { type AssignTeacherSchema } from '#/schemas/teachers.schema'
 import { motion } from 'framer-motion'
+import { getAllSchoolSubjectsServerFn } from '#/server/modules/subjects/subjects.server-functions'
+import type { AdminUser } from '#/types/usersTypes'
+import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
 
 export const Route = createFileRoute(
   '/_auth/admin/teachers/$teacherId/assignements',
@@ -65,11 +70,17 @@ export const Route = createFileRoute(
     const teacher = await context.queryClient.ensureQueryData({
       ...getTeacherQueryOptions({ fetchBy: 'teacherId', teacherId }),
     })
+
+    const currentUser = (await FetchCurrentUserServerFn({
+      data: context.authState.user!,
+    })) as AdminUser
+
     if (!teacher) throw notFound()
     context.queryClient.ensureQueryData({ ...getAllGradesQueryOptions() })
     context.queryClient.ensureQueryData({
       ...getTeacherAssignementsQueryOptions(teacherId),
     })
+    return { currentUser }
   },
 })
 
@@ -83,20 +94,26 @@ function RouteComponent() {
 
 function TeacherAssignmentsPage() {
   const { teacherId } = Route.useParams()
-  const { authState } = Route.useRouteContext()
-  const user = authState.user
-  if (!user) throw new Error('Unauthorized')
+  // const { authState } = Route.useRouteContext()
+  // const user = authState.user
+  const { currentUser } = Route.useLoaderData()
+
   const { data: teacherData, status: fetchStatus } = useSuspenseQuery({
     ...getTeacherQueryOptions({ fetchBy: 'teacherId', teacherId: teacherId }),
   })
 
-  const { form, onSubmit } = useAssignTeacher(teacherId, user.id)
+  const { form, onSubmit } = useAssignTeacher(teacherId, currentUser.id)
   console.log({ errors: form.formState.errors })
 
   if (fetchStatus === 'error' || !teacherData) throw notFound()
   const ref = useRef<HTMLFormElement | null>(null)
   return (
-    <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex h-full w-full">
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      className="flex h-full w-full"
+    >
       <main className="relative flex min-w-0 flex-1 flex-col overflow-hidden bg-background-light dark:bg-background-dark">
         <div className="flex-1 overflow-x-hidden p-8 pb-32">
           <div className="flex flex-col gap-6 pb-12">
@@ -122,23 +139,6 @@ function TeacherAssignmentsPage() {
                 <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
                   <aside className="order-1 lg:order-2 lg:w-72">
                     <div className="flex flex-col items-center gap-4 rounded-2xl border border-[#f0f2f4] bg-[#f8f9fc] p-6 dark:border-gray-800 dark:bg-[#151a25]">
-                      {/* <div className="flex size-28 items-center justify-center overflow-hidden rounded-full bg-[#eef2f7] dark:bg-gray-800">
-                        {teacherData.image ? (
-                          <AdvancedImage
-                            cldImg={cld
-                              .image(teacherData.image)
-                              .resize(
-                                thumbnail()
-                                  .width(28 * 4)
-                                  .height(28 * 4),
-                              )
-                              .roundCorners(byRadius(999))}
-                            className="size-28 object-cover"
-                          />
-                        ) : (
-                          <UserCircleIcon className="size-28" />
-                        )}
-                      </div> */}
                       <UserAvatar image={teacherData.image} size={28} />
 
                       <p className="text-center text-sm font-medium text-[#111318] dark:text-white">
@@ -156,9 +156,9 @@ function TeacherAssignmentsPage() {
                         <div className="flex flex-col gap-2.5">
                           <StudentGradeSelector />
                           <div className="flex items-start gap-1">
-                            <SubjectsSelector />
+                            <SubjectsSelector schoolId={currentUser.info.id} />
                             <AddSubjectDialog
-                              schoolId={user.id}
+                              schoolId={currentUser.info.id}
                               onCreated={(subjectId) => {
                                 form.setValue('subjectId', subjectId, {
                                   shouldDirty: true,
@@ -203,21 +203,20 @@ function TeacherAssignmentsPage() {
     </motion.div>
   )
 }
-assignTeacherSchema
-const getAllSubjectsQueryOptions = () => ({
+const getAllSubjectsQueryOptions = (schoolId: string) => ({
   queryKey: ['subjects'],
   queryFn: async () => {
-    const response = await getAllSubjectsServerFn()
+    const response = await getAllSchoolSubjectsServerFn({ data: schoolId })
     if (response.success) return response.data
     else return []
   },
 })
 
-function SubjectsSelector() {
+function SubjectsSelector({ schoolId }: { schoolId: string }) {
   const form = useFormContext<AssignTeacherSchema>()
 
   const { data: subjectsData, status: fetchStatus } = useSuspenseQuery({
-    ...getAllSubjectsQueryOptions(),
+    ...getAllSubjectsQueryOptions(schoolId),
   })
 
   const gradeId = form.watch('gradeId')

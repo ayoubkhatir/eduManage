@@ -1,11 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { subjectsController } from "./subjects.controller";
-import { successResponse } from "#/server/utils/response.type";
+import { successResponse, type APIResponse } from "#/server/utils/response.type";
 import { addSubjectSchema } from "#/schemas/subjects.schema";
 import { validCuidSchema } from "#/schemas/shared.schema";
+import type { SubjectWithGrade } from "#/types/subjectsTypes";
 
-export const getAllSubjectsServerFn = createServerFn({ method: "GET" })
-    .handler(async () => successResponse(subjectsController.listAllSubjects()))
+export const getAllSchoolSubjectsServerFn = createServerFn({ method: "GET" })
+    .inputValidator(validCuidSchema)
+    .handler(async ({ data: schoolId }) => successResponse(subjectsController.listAllSubjects(schoolId)) as APIResponse<SubjectWithGrade[]>)
 
 
 export const addSubjectServerFn = createServerFn({ method: 'POST' })

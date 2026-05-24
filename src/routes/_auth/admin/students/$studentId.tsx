@@ -2,10 +2,7 @@ import { Link, createFileRoute, notFound } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { Skeleton } from 'boneyard-js/react'
-import {
-  getStudentQueryOptions,
-  useEditStudent,
-} from '#/hooks/students/hooks'
+import { getStudentQueryOptions, useEditStudent } from '#/hooks/students/hooks'
 import InputWrapper from '@/components/admin/Wrappers/InputWrapper'
 import DatePickerField from '@/components/admin/DatePickerField'
 import SelectWrapper from '@/components/admin/Wrappers/SelectWrapper'
@@ -70,7 +67,12 @@ function OwnerStudentDetailContent() {
   }
 
   return (
-    <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex h-full w-full">
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      className="flex h-full w-full"
+    >
       <main className="flex-1 flex flex-col h-full min-w-0 bg-background-light dark:bg-background-dark overflow-hidden relative">
         <div className="flex-1 overflow-x-hidden p-8 pb-32">
           <div className="flex flex-col gap-6 pb-12">

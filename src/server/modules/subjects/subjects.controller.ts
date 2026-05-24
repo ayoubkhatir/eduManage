@@ -1,7 +1,9 @@
-import type { AddSubjectSchema } from "#/types/subjectsTypes";
+import type { AddSubjectSchema, SubjectWithGrade } from "#/types/subjectsTypes";
 import { db, type Database } from "#/server/db/db";
 import { gradesTable, gradeSubjectsTable, StatusEnum, studentsTable, subjectsTable, teachersTable } from "#/server/db/schema";
 import { and, eq, inArray } from "drizzle-orm";
+import { getAllSchoolSubjectsServerFn } from "./subjects.server-functions";
+import type { ID } from "#/types/authTypes";
 
 class SubjectsController {
     constructor(private readonly db: Database) { }
@@ -103,12 +105,13 @@ class SubjectsController {
         }
     }
 
-    async listAllSubjects() {
-        const subjects = await this.db.query.subjectsTable.findMany({
+    async listAllSubjects(schoolId: string) {
+        const rawSubjects = await this.db.query.subjectsTable.findMany({
             columns: {
                 id: true,
                 name: true,
             },
+            where: eq(subjectsTable.schoolId, schoolId),
             with: {
                 gradeSubjects: {
                     columns: {},
@@ -123,8 +126,8 @@ class SubjectsController {
                 }
             }
         })
-
-        return subjects.map(s => ({ id: s.id, name: s.name, grades: s.gradeSubjects.map(s => s.grade) }));
+        const subjects: SubjectWithGrade[] = rawSubjects.map(s => ({ id: s.id, name: s.name, grades: s.gradeSubjects.map(s => s.grade) }));
+        return subjects
     }
 
     async listStudentSubjectsByUserId(studentUserId: string) {
@@ -169,3 +172,17 @@ class SubjectsController {
     }
 }
 export const subjectsController = new SubjectsController(db)
+
+export const getAllSubjectsQueryOptions = (schoolId: ID) => {
+    return {
+        queryKey: ['subjects'],
+        queryFn: async () => {
+            const response = await getAllSchoolSubjectsServerFn({ data: schoolId })
+            if (response.success) {
+                return response.data
+            }
+
+            else throw new Error
+        },
+    }
+}

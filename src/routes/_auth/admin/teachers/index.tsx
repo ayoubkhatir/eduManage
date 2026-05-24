@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query'
 import { CustomPagination } from '@/components/admin/PaginationComp'
 import { SearchInput } from '@/components/admin/SearchInput'
 import { SelectPageSize } from '@/components/admin/SelectPageSize'
@@ -15,6 +15,11 @@ import {
 import { TeachersStatCards } from '#/components/admin/cards/UICard'
 import type { GetTeachersType } from '#/types/teacherTypes'
 import { motion } from 'framer-motion'
+import { StatusFilter, SubjectsFilter } from '#/components/admin/FilterComp.jsx'
+import { getAllSubjectsQueryOptions } from '#/server/modules/subjects/subjects.controller'
+import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
+import type { AdminUser } from '#/types/usersTypes'
+import { StatusEnum } from '#/server/db/schema'
 
 const getTeachersQueryOptions = ({
   page,
@@ -23,7 +28,6 @@ const getTeachersQueryOptions = ({
   status,
   sortOrder,
   sortBy,
-  email,
   subject,
 }: GetTeachersType) => ({
   queryKey: [
@@ -31,16 +35,14 @@ const getTeachersQueryOptions = ({
     page,
     search,
     size,
-    status,
     sortOrder,
     sortBy,
-    email,
+    status,
     subject,
   ],
   queryFn: async () => {
     const response = await getTeachersServerFn({
       data: {
-        email,
         page,
         search,
         size,
@@ -60,14 +62,18 @@ const getTeachersQueryOptions = ({
 })
 
 export const Route = createFileRoute('/_auth/admin/teachers/')({
-  // beforeLoad: async ({ location }) => {
-  //   return checkUserOnBeforeLoad(location.pathname)
-  // },
   component: RouteComponent,
   pendingComponent: AdminTeachersPending,
   loaderDeps: ({ search }) => search,
   loader: async ({ context, deps }) => {
     context.queryClient.ensureQueryData(getTeachersQueryOptions(deps))
+    const currentUser = (await FetchCurrentUserServerFn({
+      data: context.authState.user!,
+    })) as AdminUser
+    context.queryClient.ensureQueryData(
+      getAllSubjectsQueryOptions(currentUser.info.id),
+    )
+    return { currentUser }
   },
   validateSearch: zodValidator(getTeachersSchema),
 })
@@ -89,12 +95,27 @@ function AdminTeachersPending() {
 }
 
 function AdminTeachersContent() {
+  const { currentUser } = Route.useLoaderData()
   const navigate = Route.useNavigate()
-  const { search, size } = Route.useSearch({
-    select: (s) => ({ search: s.search, size: s.size }),
+  const { search, size, subject, status } = Route.useSearch({
+    select: (s) => ({
+      search: s.search,
+      size: s.size,
+      subject: s.subject,
+      status: s.status,
+    }),
   })
+  const { data, status: fetchStatus } = useSuspenseQuery(
+    getAllSubjectsQueryOptions(currentUser.info.id),
+  )
+
   return (
-    <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex-1 w-full overflow-y-auto overflow-x-auto flex flex-col gap-6">
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      className="flex-1 w-full overflow-y-auto overflow-x-auto flex flex-col gap-6"
+    >
       <IndexPageComponent role="Teacher">
         <TeachersStatCards />
 
@@ -128,6 +149,37 @@ function AdminTeachersContent() {
                 })
               }
             />
+            <StatusFilter
+              value={status}
+              onChange={(value) =>
+                navigate({
+                  search: (s) => ({
+                    ...s,
+                    status:
+                      value === 'all'
+                        ? undefined
+                        : StatusEnum[
+                            value.toUpperCase() as keyof typeof StatusEnum
+                          ],
+                  }),
+                })
+              }
+            />
+            {fetchStatus === 'success' && (
+              <SubjectsFilter
+                value={subject}
+                data={data}
+                placeholder="Subjects"
+                onChange={(value) =>
+                  navigate({
+                    search: (s) => ({
+                      ...s,
+                      subject: value === 'all' ? undefined : value,
+                    }),
+                  })
+                }
+              />
+            )}
           </div>
         </div>
 
@@ -139,7 +191,7 @@ function AdminTeachersContent() {
 
 function MainPageContent() {
   const navigate = Route.useNavigate()
-  const { size, page, search, sortBy, sortOrder, status, email, subject } =
+  const { size, page, search, sortBy, sortOrder, status, subject } =
     Route.useSearch({
       select: (s) => ({
         size: s.size,
@@ -148,7 +200,6 @@ function MainPageContent() {
         sortBy: s.sortBy,
         sortOrder: s.sortOrder,
         status: s.status,
-        email: s.email,
         subject: s.subject,
       }),
     })
@@ -160,7 +211,6 @@ function MainPageContent() {
       sortBy,
       status,
       sortOrder,
-      email,
       subject,
     }),
   })

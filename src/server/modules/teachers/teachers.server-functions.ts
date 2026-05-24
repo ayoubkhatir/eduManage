@@ -21,7 +21,6 @@ import type { TeacherUser } from "#/types/teacherTypes";
 export const getTeachersServerFn = createServerFn({ method: "GET" })
     .inputValidator(getTeachersSchema)
     .handler(async ({ data: search_queries }) => {
-        const { teachersController } = await import('./teachers.contoller')
         const { data, pagination } = await teachersController.listTeachers(search_queries)
         return paginatedSuccessResponse(data, pagination);
     })
@@ -81,7 +80,7 @@ export const editTeacherServerFn = createServerFn({ method: 'POST' })
             const data = await teachersController.updateTeacher(body)
             return successResponse(data) as APIResponse<TeacherUser>
         } catch (error) {
-            console.log("\x1b[36m[server]\x1b[0m " + error)
+            console.log({ error })
             return mapDbError(error) as APIResponse<TeacherUser>
         }
     })

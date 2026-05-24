@@ -1,6 +1,6 @@
 import { db, type Database } from "#/server/db/db";
 import { account, adminsTable, classesTable, gradesTable, StatusEnum, studentsTable, subjectsTable, teacherAssignmentsTable, teachersTable, UserGenderEnum, UserRoleEnum, users } from "#/server/db/schema";
-import { and, asc, count, desc, eq, gte, ilike, inArray, lt, or, SQL } from "drizzle-orm"
+import { and, asc, count, desc, eq, exists, gte, ilike, inArray, lt, or, sql, SQL } from "drizzle-orm"
 import { generateTemporaryPassword } from "#/server/utils/temp_password_generator";
 import { handlePassword } from "#/server/utils/handle-password";
 import generateId from "#/server/utils/id_generator";
@@ -51,14 +51,14 @@ export type AssignTeacherInput = {
 class TeachersController {
     constructor(private readonly db: Database) { }
 
-
     async listTeachers({
         search,
         page,
         size,
         status,
         sortBy,
-        sortOrder
+        sortOrder,
+        subject,
     }: GetTeachersType) {
         const safePage = Math.max(1, page ?? 1)
         const safeSize = Math.max(1, size ?? 10)
@@ -68,15 +68,19 @@ class TeachersController {
 
         const normalizedSearch = search?.trim()
         const normalizedStatus = status?.trim()
+        const normalizedSubject = subject?.trim()
 
         const sortColumn =
             sortBy === 'email'
-                ? users.email
-                : users.name
+                ? sql`lower(${users.email})`
+                : sql`lower(${users.name})`
 
         const orderDirection =
-            sortOrder === 'desc' ? desc(sortColumn) : asc(sortColumn)
+            sortOrder === 'desc'
+                ? desc(sortColumn)
+                : asc(sortColumn)
 
+        // Search filter
         if (normalizedSearch) {
             conditions.push(
                 or(
@@ -86,11 +90,48 @@ class TeachersController {
             )
         }
 
+        // Status filter
         if (normalizedStatus) {
-            conditions.push(eq(teachersTable.status, normalizedStatus as any))
+            conditions.push(
+                eq(teachersTable.status, normalizedStatus as StatusEnum)
+                
+            )
         }
 
-        const whereClause = conditions.length > 0 ? and(...conditions) : undefined
+        // Subject filter
+        if (normalizedSubject) {
+            conditions.push(
+                exists(
+                    this.db
+                        .select({ id: subjectsTable.id })
+                        .from(teacherAssignmentsTable)
+                        .innerJoin(
+                            subjectsTable,
+                            eq(
+                                teacherAssignmentsTable.subjectId,
+                                subjectsTable.id
+                            )
+                        )
+                        .where(
+                            and(
+                                eq(
+                                    teacherAssignmentsTable.teacherId,
+                                    teachersTable.id
+                                ),
+                                ilike(
+                                    subjectsTable.name,
+                                    `%${normalizedSubject}%`
+                                )
+                            )
+                        )
+                )
+            )
+        }
+
+        const whereClause =
+            conditions.length > 0
+                ? and(...conditions)
+                : undefined
 
         // Step 1: get paginated teachers + user
         const [rows, totalRows] = await Promise.all([
@@ -100,20 +141,30 @@ class TeachersController {
                     user: users,
                 })
                 .from(teachersTable)
-                .innerJoin(users, eq(teachersTable.userId, users.id))
+                .innerJoin(
+                    users,
+                    eq(teachersTable.userId, users.id)
+                )
                 .where(whereClause)
                 .orderBy(orderDirection)
                 .limit(safeSize)
                 .offset(offset),
 
             this.db
-                .select({ total: count() })
+                .select({
+                    total: count(),
+                })
                 .from(teachersTable)
-                .innerJoin(users, eq(teachersTable.userId, users.id))
+                .innerJoin(
+                    users,
+                    eq(teachersTable.userId, users.id)
+                )
                 .where(whereClause),
         ])
 
-        const teacherIds = rows.map(({ teacher }) => teacher.id)
+        const teacherIds = rows.map(
+            ({ teacher }) => teacher.id
+        )
 
         // Step 2: get subjects for only those teachers
         const assignmentRows =
@@ -121,7 +172,8 @@ class TeachersController {
                 ? []
                 : await this.db
                     .select({
-                        teacherId: teacherAssignmentsTable.teacherId,
+                        teacherId:
+                            teacherAssignmentsTable.teacherId,
                         subjectId: subjectsTable.id,
                         subjectName: subjectsTable.name,
                         subjectCode: subjectsTable.code,
@@ -129,9 +181,17 @@ class TeachersController {
                     .from(teacherAssignmentsTable)
                     .innerJoin(
                         subjectsTable,
-                        eq(teacherAssignmentsTable.subjectId, subjectsTable.id)
+                        eq(
+                            teacherAssignmentsTable.subjectId,
+                            subjectsTable.id
+                        )
                     )
-                    .where(inArray(teacherAssignmentsTable.teacherId, teacherIds))
+                    .where(
+                        inArray(
+                            teacherAssignmentsTable.teacherId,
+                            teacherIds
+                        )
+                    )
 
         // Step 3: group subjects by teacherId
         const subjectsByTeacherId = new Map<
@@ -144,9 +204,13 @@ class TeachersController {
         >()
 
         for (const row of assignmentRows) {
-            const current = subjectsByTeacherId.get(row.teacherId) ?? []
+            const current =
+                subjectsByTeacherId.get(row.teacherId) ?? []
 
-            const alreadyExists = current.some((subject) => subject.id === row.subjectId)
+            const alreadyExists = current.some(
+                (subject) => subject.id === row.subjectId
+            )
+
             if (!alreadyExists) {
                 current.push({
                     id: row.subjectId,
@@ -155,18 +219,29 @@ class TeachersController {
                 })
             }
 
-            subjectsByTeacherId.set(row.teacherId, current)
+            subjectsByTeacherId.set(
+                row.teacherId,
+                current
+            )
         }
 
         const totalCount = Number(totalRows[0]?.total ?? 0)
-        const totalPages = Math.ceil(totalCount / safeSize)
+
+        const totalPages = Math.ceil(
+            totalCount / safeSize
+        )
 
         const data = rows.map(
-            ({ teacher, user, }) => TeacherUserDto(
-                teacher,
-                user,
-                subjectsByTeacherId.get(teacher.id) ?? [])
+            ({ teacher, user }) =>
+                TeacherUserDto(
+                    teacher,
+                    user,
+                    subjectsByTeacherId.get(teacher.id) ?? []
+                )
         )
+
+        console.log(data)
+
         return {
             data,
             pagination: {

@@ -94,7 +94,7 @@ export function useAddTeacher(schoolId: string) {
 export function useEditTeacher(editedTeacher: TeacherUser) {
   const teacherForm: UseFormReturn<EditTeacherType> = useForm<EditTeacherType>({
     defaultValues: {
-      teacherId: editedTeacher.id,
+      teacherId: editedTeacher.info.id,
       name: editedTeacher.name,
       telNumber: editedTeacher.telNumber ?? '',
       status: editedTeacher.info.status,
@@ -114,7 +114,10 @@ export function useEditTeacher(editedTeacher: TeacherUser) {
     mutationFn: async (data: EditTeacherType) => {
       try {
         const response = await editTeacherServerFn({ data })
-        return response
+        if (response.success) {
+          return response.data
+        }
+        throw new Error("Error has occured")
       }
       catch (error) {
         console.log({ error })

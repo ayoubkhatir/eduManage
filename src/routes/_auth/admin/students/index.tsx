@@ -7,14 +7,7 @@ import { SearchInput } from '@/components/admin/SearchInput'
 import { SelectPageSize } from '@/components/admin/SelectPageSize'
 import IndexPageComponent from '@/components/admin/IndexPageComponent'
 import { studentSearchSchema } from '#/schemas/students.schema'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '#/components/ui/select'
-import { Suspense, useState } from 'react'
+import { Suspense } from 'react'
 import { StudentsStatCards } from '#/components/admin/cards/UICard'
 import {
   CustomDataTableSkeleton,
@@ -23,19 +16,6 @@ import {
 import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
 import { getStudentsQueryOptions } from '#/server/db/repo'
 import { motion } from 'framer-motion'
-
-// type QueryOptionsType = Filters<StudentModel>
-
-// const StudentSearchSchema = z.object({
-//   search: fallback(z.string(), '').default(''),
-//   email: fallback(z.string().email(), '').default(''),
-//   status: fallback(z.string(), '').default(''),
-//   grade: fallback(z.string(), '').default(''),
-//   sortBy: fallback(z.enum(['name', 'email']), 'name').default('name'),
-//   sortOrder: fallback(z.enum(['asc', 'desc']).nullable(), 'asc').default('asc'),
-//   page: fallback(z.coerce.number().int().positive(), 1).default(1),
-//   size: fallback(z.coerce.number().int().positive(), 10).default(10),
-// })
 
 export const Route = createFileRoute('/_auth/admin/students/')({
   component: RouteComponent,
@@ -67,6 +47,7 @@ function AdminStudentsPending() {
 
 function AdminStudentsContent() {
   const navigate = Route.useNavigate()
+  const { data } = useQuery(getAllGradesQueryOptions())
 
   const { size, search } = Route.useSearch({
     select: (s) => ({
@@ -76,7 +57,12 @@ function AdminStudentsContent() {
   })
 
   return (
-    <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex-1 w-full overflow-x-auto flex flex-col gap-6">
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      className="flex-1 w-full overflow-x-auto flex flex-col gap-6"
+    >
       <IndexPageComponent role="Student">
         <StudentsStatCards />
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -109,7 +95,7 @@ function AdminStudentsContent() {
                 })
               }
             />
-            <GradesFilter />
+            {/* <FilterComp data={data} name="grade" /> */}
           </div>
         </div>
 
@@ -118,59 +104,6 @@ function AdminStudentsContent() {
         </Suspense>
       </IndexPageComponent>
     </motion.div>
-  )
-}
-
-function GradesFilter() {
-  const navigate = Route.useNavigate()
-  const { data: gradesData, status: fetchStatus } = useQuery(
-    getAllGradesQueryOptions(),
-  )
-  const [open, setOpen] = useState(false)
-  if (fetchStatus === 'error') return null
-  if (fetchStatus === 'pending')
-    return (
-      <div className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2">
-        <span className="material-symbols-outlined text-[18px] text-muted-foreground animate-pulse">
-          school
-        </span>
-        <span className="text-sm text-muted-foreground">Loading...</span>
-      </div>
-    )
-  const gradeOptions = [
-    // { label: 'All', value: null },
-    ...gradesData.map((g) => ({ label: g.name, value: g.id })),
-  ]
-  return (
-    <div className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2">
-      <span className="material-symbols-outlined text-[18px] text-muted-foreground">
-        school
-      </span>
-      <Select
-        open={open}
-        onOpenChange={setOpen}
-        defaultValue={''}
-        onValueChange={(v) =>
-          navigate({ to: '.', search: (s) => ({ ...s, grade: v }) })
-        }
-      >
-        <SelectTrigger className="w-28 border-0 bg-transparent p-0 text-sm font-medium text-muted-foreground shadow-none focus:ring-0 hover:text-foreground">
-          <SelectValue placeholder="Grade" />
-        </SelectTrigger>
-        <SelectContent className="bg-card border-border">
-          <SelectItem value={null as any}>All</SelectItem>
-          {gradeOptions?.map((option) => (
-            <SelectItem
-              key={option.value ?? option.label}
-              value={option.value}
-              className="focus:bg-accent"
-            >
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
   )
 }
 

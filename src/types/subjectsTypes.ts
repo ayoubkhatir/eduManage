@@ -10,3 +10,12 @@ import z from "zod";
 export type Subject = typeof schema.subjectsTable.$inferSelect
 
 export type AddSubjectSchema = z.infer<typeof addSubjectSchema>
+
+export type SubjectWithGrade = {
+  id: string
+  name: string
+  grades: {
+    id: string
+    name: string
+  }[]
+}

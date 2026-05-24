@@ -1,11 +1,11 @@
 import z from "zod/v4";
 import { genderSchema, paginationQueriesSchema, phoneNumberSchema } from "./shared.schema";
+import { StatusEnum } from "#/server/db/schema";
 
 export const getUsersSchema = paginationQueriesSchema.extend({
     sortBy: z.enum(['name', 'email']).nullable().default(null),
     sortOrder: z.enum(['asc', 'desc']).nullable().default(null),
-    email: z.string().trim().nullable().default(null),
-    status: z.string().trim().nullable().default(""),
+    status: z.enum(StatusEnum).nullable().optional(),
 });
 
 
