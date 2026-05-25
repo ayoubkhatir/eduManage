@@ -41,7 +41,6 @@ import { Route as AuthPagesAboutRouteImport } from './routes/_auth/Pages/about'
 import { Route as AuthTeacherSubjectsIndexRouteImport } from './routes/_auth/teacher/subjects/index'
 import { Route as AuthTeacherClassesIndexRouteImport } from './routes/_auth/teacher/classes/index'
 import { Route as AuthStudentSubjectsIndexRouteImport } from './routes/_auth/student/subjects.index'
-import { Route as AuthStudentNotificationIndexRouteImport } from './routes/_auth/student/notification/index'
 import { Route as AuthAdminTeachersIndexRouteImport } from './routes/_auth/admin/teachers/index'
 import { Route as AuthAdminStudentsIndexRouteImport } from './routes/_auth/admin/students/index'
 import { Route as AuthAdminGradesIndexRouteImport } from './routes/_auth/admin/grades/index'
@@ -222,12 +221,6 @@ const AuthStudentSubjectsIndexRoute =
     path: '/subjects/',
     getParentRoute: () => AuthStudentRoute,
   } as any)
-const AuthStudentNotificationIndexRoute =
-  AuthStudentNotificationIndexRouteImport.update({
-    id: '/notification/',
-    path: '/notification/',
-    getParentRoute: () => AuthStudentRoute,
-  } as any)
 const AuthAdminTeachersIndexRoute = AuthAdminTeachersIndexRouteImport.update({
   id: '/teachers/',
   path: '/teachers/',
@@ -367,7 +360,6 @@ export interface FileRoutesByFullPath {
   '/admin/grades/': typeof AuthAdminGradesIndexRoute
   '/admin/students/': typeof AuthAdminStudentsIndexRoute
   '/admin/teachers/': typeof AuthAdminTeachersIndexRoute
-  '/student/notification/': typeof AuthStudentNotificationIndexRoute
   '/student/subjects/': typeof AuthStudentSubjectsIndexRoute
   '/teacher/classes/': typeof AuthTeacherClassesIndexRoute
   '/teacher/subjects/': typeof AuthTeacherSubjectsIndexRoute
@@ -418,7 +410,6 @@ export interface FileRoutesByTo {
   '/admin/grades': typeof AuthAdminGradesIndexRoute
   '/admin/students': typeof AuthAdminStudentsIndexRoute
   '/admin/teachers': typeof AuthAdminTeachersIndexRoute
-  '/student/notification': typeof AuthStudentNotificationIndexRoute
   '/student/subjects': typeof AuthStudentSubjectsIndexRoute
   '/teacher/classes': typeof AuthTeacherClassesIndexRoute
   '/teacher/subjects': typeof AuthTeacherSubjectsIndexRoute
@@ -471,7 +462,6 @@ export interface FileRoutesById {
   '/_auth/admin/grades/': typeof AuthAdminGradesIndexRoute
   '/_auth/admin/students/': typeof AuthAdminStudentsIndexRoute
   '/_auth/admin/teachers/': typeof AuthAdminTeachersIndexRoute
-  '/_auth/student/notification/': typeof AuthStudentNotificationIndexRoute
   '/_auth/student/subjects/': typeof AuthStudentSubjectsIndexRoute
   '/_auth/teacher/classes/': typeof AuthTeacherClassesIndexRoute
   '/_auth/teacher/subjects/': typeof AuthTeacherSubjectsIndexRoute
@@ -524,7 +514,6 @@ export interface FileRouteTypes {
     | '/admin/grades/'
     | '/admin/students/'
     | '/admin/teachers/'
-    | '/student/notification/'
     | '/student/subjects/'
     | '/teacher/classes/'
     | '/teacher/subjects/'
@@ -575,7 +564,6 @@ export interface FileRouteTypes {
     | '/admin/grades'
     | '/admin/students'
     | '/admin/teachers'
-    | '/student/notification'
     | '/student/subjects'
     | '/teacher/classes'
     | '/teacher/subjects'
@@ -627,7 +615,6 @@ export interface FileRouteTypes {
     | '/_auth/admin/grades/'
     | '/_auth/admin/students/'
     | '/_auth/admin/teachers/'
-    | '/_auth/student/notification/'
     | '/_auth/student/subjects/'
     | '/_auth/teacher/classes/'
     | '/_auth/teacher/subjects/'
@@ -867,13 +854,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthStudentSubjectsIndexRouteImport
       parentRoute: typeof AuthStudentRoute
     }
-    '/_auth/student/notification/': {
-      id: '/_auth/student/notification/'
-      path: '/notification'
-      fullPath: '/student/notification/'
-      preLoaderRoute: typeof AuthStudentNotificationIndexRouteImport
-      parentRoute: typeof AuthStudentRoute
-    }
     '/_auth/admin/teachers/': {
       id: '/_auth/admin/teachers/'
       path: '/teachers'
@@ -1042,7 +1022,6 @@ interface AuthStudentRouteChildren {
   AuthStudentCalendarRoute: typeof AuthStudentCalendarRoute
   AuthStudentSettingsRoute: typeof AuthStudentSettingsRoute
   AuthStudentSubjectsSubjectCodeRoute: typeof AuthStudentSubjectsSubjectCodeRoute
-  AuthStudentNotificationIndexRoute: typeof AuthStudentNotificationIndexRoute
   AuthStudentSubjectsIndexRoute: typeof AuthStudentSubjectsIndexRoute
 }
 
@@ -1050,7 +1029,6 @@ const AuthStudentRouteChildren: AuthStudentRouteChildren = {
   AuthStudentCalendarRoute: AuthStudentCalendarRoute,
   AuthStudentSettingsRoute: AuthStudentSettingsRoute,
   AuthStudentSubjectsSubjectCodeRoute: AuthStudentSubjectsSubjectCodeRoute,
-  AuthStudentNotificationIndexRoute: AuthStudentNotificationIndexRoute,
   AuthStudentSubjectsIndexRoute: AuthStudentSubjectsIndexRoute,
 }
 

@@ -17,8 +17,7 @@ export type logInSearch = z.infer<typeof logInSearchSchema>
 
 export const Route = createFileRoute('/log-in')({
   beforeLoad: ({ context }) => {
-    const { authState } = context
-    console.log({ authState })
+    const authState = context.authState
     if (authState?.user && authState?.user.role) {
       const role = authState.user.role
       throw redirect({

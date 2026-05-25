@@ -43,8 +43,6 @@ const info = {
   ],
 }
 
-import { motion } from 'framer-motion'
-
 function Teacher() {
   const { currentUser } = Route.useLoaderData()
 

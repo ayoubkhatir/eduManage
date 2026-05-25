@@ -2,8 +2,6 @@ import {
     addTeacherSchema,
     getTeachersSchema,
     editTeacherSchema,
-    teacherIdSchema,
-    schoolIdSchema,
     assignTeacherSchema,
     updateTeacherAssignmentSchema,
     classIdSchema,
@@ -44,16 +42,16 @@ export const addTeacherServerFn = createServerFn({ method: 'POST' })
 
 // Get all teachers in school
 export const getAllTeachersServerFn = createServerFn({ method: 'GET' })
-    .inputValidator(schoolIdSchema)
-    .handler(async ({ data }) => {
-        return successResponse(await teachersController.getTeachers(data.schoolId))
+    .inputValidator(validCuidSchema)
+    .handler(async ({ data: schoolId }) => {
+        return successResponse(await teachersController.getTeachers(schoolId))
     })
 
 // Get one teacher by teacherId
 export const getTeacherServerFn = createServerFn({ method: 'GET' })
-    .inputValidator(teacherIdSchema)
-    .handler(async ({ data }) => {
-        return successResponse(await teachersController.getTeacherById(data.teacherId)
+    .inputValidator(validCuidSchema)
+    .handler(async ({ data: teacherId }) => {
+        return successResponse(await teachersController.getTeacherById(teacherId)
         )
     })
 

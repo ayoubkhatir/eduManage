@@ -25,9 +25,9 @@ const getTeachersQueryOptions = ({
   page,
   search,
   size,
-  status,
   sortOrder,
   sortBy,
+  status,
   subject,
 }: GetTeachersType) => ({
   queryKey: [

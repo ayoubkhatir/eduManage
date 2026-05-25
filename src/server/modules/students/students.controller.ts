@@ -1,19 +1,241 @@
-import { db } from "#/server/db/db";
-import { account, classesTable, StatusEnum, studentsTable, UserRoleEnum, users } from "#/server/db/schema";
-import { and, count, eq, gte, lt } from "drizzle-orm";
+import { db, type Database } from "#/server/db/db";
+import { account, classesTable, gradesTable, StatusEnum, studentsTable, UserRoleEnum, users } from "#/server/db/schema";
+import { and, asc, count, desc, eq, gte, ilike, lt, or, sql, SQL } from "drizzle-orm";
 import generateId from "../../utils/id_generator";
 import { generateTemporaryPassword } from "../../utils/temp_password_generator";
 import { handlePassword } from "#/server/utils/handle-password";
-import { studentsRepository, type IStudentsRepository } from "#/server/db/repo/students.repository";
-import { StudentUserDto, type AddStudentType, type EditStudentType, type StudentSearchType, type StudentUser } from "#/types/studentTypes";
+import { StudentUserDto, type AddStudentType, type EditStudentType, type GetStudentsType, type StudentUser } from "#/types/studentTypes";
+import { getAllStudentsServerFn } from "./students.server-functions";
 
 
 class StudentsController {
-    constructor(private readonly studentsRepository: IStudentsRepository) { }
+    constructor(private readonly db: Database) { }
 
-    async listStudents(search_queries: StudentSearchType) {
-        return await this.studentsRepository.listStudents(search_queries);
+    async listStudents({
+        classe,
+        grade,
+        page,
+        search,
+        size,
+        sortOrder,
+        sortBy,
+        status,
+    }: GetStudentsType) {
+        const safePage = Math.max(1, page ?? 1)
+        const safeSize = Math.max(1, size ?? 10)
+        const offset = (safePage - 1) * safeSize
+
+        const conditions: SQL<unknown>[] = []
+
+        const normalizedSearch = search?.trim()
+        const normalizedStatus = status?.trim()
+        const normalizedClass = classe?.trim()
+        const normalizedGrade = grade?.trim()
+
+        const sortColumn =
+            sortBy === 'email'
+                ? sql`lower(${users.email})`
+                : sql`lower(${users.name})`
+
+        const orderDirection =
+            sortOrder === 'desc'
+                ? desc(sortColumn)
+                : asc(sortColumn)
+
+        // search by student name/email
+        if (normalizedSearch) {
+            conditions.push(
+                or(
+                    ilike(users.name, `%${normalizedSearch}%`),
+                    ilike(users.email, `%${normalizedSearch}%`)
+                ) as SQL<unknown>
+            )
+        }
+
+        // filter by status
+        if (normalizedStatus) {
+            conditions.push(
+                eq(studentsTable.status, normalizedStatus as StatusEnum)
+            )
+        }
+
+        // filter by class
+        if (normalizedClass) {
+            conditions.push(
+                eq(classesTable.id, normalizedClass)
+            )
+        }
+
+        // filter by grade
+        if (normalizedGrade) {
+            conditions.push(
+                eq(gradesTable.id, normalizedGrade)
+            )
+        }
+
+        const whereClause =
+            conditions.length > 0
+                ? and(...conditions)
+                : undefined
+
+        const [rows, totalResult] = await Promise.all([
+            this.db
+                .select({
+                    student: studentsTable,
+                    user: users,
+                    classe: {
+                        id: classesTable.id,
+                        name: classesTable.name,
+                    },
+                    grade: {
+                        id: gradesTable.id,
+                        name: gradesTable.name,
+                    },
+                })
+                .from(studentsTable)
+                .innerJoin(users, eq(studentsTable.userId, users.id))
+                .innerJoin(
+                    classesTable,
+                    eq(studentsTable.classId, classesTable.id)
+                )
+                .innerJoin(
+                    gradesTable,
+                    eq(classesTable.gradeId, gradesTable.id)
+                )
+                .where(whereClause)
+                .orderBy(orderDirection)
+                .limit(safeSize)
+                .offset(offset),
+
+            this.db
+                .select({
+                    total: count(),
+                })
+                .from(studentsTable)
+                .innerJoin(users, eq(studentsTable.userId, users.id))
+                .innerJoin(
+                    classesTable,
+                    eq(studentsTable.classId, classesTable.id)
+                )
+                .innerJoin(
+                    gradesTable,
+                    eq(classesTable.gradeId, gradesTable.id)
+                )
+                .where(whereClause),
+        ])
+
+        const totalCount = Number(totalResult[0]?.total ?? 0)
+        const totalPages = Math.ceil(totalCount / safeSize)
+
+        const data = rows.map(({
+            student,
+            user,
+            classe,
+            grade,
+        }) =>
+            StudentUserDto(student, user, classe, grade)
+        )
+
+        return {
+            data,
+            pagination: {
+                totalCount,
+                totalPages,
+            },
+        }
     }
+    // async listStudents({ classe, grade, page, search, size, sortOrder, sortBy, status }: GetStudentsType) {
+    //     const safePage = Math.max(1, page ?? 1)
+    //     const safeSize = Math.max(1, size ?? 10)
+    //     const offset = (safePage - 1) * safeSize
+
+    //     const conditions: SQL<unknown>[] = []
+
+    //     const normalizedSearch = search?.trim()
+    //     const normalizedStatus = status?.trim()
+    //     const normalizedClass = classe?.trim()
+    //     const normalizedGrade = grade?.trim()
+
+    //     const sortColumn =
+    //         sortBy === 'email'
+    //             ? sql`lower(${users.email})`
+    //             : sql`lower(${users.name})`
+
+    //     const orderDirection =
+    //         sortOrder === 'desc'
+    //             ? desc(sortColumn)
+    //             : asc(sortColumn)
+
+
+
+    //     if (normalizedSearch) {
+    //         conditions.push(
+    //             or(
+    //                 ilike(users.name, `%${normalizedSearch}%`),
+    //                 ilike(users.email, `%${normalizedSearch}%`)
+    //             ) as SQL<unknown>
+    //         );
+    //     }
+
+    //     if (normalizedStatus) {
+    //         conditions.push(
+    //             eq(studentsTable.status, normalizedStatus as StatusEnum)
+    //         )
+    //     }
+
+    //     const whereClause = conditions.length > 0 ? and(...conditions) : undefined
+
+    //     const [rows, totalResult] = await Promise.all([
+    //         this.db
+    //             .select({
+    //                 student: studentsTable,
+    //                 user: users,
+    //                 classe: {
+    //                     id: classesTable.id,
+    //                     name: classesTable.name,
+    //                 },
+    //                 grade: {
+    //                     id: gradesTable.id,
+    //                     name: gradesTable.name,
+    //                 },
+    //             })
+    //             .from(studentsTable)
+    //             .innerJoin(users, eq(studentsTable.userId, users.id))
+    //             .innerJoin(classesTable, eq(studentsTable.classId, classesTable.id))
+    //             .innerJoin(gradesTable, eq(classesTable.gradeId, gradesTable.id)).where(whereClause)
+    //             .orderBy(orderDirection)
+    //             .limit(safeSize)
+    //             .offset(offset),
+
+    //         this.db
+    //             .select({
+    //                 total: count(),
+    //             })
+    //             .from(studentsTable)
+    //             .innerJoin(users, eq(studentsTable.userId, users.id))
+    //             .innerJoin(classesTable, eq(studentsTable.classId, classesTable.id))
+    //             .innerJoin(gradesTable, eq(classesTable.gradeId, gradesTable.id))
+    //             .where(whereClause),
+    //     ])
+
+    //     const totalCount = Number(totalResult[0]?.total ?? 0)
+    //     const totalPages = Math.ceil(totalCount / safeSize)
+
+    //     const data = rows.map(({
+    //         student,
+    //         user,
+    //         classe,
+    //         grade
+    //     }) => StudentUserDto(student, user, classe, grade))
+
+    //     return {
+    //         data,
+    //         pagination: {
+    //             totalCount,
+    //             totalPages,
+    //         },
+    //     }
+    // }
 
     async addStudent(data: AddStudentType) {
         const userId = generateId();
@@ -21,12 +243,12 @@ class StudentsController {
         const passwordHash = await handlePassword.hash(generateTemporaryPassword(data.name))
 
         try {
-            const classe = await db.query.classesTable.findFirst({
+            const classe = await this.db.query.classesTable.findFirst({
                 where: eq(classesTable.id, data.classId)
             })
             if (!classe) throw new Error("Classe Not Found");
 
-            await db.insert(users).values({
+            await this.db.insert(users).values({
                 id: userId,
                 email: data.email,
                 telNumber: data.telNumber,
@@ -38,7 +260,7 @@ class StudentsController {
                 updatedAt: new Date(),
             }).returning()
 
-            await db.insert(account).values({
+            await this.db.insert(account).values({
                 id: generateId(),
                 userId,
                 accountId: userId,
@@ -47,7 +269,7 @@ class StudentsController {
                 createdAt: new Date(),
             })
 
-            const [{ id: studentId }] = await db
+            const [{ id: studentId }] = await this.db
                 .insert(studentsTable)
                 .values({
                     address: data.address,
@@ -61,7 +283,7 @@ class StudentsController {
                 })
                 .returning({ id: studentsTable.id })
 
-            const student = await db.query.studentsTable.findFirst({
+            const student = await this.db.query.studentsTable.findFirst({
                 where: eq(studentsTable.id, studentId),
                 with: {
                     user: true,
@@ -85,14 +307,35 @@ class StudentsController {
             const studentUser: StudentUser = StudentUserDto(student, student.user, student.class, student.class.grade);
             return studentUser
         } catch (error) {
-            await db.delete(users).where(eq(users.id, userId)).catch(() => undefined)
+            await this.db.delete(users).where(eq(users.id, userId)).catch(() => undefined)
             throw error
         }
     }
 
 
     async getStudent(studentId: string) {
-        return this.studentsRepository.findStudentById(studentId)
+        const student = await db.query.studentsTable.findFirst({
+            where: eq(studentsTable.id, studentId),
+            with: {
+                user: true,
+                class: {
+                    columns: {
+                        id: true,
+                        name: true
+                    },
+                    with: {
+                        grade: {
+                            columns: {
+                                id: true,
+                                name: true
+                            }
+                        }
+                    }
+                }
+            },
+        });
+        if (!student) return undefined;
+        return StudentUserDto(student, student.user, student.class, student.class.grade);
     }
 
 
@@ -100,14 +343,14 @@ class StudentsController {
         const password = data.name // just the name of the user 
         const passwordHash = await handlePassword.hash(password);
 
-        const foundStudent = await db.query.studentsTable.findFirst({
+        const foundStudent = await this.db.query.studentsTable.findFirst({
             where: eq(studentsTable.id, data.studentId),
             columns: { userId: true }
         });
         if (!foundStudent) throw new Error("Student not found");
         const userId = foundStudent.userId;
 
-        await db
+        await this.db
             .update(users)
             .set({
                 email: data.email,
@@ -120,13 +363,13 @@ class StudentsController {
             .where(eq(users.id, userId))
             .returning()
 
-        await db.update(account)
+        await this.db.update(account)
             .set({
                 password: passwordHash,
             })
             .where(eq(account.userId, userId))
 
-        await db
+        await this.db
             .update(studentsTable)
             .set({
                 address: data.address,
@@ -139,7 +382,7 @@ class StudentsController {
             .where(eq(studentsTable.id, data.studentId))
             .returning()
 
-        const student = await db.query.studentsTable.findFirst({
+        const student = await this.db.query.studentsTable.findFirst({
             where: eq(studentsTable.id, data.studentId),
             with: {
                 user: true,
@@ -168,7 +411,8 @@ class StudentsController {
     }
 
     async deleteStudent(studentId: string) {
-        await this.studentsRepository.deleteStudent(studentId)
+        const [deletedStudent] = await this.db.delete(studentsTable).where(eq(studentsTable.id, studentId)).returning();
+        return deletedStudent;
     }
 
     async getStudentsStats() {
@@ -177,11 +421,11 @@ class StudentsController {
         const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
         const startOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1)
 
-        const [{ totalStudents }] = await db
+        const [{ totalStudents }] = await this.db
             .select({ totalStudents: count() })
             .from(studentsTable)
 
-        const [{ totalMonthEnrollments }] = await db
+        const [{ totalMonthEnrollments }] = await this.db
             .select({ totalMonthEnrollments: count() })
             .from(studentsTable)
             .where(
@@ -198,5 +442,68 @@ class StudentsController {
     }
 }
 
-export const studentsController = new StudentsController(studentsRepository);
+export const studentsController = new StudentsController(db);
 
+export const getStudentsQueryOptions = ({
+    page,
+    search,
+    size,
+    sortOrder,
+    sortBy,
+    status,
+    classe,
+    grade
+}: GetStudentsType) => ({
+    queryKey: ['students', page, search, size, sortOrder, sortBy, status, classe, grade],
+    queryFn: async () => {
+        const response = await getAllStudentsServerFn({
+            data: {
+                page,
+                search,
+                size,
+                sortOrder,
+                sortBy,
+                status,
+                classe,
+                grade
+            },
+        })
+
+        if (response.success)
+            return {
+                data: response.data,
+                pagination: response.pagination,
+            }
+        else throw new Error(response.message)
+    },
+    // placeholderData: keepPreviousData,
+})
+
+
+// this function is not in use now 
+// async function findStudentByUserId(
+//     userId: string,
+// ) {
+//     const student = await db.query.studentsTable.findFirst({
+//         where: eq(studentsTable.userId, userId),
+//         with: {
+//             user: true,
+//             class: {
+//                 columns: {
+//                     id: true,
+//                     name: true
+//                 },
+//                 with: {
+//                     grade: {
+//                         columns: {
+//                             id: true,
+//                             name: true
+//                         }
+//                     }
+//                 }
+//             }
+//         },
+//     });
+//     if (!student) return undefined;
+//     return StudentUserDto(student, student.user, student.class, student.class.grade);
+// }

@@ -1,12 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
-import { useQuery, useSuspenseQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { zodValidator } from '@tanstack/zod-adapter'
 import { CustomPagination } from '@/components/admin/PaginationComp'
 import { SearchInput } from '@/components/admin/SearchInput'
 import { SelectPageSize } from '@/components/admin/SelectPageSize'
 import IndexPageComponent from '@/components/admin/IndexPageComponent'
-import { studentSearchSchema } from '#/schemas/students.schema'
 import { Suspense } from 'react'
 import { StudentsStatCards } from '#/components/admin/cards/UICard'
 import {
@@ -14,19 +13,21 @@ import {
   StudentsTable,
 } from '#/components/admin/Table/dataTable'
 import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
-import { getStudentsQueryOptions } from '#/server/db/repo'
 import { motion } from 'framer-motion'
+import { StatusFilter } from '#/components/admin/FilterComp'
+import { getStudentsSchema } from '#/schemas/students.schema'
+import { StatusEnum } from '#/server/db/schema'
+import { getStudentsQueryOptions } from '#/server/modules/students/students.controller'
 
 export const Route = createFileRoute('/_auth/admin/students/')({
   component: RouteComponent,
   pendingComponent: AdminStudentsPending,
   loaderDeps: ({ search }) => search,
   loader: async ({ context, deps }) => {
-    // // await new Promise((resolve) => setTimeout(resolve, 2000))
     context.queryClient.ensureQueryData(getAllGradesQueryOptions())
     context.queryClient.ensureQueryData(getStudentsQueryOptions(deps))
   },
-  validateSearch: zodValidator(studentSearchSchema),
+  validateSearch: zodValidator(getStudentsSchema),
 })
 
 function RouteComponent() {
@@ -47,13 +48,14 @@ function AdminStudentsPending() {
 
 function AdminStudentsContent() {
   const navigate = Route.useNavigate()
-  // const { data } = useQuery(getAllGradesQueryOptions()) 
-  // this should be for the filter 
+  // const { data } = useQuery(getAllGradesQueryOptions())
+  // this should be for the filter
 
-  const { size, search } = Route.useSearch({
+  const { size, search, status } = Route.useSearch({
     select: (s) => ({
       size: s.size,
       search: s.search,
+      status: s.status,
     }),
   })
 
@@ -96,7 +98,22 @@ function AdminStudentsContent() {
                 })
               }
             />
-            {/* <FilterComp data={data} name="grade" /> */}
+            <StatusFilter
+              value={status}
+              onChange={(value) =>
+                navigate({
+                  search: (s) => ({
+                    ...s,
+                    status:
+                      value === 'all'
+                        ? undefined
+                        : StatusEnum[
+                            value.toUpperCase() as keyof typeof StatusEnum
+                          ],
+                  }),
+                })
+              }
+            />
           </div>
         </div>
 
@@ -109,15 +126,19 @@ function AdminStudentsContent() {
 }
 
 function MainPageContent() {
-  const { size, page, search, sortBy, sortOrder } = Route.useSearch({
-    select: (s) => ({
-      size: s.size,
-      page: s.page,
-      search: s.search,
-      sortBy: s.sortBy,
-      sortOrder: s.sortOrder,
-    }),
-  })
+  const { size, page, search, sortBy, sortOrder, status, grade, classe } =
+    Route.useSearch({
+      select: (s) => ({
+        size: s.size,
+        page: s.page,
+        search: s.search,
+        sortBy: s.sortBy,
+        sortOrder: s.sortOrder,
+        grade: s.grade,
+        classe: s.classe,
+        status: s.status,
+      }),
+    })
   const { data: studentsData, status: fetchStatus } = useSuspenseQuery({
     ...getStudentsQueryOptions({
       size,
@@ -125,6 +146,9 @@ function MainPageContent() {
       search,
       sortBy,
       sortOrder,
+      status,
+      grade,
+      classe,
     }),
     // placeholderData: keepPreviousData,
   })

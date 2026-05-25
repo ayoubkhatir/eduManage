@@ -7,8 +7,6 @@ import type {
   PaginationState,
 } from '@tanstack/react-table'
 /* filter types*/
-import type { ResourceFilter } from '../../../services/api/teacher/types/apiType'
-import type { ResourceSortOption } from '../../../services/api/teacher/types/modelType'
 
 import { useDebounce } from '@/hooks/use-debounce'
 import { DataTable } from '@/components/table/data-table'

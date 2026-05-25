@@ -49,7 +49,7 @@ export function useAnnouncementForm(user: TeacherUser | AdminUser) {
     defaultValues: {
       title: '',
       description: '',
-      audience: AnnouncementAudienceEnum.ALL,
+      audience: AnnouncementAudienceEnum.PUBLIC,
       authorId: user.id,
       schoolId: user.role === UserRoleEnum.ADMIN ? user.info.id : UserRoleEnum.TEACHER ? user.info.id : ""
       // BECAUSE THE COMPILER THINK role CAN BE ALSO A STUDENT, BUT IN THIS CASE THE user IS ONLY A TEACHER OR ADMIN
@@ -82,7 +82,7 @@ export function useAnnouncementForm(user: TeacherUser | AdminUser) {
       reset({
         title: '',
         description: '',
-        audience: AnnouncementAudienceEnum.ALL,
+        audience: AnnouncementAudienceEnum.PUBLIC,
         // status: 'DRAFT',
       })
     },

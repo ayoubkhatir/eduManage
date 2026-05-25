@@ -18,7 +18,7 @@ export function useAdminCalendarData(schoolId?: string) {
 		queryKey: ['teachers', 'calendar-options', schoolId],
 		queryFn: async () => {
 			if (!schoolId) return []
-			const response = await getAllTeachersServerFn({ data: { schoolId } })
+			const response = await getAllTeachersServerFn({ data: schoolId })
 			return response.success ? response.data : []
 		},
 		enabled: !!schoolId,
