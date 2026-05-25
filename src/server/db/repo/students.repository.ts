@@ -10,7 +10,7 @@ import {
   type SQL,
 } from 'drizzle-orm'
 import { studentsTable, UserRoleEnum, users, classesTable, gradesTable } from "../schema.js";
-import { StudentUserDto, type AddStudentType,  type Student, type StudentSearchType, type StudentUser } from "#/types/studentTypes.js";
+import { StudentUserDto, type AddStudentType, type Student, type StudentSearchType, type StudentUser } from "#/types/studentTypes.js";
 import { getAllStudentsServerFn } from "#/server/modules/students/students.server-functions.js";
 
 
@@ -133,7 +133,7 @@ class StudentsRepository implements IStudentsRepository {
     const conditions: SQL<unknown>[] = []
 
     const normalizedSearch = search?.trim()
-    
+
 
     if (normalizedSearch) {
       conditions.push(
@@ -144,7 +144,7 @@ class StudentsRepository implements IStudentsRepository {
       );
     }
 
-    
+
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined
 
@@ -183,7 +183,8 @@ class StudentsRepository implements IStudentsRepository {
         .from(studentsTable)
         .innerJoin(users, eq(studentsTable.userId, users.id))
         .innerJoin(classesTable, eq(studentsTable.classId, classesTable.id))
-        .innerJoin(gradesTable, eq(classesTable.gradeId, gradesTable.id)).where(whereClause),
+        .innerJoin(gradesTable, eq(classesTable.gradeId, gradesTable.id))
+        .where(whereClause),
     ])
 
     const totalCount = Number(totalResult[0]?.total ?? 0)

@@ -5,9 +5,9 @@ import { getTeacherQueryOptions, useEditTeacher } from '#/hooks/teachers/hooks'
 import InputWrapper from '@/components/admin/Wrappers/InputWrapper'
 import DatePickerField from '@/components/admin/DatePickerField'
 import SelectWrapper from '@/components/admin/Wrappers/SelectWrapper'
-import { AvatarUploadCard } from '../../students/-student.avatar-editor'
 import type { TeacherUser } from '#/types/teacherTypes'
 import { motion } from 'framer-motion'
+import { AvatarUploadCard } from '#/components/avatarUploadCard'
 
 export const Route = createFileRoute('/_auth/admin/teachers/$teacherId/')({
   component: RouteComponent,

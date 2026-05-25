@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { gradesController } from "./grades.controller";
 import { successResponse } from "#/server/utils/response.type";
 import { addGradeSchema } from "#/schemas/grades.schema";
+import { validCuidSchema } from "#/schemas/shared.schema";
 
 export const getAllGradesServerFn = createServerFn({ method: "GET" })
     .handler(async () => successResponse(await gradesController.getAllGrades()))
@@ -12,3 +13,7 @@ export const getAllGradesWithClassesAndSubjectsServerFn = createServerFn({ metho
 export const addGradeServerFn = createServerFn({ method: "POST" })
     .inputValidator(addGradeSchema)
     .handler(async ({ data }) => successResponse(await gradesController.addGrade(data)))
+
+export const deleteGradeServerFn = createServerFn({ method: "POST" })
+    .inputValidator(validCuidSchema)
+    .handler(async ({ data: gradeId }) => successResponse(await gradesController.deleteGrade(gradeId)))

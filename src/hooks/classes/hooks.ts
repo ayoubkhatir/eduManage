@@ -1,17 +1,13 @@
-import { addClassServerFn, getAllClassesServerFn } from "#/server/modules/classes/classes.server-functions";
+import { addClassServerFn, deleteClassByIdServerFn } from "#/server/modules/classes/classes.server-functions";
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
-import { addClassSchema} from "#/schemas/classes.schema";
+import { addClassSchema } from "#/schemas/classes.schema";
 import type { AddClassSchema } from "#/types/classesTypes";
 import { StatusEnum } from "#/server/db/schema";
-
-export const getAllClassesQueryOptions = () => ({
-    queryKey: ['classes'],
-    queryFn: () => getAllClassesServerFn(),
-})
+import { useRouter } from "@tanstack/react-router";
 
 
 export function useAddClass(
@@ -45,7 +41,6 @@ export function useAddClass(
             await Promise.all([
                 queryClient.invalidateQueries({ queryKey: ['classes'] }),
                 queryClient.invalidateQueries({ queryKey: ['grades'] }),
-                queryClient.invalidateQueries({ queryKey: ['grade-classes'] }),
             ])
 
             toast.success('Class added successfully')
@@ -77,4 +72,25 @@ export function useAddClass(
         isPending,
         errors,
     }
+}
+
+export function useDeleteClass() {
+    const queryClient = useQueryClient()
+    const router = useRouter()
+    return useMutation({
+        mutationFn: (classId: string) => deleteClassByIdServerFn({ data: classId }),
+        onSuccess: async () => {
+            await Promise.all([
+                queryClient.invalidateQueries({ queryKey: ['classes'] }),
+                queryClient.invalidateQueries({ queryKey: ['grades'] }),
+                await router.invalidate()
+            ])
+        },
+        onError: (error) => {
+            toast.error(
+                error instanceof Error ? error.message : 'Failed to add class',
+            )
+        },
+
+    })
 }

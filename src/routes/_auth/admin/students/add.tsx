@@ -5,16 +5,15 @@ import InputWrapper from '@/components/admin/Wrappers/InputWrapper'
 import SelectWrapper from '@/components/admin/Wrappers/SelectWrapper'
 import { useAddStudent } from '#/hooks/students/hooks'
 import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
-import { getAllClassesQueryOptions } from '#/hooks/classes/hooks'
-import {
-  StudentClassSelector,
-  StudentGradeSelector,
-} from './-students.selectors'
 import { FormProvider } from 'react-hook-form'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
 import type { AdminUser } from '#/types/usersTypes'
 import { SimpleImageUpload } from '#/components/cloudinary-uploader'
-// import { useAuth } from '#/store/auth_store'
+import { getAllClassesQueryOptions } from '#/server/modules/classes/classes.controller'
+import {
+  StudentClassSelector,
+  StudentGradeSelector,
+} from '#/components/studentsSelectors'
 
 export const Route = createFileRoute('/_auth/admin/students/add')({
   component: RouteComponent,
@@ -26,7 +25,9 @@ export const Route = createFileRoute('/_auth/admin/students/add')({
       data: context.authState.user!,
     })) as AdminUser
     context.queryClient.ensureQueryData({ ...getAllGradesQueryOptions() })
-    context.queryClient.ensureQueryData({ ...getAllClassesQueryOptions() })
+    context.queryClient.ensureQueryData({
+      ...getAllClassesQueryOptions(currentUser.info.id),
+    })
     return { currentUser }
   },
 })
@@ -152,7 +153,7 @@ function RouteComponent() {
                           form={studentForm}
                         />
                         <StudentGradeSelector />
-                        <StudentClassSelector />
+                        <StudentClassSelector schoolId={currentUser.info.id} />
                       </div>
                     </div>
                     <div className="p-6 bg-[#f8f9fc] dark:bg-[#151a25] border-t border-[#f0f2f4] dark:border-gray-800 flex flex-col-reverse sm:flex-row items-center justify-end gap-4 rounded-b-xl">

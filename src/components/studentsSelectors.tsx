@@ -7,8 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '#/components/ui/select'
-import { getAllClassesQueryOptions } from '#/hooks/classes/hooks'
 import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
+import { getAllClassesQueryOptions } from '#/server/modules/classes/classes.controller'
 import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { Controller, useFormContext, type Path } from 'react-hook-form'
@@ -16,12 +16,12 @@ import { toast } from 'sonner'
 
 export function StudentClassSelector<
   T extends { classId: string; gradeId: string },
->() {
+>({ schoolId }: { schoolId: string }) {
   const form = useFormContext<T>()
 
   const gradeId = form.watch('gradeId' as Path<T>)
   const { data: allClasses, status: fetchStatus } = useQuery({
-    ...getAllClassesQueryOptions(),
+    ...getAllClassesQueryOptions(schoolId),
   })
   const classOptions = useMemo(
     () =>
@@ -53,15 +53,6 @@ export function StudentClassSelector<
     )
     return 'Error happened'
   }
-
-  //   return (
-  //     <SelectWrapper
-  //       form={form}
-  //       label="Class"
-  //       name="classId"
-  //       placeholder="pick your class"
-  //       values={classOptions}
-  //     />
   const error = form.formState.errors['classId']
 
   return (
@@ -94,7 +85,9 @@ export function StudentClassSelector<
               sideOffset={6}
             >
               {classOptions.map((item, i) => (
-                <div key={`class-${typeof item === 'string' ? item : item.value}`}>
+                <div
+                  key={`class-${typeof item === 'string' ? item : item.value}`}
+                >
                   <SelectItem
                     value={typeof item === 'string' ? item : item.value}
                     className="px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-900 text-black dark:text-white cursor-pointer transition-colors"
@@ -103,7 +96,10 @@ export function StudentClassSelector<
                   </SelectItem>
 
                   {classOptions.length !== i + 1 && (
-                    <SelectSeparator key={`class-sep-${i}`} className="bg-gray-200 dark:bg-gray-700 my-1" />
+                    <SelectSeparator
+                      key={`class-sep-${i}`}
+                      className="bg-gray-200 dark:bg-gray-700 my-1"
+                    />
                   )}
                 </div>
               ))}
@@ -117,7 +113,6 @@ export function StudentClassSelector<
       )}
     </div>
   )
-  //   )
 }
 
 export function StudentGradeSelector<T extends { gradeId: string }>() {
@@ -153,17 +148,6 @@ export function StudentGradeSelector<T extends { gradeId: string }>() {
     )
     return 'Error happened'
   }
-
-  //   return (
-  //     <SelectWrapper
-  //       form={form}
-  //       label="Grade"
-  //       name="gradeId"
-  //       placeholder="pick your grade"
-  //       values={gradesOptions}
-  //     />
-  //   )
-
   const error = form.formState.errors['gradeId']
   return (
     <div className="flex flex-col gap-1.5">
@@ -195,7 +179,9 @@ export function StudentGradeSelector<T extends { gradeId: string }>() {
               sideOffset={6}
             >
               {gradesOptions.map((item, i) => (
-                <div key={`grade-${typeof item === 'string' ? item : item.value}`}>
+                <div
+                  key={`grade-${typeof item === 'string' ? item : item.value}`}
+                >
                   <SelectItem
                     value={typeof item === 'string' ? item : item.value}
                     className="px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-900 text-black dark:text-white cursor-pointer transition-colors"
@@ -204,7 +190,10 @@ export function StudentGradeSelector<T extends { gradeId: string }>() {
                   </SelectItem>
 
                   {gradesOptions.length !== i + 1 && (
-                    <SelectSeparator key={`grade-sep-${i}`} className="bg-gray-200 dark:bg-gray-700 my-1" />
+                    <SelectSeparator
+                      key={`grade-sep-${i}`}
+                      className="bg-gray-200 dark:bg-gray-700 my-1"
+                    />
                   )}
                 </div>
               ))}

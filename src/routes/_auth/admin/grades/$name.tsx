@@ -3,12 +3,13 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '#/components/ui/skeleton'
 import { getAllGradesWithClassesAndSubjectsQueryOptions } from '#/hooks/grades/hooks'
-import { AddClassDialog } from '../teachers/$teacherId/-add-class.form-dialog'
-import { AddSubjectDialog } from '../teachers/$teacherId/-add-subject.form'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
 import type { AdminUser } from '#/types/usersTypes'
 import { motion } from 'framer-motion'
-// import { useAuth } from '#/store/auth_store'
+import { AddClassDialog } from '#/components/AddClassDialog'
+import { AddSubjectDialog } from '#/components/AddSubjectDialog'
+import { DeleteClass } from '#/components/admin/DeleteComp'
+import { Trash2 } from 'lucide-react'
 
 export const Route = createFileRoute('/_auth/admin/grades/$name')({
   component: RouteComponent,
@@ -27,9 +28,9 @@ export const Route = createFileRoute('/_auth/admin/grades/$name')({
       throw notFound()
     }
 
-    const currentUser = await FetchCurrentUserServerFn({
+    const currentUser = (await FetchCurrentUserServerFn({
       data: context.authState.user!,
-    }) as AdminUser
+    })) as AdminUser
     return { currentUser }
   },
 })
@@ -39,7 +40,6 @@ function RouteComponent() {
   const adminId = currentUser.info.id
 
   const { name } = Route.useParams()
-  // const user = useAuth((s)=>s.user)
   const { data: grades } = useSuspenseQuery({
     ...getAllGradesWithClassesAndSubjectsQueryOptions(),
   })
@@ -50,7 +50,12 @@ function RouteComponent() {
 
   if (!grade) {
     return (
-      <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex h-full w-full overflow-y-hidden">
+      <motion.div
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        className="flex h-full w-full overflow-y-hidden"
+      >
         <main className="flex flex-1 flex-col bg-background-light dark:bg-background-dark">
           <div className="flex-1 overflow-x-hidden p-6">
             <div className="mx-auto flex max-w-7xl flex-col gap-6">
@@ -79,7 +84,12 @@ function RouteComponent() {
   const isActive = grade.status === 'Active'
 
   return (
-    <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex h-full w-full overflow-y-hidden">
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      className="flex h-full w-full overflow-y-hidden"
+    >
       <main className="flex flex-1 flex-col bg-background-light dark:bg-background-dark">
         <div className="flex-1 overflow-x-hidden p-6">
           <div className="mx-auto flex max-w-7xl flex-col gap-6">
@@ -149,6 +159,7 @@ function RouteComponent() {
                         {grade.classes.length} total
                       </div>
                       <AddClassDialog
+                        schoolId={currentUser.info.id}
                         defaultGradeId={grade.id}
                         lockGradeSelection
                         triggerTitle="Add class"
@@ -177,9 +188,14 @@ function RouteComponent() {
                             </div>
 
                             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-card text-foreground shadow-sm dark:bg-card dark:text-slate-300">
-                              <span className="material-symbols-outlined">
-                                groups
-                              </span>
+                              <DeleteClass classe={classe}>
+                                <button
+                                  type="button"
+                                  className="mt-1 flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground opacity-0 transition-opacity hover:bg-red-50 hover:text-red-600 group-hover:opacity-100 dark:hover:bg-red-950/30 cursor-pointer border border-red-600"
+                                >
+                                  <Trash2 size={26} color="red" />
+                                </button>
+                              </DeleteClass>
                             </div>
                           </div>
                         </div>
@@ -208,7 +224,7 @@ function RouteComponent() {
                         lockGradeSelection
                         triggerTitle="Add subject"
                       />
-                    </div>{' '}
+                    </div>
                   </div>
 
                   {grade.subjects.length === 0 ? (
@@ -364,9 +380,7 @@ function SummaryRow({
 }) {
   return (
     <div className="flex items-center justify-between gap-4">
-      <span className="text-sm text-muted-foreground">
-        {label}
-      </span>
+      <span className="text-sm text-muted-foreground">{label}</span>
       <span
         className={`text-sm font-semibold text-foreground dark:text-white ${valueClassName ?? ''}`}
       >
@@ -386,7 +400,12 @@ function EmptyBlock({ message }: { message: string }) {
 
 function GradeDetailsSkeleton() {
   return (
-    <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex h-full w-full overflow-y-hidden">
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      className="flex h-full w-full overflow-y-hidden"
+    >
       <main className="flex flex-1 flex-col bg-background-light dark:bg-background-dark">
         <div className="flex-1 overflow-x-hidden p-6">
           <div className="mx-auto flex max-w-7xl flex-col gap-6">

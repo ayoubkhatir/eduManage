@@ -6,6 +6,7 @@ import SelectWrapper from '@/components/admin/Wrappers/SelectWrapper'
 import DatePickerField from '@/components/admin/DatePickerField'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
 import type { AdminUser } from '#/types/usersTypes'
+import { SimpleImageUpload } from '#/components/cloudinary-uploader'
 
 export const Route = createFileRoute('/_auth/admin/teachers/add')({
   component: RouteComponent,
@@ -52,6 +53,20 @@ function RouteComponent() {
                       </span>
                       Personal Information
                     </h3>
+
+                    <div className="mb-4">
+                      <SimpleImageUpload
+                        value={form.watch('image')}
+                        onChange={(publicId) => {
+                          form.setValue('image', publicId, {
+                            shouldDirty: true,
+                            shouldTouch: true,
+                            shouldValidate: true,
+                          })
+                        }}
+                      />
+                    </div>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <InputWrapper
                         form={form}
@@ -105,12 +120,47 @@ function RouteComponent() {
                       />
                     </div>
                   </div>
-                  <label>About</label>
-                  <textarea
-                    className=" border border-gray-300 dark:border-gray-700 rounded-lg p-4 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 dark:text-gray-400 resize-none"
-                    value={form.watch('about')}
-                    onChange={(e) => form.setValue('about', e.target.value)}
-                  ></textarea>
+                  <div className="p-8 border-b border-gray-100 dark:border-gray-800">
+                    <div className="flex items-center justify-between mb-3">
+                      <label className="text-sm font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
+                        <span className="material-symbols-outlined text-primary text-[20px]">
+                          edit_note
+                        </span>
+                        About Teacher
+                      </label>
+
+                      <span className="text-xs text-slate-400 dark:text-gray-500">
+                        {form.watch('about')?.length || 0}/500
+                      </span>
+                    </div>
+
+                    <div className="relative">
+                      <textarea
+                        rows={6}
+                        maxLength={500}
+                        placeholder="Write a short biography, teaching experience, skills, or anything important about the teacher..."
+                        className="
+        w-full rounded-2xl border border-gray-200 dark:border-gray-700
+        bg-gray-50 dark:bg-gray-900/60
+        px-4 py-4
+        text-sm text-gray-800 dark:text-gray-200
+        placeholder:text-gray-400 dark:placeholder:text-gray-500
+        shadow-sm
+        outline-none
+        transition-all duration-200
+        focus:border-primary
+        focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/30
+        resize-none
+      "
+                        value={form.watch('about')}
+                        onChange={(e) => form.setValue('about', e.target.value)}
+                      />
+
+                      <div className="absolute bottom-3 right-3 text-xs text-slate-400 dark:text-gray-500">
+                        Professional summary
+                      </div>
+                    </div>
+                  </div>
                   <div className="p-6 bg-slate-50 dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 flex flex-col-reverse sm:flex-row items-center justify-end gap-4 rounded-b-xl">
                     <Link
                       to="/admin/teachers"

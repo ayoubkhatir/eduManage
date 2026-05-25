@@ -6,10 +6,11 @@ import { successResponse } from "#/server/utils/response.type";
 
 export const getClassesByGradeIdSevrerFn = createServerFn({ method: "GET" })
     .inputValidator(validCuidSchema)
-    .handler(({ data: gradeId }) => classesController.listClassesByGradeId(gradeId))
+    .handler(({ data: gradeId }) => successResponse(classesController.listClassesByGradeId(gradeId)))
 
 export const getAllClassesServerFn = createServerFn({ method: "GET" })
-    .handler(() => classesController.listClasses())
+    .inputValidator(validCuidSchema)
+    .handler(({ data: schoolId }) => successResponse(classesController.listClasses(schoolId)))
 
 export const addClassServerFn = createServerFn({ method: "POST" })
     .inputValidator(addClassSchema)
@@ -18,3 +19,7 @@ export const addClassServerFn = createServerFn({ method: "POST" })
 export const getClassesByTeacherUserIdServerFn = createServerFn({ method: "GET" })
     .inputValidator(validCuidSchema)
     .handler(async ({ data: teacherUserId }) => successResponse(classesController.getClassesByTeacherUserId(teacherUserId)))
+
+export const deleteClassByIdServerFn = createServerFn({ method: "POST" })
+    .inputValidator(validCuidSchema)
+    .handler(({ data: classId }) => successResponse(classesController.deleteClassById(classId)))

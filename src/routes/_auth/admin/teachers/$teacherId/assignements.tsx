@@ -42,18 +42,18 @@ import {
 } from '#/components/ui/dropdown-menu'
 import { Button } from '#/components/ui/button'
 import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
-import { AddSubjectDialog } from './-add-subject.form'
 import type { StatusEnum } from '#/server/db/schema'
 import { UserAvatar } from '#/components/admin/Table/columnsData'
-import {
-  StudentClassSelector,
-  StudentGradeSelector,
-} from '../../students/-students.selectors'
 import { type AssignTeacherSchema } from '#/schemas/teachers.schema'
 import { motion } from 'framer-motion'
 import { getAllSchoolSubjectsServerFn } from '#/server/modules/subjects/subjects.server-functions'
 import type { AdminUser } from '#/types/usersTypes'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
+import {
+  StudentClassSelector,
+  StudentGradeSelector,
+} from '#/components/studentsSelectors'
+import { AddSubjectDialog } from '#/components/AddSubjectDialog'
 
 export const Route = createFileRoute(
   '/_auth/admin/teachers/$teacherId/assignements',
@@ -94,8 +94,6 @@ function RouteComponent() {
 
 function TeacherAssignmentsPage() {
   const { teacherId } = Route.useParams()
-  // const { authState } = Route.useRouteContext()
-  // const user = authState.user
   const { currentUser } = Route.useLoaderData()
 
   const { data: teacherData, status: fetchStatus } = useSuspenseQuery({
@@ -170,7 +168,9 @@ function TeacherAssignmentsPage() {
                         </div>
 
                         <div className="flex flex-col gap-2.5">
-                          <StudentClassSelector />
+                          <StudentClassSelector
+                            schoolId={currentUser.info.id}
+                          />
                           <IsPrimaryTeacherCheckboxInput />
                         </div>
                       </div>

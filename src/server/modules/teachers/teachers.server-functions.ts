@@ -141,8 +141,7 @@ export const deleteTeacherAssignmentServerFn = createServerFn({
 })
     .inputValidator(validCuidSchema)
     .handler(async ({ data: assignmentId }) => {
-        await teachersController.removeAssignment(assignmentId)
-        return { success: true }
+        successResponse(await teachersController.removeAssignment(assignmentId))
     })
 
 // Get all assignments for one teacher

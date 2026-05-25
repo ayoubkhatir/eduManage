@@ -4,11 +4,13 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '#/components/ui/skeleton'
 import { getAllGradesWithClassesAndSubjectsQueryOptions } from '#/hooks/grades/hooks'
 import { Link } from '@tanstack/react-router'
-import { AddGradeDialog } from './-add-grade.form'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
 import type { AdminUser } from '#/types/usersTypes'
 import { motion } from 'framer-motion'
-// import { useAuth } from '#/store/auth_store'
+import { AddGradeDialog } from '#/components/AddGradeDialog'
+import type { GradeCardProps } from '#/types/gradesTypes'
+import { DeleteGrade } from '#/components/admin/DeleteComp'
+import { Trash2 } from 'lucide-react'
 
 export const Route = createFileRoute('/_auth/admin/grades/')({
   component: RouteComponent,
@@ -32,10 +34,13 @@ function RouteComponent() {
     ...getAllGradesWithClassesAndSubjectsQueryOptions(),
   })
 
-  // const user = useAuth((s) => s.user)
-
   return (
-    <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex h-full w-full overflow-y-hidden">
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      className="flex h-full w-full overflow-y-hidden"
+    >
       <main className="flex flex-1 flex-col bg-background-light dark:bg-background-dark">
         <div className="flex-1 overflow-x-hidden p-6 pt-2">
           <div className="mx-auto flex max-w-7xl flex-col gap-6">
@@ -49,7 +54,10 @@ function RouteComponent() {
                   Browse grades with their classes and subjects.
                 </p>
               </div>
-              <AddGradeDialog schoolId={adminId} triggerClassName='text-white bg-primary hover:bg-primary/80 dark:bg-primary dark:hover:bg-primary/80 cursor-pointer'/>
+              <AddGradeDialog
+                schoolId={adminId}
+                triggerClassName="text-white bg-primary hover:bg-primary/80 dark:bg-primary dark:hover:bg-primary/80 cursor-pointer"
+              />
             </div>
 
             {/* Content */}
@@ -65,13 +73,7 @@ function RouteComponent() {
             ) : (
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
                 {grades.map((grade) => (
-                  <Link
-                    key={grade.id}
-                    to="/admin/grades/$name"
-                    params={{ name: grade.name }}
-                  >
-                    <GradeCard grade={grade} />
-                  </Link>
+                  <GradeCard grade={grade} />
                 ))}
               </div>
             )}
@@ -80,24 +82,6 @@ function RouteComponent() {
       </main>
     </motion.div>
   )
-}
-
-type GradeCardProps = {
-  grade: {
-    id: string
-    name: string
-    levelOrder: number
-    status: string
-    classes: Array<{
-      id: string
-      name: string
-    }>
-    subjects: Array<{
-      id: string
-      name: string
-      code?: string | null
-    }>
-  }
 }
 
 function GradeCard({ grade }: GradeCardProps) {
@@ -127,8 +111,15 @@ function GradeCard({ grade }: GradeCardProps) {
           </p>
         </div>
 
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white dark:bg-primary/10">
-          <span className="material-symbols-outlined">school</span>
+        <div className="flex items-start gap-1">
+          <DeleteGrade grade={grade}>
+            <button
+              type="button"
+              className="mt-1 flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground opacity-0 transition-opacity hover:bg-red-50 hover:text-red-600 group-hover:opacity-100 dark:hover:bg-red-950/30 cursor-pointer border border-red-600"
+            >
+              <Trash2 size={26} color="red" />
+            </button>
+          </DeleteGrade>
         </div>
       </div>
 
@@ -155,9 +146,7 @@ function GradeCard({ grade }: GradeCardProps) {
       {/* Classes */}
       <div className="mt-5 space-y-4">
         <div>
-          <p className="mb-2 text-sm font-semibold text-foreground">
-            Classes
-          </p>
+          <p className="mb-2 text-sm font-semibold text-foreground">Classes</p>
           {grade.classes.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               No classes assigned.
@@ -178,9 +167,7 @@ function GradeCard({ grade }: GradeCardProps) {
 
         {/* Subjects */}
         <div>
-          <p className="mb-2 text-sm font-semibold text-foreground">
-            Subjects
-          </p>
+          <p className="mb-2 text-sm font-semibold text-foreground">Subjects</p>
           {grade.subjects.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               No subjects assigned.
@@ -215,6 +202,17 @@ function GradeCard({ grade }: GradeCardProps) {
               )}
             </div>
           )}
+          <div className="flex justify-end p-3">
+            <Link
+              key={grade.id}
+              to="/admin/grades/$name"
+              params={{ name: grade.name }}
+            >
+              <span className="text-xs text-blue-400 underline cursor-pointer hover:text-blue-500">
+                see Details
+              </span>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

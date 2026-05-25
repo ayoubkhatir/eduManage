@@ -57,6 +57,7 @@ export default function DeleteMenuItem({ role, id }: Props) {
               className="cursor-pointer bg-red-600 text-white hover:bg-red-700 focus:ring-2 focus:ring-red-500"
               onClick={() =>
                 deleteElement(id, {
+
                   onSuccess: () => {
                     toast.success('Element deleted')
                   },

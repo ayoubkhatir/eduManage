@@ -48,8 +48,8 @@ export default function SettingsComp({
           >
             <div className="flex-1 space-y-6">
               {/* Profile */}
-              <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
-                <div className="border-b border-slate-100 p-6 dark:border-white/[0.06]">
+              <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/6 dark:bg-white/2">
+                <div className="border-b border-slate-100 p-6 dark:border-white/6">
                   <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                     Profile Picture
                   </h2>
@@ -67,7 +67,7 @@ export default function SettingsComp({
                     </p>
                     <button
                       type="button"
-                      className="cursor-pointer mt-3 cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+                      className="cursor-pointer mt-3 rounded-lg px-4 py-2 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
                     >
                       Remove Photo
                     </button>
@@ -76,8 +76,8 @@ export default function SettingsComp({
               </section>
 
               {/* Personal Information */}
-              <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
-                <div className="flex items-center justify-between border-b border-slate-100 p-6 dark:border-white/[0.06]">
+              <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/6 dark:bg-white/2">
+                <div className="flex items-center justify-between border-b border-slate-100 p-6 dark:border-white/6">
                   <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                     Personal Information
                   </h2>
@@ -181,8 +181,8 @@ export default function SettingsComp({
               </section>
 
               {/* Academic Details */}
-              <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
-                <div className="border-b border-slate-100 p-6 dark:border-white/[0.06]">
+              <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/6 dark:bg-white/2">
+                <div className="border-b border-slate-100 p-6 dark:border-white/6">
                   <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                     Academic Details
                   </h2>
@@ -229,8 +229,8 @@ export default function SettingsComp({
               </section>
 
               {/* Notification Preferences */}
-              <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
-                <div className="border-b border-slate-100 p-6 dark:border-white/[0.06]">
+              <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/6 dark:bg-white/2">
+                <div className="border-b border-slate-100 p-6 dark:border-white/6">
                   <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                     Notification Preferences
                   </h2>
@@ -238,7 +238,7 @@ export default function SettingsComp({
                     Choose how you want to be notified about school activities.
                   </p>
                 </div>
-                <div className="divide-y divide-slate-100 p-6 dark:divide-white/[0.06]">
+                <div className="divide-y divide-slate-100 p-6 dark:divide-white/6">
                   <div className="flex items-center justify-between py-4">
                     <div>
                       <p className="text-sm font-medium text-slate-900 dark:text-white">
@@ -290,8 +290,8 @@ export default function SettingsComp({
               </section>
 
               {/* Security */}
-              <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
-                <div className="border-b border-slate-100 p-6 dark:border-white/[0.06]">
+              <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/6 dark:bg-white/2">
+                <div className="border-b border-slate-100 p-6 dark:border-white/6">
                   <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                     Security
                   </h2>

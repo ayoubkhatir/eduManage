@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import type { AddGradeSchema } from "#/schemas/grades.schema";
 import { db, type Database } from "#/server/db/db";
 import { gradesTable } from "#/server/db/schema";
@@ -7,7 +8,6 @@ class GradesController {
 
     async getAllGrades() {
         return this.db.query.gradesTable.findMany({
-            // where: eq(gradesTable.status, "Active"),
             columns: {
                 name: true,
                 id: true
@@ -15,23 +15,6 @@ class GradesController {
         })
     }
 
-    /*
-    grade: {
-    id: string
-    name: string
-    levelOrder: number
-    status: string
-    classes: Array<{
-      id: string
-      name: string
-    }>
-    subjects: Array<{
-      id: string
-      name: string
-      code?: string | null
-    }>
-  }
-    */
     async getAllGradesWithClassesAndSubjects() {
         const grades = await this.db.query.gradesTable.findMany({
             // where: eq(gradesTable.status, "Active"),
@@ -82,6 +65,11 @@ class GradesController {
                 levelOrder
             })
             .returning()
+        return grade
+    }
+
+    async deleteGrade(gradeId: string) {
+        const [grade] = await this.db.delete(gradesTable).where(eq(gradesTable.id, gradeId)).returning()
         return grade
     }
 }

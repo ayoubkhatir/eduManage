@@ -108,7 +108,7 @@ export function DataTable<T extends Record<string, unknown>>({
                   <p>No results.</p>
                   {hasActiveFilters && (
                     <button
-                      className="cursor-pointer text-sm font-medium text-primary hover:underline cursor-pointer"
+                      className="cursor-pointer text-sm font-medium text-primary hover:underline"
                       onClick={clearFilters}
                       type="button"
                     >

@@ -18,10 +18,13 @@ import {
 } from '@/components/ui/dialog'
 
 import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
-import InputWrapper from '#/components/admin/Wrappers/InputWrapper'
 import { useAddClass } from '#/hooks/classes/hooks'
+// import { getAllClassesQueryOptions } from '#/server/modules/classes/classes.controller'
+// import SelectWrapper from './admin/Wrappers/SelectWrapper'
+import InputWrapper from './admin/Wrappers/InputWrapper'
 
 type AddClassDialogProps = {
+  schoolId: string
   onCreated?: (classId: string) => void
   defaultGradeId?: string
   lockGradeSelection?: boolean
@@ -32,6 +35,7 @@ type AddClassDialogProps = {
 }
 
 export function AddClassDialog({
+  schoolId,
   onCreated,
   defaultGradeId,
   lockGradeSelection = false,
@@ -41,7 +45,6 @@ export function AddClassDialog({
   buttonVariant = 'default',
 }: AddClassDialogProps) {
   const [open, setOpen] = useState(false)
-  const schoolId = 'r0akyppqt5jl'
 
   const { form, onSubmit, isPending } = useAddClass(schoolId, (classId) => {
     onCreated?.(classId)
@@ -51,6 +54,9 @@ export function AddClassDialog({
   const { data: grades, status: fetchStatus } = useQuery({
     ...getAllGradesQueryOptions(),
   })
+
+  // const { data: classes } = useQuery(getAllClassesQueryOptions(schoolId)) 
+  // this line with the select wrapper are used to map all the existing classes
 
   useEffect(() => {
     if (!open) return
@@ -134,6 +140,14 @@ export function AddClassDialog({
               label="Class name"
               placeholder="A"
             />
+            {/* <SelectWrapper
+              form={form}
+              name="name"
+              label="Class name"
+              values={
+                classes?.map((c) => ({ label: c.name, value: c.name })) ?? []
+              }
+            /> */}
 
             {lockGradeSelection && defaultGradeId ? (
               <div className="flex flex-col gap-2">
