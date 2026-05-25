@@ -14,7 +14,7 @@ import {
 import { getSession } from '#/lib/auth'
 
 const getRedirectToFromRole = (role: UserRoleEnum) =>
-  role === UserRoleEnum.ADMIN ? '/admin/dashboard' : `/${role.toLowerCase()}`
+  role === UserRoleEnum.ADMIN ? '/admin/dashboard' : `/${role.toLowerCase()}/calendar`
 
 export const Route = createFileRoute('/')({
   beforeLoad: async () => {

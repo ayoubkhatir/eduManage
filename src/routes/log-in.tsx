@@ -5,6 +5,7 @@ import { authRoleSchema } from '#/schemas/shared.schema'
 import { UserRoleEnum } from '#/server/db/schema'
 import Login from '#/auth/login/components/login'
 import Screen from '#/auth/login/components/screen'
+import { getSession } from '#/lib/auth'
 
 const logInSearchSchema = z.object({
   role: authRoleSchema
@@ -15,19 +16,17 @@ const logInSearchSchema = z.object({
 
 export type logInSearch = z.infer<typeof logInSearchSchema>
 
+const getRedirectToFromRole = (role: UserRoleEnum) =>
+  role === UserRoleEnum.ADMIN
+    ? '/admin/dashboard'
+    : `/${role.toLowerCase()}/calendar`
+
 export const Route = createFileRoute('/log-in')({
-  beforeLoad: ({ context }) => {
-    const authState = context.authState
-    if (authState?.user && authState?.user.role) {
+  beforeLoad: async () => {
+    const authState = await getSession()
+    if (authState && authState.user) {
       const role = authState.user.role
-      throw redirect({
-        to:
-          role === UserRoleEnum.ADMIN
-            ? '/admin/dashboard'
-            : role === UserRoleEnum.TEACHER
-              ? '/teacher'
-              : '/student',
-      })
+      throw redirect({ to: getRedirectToFromRole(role) })
     }
   },
   component: login,
