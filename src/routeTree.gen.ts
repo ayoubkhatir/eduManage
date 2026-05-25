@@ -9,14 +9,29 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as LogInRouteImport } from './routes/log-in'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthTeacherRouteImport } from './routes/_auth/teacher'
 import { Route as AuthStudentRouteImport } from './routes/_auth/student'
-import { Route as AuthSignUpRouteImport } from './routes/sign-up.tsx'
 import { Route as AuthAdminRouteImport } from './routes/_auth/admin'
+import { Route as PagesTermsRouteImport } from './routes/Pages/terms'
+import { Route as PagesSecurityRouteImport } from './routes/Pages/security'
+import { Route as PagesPrivacyRouteImport } from './routes/Pages/privacy'
+import { Route as PagesPricingRouteImport } from './routes/Pages/pricing'
+import { Route as PagesPressRouteImport } from './routes/Pages/press'
+import { Route as PagesLicensesRouteImport } from './routes/Pages/licenses'
+import { Route as PagesHelpRouteImport } from './routes/Pages/help'
+import { Route as PagesDocumentationRouteImport } from './routes/Pages/documentation'
+import { Route as PagesCookiePolicyRouteImport } from './routes/Pages/cookie-policy'
+import { Route as PagesCommunityRouteImport } from './routes/Pages/community'
+import { Route as PagesChangelogRouteImport } from './routes/Pages/changelog'
+import { Route as PagesCareersRouteImport } from './routes/Pages/careers'
+import { Route as PagesBlogRouteImport } from './routes/Pages/blog'
+import { Route as PagesAboutRouteImport } from './routes/Pages/about'
 import { Route as AuthTeacherSettingsRouteImport } from './routes/_auth/teacher/settings'
+import { Route as AuthTeacherCreateAnnouncementRouteImport } from './routes/_auth/teacher/createAnnouncement'
 import { Route as AuthTeacherCalendarRouteImport } from './routes/_auth/teacher/calendar'
 import { Route as AuthStudentSettingsRouteImport } from './routes/_auth/student/settings'
 import { Route as AuthStudentCalendarRouteImport } from './routes/_auth/student/calendar'
@@ -24,24 +39,11 @@ import { Route as AuthAdminSettingsRouteImport } from './routes/_auth/admin/sett
 import { Route as AuthAdminDashboardRouteImport } from './routes/_auth/admin/dashboard'
 import { Route as AuthAdminCreateAnnouncementRouteImport } from './routes/_auth/admin/createAnnouncement'
 import { Route as AuthAdminCalendarRouteImport } from './routes/_auth/admin/calendar'
-import { Route as AuthPagesTermsRouteImport } from './routes/Pages/terms.tsx'
-import { Route as AuthPagesSecurityRouteImport } from './routes/Pages/security.tsx'
-import { Route as AuthPagesPrivacyRouteImport } from './routes/Pages/privacy.tsx'
-import { Route as AuthPagesPricingRouteImport } from './routes/Pages/pricing.tsx'
-import { Route as AuthPagesPressRouteImport } from './routes/Pages/press.tsx'
-import { Route as AuthPagesLicensesRouteImport } from './routes/Pages/licenses.tsx'
-import { Route as AuthPagesHelpRouteImport } from './routes/Pages/help.tsx'
-import { Route as AuthPagesDocumentationRouteImport } from './routes/Pages/documentation.tsx'
-import { Route as AuthPagesCookiePolicyRouteImport } from './routes/Pages/cookie-policy.tsx'
-import { Route as AuthPagesCommunityRouteImport } from './routes/Pages/community.tsx'
-import { Route as AuthPagesChangelogRouteImport } from './routes/Pages/changelog.tsx'
-import { Route as AuthPagesCareersRouteImport } from './routes/Pages/careers.tsx'
-import { Route as AuthPagesBlogRouteImport } from './routes/Pages/blog.tsx'
-import { Route as AuthPagesAboutRouteImport } from './routes/Pages/about.tsx'
 import { Route as AuthTeacherSubjectsIndexRouteImport } from './routes/_auth/teacher/subjects/index'
 import { Route as AuthTeacherClassesIndexRouteImport } from './routes/_auth/teacher/classes/index'
+import { Route as AuthTeacherAnnouncementsIndexRouteImport } from './routes/_auth/teacher/announcements/index'
 import { Route as AuthStudentSubjectsIndexRouteImport } from './routes/_auth/student/subjects.index'
-import { Route as AuthStudentNotificationIndexRouteImport } from './routes/_auth/student/notification/index'
+import { Route as AuthStudentAnnouncementsIndexRouteImport } from './routes/_auth/student/announcements/index'
 import { Route as AuthAdminTeachersIndexRouteImport } from './routes/_auth/admin/teachers/index'
 import { Route as AuthAdminStudentsIndexRouteImport } from './routes/_auth/admin/students/index'
 import { Route as AuthAdminGradesIndexRouteImport } from './routes/_auth/admin/grades/index'
@@ -50,7 +52,9 @@ import { Route as AuthTeacherSubjectsSubjectCodeRouteImport } from './routes/_au
 import { Route as AuthTeacherMarksClassIdRouteImport } from './routes/_auth/teacher/marks/$classId'
 import { Route as AuthTeacherClassesClassIdRouteImport } from './routes/_auth/teacher/classes/$classId'
 import { Route as AuthTeacherAttendanceClassIdRouteImport } from './routes/_auth/teacher/attendance/$classId'
+import { Route as AuthTeacherAnnouncementsAnnouncementTitleSlugRouteImport } from './routes/_auth/teacher/announcements/$announcementTitleSlug'
 import { Route as AuthStudentSubjectsSubjectCodeRouteImport } from './routes/_auth/student/subjects.$subjectCode'
+import { Route as AuthStudentAnnouncementsAnnouncementTitleSlugRouteImport } from './routes/_auth/student/announcements/$announcementTitleSlug'
 import { Route as AuthApiAuthSplatRouteImport } from './routes/_auth/api/auth.$'
 import { Route as AuthAdminTeachersAddRouteImport } from './routes/_auth/admin/teachers/add'
 import { Route as AuthAdminStudentsAddRouteImport } from './routes/_auth/admin/students/add'
@@ -60,6 +64,11 @@ import { Route as AuthAdminAnnouncementsAnnouncementTitleSlugRouteImport } from 
 import { Route as AuthAdminTeachersTeacherIdIndexRouteImport } from './routes/_auth/admin/teachers/$teacherId/index'
 import { Route as AuthAdminTeachersTeacherIdAssignementsRouteImport } from './routes/_auth/admin/teachers/$teacherId/assignements'
 
+const SignUpRoute = SignUpRouteImport.update({
+  id: '/sign-up',
+  path: '/sign-up',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LogInRoute = LogInRouteImport.update({
   id: '/log-in',
   path: '/log-in',
@@ -84,21 +93,92 @@ const AuthStudentRoute = AuthStudentRouteImport.update({
   path: '/student',
   getParentRoute: () => AuthRoute,
 } as any)
-const AuthSignUpRoute = AuthSignUpRouteImport.update({
-  id: '/sign-up',
-  path: '/sign-up',
-  getParentRoute: () => AuthRoute,
-} as any)
 const AuthAdminRoute = AuthAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => AuthRoute,
+} as any)
+const PagesTermsRoute = PagesTermsRouteImport.update({
+  id: '/Pages/terms',
+  path: '/Pages/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesSecurityRoute = PagesSecurityRouteImport.update({
+  id: '/Pages/security',
+  path: '/Pages/security',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesPrivacyRoute = PagesPrivacyRouteImport.update({
+  id: '/Pages/privacy',
+  path: '/Pages/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesPricingRoute = PagesPricingRouteImport.update({
+  id: '/Pages/pricing',
+  path: '/Pages/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesPressRoute = PagesPressRouteImport.update({
+  id: '/Pages/press',
+  path: '/Pages/press',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesLicensesRoute = PagesLicensesRouteImport.update({
+  id: '/Pages/licenses',
+  path: '/Pages/licenses',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesHelpRoute = PagesHelpRouteImport.update({
+  id: '/Pages/help',
+  path: '/Pages/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesDocumentationRoute = PagesDocumentationRouteImport.update({
+  id: '/Pages/documentation',
+  path: '/Pages/documentation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesCookiePolicyRoute = PagesCookiePolicyRouteImport.update({
+  id: '/Pages/cookie-policy',
+  path: '/Pages/cookie-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesCommunityRoute = PagesCommunityRouteImport.update({
+  id: '/Pages/community',
+  path: '/Pages/community',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesChangelogRoute = PagesChangelogRouteImport.update({
+  id: '/Pages/changelog',
+  path: '/Pages/changelog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesCareersRoute = PagesCareersRouteImport.update({
+  id: '/Pages/careers',
+  path: '/Pages/careers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesBlogRoute = PagesBlogRouteImport.update({
+  id: '/Pages/blog',
+  path: '/Pages/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PagesAboutRoute = PagesAboutRouteImport.update({
+  id: '/Pages/about',
+  path: '/Pages/about',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthTeacherSettingsRoute = AuthTeacherSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => AuthTeacherRoute,
 } as any)
+const AuthTeacherCreateAnnouncementRoute =
+  AuthTeacherCreateAnnouncementRouteImport.update({
+    id: '/createAnnouncement',
+    path: '/createAnnouncement',
+    getParentRoute: () => AuthTeacherRoute,
+  } as any)
 const AuthTeacherCalendarRoute = AuthTeacherCalendarRouteImport.update({
   id: '/calendar',
   path: '/calendar',
@@ -135,76 +215,6 @@ const AuthAdminCalendarRoute = AuthAdminCalendarRouteImport.update({
   path: '/calendar',
   getParentRoute: () => AuthAdminRoute,
 } as any)
-const AuthPagesTermsRoute = AuthPagesTermsRouteImport.update({
-  id: '/Pages/terms',
-  path: '/Pages/terms',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthPagesSecurityRoute = AuthPagesSecurityRouteImport.update({
-  id: '/Pages/security',
-  path: '/Pages/security',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthPagesPrivacyRoute = AuthPagesPrivacyRouteImport.update({
-  id: '/Pages/privacy',
-  path: '/Pages/privacy',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthPagesPricingRoute = AuthPagesPricingRouteImport.update({
-  id: '/Pages/pricing',
-  path: '/Pages/pricing',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthPagesPressRoute = AuthPagesPressRouteImport.update({
-  id: '/Pages/press',
-  path: '/Pages/press',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthPagesLicensesRoute = AuthPagesLicensesRouteImport.update({
-  id: '/Pages/licenses',
-  path: '/Pages/licenses',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthPagesHelpRoute = AuthPagesHelpRouteImport.update({
-  id: '/Pages/help',
-  path: '/Pages/help',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthPagesDocumentationRoute = AuthPagesDocumentationRouteImport.update({
-  id: '/Pages/documentation',
-  path: '/Pages/documentation',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthPagesCookiePolicyRoute = AuthPagesCookiePolicyRouteImport.update({
-  id: '/Pages/cookie-policy',
-  path: '/Pages/cookie-policy',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthPagesCommunityRoute = AuthPagesCommunityRouteImport.update({
-  id: '/Pages/community',
-  path: '/Pages/community',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthPagesChangelogRoute = AuthPagesChangelogRouteImport.update({
-  id: '/Pages/changelog',
-  path: '/Pages/changelog',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthPagesCareersRoute = AuthPagesCareersRouteImport.update({
-  id: '/Pages/careers',
-  path: '/Pages/careers',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthPagesBlogRoute = AuthPagesBlogRouteImport.update({
-  id: '/Pages/blog',
-  path: '/Pages/blog',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthPagesAboutRoute = AuthPagesAboutRouteImport.update({
-  id: '/Pages/about',
-  path: '/Pages/about',
-  getParentRoute: () => AuthRoute,
-} as any)
 const AuthTeacherSubjectsIndexRoute =
   AuthTeacherSubjectsIndexRouteImport.update({
     id: '/subjects/',
@@ -216,16 +226,22 @@ const AuthTeacherClassesIndexRoute = AuthTeacherClassesIndexRouteImport.update({
   path: '/classes/',
   getParentRoute: () => AuthTeacherRoute,
 } as any)
+const AuthTeacherAnnouncementsIndexRoute =
+  AuthTeacherAnnouncementsIndexRouteImport.update({
+    id: '/announcements/',
+    path: '/announcements/',
+    getParentRoute: () => AuthTeacherRoute,
+  } as any)
 const AuthStudentSubjectsIndexRoute =
   AuthStudentSubjectsIndexRouteImport.update({
     id: '/subjects/',
     path: '/subjects/',
     getParentRoute: () => AuthStudentRoute,
   } as any)
-const AuthStudentNotificationIndexRoute =
-  AuthStudentNotificationIndexRouteImport.update({
-    id: '/notification/',
-    path: '/notification/',
+const AuthStudentAnnouncementsIndexRoute =
+  AuthStudentAnnouncementsIndexRouteImport.update({
+    id: '/announcements/',
+    path: '/announcements/',
     getParentRoute: () => AuthStudentRoute,
   } as any)
 const AuthAdminTeachersIndexRoute = AuthAdminTeachersIndexRouteImport.update({
@@ -272,10 +288,22 @@ const AuthTeacherAttendanceClassIdRoute =
     path: '/attendance/$classId',
     getParentRoute: () => AuthTeacherRoute,
   } as any)
+const AuthTeacherAnnouncementsAnnouncementTitleSlugRoute =
+  AuthTeacherAnnouncementsAnnouncementTitleSlugRouteImport.update({
+    id: '/announcements/$announcementTitleSlug',
+    path: '/announcements/$announcementTitleSlug',
+    getParentRoute: () => AuthTeacherRoute,
+  } as any)
 const AuthStudentSubjectsSubjectCodeRoute =
   AuthStudentSubjectsSubjectCodeRouteImport.update({
     id: '/subjects/$subjectCode',
     path: '/subjects/$subjectCode',
+    getParentRoute: () => AuthStudentRoute,
+  } as any)
+const AuthStudentAnnouncementsAnnouncementTitleSlugRoute =
+  AuthStudentAnnouncementsAnnouncementTitleSlugRouteImport.update({
+    id: '/announcements/$announcementTitleSlug',
+    path: '/announcements/$announcementTitleSlug',
     getParentRoute: () => AuthStudentRoute,
   } as any)
 const AuthApiAuthSplatRoute = AuthApiAuthSplatRouteImport.update({
@@ -326,24 +354,24 @@ const AuthAdminTeachersTeacherIdAssignementsRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/log-in': typeof LogInRoute
+  '/sign-up': typeof SignUpRoute
+  '/Pages/about': typeof PagesAboutRoute
+  '/Pages/blog': typeof PagesBlogRoute
+  '/Pages/careers': typeof PagesCareersRoute
+  '/Pages/changelog': typeof PagesChangelogRoute
+  '/Pages/community': typeof PagesCommunityRoute
+  '/Pages/cookie-policy': typeof PagesCookiePolicyRoute
+  '/Pages/documentation': typeof PagesDocumentationRoute
+  '/Pages/help': typeof PagesHelpRoute
+  '/Pages/licenses': typeof PagesLicensesRoute
+  '/Pages/press': typeof PagesPressRoute
+  '/Pages/pricing': typeof PagesPricingRoute
+  '/Pages/privacy': typeof PagesPrivacyRoute
+  '/Pages/security': typeof PagesSecurityRoute
+  '/Pages/terms': typeof PagesTermsRoute
   '/admin': typeof AuthAdminRouteWithChildren
-  '/sign-up': typeof AuthSignUpRoute
   '/student': typeof AuthStudentRouteWithChildren
   '/teacher': typeof AuthTeacherRouteWithChildren
-  '/Pages/about': typeof AuthPagesAboutRoute
-  '/Pages/blog': typeof AuthPagesBlogRoute
-  '/Pages/careers': typeof AuthPagesCareersRoute
-  '/Pages/changelog': typeof AuthPagesChangelogRoute
-  '/Pages/community': typeof AuthPagesCommunityRoute
-  '/Pages/cookie-policy': typeof AuthPagesCookiePolicyRoute
-  '/Pages/documentation': typeof AuthPagesDocumentationRoute
-  '/Pages/help': typeof AuthPagesHelpRoute
-  '/Pages/licenses': typeof AuthPagesLicensesRoute
-  '/Pages/press': typeof AuthPagesPressRoute
-  '/Pages/pricing': typeof AuthPagesPricingRoute
-  '/Pages/privacy': typeof AuthPagesPrivacyRoute
-  '/Pages/security': typeof AuthPagesSecurityRoute
-  '/Pages/terms': typeof AuthPagesTermsRoute
   '/admin/calendar': typeof AuthAdminCalendarRoute
   '/admin/createAnnouncement': typeof AuthAdminCreateAnnouncementRoute
   '/admin/dashboard': typeof AuthAdminDashboardRoute
@@ -351,6 +379,7 @@ export interface FileRoutesByFullPath {
   '/student/calendar': typeof AuthStudentCalendarRoute
   '/student/settings': typeof AuthStudentSettingsRoute
   '/teacher/calendar': typeof AuthTeacherCalendarRoute
+  '/teacher/createAnnouncement': typeof AuthTeacherCreateAnnouncementRoute
   '/teacher/settings': typeof AuthTeacherSettingsRoute
   '/admin/announcements/$announcementTitleSlug': typeof AuthAdminAnnouncementsAnnouncementTitleSlugRoute
   '/admin/grades/$name': typeof AuthAdminGradesNameRoute
@@ -358,7 +387,9 @@ export interface FileRoutesByFullPath {
   '/admin/students/add': typeof AuthAdminStudentsAddRoute
   '/admin/teachers/add': typeof AuthAdminTeachersAddRoute
   '/api/auth/$': typeof AuthApiAuthSplatRoute
+  '/student/announcements/$announcementTitleSlug': typeof AuthStudentAnnouncementsAnnouncementTitleSlugRoute
   '/student/subjects/$subjectCode': typeof AuthStudentSubjectsSubjectCodeRoute
+  '/teacher/announcements/$announcementTitleSlug': typeof AuthTeacherAnnouncementsAnnouncementTitleSlugRoute
   '/teacher/attendance/$classId': typeof AuthTeacherAttendanceClassIdRoute
   '/teacher/classes/$classId': typeof AuthTeacherClassesClassIdRoute
   '/teacher/marks/$classId': typeof AuthTeacherMarksClassIdRoute
@@ -367,8 +398,9 @@ export interface FileRoutesByFullPath {
   '/admin/grades/': typeof AuthAdminGradesIndexRoute
   '/admin/students/': typeof AuthAdminStudentsIndexRoute
   '/admin/teachers/': typeof AuthAdminTeachersIndexRoute
-  '/student/notification/': typeof AuthStudentNotificationIndexRoute
+  '/student/announcements/': typeof AuthStudentAnnouncementsIndexRoute
   '/student/subjects/': typeof AuthStudentSubjectsIndexRoute
+  '/teacher/announcements/': typeof AuthTeacherAnnouncementsIndexRoute
   '/teacher/classes/': typeof AuthTeacherClassesIndexRoute
   '/teacher/subjects/': typeof AuthTeacherSubjectsIndexRoute
   '/admin/teachers/$teacherId/assignements': typeof AuthAdminTeachersTeacherIdAssignementsRoute
@@ -377,24 +409,24 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/log-in': typeof LogInRoute
+  '/sign-up': typeof SignUpRoute
+  '/Pages/about': typeof PagesAboutRoute
+  '/Pages/blog': typeof PagesBlogRoute
+  '/Pages/careers': typeof PagesCareersRoute
+  '/Pages/changelog': typeof PagesChangelogRoute
+  '/Pages/community': typeof PagesCommunityRoute
+  '/Pages/cookie-policy': typeof PagesCookiePolicyRoute
+  '/Pages/documentation': typeof PagesDocumentationRoute
+  '/Pages/help': typeof PagesHelpRoute
+  '/Pages/licenses': typeof PagesLicensesRoute
+  '/Pages/press': typeof PagesPressRoute
+  '/Pages/pricing': typeof PagesPricingRoute
+  '/Pages/privacy': typeof PagesPrivacyRoute
+  '/Pages/security': typeof PagesSecurityRoute
+  '/Pages/terms': typeof PagesTermsRoute
   '/admin': typeof AuthAdminRouteWithChildren
-  '/sign-up': typeof AuthSignUpRoute
   '/student': typeof AuthStudentRouteWithChildren
   '/teacher': typeof AuthTeacherRouteWithChildren
-  '/Pages/about': typeof AuthPagesAboutRoute
-  '/Pages/blog': typeof AuthPagesBlogRoute
-  '/Pages/careers': typeof AuthPagesCareersRoute
-  '/Pages/changelog': typeof AuthPagesChangelogRoute
-  '/Pages/community': typeof AuthPagesCommunityRoute
-  '/Pages/cookie-policy': typeof AuthPagesCookiePolicyRoute
-  '/Pages/documentation': typeof AuthPagesDocumentationRoute
-  '/Pages/help': typeof AuthPagesHelpRoute
-  '/Pages/licenses': typeof AuthPagesLicensesRoute
-  '/Pages/press': typeof AuthPagesPressRoute
-  '/Pages/pricing': typeof AuthPagesPricingRoute
-  '/Pages/privacy': typeof AuthPagesPrivacyRoute
-  '/Pages/security': typeof AuthPagesSecurityRoute
-  '/Pages/terms': typeof AuthPagesTermsRoute
   '/admin/calendar': typeof AuthAdminCalendarRoute
   '/admin/createAnnouncement': typeof AuthAdminCreateAnnouncementRoute
   '/admin/dashboard': typeof AuthAdminDashboardRoute
@@ -402,6 +434,7 @@ export interface FileRoutesByTo {
   '/student/calendar': typeof AuthStudentCalendarRoute
   '/student/settings': typeof AuthStudentSettingsRoute
   '/teacher/calendar': typeof AuthTeacherCalendarRoute
+  '/teacher/createAnnouncement': typeof AuthTeacherCreateAnnouncementRoute
   '/teacher/settings': typeof AuthTeacherSettingsRoute
   '/admin/announcements/$announcementTitleSlug': typeof AuthAdminAnnouncementsAnnouncementTitleSlugRoute
   '/admin/grades/$name': typeof AuthAdminGradesNameRoute
@@ -409,7 +442,9 @@ export interface FileRoutesByTo {
   '/admin/students/add': typeof AuthAdminStudentsAddRoute
   '/admin/teachers/add': typeof AuthAdminTeachersAddRoute
   '/api/auth/$': typeof AuthApiAuthSplatRoute
+  '/student/announcements/$announcementTitleSlug': typeof AuthStudentAnnouncementsAnnouncementTitleSlugRoute
   '/student/subjects/$subjectCode': typeof AuthStudentSubjectsSubjectCodeRoute
+  '/teacher/announcements/$announcementTitleSlug': typeof AuthTeacherAnnouncementsAnnouncementTitleSlugRoute
   '/teacher/attendance/$classId': typeof AuthTeacherAttendanceClassIdRoute
   '/teacher/classes/$classId': typeof AuthTeacherClassesClassIdRoute
   '/teacher/marks/$classId': typeof AuthTeacherMarksClassIdRoute
@@ -418,8 +453,9 @@ export interface FileRoutesByTo {
   '/admin/grades': typeof AuthAdminGradesIndexRoute
   '/admin/students': typeof AuthAdminStudentsIndexRoute
   '/admin/teachers': typeof AuthAdminTeachersIndexRoute
-  '/student/notification': typeof AuthStudentNotificationIndexRoute
+  '/student/announcements': typeof AuthStudentAnnouncementsIndexRoute
   '/student/subjects': typeof AuthStudentSubjectsIndexRoute
+  '/teacher/announcements': typeof AuthTeacherAnnouncementsIndexRoute
   '/teacher/classes': typeof AuthTeacherClassesIndexRoute
   '/teacher/subjects': typeof AuthTeacherSubjectsIndexRoute
   '/admin/teachers/$teacherId/assignements': typeof AuthAdminTeachersTeacherIdAssignementsRoute
@@ -430,24 +466,24 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
   '/log-in': typeof LogInRoute
+  '/sign-up': typeof SignUpRoute
+  '/Pages/about': typeof PagesAboutRoute
+  '/Pages/blog': typeof PagesBlogRoute
+  '/Pages/careers': typeof PagesCareersRoute
+  '/Pages/changelog': typeof PagesChangelogRoute
+  '/Pages/community': typeof PagesCommunityRoute
+  '/Pages/cookie-policy': typeof PagesCookiePolicyRoute
+  '/Pages/documentation': typeof PagesDocumentationRoute
+  '/Pages/help': typeof PagesHelpRoute
+  '/Pages/licenses': typeof PagesLicensesRoute
+  '/Pages/press': typeof PagesPressRoute
+  '/Pages/pricing': typeof PagesPricingRoute
+  '/Pages/privacy': typeof PagesPrivacyRoute
+  '/Pages/security': typeof PagesSecurityRoute
+  '/Pages/terms': typeof PagesTermsRoute
   '/_auth/admin': typeof AuthAdminRouteWithChildren
-  '/_auth/sign-up': typeof AuthSignUpRoute
   '/_auth/student': typeof AuthStudentRouteWithChildren
   '/_auth/teacher': typeof AuthTeacherRouteWithChildren
-  '/_auth/Pages/about': typeof AuthPagesAboutRoute
-  '/_auth/Pages/blog': typeof AuthPagesBlogRoute
-  '/_auth/Pages/careers': typeof AuthPagesCareersRoute
-  '/_auth/Pages/changelog': typeof AuthPagesChangelogRoute
-  '/_auth/Pages/community': typeof AuthPagesCommunityRoute
-  '/_auth/Pages/cookie-policy': typeof AuthPagesCookiePolicyRoute
-  '/_auth/Pages/documentation': typeof AuthPagesDocumentationRoute
-  '/_auth/Pages/help': typeof AuthPagesHelpRoute
-  '/_auth/Pages/licenses': typeof AuthPagesLicensesRoute
-  '/_auth/Pages/press': typeof AuthPagesPressRoute
-  '/_auth/Pages/pricing': typeof AuthPagesPricingRoute
-  '/_auth/Pages/privacy': typeof AuthPagesPrivacyRoute
-  '/_auth/Pages/security': typeof AuthPagesSecurityRoute
-  '/_auth/Pages/terms': typeof AuthPagesTermsRoute
   '/_auth/admin/calendar': typeof AuthAdminCalendarRoute
   '/_auth/admin/createAnnouncement': typeof AuthAdminCreateAnnouncementRoute
   '/_auth/admin/dashboard': typeof AuthAdminDashboardRoute
@@ -455,6 +491,7 @@ export interface FileRoutesById {
   '/_auth/student/calendar': typeof AuthStudentCalendarRoute
   '/_auth/student/settings': typeof AuthStudentSettingsRoute
   '/_auth/teacher/calendar': typeof AuthTeacherCalendarRoute
+  '/_auth/teacher/createAnnouncement': typeof AuthTeacherCreateAnnouncementRoute
   '/_auth/teacher/settings': typeof AuthTeacherSettingsRoute
   '/_auth/admin/announcements/$announcementTitleSlug': typeof AuthAdminAnnouncementsAnnouncementTitleSlugRoute
   '/_auth/admin/grades/$name': typeof AuthAdminGradesNameRoute
@@ -462,7 +499,9 @@ export interface FileRoutesById {
   '/_auth/admin/students/add': typeof AuthAdminStudentsAddRoute
   '/_auth/admin/teachers/add': typeof AuthAdminTeachersAddRoute
   '/_auth/api/auth/$': typeof AuthApiAuthSplatRoute
+  '/_auth/student/announcements/$announcementTitleSlug': typeof AuthStudentAnnouncementsAnnouncementTitleSlugRoute
   '/_auth/student/subjects/$subjectCode': typeof AuthStudentSubjectsSubjectCodeRoute
+  '/_auth/teacher/announcements/$announcementTitleSlug': typeof AuthTeacherAnnouncementsAnnouncementTitleSlugRoute
   '/_auth/teacher/attendance/$classId': typeof AuthTeacherAttendanceClassIdRoute
   '/_auth/teacher/classes/$classId': typeof AuthTeacherClassesClassIdRoute
   '/_auth/teacher/marks/$classId': typeof AuthTeacherMarksClassIdRoute
@@ -471,8 +510,9 @@ export interface FileRoutesById {
   '/_auth/admin/grades/': typeof AuthAdminGradesIndexRoute
   '/_auth/admin/students/': typeof AuthAdminStudentsIndexRoute
   '/_auth/admin/teachers/': typeof AuthAdminTeachersIndexRoute
-  '/_auth/student/notification/': typeof AuthStudentNotificationIndexRoute
+  '/_auth/student/announcements/': typeof AuthStudentAnnouncementsIndexRoute
   '/_auth/student/subjects/': typeof AuthStudentSubjectsIndexRoute
+  '/_auth/teacher/announcements/': typeof AuthTeacherAnnouncementsIndexRoute
   '/_auth/teacher/classes/': typeof AuthTeacherClassesIndexRoute
   '/_auth/teacher/subjects/': typeof AuthTeacherSubjectsIndexRoute
   '/_auth/admin/teachers/$teacherId/assignements': typeof AuthAdminTeachersTeacherIdAssignementsRoute
@@ -483,10 +523,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/log-in'
-    | '/admin'
     | '/sign-up'
-    | '/student'
-    | '/teacher'
     | '/Pages/about'
     | '/Pages/blog'
     | '/Pages/careers'
@@ -501,6 +538,9 @@ export interface FileRouteTypes {
     | '/Pages/privacy'
     | '/Pages/security'
     | '/Pages/terms'
+    | '/admin'
+    | '/student'
+    | '/teacher'
     | '/admin/calendar'
     | '/admin/createAnnouncement'
     | '/admin/dashboard'
@@ -508,6 +548,7 @@ export interface FileRouteTypes {
     | '/student/calendar'
     | '/student/settings'
     | '/teacher/calendar'
+    | '/teacher/createAnnouncement'
     | '/teacher/settings'
     | '/admin/announcements/$announcementTitleSlug'
     | '/admin/grades/$name'
@@ -515,7 +556,9 @@ export interface FileRouteTypes {
     | '/admin/students/add'
     | '/admin/teachers/add'
     | '/api/auth/$'
+    | '/student/announcements/$announcementTitleSlug'
     | '/student/subjects/$subjectCode'
+    | '/teacher/announcements/$announcementTitleSlug'
     | '/teacher/attendance/$classId'
     | '/teacher/classes/$classId'
     | '/teacher/marks/$classId'
@@ -524,8 +567,9 @@ export interface FileRouteTypes {
     | '/admin/grades/'
     | '/admin/students/'
     | '/admin/teachers/'
-    | '/student/notification/'
+    | '/student/announcements/'
     | '/student/subjects/'
+    | '/teacher/announcements/'
     | '/teacher/classes/'
     | '/teacher/subjects/'
     | '/admin/teachers/$teacherId/assignements'
@@ -534,10 +578,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/log-in'
-    | '/admin'
     | '/sign-up'
-    | '/student'
-    | '/teacher'
     | '/Pages/about'
     | '/Pages/blog'
     | '/Pages/careers'
@@ -552,6 +593,9 @@ export interface FileRouteTypes {
     | '/Pages/privacy'
     | '/Pages/security'
     | '/Pages/terms'
+    | '/admin'
+    | '/student'
+    | '/teacher'
     | '/admin/calendar'
     | '/admin/createAnnouncement'
     | '/admin/dashboard'
@@ -559,6 +603,7 @@ export interface FileRouteTypes {
     | '/student/calendar'
     | '/student/settings'
     | '/teacher/calendar'
+    | '/teacher/createAnnouncement'
     | '/teacher/settings'
     | '/admin/announcements/$announcementTitleSlug'
     | '/admin/grades/$name'
@@ -566,7 +611,9 @@ export interface FileRouteTypes {
     | '/admin/students/add'
     | '/admin/teachers/add'
     | '/api/auth/$'
+    | '/student/announcements/$announcementTitleSlug'
     | '/student/subjects/$subjectCode'
+    | '/teacher/announcements/$announcementTitleSlug'
     | '/teacher/attendance/$classId'
     | '/teacher/classes/$classId'
     | '/teacher/marks/$classId'
@@ -575,8 +622,9 @@ export interface FileRouteTypes {
     | '/admin/grades'
     | '/admin/students'
     | '/admin/teachers'
-    | '/student/notification'
+    | '/student/announcements'
     | '/student/subjects'
+    | '/teacher/announcements'
     | '/teacher/classes'
     | '/teacher/subjects'
     | '/admin/teachers/$teacherId/assignements'
@@ -586,24 +634,24 @@ export interface FileRouteTypes {
     | '/'
     | '/_auth'
     | '/log-in'
+    | '/sign-up'
+    | '/Pages/about'
+    | '/Pages/blog'
+    | '/Pages/careers'
+    | '/Pages/changelog'
+    | '/Pages/community'
+    | '/Pages/cookie-policy'
+    | '/Pages/documentation'
+    | '/Pages/help'
+    | '/Pages/licenses'
+    | '/Pages/press'
+    | '/Pages/pricing'
+    | '/Pages/privacy'
+    | '/Pages/security'
+    | '/Pages/terms'
     | '/_auth/admin'
-    | '/_auth/sign-up'
     | '/_auth/student'
     | '/_auth/teacher'
-    | '/_auth/Pages/about'
-    | '/_auth/Pages/blog'
-    | '/_auth/Pages/careers'
-    | '/_auth/Pages/changelog'
-    | '/_auth/Pages/community'
-    | '/_auth/Pages/cookie-policy'
-    | '/_auth/Pages/documentation'
-    | '/_auth/Pages/help'
-    | '/_auth/Pages/licenses'
-    | '/_auth/Pages/press'
-    | '/_auth/Pages/pricing'
-    | '/_auth/Pages/privacy'
-    | '/_auth/Pages/security'
-    | '/_auth/Pages/terms'
     | '/_auth/admin/calendar'
     | '/_auth/admin/createAnnouncement'
     | '/_auth/admin/dashboard'
@@ -611,6 +659,7 @@ export interface FileRouteTypes {
     | '/_auth/student/calendar'
     | '/_auth/student/settings'
     | '/_auth/teacher/calendar'
+    | '/_auth/teacher/createAnnouncement'
     | '/_auth/teacher/settings'
     | '/_auth/admin/announcements/$announcementTitleSlug'
     | '/_auth/admin/grades/$name'
@@ -618,7 +667,9 @@ export interface FileRouteTypes {
     | '/_auth/admin/students/add'
     | '/_auth/admin/teachers/add'
     | '/_auth/api/auth/$'
+    | '/_auth/student/announcements/$announcementTitleSlug'
     | '/_auth/student/subjects/$subjectCode'
+    | '/_auth/teacher/announcements/$announcementTitleSlug'
     | '/_auth/teacher/attendance/$classId'
     | '/_auth/teacher/classes/$classId'
     | '/_auth/teacher/marks/$classId'
@@ -627,8 +678,9 @@ export interface FileRouteTypes {
     | '/_auth/admin/grades/'
     | '/_auth/admin/students/'
     | '/_auth/admin/teachers/'
-    | '/_auth/student/notification/'
+    | '/_auth/student/announcements/'
     | '/_auth/student/subjects/'
+    | '/_auth/teacher/announcements/'
     | '/_auth/teacher/classes/'
     | '/_auth/teacher/subjects/'
     | '/_auth/admin/teachers/$teacherId/assignements'
@@ -639,10 +691,32 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
   LogInRoute: typeof LogInRoute
+  SignUpRoute: typeof SignUpRoute
+  PagesAboutRoute: typeof PagesAboutRoute
+  PagesBlogRoute: typeof PagesBlogRoute
+  PagesCareersRoute: typeof PagesCareersRoute
+  PagesChangelogRoute: typeof PagesChangelogRoute
+  PagesCommunityRoute: typeof PagesCommunityRoute
+  PagesCookiePolicyRoute: typeof PagesCookiePolicyRoute
+  PagesDocumentationRoute: typeof PagesDocumentationRoute
+  PagesHelpRoute: typeof PagesHelpRoute
+  PagesLicensesRoute: typeof PagesLicensesRoute
+  PagesPressRoute: typeof PagesPressRoute
+  PagesPricingRoute: typeof PagesPricingRoute
+  PagesPrivacyRoute: typeof PagesPrivacyRoute
+  PagesSecurityRoute: typeof PagesSecurityRoute
+  PagesTermsRoute: typeof PagesTermsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sign-up': {
+      id: '/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof SignUpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/log-in': {
       id: '/log-in'
       path: '/log-in'
@@ -678,13 +752,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthStudentRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/_auth/sign-up': {
-      id: '/_auth/sign-up'
-      path: '/sign-up'
-      fullPath: '/sign-up'
-      preLoaderRoute: typeof AuthSignUpRouteImport
-      parentRoute: typeof AuthRoute
-    }
     '/_auth/admin': {
       id: '/_auth/admin'
       path: '/admin'
@@ -692,11 +759,116 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthAdminRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/Pages/terms': {
+      id: '/Pages/terms'
+      path: '/Pages/terms'
+      fullPath: '/Pages/terms'
+      preLoaderRoute: typeof PagesTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/security': {
+      id: '/Pages/security'
+      path: '/Pages/security'
+      fullPath: '/Pages/security'
+      preLoaderRoute: typeof PagesSecurityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/privacy': {
+      id: '/Pages/privacy'
+      path: '/Pages/privacy'
+      fullPath: '/Pages/privacy'
+      preLoaderRoute: typeof PagesPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/pricing': {
+      id: '/Pages/pricing'
+      path: '/Pages/pricing'
+      fullPath: '/Pages/pricing'
+      preLoaderRoute: typeof PagesPricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/press': {
+      id: '/Pages/press'
+      path: '/Pages/press'
+      fullPath: '/Pages/press'
+      preLoaderRoute: typeof PagesPressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/licenses': {
+      id: '/Pages/licenses'
+      path: '/Pages/licenses'
+      fullPath: '/Pages/licenses'
+      preLoaderRoute: typeof PagesLicensesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/help': {
+      id: '/Pages/help'
+      path: '/Pages/help'
+      fullPath: '/Pages/help'
+      preLoaderRoute: typeof PagesHelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/documentation': {
+      id: '/Pages/documentation'
+      path: '/Pages/documentation'
+      fullPath: '/Pages/documentation'
+      preLoaderRoute: typeof PagesDocumentationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/cookie-policy': {
+      id: '/Pages/cookie-policy'
+      path: '/Pages/cookie-policy'
+      fullPath: '/Pages/cookie-policy'
+      preLoaderRoute: typeof PagesCookiePolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/community': {
+      id: '/Pages/community'
+      path: '/Pages/community'
+      fullPath: '/Pages/community'
+      preLoaderRoute: typeof PagesCommunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/changelog': {
+      id: '/Pages/changelog'
+      path: '/Pages/changelog'
+      fullPath: '/Pages/changelog'
+      preLoaderRoute: typeof PagesChangelogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/careers': {
+      id: '/Pages/careers'
+      path: '/Pages/careers'
+      fullPath: '/Pages/careers'
+      preLoaderRoute: typeof PagesCareersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/blog': {
+      id: '/Pages/blog'
+      path: '/Pages/blog'
+      fullPath: '/Pages/blog'
+      preLoaderRoute: typeof PagesBlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Pages/about': {
+      id: '/Pages/about'
+      path: '/Pages/about'
+      fullPath: '/Pages/about'
+      preLoaderRoute: typeof PagesAboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_auth/teacher/settings': {
       id: '/_auth/teacher/settings'
       path: '/settings'
       fullPath: '/teacher/settings'
       preLoaderRoute: typeof AuthTeacherSettingsRouteImport
+      parentRoute: typeof AuthTeacherRoute
+    }
+    '/_auth/teacher/createAnnouncement': {
+      id: '/_auth/teacher/createAnnouncement'
+      path: '/createAnnouncement'
+      fullPath: '/teacher/createAnnouncement'
+      preLoaderRoute: typeof AuthTeacherCreateAnnouncementRouteImport
       parentRoute: typeof AuthTeacherRoute
     }
     '/_auth/teacher/calendar': {
@@ -748,104 +920,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthAdminCalendarRouteImport
       parentRoute: typeof AuthAdminRoute
     }
-    '/_auth/Pages/terms': {
-      id: '/_auth/Pages/terms'
-      path: '/Pages/terms'
-      fullPath: '/Pages/terms'
-      preLoaderRoute: typeof AuthPagesTermsRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/Pages/security': {
-      id: '/_auth/Pages/security'
-      path: '/Pages/security'
-      fullPath: '/Pages/security'
-      preLoaderRoute: typeof AuthPagesSecurityRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/Pages/privacy': {
-      id: '/_auth/Pages/privacy'
-      path: '/Pages/privacy'
-      fullPath: '/Pages/privacy'
-      preLoaderRoute: typeof AuthPagesPrivacyRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/Pages/pricing': {
-      id: '/_auth/Pages/pricing'
-      path: '/Pages/pricing'
-      fullPath: '/Pages/pricing'
-      preLoaderRoute: typeof AuthPagesPricingRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/Pages/press': {
-      id: '/_auth/Pages/press'
-      path: '/Pages/press'
-      fullPath: '/Pages/press'
-      preLoaderRoute: typeof AuthPagesPressRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/Pages/licenses': {
-      id: '/_auth/Pages/licenses'
-      path: '/Pages/licenses'
-      fullPath: '/Pages/licenses'
-      preLoaderRoute: typeof AuthPagesLicensesRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/Pages/help': {
-      id: '/_auth/Pages/help'
-      path: '/Pages/help'
-      fullPath: '/Pages/help'
-      preLoaderRoute: typeof AuthPagesHelpRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/Pages/documentation': {
-      id: '/_auth/Pages/documentation'
-      path: '/Pages/documentation'
-      fullPath: '/Pages/documentation'
-      preLoaderRoute: typeof AuthPagesDocumentationRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/Pages/cookie-policy': {
-      id: '/_auth/Pages/cookie-policy'
-      path: '/Pages/cookie-policy'
-      fullPath: '/Pages/cookie-policy'
-      preLoaderRoute: typeof AuthPagesCookiePolicyRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/Pages/community': {
-      id: '/_auth/Pages/community'
-      path: '/Pages/community'
-      fullPath: '/Pages/community'
-      preLoaderRoute: typeof AuthPagesCommunityRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/Pages/changelog': {
-      id: '/_auth/Pages/changelog'
-      path: '/Pages/changelog'
-      fullPath: '/Pages/changelog'
-      preLoaderRoute: typeof AuthPagesChangelogRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/Pages/careers': {
-      id: '/_auth/Pages/careers'
-      path: '/Pages/careers'
-      fullPath: '/Pages/careers'
-      preLoaderRoute: typeof AuthPagesCareersRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/Pages/blog': {
-      id: '/_auth/Pages/blog'
-      path: '/Pages/blog'
-      fullPath: '/Pages/blog'
-      preLoaderRoute: typeof AuthPagesBlogRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/Pages/about': {
-      id: '/_auth/Pages/about'
-      path: '/Pages/about'
-      fullPath: '/Pages/about'
-      preLoaderRoute: typeof AuthPagesAboutRouteImport
-      parentRoute: typeof AuthRoute
-    }
     '/_auth/teacher/subjects/': {
       id: '/_auth/teacher/subjects/'
       path: '/subjects'
@@ -860,6 +934,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthTeacherClassesIndexRouteImport
       parentRoute: typeof AuthTeacherRoute
     }
+    '/_auth/teacher/announcements/': {
+      id: '/_auth/teacher/announcements/'
+      path: '/announcements'
+      fullPath: '/teacher/announcements/'
+      preLoaderRoute: typeof AuthTeacherAnnouncementsIndexRouteImport
+      parentRoute: typeof AuthTeacherRoute
+    }
     '/_auth/student/subjects/': {
       id: '/_auth/student/subjects/'
       path: '/subjects'
@@ -867,11 +948,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthStudentSubjectsIndexRouteImport
       parentRoute: typeof AuthStudentRoute
     }
-    '/_auth/student/notification/': {
-      id: '/_auth/student/notification/'
-      path: '/notification'
-      fullPath: '/student/notification/'
-      preLoaderRoute: typeof AuthStudentNotificationIndexRouteImport
+    '/_auth/student/announcements/': {
+      id: '/_auth/student/announcements/'
+      path: '/announcements'
+      fullPath: '/student/announcements/'
+      preLoaderRoute: typeof AuthStudentAnnouncementsIndexRouteImport
       parentRoute: typeof AuthStudentRoute
     }
     '/_auth/admin/teachers/': {
@@ -930,11 +1011,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthTeacherAttendanceClassIdRouteImport
       parentRoute: typeof AuthTeacherRoute
     }
+    '/_auth/teacher/announcements/$announcementTitleSlug': {
+      id: '/_auth/teacher/announcements/$announcementTitleSlug'
+      path: '/announcements/$announcementTitleSlug'
+      fullPath: '/teacher/announcements/$announcementTitleSlug'
+      preLoaderRoute: typeof AuthTeacherAnnouncementsAnnouncementTitleSlugRouteImport
+      parentRoute: typeof AuthTeacherRoute
+    }
     '/_auth/student/subjects/$subjectCode': {
       id: '/_auth/student/subjects/$subjectCode'
       path: '/subjects/$subjectCode'
       fullPath: '/student/subjects/$subjectCode'
       preLoaderRoute: typeof AuthStudentSubjectsSubjectCodeRouteImport
+      parentRoute: typeof AuthStudentRoute
+    }
+    '/_auth/student/announcements/$announcementTitleSlug': {
+      id: '/_auth/student/announcements/$announcementTitleSlug'
+      path: '/announcements/$announcementTitleSlug'
+      fullPath: '/student/announcements/$announcementTitleSlug'
+      preLoaderRoute: typeof AuthStudentAnnouncementsAnnouncementTitleSlugRouteImport
       parentRoute: typeof AuthStudentRoute
     }
     '/_auth/api/auth/$': {
@@ -1041,16 +1136,19 @@ const AuthAdminRouteWithChildren = AuthAdminRoute._addFileChildren(
 interface AuthStudentRouteChildren {
   AuthStudentCalendarRoute: typeof AuthStudentCalendarRoute
   AuthStudentSettingsRoute: typeof AuthStudentSettingsRoute
+  AuthStudentAnnouncementsAnnouncementTitleSlugRoute: typeof AuthStudentAnnouncementsAnnouncementTitleSlugRoute
   AuthStudentSubjectsSubjectCodeRoute: typeof AuthStudentSubjectsSubjectCodeRoute
-  AuthStudentNotificationIndexRoute: typeof AuthStudentNotificationIndexRoute
+  AuthStudentAnnouncementsIndexRoute: typeof AuthStudentAnnouncementsIndexRoute
   AuthStudentSubjectsIndexRoute: typeof AuthStudentSubjectsIndexRoute
 }
 
 const AuthStudentRouteChildren: AuthStudentRouteChildren = {
   AuthStudentCalendarRoute: AuthStudentCalendarRoute,
   AuthStudentSettingsRoute: AuthStudentSettingsRoute,
+  AuthStudentAnnouncementsAnnouncementTitleSlugRoute:
+    AuthStudentAnnouncementsAnnouncementTitleSlugRoute,
   AuthStudentSubjectsSubjectCodeRoute: AuthStudentSubjectsSubjectCodeRoute,
-  AuthStudentNotificationIndexRoute: AuthStudentNotificationIndexRoute,
+  AuthStudentAnnouncementsIndexRoute: AuthStudentAnnouncementsIndexRoute,
   AuthStudentSubjectsIndexRoute: AuthStudentSubjectsIndexRoute,
 }
 
@@ -1060,22 +1158,29 @@ const AuthStudentRouteWithChildren = AuthStudentRoute._addFileChildren(
 
 interface AuthTeacherRouteChildren {
   AuthTeacherCalendarRoute: typeof AuthTeacherCalendarRoute
+  AuthTeacherCreateAnnouncementRoute: typeof AuthTeacherCreateAnnouncementRoute
   AuthTeacherSettingsRoute: typeof AuthTeacherSettingsRoute
+  AuthTeacherAnnouncementsAnnouncementTitleSlugRoute: typeof AuthTeacherAnnouncementsAnnouncementTitleSlugRoute
   AuthTeacherAttendanceClassIdRoute: typeof AuthTeacherAttendanceClassIdRoute
   AuthTeacherClassesClassIdRoute: typeof AuthTeacherClassesClassIdRoute
   AuthTeacherMarksClassIdRoute: typeof AuthTeacherMarksClassIdRoute
   AuthTeacherSubjectsSubjectCodeRoute: typeof AuthTeacherSubjectsSubjectCodeRoute
+  AuthTeacherAnnouncementsIndexRoute: typeof AuthTeacherAnnouncementsIndexRoute
   AuthTeacherClassesIndexRoute: typeof AuthTeacherClassesIndexRoute
   AuthTeacherSubjectsIndexRoute: typeof AuthTeacherSubjectsIndexRoute
 }
 
 const AuthTeacherRouteChildren: AuthTeacherRouteChildren = {
   AuthTeacherCalendarRoute: AuthTeacherCalendarRoute,
+  AuthTeacherCreateAnnouncementRoute: AuthTeacherCreateAnnouncementRoute,
   AuthTeacherSettingsRoute: AuthTeacherSettingsRoute,
+  AuthTeacherAnnouncementsAnnouncementTitleSlugRoute:
+    AuthTeacherAnnouncementsAnnouncementTitleSlugRoute,
   AuthTeacherAttendanceClassIdRoute: AuthTeacherAttendanceClassIdRoute,
   AuthTeacherClassesClassIdRoute: AuthTeacherClassesClassIdRoute,
   AuthTeacherMarksClassIdRoute: AuthTeacherMarksClassIdRoute,
   AuthTeacherSubjectsSubjectCodeRoute: AuthTeacherSubjectsSubjectCodeRoute,
+  AuthTeacherAnnouncementsIndexRoute: AuthTeacherAnnouncementsIndexRoute,
   AuthTeacherClassesIndexRoute: AuthTeacherClassesIndexRoute,
   AuthTeacherSubjectsIndexRoute: AuthTeacherSubjectsIndexRoute,
 }
@@ -1086,45 +1191,15 @@ const AuthTeacherRouteWithChildren = AuthTeacherRoute._addFileChildren(
 
 interface AuthRouteChildren {
   AuthAdminRoute: typeof AuthAdminRouteWithChildren
-  AuthSignUpRoute: typeof AuthSignUpRoute
   AuthStudentRoute: typeof AuthStudentRouteWithChildren
   AuthTeacherRoute: typeof AuthTeacherRouteWithChildren
-  AuthPagesAboutRoute: typeof AuthPagesAboutRoute
-  AuthPagesBlogRoute: typeof AuthPagesBlogRoute
-  AuthPagesCareersRoute: typeof AuthPagesCareersRoute
-  AuthPagesChangelogRoute: typeof AuthPagesChangelogRoute
-  AuthPagesCommunityRoute: typeof AuthPagesCommunityRoute
-  AuthPagesCookiePolicyRoute: typeof AuthPagesCookiePolicyRoute
-  AuthPagesDocumentationRoute: typeof AuthPagesDocumentationRoute
-  AuthPagesHelpRoute: typeof AuthPagesHelpRoute
-  AuthPagesLicensesRoute: typeof AuthPagesLicensesRoute
-  AuthPagesPressRoute: typeof AuthPagesPressRoute
-  AuthPagesPricingRoute: typeof AuthPagesPricingRoute
-  AuthPagesPrivacyRoute: typeof AuthPagesPrivacyRoute
-  AuthPagesSecurityRoute: typeof AuthPagesSecurityRoute
-  AuthPagesTermsRoute: typeof AuthPagesTermsRoute
   AuthApiAuthSplatRoute: typeof AuthApiAuthSplatRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthAdminRoute: AuthAdminRouteWithChildren,
-  AuthSignUpRoute: AuthSignUpRoute,
   AuthStudentRoute: AuthStudentRouteWithChildren,
   AuthTeacherRoute: AuthTeacherRouteWithChildren,
-  AuthPagesAboutRoute: AuthPagesAboutRoute,
-  AuthPagesBlogRoute: AuthPagesBlogRoute,
-  AuthPagesCareersRoute: AuthPagesCareersRoute,
-  AuthPagesChangelogRoute: AuthPagesChangelogRoute,
-  AuthPagesCommunityRoute: AuthPagesCommunityRoute,
-  AuthPagesCookiePolicyRoute: AuthPagesCookiePolicyRoute,
-  AuthPagesDocumentationRoute: AuthPagesDocumentationRoute,
-  AuthPagesHelpRoute: AuthPagesHelpRoute,
-  AuthPagesLicensesRoute: AuthPagesLicensesRoute,
-  AuthPagesPressRoute: AuthPagesPressRoute,
-  AuthPagesPricingRoute: AuthPagesPricingRoute,
-  AuthPagesPrivacyRoute: AuthPagesPrivacyRoute,
-  AuthPagesSecurityRoute: AuthPagesSecurityRoute,
-  AuthPagesTermsRoute: AuthPagesTermsRoute,
   AuthApiAuthSplatRoute: AuthApiAuthSplatRoute,
 }
 
@@ -1134,6 +1209,21 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
   LogInRoute: LogInRoute,
+  SignUpRoute: SignUpRoute,
+  PagesAboutRoute: PagesAboutRoute,
+  PagesBlogRoute: PagesBlogRoute,
+  PagesCareersRoute: PagesCareersRoute,
+  PagesChangelogRoute: PagesChangelogRoute,
+  PagesCommunityRoute: PagesCommunityRoute,
+  PagesCookiePolicyRoute: PagesCookiePolicyRoute,
+  PagesDocumentationRoute: PagesDocumentationRoute,
+  PagesHelpRoute: PagesHelpRoute,
+  PagesLicensesRoute: PagesLicensesRoute,
+  PagesPressRoute: PagesPressRoute,
+  PagesPricingRoute: PagesPricingRoute,
+  PagesPrivacyRoute: PagesPrivacyRoute,
+  PagesSecurityRoute: PagesSecurityRoute,
+  PagesTermsRoute: PagesTermsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

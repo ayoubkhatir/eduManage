@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 import { PageLayout, Section, FadeIn } from '#/components/landing/landing-shared'
 
-export const Route = createFileRoute('/_auth/Pages/cookie-policy')({
+export const Route = createFileRoute('/Pages/cookie-policy')({
   component: RouteComponent,
   head: () => ({ meta: [{ title: 'Cookie Policy - EduManage' }] }),
 })

@@ -8,7 +8,7 @@ import {
   Footer,
 } from '#/components/landing/landing-shared'
 
-export const Route = createFileRoute('/_auth/Pages/about')({
+export const Route = createFileRoute('/Pages/about')({
   component: RouteComponent,
   head: () => ({
     meta: [
