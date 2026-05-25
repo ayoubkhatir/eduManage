@@ -4,7 +4,7 @@ import { Skeleton } from 'boneyard-js/react'
 import { Link } from '@tanstack/react-router'
 import { PageLayout, Section, FadeIn, Icon } from '#/components/landing/landing-shared'
 
-export const Route = createFileRoute('/_auth/Pages/pricing')({
+export const Route = createFileRoute('/Pages/pricing')({
   component: RouteComponent,
   head: () => ({ meta: [{ title: 'Pricing - EduManage' }] }),
 })

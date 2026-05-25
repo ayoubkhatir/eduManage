@@ -3,7 +3,7 @@ import { RightPanel } from '#/auth/signup/components/signup'
 import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 
-export const Route = createFileRoute('/_auth/sign-up')({
+export const Route = createFileRoute('/sign-up')({
   component: RouteComponent,
   head: () => ({
     meta: [{ title: 'Sign Up - EduManage' }],
