@@ -1,7 +1,8 @@
 import { getAnnouncementsListQueryOptions } from '#/hooks/admin/hooks'
-import type { GetAnnouncementsFiltersSchema } from '#/server/modules/announcement/announcement.server-functions'
+
 import { getStudentsStatsServerFn } from '#/server/modules/students/students.server-functions'
 import { getTeachersStatsServerFn } from '#/server/modules/teachers/teachers.server-functions'
+import type { GetAnnouncementsFiltersSchema } from '#/types/announcementTypes'
 import type { ID } from '#/types/authTypes'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query'

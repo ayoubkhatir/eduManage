@@ -16,6 +16,7 @@ export type ResourceDto = {
     type: string
     dateAdded: string
     size: string
+    fileUrl: string
 }
 
 export type AddResourceSchema = z.infer<typeof addResourceSchema>

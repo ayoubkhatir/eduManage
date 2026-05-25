@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 import { PageLayout, Section, FadeIn, Icon } from '#/components/landing/landing-shared'
 
-export const Route = createFileRoute('/_auth/Pages/security')({
+export const Route = createFileRoute('/Pages/security')({
   component: RouteComponent,
   head: () => ({ meta: [{ title: 'Security - EduManage' }] }),
 })
