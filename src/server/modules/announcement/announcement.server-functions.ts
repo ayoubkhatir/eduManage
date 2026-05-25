@@ -7,30 +7,12 @@ import type { AnnouncementWithAuthor } from "#/types/announcementTypes";
 
 export const createAnnouncementServerFn = createServerFn({ method: "POST" })
     .inputValidator(createAnnouncementSchema)
-    .handler(({ data }) => {
-        try {
-            return successResponse(announcementsController.createAnnouncement(data)) as APIResponse<{
-                id: string;
-            }[]>
-        } catch (e) {
-            console.log({ error: e })
-            return internalServerErrorResponse() as APIResponse<{
-                id: string;
-            }[]>
-        }
-    })
+    .handler(({ data }) => { return successResponse(announcementsController.createAnnouncement(data)) })
 
 
 export const getAnnouncementsServerFn = createServerFn({ method: "GET" })
     .inputValidator(getAnnouncementsSchema)
-    .handler(({ data: { schoolId, filters } }) => {
-        try {
-            return successResponse(announcementsController.getAnnouncementsBySchool(schoolId, filters)) as APIResponse<AnnouncementWithAuthor[]>
-        } catch (error) {
-            console.log({ error })
-            return internalServerErrorResponse() as APIResponse<AnnouncementWithAuthor[]>
-        }
-    })
+    .handler(({ data: { schoolId, filters } }) => { return successResponse(announcementsController.getAnnouncementsBySchool(schoolId, filters)) })
 
 
 export const getAnnouncementByIdServerFn = createServerFn({ method: "GET" })

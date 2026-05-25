@@ -7,7 +7,7 @@ import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
 import type { AdminUser } from '#/types/usersTypes'
 import { motion } from 'framer-motion'
 import { AddClassDialog } from '#/components/AddClassDialog'
-import { AddSubjectDialog } from '#/components/AddSubjectDialog'
+import { AddSubjectDialog } from '#/routes/_auth/admin/teachers/$teacherId/AddSubjectDialog'
 import { DeleteClass } from '#/components/admin/DeleteComp'
 import { Trash2 } from 'lucide-react'
 

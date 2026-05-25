@@ -53,7 +53,7 @@ import {
   StudentClassSelector,
   StudentGradeSelector,
 } from '#/components/studentsSelectors'
-import { AddSubjectDialog } from '#/components/AddSubjectDialog'
+import { AddSubjectDialog } from '#/routes/_auth/admin/teachers/$teacherId/AddSubjectDialog'
 
 export const Route = createFileRoute(
   '/_auth/admin/teachers/$teacherId/assignements',

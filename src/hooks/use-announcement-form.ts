@@ -12,24 +12,6 @@ import { createAnnouncementSchema } from '#/schemas/announcement.schema'
 import { AnnouncementAudienceEnum, UserRoleEnum } from '#/server/db/schema'
 import type { TeacherUser } from '#/types/teacherTypes'
 
-// const createAnnouncement = async (payload: AnnouncementPayload) => {
-//   const response = await fetch('http://localhost:4000/announcements', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({
-//       ...payload,
-//       id: Date.now().toString(),
-//     }),
-//   })
-
-//   if (!response.ok) {
-//     throw new Error('Failed to create announcement')
-//   }
-
-//   return response.json()
-// }
 
 export function useAnnouncementForm(user: TeacherUser | AdminUser) {
   const queryClient = useQueryClient()
@@ -51,8 +33,7 @@ export function useAnnouncementForm(user: TeacherUser | AdminUser) {
       description: '',
       audience: AnnouncementAudienceEnum.PUBLIC,
       authorId: user.id,
-      schoolId: user.role === UserRoleEnum.ADMIN ? user.info.id : UserRoleEnum.TEACHER ? user.info.id : ""
-      // BECAUSE THE COMPILER THINK role CAN BE ALSO A STUDENT, BUT IN THIS CASE THE user IS ONLY A TEACHER OR ADMIN
+      schoolId: user.role === UserRoleEnum.ADMIN ? (user as AdminUser).info.id : user.role === UserRoleEnum.TEACHER ? (user as TeacherUser).info.schoolId : ""
     },
   })
 
@@ -76,14 +57,11 @@ export function useAnnouncementForm(user: TeacherUser | AdminUser) {
   const onSubmit: SubmitHandler<CreateAnnouncementType> = useCallback(
     async (data) => {
       await createAnnouncementMutation.mutateAsync(data)
-      // authorId: user.info.id, // TODO: Get current user
-      // schoolId: user.info.id,
 
       reset({
         title: '',
         description: '',
         audience: AnnouncementAudienceEnum.PUBLIC,
-        // status: 'DRAFT',
       })
     },
     [createAnnouncementMutation, reset],

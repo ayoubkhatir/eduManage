@@ -3,7 +3,7 @@ import { Suspense } from 'react'
 import AnnouncementsList from '#/components/announcementsList'
 import { motion } from 'framer-motion'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
-import type { AdminUser } from '#/types/usersTypes'
+import type { TeacherUser } from '#/types/usersTypes'
 import Loading from '#/components/loading'
 import { getAnnouncementsListQueryOptions } from '#/hooks/admin/hooks'
 import {
@@ -26,7 +26,7 @@ export const Route = createFileRoute('/_auth/teacher/announcements/')({
   loader: async ({ context, deps }) => {
     const currentUser = (await FetchCurrentUserServerFn({
       data: context.authState.user!,
-    })) as AdminUser
+    })) as TeacherUser
 
     context.queryClient.ensureQueryData({
       ...getAnnouncementsListQueryOptions(currentUser.id, {
@@ -66,7 +66,7 @@ function Announcement() {
             </p>
           </div>
           <Link
-            to="/teacher/createAnnouncement"
+            to="/admin/createAnnouncement"
             className="flex items-center gap-2 justify-center rounded-lg h-8 px-5 py-6  bg-primary  hover:bg-blue-700 dark:hover:bg-blue-500 text-white text-md font-bold active:scale-95 cursor-pointer"
           >
             <button className="flex shrink-0 items-center gap-2 justify-center rounded-lg h-8 px-5 py-6  bg-primary  hover:bg-blue-700 dark:hover:bg-blue-500 text-white text-md font-bold active:scale-95 cursor-pointer">

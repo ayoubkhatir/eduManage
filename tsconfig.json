@@ -7,7 +7,10 @@
     "vite.config.js"
   ],
   "compilerOptions": {
+<<<<<<< HEAD
     // "ignoreDeprecations": "6.0",
+=======
+>>>>>>> 7ff135d38c22c2539512238e28a6aa428b9eea01
     "ignoreDeprecations": "5.0",
     "target": "ES2022",
     "jsx": "react-jsx",

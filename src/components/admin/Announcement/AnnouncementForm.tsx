@@ -2,9 +2,10 @@ import { Controller } from 'react-hook-form'
 import QuillEditor from '@/components/ui/quillEditor'
 import { useAnnouncementForm } from '@/hooks/use-announcement-form'
 import type { AdminUser } from '#/types/usersTypes'
+import type { TeacherUser } from '#/types/teacherTypes'
 import { announcementAudienceList } from '#/server/db/schema'
 
-export function AnnouncementForm({ user }: { user: AdminUser }) {
+export function AnnouncementForm({ user }: { user: AdminUser | TeacherUser }) {
   const {
     register,
     control,
