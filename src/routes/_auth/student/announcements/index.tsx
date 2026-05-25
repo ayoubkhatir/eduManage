@@ -1,9 +1,9 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { Suspense } from 'react'
 import AnnouncementsList from '#/components/announcementsList'
 import { motion } from 'framer-motion'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
-import type { TeacherUser } from '#/types/usersTypes'
+import type { AdminUser } from '#/types/usersTypes'
 import Loading from '#/components/loading'
 import { getAnnouncementsListQueryOptions } from '#/hooks/admin/hooks'
 import {
@@ -17,7 +17,7 @@ import {
 import { SearchInput } from '#/components/admin/SearchInput'
 import { getAnnouncementsFiltersSchema } from '#/schemas/announcement.schema'
 
-export const Route = createFileRoute('/_auth/teacher/announcements/')({
+export const Route = createFileRoute('/_auth/student/announcements/')({
   component: Announcement,
 
   validateSearch: getAnnouncementsFiltersSchema,
@@ -26,7 +26,7 @@ export const Route = createFileRoute('/_auth/teacher/announcements/')({
   loader: async ({ context, deps }) => {
     const currentUser = (await FetchCurrentUserServerFn({
       data: context.authState.user!,
-    })) as TeacherUser
+    })) as AdminUser
 
     context.queryClient.ensureQueryData({
       ...getAnnouncementsListQueryOptions(currentUser.id, {
@@ -55,7 +55,7 @@ function Announcement() {
       transition={{ duration: 0.5 }}
       className="flex-1 py-8 px-4 sm:px-8 flex flex-col w-full overflow-y-auto gap-8 relative"
     >
-      <div className="flex flex-col gap-8">
+      {/* <div className="flex flex-col gap-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="flex flex-col gap-2">
             <h2 className="text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">
@@ -82,7 +82,7 @@ function Announcement() {
             filters={{ audience, search }}
           />
         </Suspense>
-      </div>
+      </div> */}
       <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-white dark:bg-[#1e293b] p-2 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
         <div className="w-full md:w-96">
           <SearchInput

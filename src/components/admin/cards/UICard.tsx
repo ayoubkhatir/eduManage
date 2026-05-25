@@ -245,12 +245,12 @@ export function AnnouncementsStatCards({
   const cards = useMemo<UICardType[]>(
     () => [
       {
-        id: 'active-posts',
+        id: 'your-posts',
         iconName: 'campaign',
         iconColor: 'green',
         stateIcon: 'trending_up',
         percentage: 12,
-        cardTitle: 'Active Posts',
+        cardTitle: 'Your Posts',
         info: announcements.length ?? 0,
       },
 
@@ -271,7 +271,7 @@ export function AnnouncementsStatCards({
         stateIcon: 'trending_up',
         percentage: 24,
         cardTitle: 'Total Views',
-        info: '1.2k',
+        info: '1k',
       },
     ],
     [announcements, fetchStatus],
