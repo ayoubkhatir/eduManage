@@ -38,7 +38,7 @@ const info = {
     { name: 'Calendar', icon: 'calendar_month' },
     { name: 'Classes', icon: 'class' },
     { name: 'Subjects', icon: 'subject' },
-    { name: 'Notifications', icon: 'notifications' },
+    { name: 'Announcements', icon: 'announcement' },
     { name: 'Settings', icon: 'settings' },
   ],
 }
@@ -66,8 +66,18 @@ function Teacher() {
               .map((segment, i, arr) => (
                 <Fragment key={i}>
                   {i > 0 && (
-                    <svg className="size-3.5 shrink-0 text-slate-400 dark:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    <svg
+                      className="size-3.5 shrink-0 text-slate-400 dark:text-slate-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 5l7 7-7 7"
+                      />
                     </svg>
                   )}
                   <span
@@ -82,7 +92,7 @@ function Teacher() {
                 </Fragment>
               ))}
           </nav>
-            <Outlet />
+          <Outlet />
         </main>
       </div>
     </Skeleton>

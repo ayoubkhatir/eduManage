@@ -16,8 +16,6 @@ export function AnnouncementForm({ user }: { user: AdminUser }) {
     isError,
   } = useAnnouncementForm(user)
 
-
-  
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col h-full">
@@ -61,9 +59,6 @@ export function AnnouncementForm({ user }: { user: AdminUser }) {
                   {audience}
                 </option>
               ))}
-              {/* <option value="All School">All School</option>
-              <option value="Students">Students</option>
-              <option value="Teachers">Teachers</option> */}
             </select>
             {errors.audience && (
               <span className="text-xs text-red-500 mt-1">
