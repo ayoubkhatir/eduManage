@@ -112,7 +112,7 @@ function TeacherAssignmentsPage() {
     ...getTeacherQueryOptions({ fetchBy: 'teacherId', teacherId: teacherId }),
   })
 
-  const { form, onSubmit } = useAssignTeacher(teacherId, currentUser.id)
+  const { form, onSubmit } = useAssignTeacher(teacherId, currentUser.info.id)
 
   if (fetchStatus === 'error' || !teacherData) throw notFound()
   const ref = useRef<HTMLFormElement | null>(null)
@@ -132,7 +132,7 @@ function TeacherAssignmentsPage() {
               </h1>
               <p className="text-base text-[#616f89] dark:text-gray-400">
                 Assign teachers to classes and subjects, and manage existing
-                teaching assignments.
+                teaching assignements.
               </p>
             </div>
 
@@ -142,7 +142,7 @@ function TeacherAssignmentsPage() {
                   <span className="material-symbols-outlined text-primary">
                     assignment_ind
                   </span>
-                  New Assignment
+                  New Assignement
                 </h3>
 
                 <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
@@ -180,12 +180,12 @@ function TeacherAssignmentsPage() {
                           </div>
                         </div>
 
-                        <div className="flex flex-col gap-2.5">
-                          <StudentClassSelector
-                            schoolId={currentUser.info.id}
-                          />
-                          <IsPrimaryTeacherCheckboxInput />
-                        </div>
+                                        <div className="flex flex-col gap-2.5">
+                                            <StudentClassSelector
+                                              schoolId={currentUser.info.id}
+                                            />
+                                            <IsPrimaryTeacherCheckboxInput />
+                                          </div>
                       </div>
 
                       <div className="flex justify-end">
@@ -200,7 +200,7 @@ function TeacherAssignmentsPage() {
                           </span>
                           {form.formState.isSubmitting
                             ? 'Assigning...'
-                            : 'Create Assignment'}
+                            : 'Create Assignement'}
                         </button>
                       </div>
                     </form>
@@ -485,13 +485,13 @@ function CurrentAssignementsTable({
           <span className="material-symbols-outlined text-primary">
             list_alt
           </span>
-          Current Assignments
+          Current Assignements
         </h3>
 
         <div className="text-sm text-[#616f89] dark:text-gray-400">
           {teacherId
-            ? `Showing assignments for ${teacherName}`
-            : 'Showing all teacher assignments'}
+            ? `Showing assignements for ${teacherName}`
+            : 'Showing all teacher assignements'}
         </div>
       </div>
       <DataTable table={table} />
@@ -505,7 +505,7 @@ function IsPrimaryTeacherCheckboxInput() {
   return (
     <div className="flex flex-col gap-1.5">
       <label className="text-sm font-medium text-[#111318] dark:text-gray-200">
-        Assignment Type
+        Assignement Type
       </label>
 
       <div className="flex h-11 items-center rounded-xl bg-[#f0f2f4] px-4 dark:bg-gray-800">

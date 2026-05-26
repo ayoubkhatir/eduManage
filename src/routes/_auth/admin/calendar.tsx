@@ -348,7 +348,7 @@ function AdminCalendarContent() {
         </div>
       </aside>
 
-      <section className="flex-1 flex flex-col gap-4 min-w-0">
+      <section className="flex-1 flex flex-col gap-4 min-w-0 min-h-0">
         <CalendarToolbar
           selectedDate={selectedDate}
           view={view}
@@ -357,7 +357,7 @@ function AdminCalendarContent() {
           onViewChange={setView}
         />
 
-        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-4 flex-1 flex flex-col min-h-0">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800 p-4 flex-1 flex flex-col min-h-[calc(100dvh-14rem)]">
           {isEventsLoading ? (
             <div className="flex flex-col items-center justify-center flex-1 gap-3 text-slate-400">
               <span className="material-symbols-outlined animate-spin text-[40px]">
@@ -390,7 +390,7 @@ function AdminCalendarContent() {
               </p>
             </div>
           ) : (
-            <div className="admin-big-calendar admin-calendar-view admin flex-1 h-full min-h-0">
+            <div className="admin-big-calendar admin-calendar-view admin flex-1 min-h-0">
               <Calendar
                 date={selectedDate}
                 events={displayEvents}

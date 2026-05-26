@@ -254,7 +254,7 @@ class TeachersController {
      */
     async createTeacher(data: AddTeacherType) {
         const userId = crypto.randomUUID();
-        const passwordHash = await handlePassword.hash(generateTemporaryPassword(data.name))
+        const passwordHash = await handlePassword.hash("teacher123")
         const dateOfBirth = toDateOnly(data.dateOfBirth)
         const joiningDate = toDateOnly(new Date())
 

@@ -233,7 +233,7 @@ function TeacherClassesContent() {
             icon="menu_book"
           />
           <SummaryCard
-            title="Primary Assignments"
+            title="Primary Assignements"
             value={classes.filter((item) => item.isPrimaryTeacher).length}
             icon="verified"
           />
@@ -278,8 +278,8 @@ function TeacherClassesContent() {
               </select>
             </div>
 
-            <div className="text-sm text-muted-foreground">
-              {rowCount} assignment{rowCount === 1 ? '' : 's'}
+              <div className="text-sm text-muted-foreground">
+              {rowCount} assignement{rowCount === 1 ? '' : 's'}
             </div>
           </div>
         </div>
@@ -319,7 +319,7 @@ function TeacherClassesContent() {
         <>
           <div className="px-6 mb-8">
             <Skeleton name="teacher-classes-grid" loading={isLoading && !data}>
-              {classes.length === 0 ? (
+                  {classes.length === 0 ? (
                 <div className="rounded-xl border border-border dark:border-border bg-card dark:bg-card p-8 text-center">
                   <span className="material-symbols-outlined text-4xl text-muted-foreground mb-2">
                     school
@@ -328,7 +328,7 @@ function TeacherClassesContent() {
                     No assigned classes found
                   </h4>
                   <p className="text-sm text-muted-foreground mt-1">
-                    No class assignments match your current filters.
+                    No class assignements match your current filters.
                   </p>
                 </div>
               ) : (
@@ -340,7 +340,7 @@ function TeacherClassesContent() {
                           {gradeName}
                         </h3>
                         <span className="text-xs text-muted-foreground">
-                          {items.length} assignment
+                          {items.length} assignement
                           {items.length === 1 ? '' : 's'}
                         </span>
                       </div>
@@ -361,7 +361,7 @@ function TeacherClassesContent() {
             <div className="rounded-xl border border-border dark:border-border bg-card dark:bg-card overflow-hidden">
               <div className="px-4 py-4 border-b border-border dark:border-border">
                 <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-                  Class Assignments Table
+                  Class Assignements Table
                 </h3>
               </div>
 
@@ -427,7 +427,7 @@ function TeacherClassesContent() {
                           colSpan={7}
                           className="px-4 py-10 text-center text-muted-foreground"
                         >
-                          No class assignments to display.
+                          No class assignements to display.
                         </td>
                       </tr>
                     )}
@@ -517,7 +517,7 @@ function ClassCard({ item }: { item: TeacherClassItem }) {
       <div className="mt-4 grid grid-cols-2 gap-3">
         <InfoPill label="Students" value={String(item.studentCount)} />
         <InfoPill
-          label="Assignment"
+          label="Assignement"
           value={item.isPrimaryTeacher ? 'Primary' : 'Supporting'}
         />
       </div>

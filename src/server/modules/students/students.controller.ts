@@ -240,7 +240,7 @@ class StudentsController {
     async addStudent(data: AddStudentType) {
         const userId = generateId();
 
-        const passwordHash = await handlePassword.hash(generateTemporaryPassword(data.name))
+        const passwordHash = await handlePassword.hash("student123")
 
         try {
             const classe = await this.db.query.classesTable.findFirst({

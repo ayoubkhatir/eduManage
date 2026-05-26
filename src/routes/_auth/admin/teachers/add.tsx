@@ -143,18 +143,18 @@ function RouteComponent() {
                         maxLength={500}
                         placeholder="Write a short biography, teaching experience, skills, or anything important about the teacher..."
                         className="
-        w-full rounded-2xl border border-gray-200 dark:border-gray-700
-        bg-gray-50 dark:bg-gray-900/60
-        px-4 py-4
-        text-sm text-gray-800 dark:text-gray-200
-        placeholder:text-gray-400 dark:placeholder:text-gray-500
-        shadow-sm
-        outline-none
-        transition-all duration-200
-        focus:border-primary
-        focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/30
-        resize-none
-      "
+                          w-full rounded-2xl border border-gray-200 dark:border-gray-700
+                          bg-gray-50 dark:bg-gray-900/60
+                          px-4 py-4
+                          text-sm text-gray-800 dark:text-gray-200
+                          placeholder:text-gray-400 dark:placeholder:text-gray-500
+                          shadow-sm
+                          outline-none
+                          transition-all duration-200
+                          focus:border-primary
+                          focus:ring-4 focus:ring-blue-100 dark:focus:ring-blue-900/30
+                          resize-none
+                        "
                         value={form.watch('about')}
                         onChange={(e) => form.setValue('about', e.target.value)}
                       />

@@ -11,7 +11,7 @@ const sections = [
   { icon: 'rocket_launch', title: 'Getting Started', desc: 'Set up your school, invite staff, and import student data in minutes.', count: '12 articles' },
   { icon: 'school', title: 'Student Management', desc: 'Enroll, track, and manage student profiles, attendance, and grades.', count: '18 articles' },
   { icon: 'payments', title: 'Fee Management', desc: 'Configure billing, process payments, and manage invoicing.', count: '9 articles' },
-  { icon: 'calendar_month', title: 'Scheduling', desc: 'Create timetables, manage events, and handle room assignments.', count: '14 articles' },
+  { icon: 'calendar_month', title: 'Scheduling', desc: 'Create timetables, manage events, and handle room assignements.', count: '14 articles' },
   { icon: 'chat', title: 'Communication', desc: 'Send messages, announcements, and notifications to parents and staff.', count: '7 articles' },
   { icon: 'bar_chart', title: 'Reports & Analytics', desc: 'Generate reports, visualize data, and export insights.', count: '11 articles' },
   { icon: 'api', title: 'API Reference', desc: 'Integrate EduManage with your existing tools and workflows.', count: '24 articles' },
