@@ -23,6 +23,15 @@ export const Route = createFileRoute('/_auth/admin/teachers/$teacherId/')({
       getTeacherQueryOptions({ fetchBy: 'teacherId', teacherId }),
     )
     if (!teacher) throw notFound()
+    return { teacher }
+  },
+  staticData: {
+    breadcrumb: [
+      'Teachers',
+      (match) =>
+        (match.loaderData as { teacher: TeacherUser })?.teacher?.name ??
+        `Teacher ${match.params.teacherId}`,
+    ],
   },
 })
 

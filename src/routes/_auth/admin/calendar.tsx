@@ -43,7 +43,9 @@ export const Route = createFileRoute('/_auth/admin/calendar')({
   loader: async ({ context }) => {
     const user = context?.authState?.user
     if (!user) throw new Error('Missing auth state')
-    const currentUser = (await FetchCurrentUserServerFn({ data: user })) as AdminUser
+    const currentUser = (await FetchCurrentUserServerFn({
+      data: user,
+    })) as AdminUser
     return { currentUser }
   },
   pendingComponent: () => (
@@ -56,7 +58,9 @@ export const Route = createFileRoute('/_auth/admin/calendar')({
   head: () => ({
     meta: [{ title: 'Admin | School Calendar - EduManage' }],
   }),
-  
+  staticData: {
+    breadcrumb: 'Calendar',
+  },
 })
 
 function RouteComponent() {
@@ -68,8 +72,8 @@ function RouteComponent() {
 }
 
 function AdminCalendarContent() {
-   const { currentUser } = Route.useLoaderData()
-   const schoolId = currentUser.info?.id
+  const { currentUser } = Route.useLoaderData()
+  const schoolId = currentUser.info?.id
 
   const {
     classOptions,
@@ -96,7 +100,9 @@ function AdminCalendarContent() {
       toast.success('Event added successfully')
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : 'Failed to add event')
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to add event',
+      )
     },
   })
 
@@ -111,7 +117,9 @@ function AdminCalendarContent() {
       toast.success('Event updated successfully')
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : 'Failed to update event')
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to update event',
+      )
     },
   })
 
@@ -126,7 +134,9 @@ function AdminCalendarContent() {
       toast.success('Event deleted successfully')
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : 'Failed to delete event')
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to delete event',
+      )
     },
   })
 
@@ -232,8 +242,12 @@ function AdminCalendarContent() {
       const endDate = new Date(form.end)
       if (endDate <= startDate) return
 
-      const classId = form.className ? classLookup.get(form.className) : undefined
-      const teacherId = form.teacherName ? teacherLookup.get(form.teacherName) : undefined
+      const classId = form.className
+        ? classLookup.get(form.className)
+        : undefined
+      const teacherId = form.teacherName
+        ? teacherLookup.get(form.teacherName)
+        : undefined
 
       // Transform form to match server schema
       const payload = {
@@ -249,7 +263,7 @@ function AdminCalendarContent() {
         allDay: form.allDay,
         repeatWeekly: form.repeatWeekly,
         isClass: form.isClass,
-          status: StatusEnum.NEW,
+        status: StatusEnum.NEW,
       }
 
       if (editingId !== null) {
@@ -260,7 +274,14 @@ function AdminCalendarContent() {
 
       setDialogOpen(false)
     },
-    [addEventAsync, classLookup, editEventAsync, editingId, schoolId, teacherLookup],
+    [
+      addEventAsync,
+      classLookup,
+      editEventAsync,
+      editingId,
+      schoolId,
+      teacherLookup,
+    ],
   )
 
   const handleDelete = useCallback(
@@ -279,7 +300,12 @@ function AdminCalendarContent() {
   }, [])
 
   return (
-    <motion.main initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex-1 flex flex-col md:flex-row p-6 gap-6 min-h-0">
+    <motion.main
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      className="flex-1 flex flex-col md:flex-row p-6 gap-6 min-h-0"
+    >
       <aside className="w-full md:w-72 flex flex-col gap-5 shrink-0">
         <div className="bg-white dark:bg-slate-900 rounded-2xl p-5 shadow-sm border border-slate-200 dark:border-slate-800">
           <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">
@@ -403,6 +429,6 @@ function AdminCalendarContent() {
         onEdit={openEditFromDetail}
         onDelete={handleDelete}
       />
-      </motion.main>
+    </motion.main>
   )
 }

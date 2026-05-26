@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react'
-// import PopUpNotification from './popUpNotification'
 import { ModeToggle } from '@/features/theme/mode-toggle'
 
 function Icon({ name, className = '' }: { name: string; className?: string }) {

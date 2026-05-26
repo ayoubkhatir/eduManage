@@ -14,6 +14,7 @@ import {
 } from '#/components/studentsSelectors'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
 import type { AdminUser } from '#/types/usersTypes'
+import type { StudentUser } from '#/types/studentTypes'
 
 export const Route = createFileRoute('/_auth/admin/students/$studentId')({
   component: RouteComponent,
@@ -34,7 +35,15 @@ export const Route = createFileRoute('/_auth/admin/students/$studentId')({
     if (!student) {
       throw notFound()
     }
-    return { currentUser }
+    return { currentUser, student }
+  },
+  staticData: {
+    breadcrumb: [
+      'Students',
+      (match) =>
+        (match.loaderData as { student: StudentUser })?.student?.name ??
+        `Student ${match.params.studentId}`,
+    ],
   },
 })
 

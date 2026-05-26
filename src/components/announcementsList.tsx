@@ -1,9 +1,7 @@
 import { Link } from '@tanstack/react-router'
 // import type { AnnouncementModel } from '@/schemas/announcement.schemas'
-import { stripHtmlTags } from '@/lib/utils'
 import { getAnnouncementsListQueryOptions } from '#/hooks/admin/hooks'
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { UserGenderEnum } from '#/server/db/schema'
 import type { GetAnnouncementsFiltersSchema } from '#/types/announcementTypes'
 import { AnnouncementCard } from './AnnouncmentCard'
 

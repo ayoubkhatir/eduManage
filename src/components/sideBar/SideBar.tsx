@@ -20,8 +20,8 @@ export interface SideBarProps {
 
 export function SideBar({ info, currentUser }: SideBarProps) {
   const navigate = useNavigate()
-  const location = useLocation()
 
+  const location = useLocation()
   const localPath = location.pathname.split('/')[1]
   const activeItem = getCurrentSidebarKey(location.pathname)
 

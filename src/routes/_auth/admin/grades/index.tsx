@@ -7,7 +7,7 @@ import { Link } from '@tanstack/react-router'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
 import type { AdminUser } from '#/types/usersTypes'
 import { motion } from 'framer-motion'
-import { AddGradeDialog } from '#/components/AddGradeDialog'
+import { AddGradeDialog } from '#/components/Dialogs/AddGradeDialog'
 import type { GradeCardProps } from '#/types/gradesTypes'
 import { DeleteGrade } from '#/components/admin/DeleteComp'
 import { Trash2 } from 'lucide-react'
@@ -23,6 +23,9 @@ export const Route = createFileRoute('/_auth/admin/grades/')({
       data: context.authState.user!,
     })) as AdminUser
     return { currentUser }
+  },
+  staticData: {
+    breadcrumb: 'Grades',
   },
 })
 
@@ -73,7 +76,7 @@ function RouteComponent() {
             ) : (
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
                 {grades.map((grade) => (
-                  <GradeCard grade={grade} />
+                  <GradeCard key={grade.id} grade={grade} />
                 ))}
               </div>
             )}

@@ -1,4 +1,4 @@
-import { addClassServerFn, deleteClassByIdServerFn } from "#/server/modules/classes/classes.server-functions";
+import { addClassServerFn, deleteClassByIdServerFn, getAllClassesServerFn } from "#/server/modules/classes/classes.server-functions";
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
@@ -9,6 +9,22 @@ import type { AddClassSchema } from "#/types/classesTypes";
 import { StatusEnum } from "#/server/db/schema";
 import { useRouter } from "@tanstack/react-router";
 
+
+export const getAllClassesQueryOptions = (schoolId: string) => ({
+    queryKey: ['classes', schoolId],
+    queryFn: async () => {
+        try {
+            const response = await getAllClassesServerFn({ data: schoolId })
+            if (!response.success) {
+                throw new Error('Announcement not found')
+            }
+            return response.data
+        }
+        catch (error) {
+            throw new Error("Error when fetching classes")
+        }
+    }
+})
 
 export function useAddClass(
     schoolId: string,

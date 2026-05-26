@@ -1,5 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
-import { addResourceSchema, getResourcesSchema, } from '#/schemas/resources.schema'
+import { addResourceSchema, getResourcesSchema } from '#/schemas/resources.schema'
 import type { ResourceDto } from '#/types/resourcesTypes'
 import { resourcesController } from './resources.controller'
 import {
@@ -8,6 +8,7 @@ import {
     type PaginatedAPIResponse,
 } from '#/server/utils/response.type'
 import { mapDbError } from '#/server/utils/db_error_handling'
+import { validCuidSchema } from '#/schemas/shared.schema'
 
 export const getResourcesServerFn = createServerFn({ method: 'GET' })
     .inputValidator(getResourcesSchema)
@@ -26,3 +27,7 @@ export const addResourceServerFn = createServerFn({ method: "POST" })
     .handler(async ({ data }) => {
         return successResponse(await resourcesController.addResource(data))
     })
+
+export const deleteResourceServerFn = createServerFn({ method: 'POST' })
+    .inputValidator(validCuidSchema)
+    .handler(async ({ data: resourceId }) => successResponse(await resourcesController.deleteResource(resourceId)))

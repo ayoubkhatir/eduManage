@@ -264,20 +264,7 @@ export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
     cell: ({ row }) => (
       <div className="flex items-center justify-center">
         <div className="relative">
-          {/* <ProfilePicGenerator
-            name={row.original.name}
-            imgSrc={row.original.image}
-          /> */}
           <ImageColumnUI image={row.original.image} />
-          {/* <span
-            className={`absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white dark:border-slate-800 ${
-              row.original.status === 'Active'
-                ? 'bg-green-500'
-                : row.original.status === 'Inactive'
-                  ? 'bg-red-500'
-                  : 'bg-yellow-500'
-            }`}
-          /> */}
         </div>
       </div>
     ),

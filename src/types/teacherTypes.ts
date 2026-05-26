@@ -1,8 +1,9 @@
 import * as schema from '#/server/db/schema';
 import { classIdSchema, getTeacherClassMarksPageSchema } from '#/schemas/marks.schema';
-import { addTeacherSchema, assignmentIdSchema, assignTeacherSchema, editTeacherSchema, getTeacherClassesSchema, getTeachersSchema, schoolIdSchema, teacherIdSchema, teacherSearchSchema, teacherUserIdSchema, updateTeacherAssignmentSchema } from '#/schemas/teachers.schema';
+import { addTeacherSchema, assignmentIdSchema, assignTeacherSchema, editTeacherSchema, getTeacherClassesSchema, getTeachersSchema, teacherSearchSchema, updateTeacherAssignmentSchema } from '#/schemas/teachers.schema';
 import z from "zod";
 import type { AuthUser } from './authTypes';
+import type { validCuidSchema } from '#/schemas/shared.schema';
 
 
 
@@ -12,8 +13,8 @@ import type { AuthUser } from './authTypes';
 export type Teacher = typeof schema.teachersTable.$inferSelect
 
 // * Teacher with user info
-export type TeacherUser = Omit<AuthUser,"info">& {
-	info: Teacher & {
+export type TeacherUser = Omit<AuthUser, "info"> & {
+    info: Teacher & {
         subjects: {
             id: string,
             name: string
@@ -33,11 +34,11 @@ export type AddTeacherType = z.infer<typeof addTeacherSchema>;
 
 export type EditTeacherType = z.infer<typeof editTeacherSchema>;
 
-export type TeacherIdType = z.infer<typeof teacherIdSchema>;
+export type TeacherIdType = z.infer<typeof validCuidSchema>;
 
-export type TeacherUserIdType = z.infer<typeof teacherUserIdSchema>;
+export type TeacherUserIdType = z.infer<typeof validCuidSchema>;
 
-export type SchoolIdType = z.infer<typeof schoolIdSchema>;
+export type SchoolIdType = z.infer<typeof validCuidSchema>;
 
 export type AssignTeacherType = z.infer<typeof assignTeacherSchema>;
 
@@ -54,16 +55,16 @@ export type GetTeacherClassesType = z.infer<typeof getTeacherClassesSchema>
 export type TeacherSearchType = z.infer<typeof teacherSearchSchema>
 
 export type TeacherClassItem = {
-  assignmentId: string
-  classId: string
-  className: string
-  gradeId: string
-  gradeName: string
-  subjectId: string
-  subjectName: string
-  studentCount: number
-  isPrimaryTeacher: boolean
-  status: schema.StatusEnum
+    assignmentId: string
+    classId: string
+    className: string
+    gradeId: string
+    gradeName: string
+    subjectId: string
+    subjectName: string
+    studentCount: number
+    isPrimaryTeacher: boolean
+    status: schema.StatusEnum
 }
 
 
@@ -74,10 +75,10 @@ export function TeacherUserDto(
 ): TeacherUser {
     return {
         ...user,
-			info: {
-                ...teacher,
-                subjects
-            }
-				
+        info: {
+            ...teacher,
+            subjects
+        }
+
     }
-	}
+}

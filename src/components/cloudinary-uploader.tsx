@@ -39,7 +39,7 @@ export function CloudinaryUploader({
       widgetRef.current = window.cloudinary.createUploadWidget(
         {
           cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
-          uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
+          uploadPreset: import.meta.env.VITE_CLOUDINARY_IMAGE_PRESET,
           folder: 'avatars',
           sources: ['local', 'camera', 'url'],
           multiple: false,
@@ -112,7 +112,7 @@ export function SimpleCloudinaryUpload({
       widgetRef.current = window.cloudinary.createUploadWidget(
         {
           cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
-          uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
+          uploadPreset: import.meta.env.VITE_CLOUDINARY_IMAGE_PRESET,
         },
         (error, result) => {
           if (error) {
@@ -158,10 +158,9 @@ export async function uploadToCloudinary(file: File) {
   formData.append('file', file)
   formData.append(
     'upload_preset',
-    import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
+    import.meta.env.VITE_CLOUDINARY_FILE_PRESET,
   )
   formData.append('folder', 'avatars')
-
   const response = await fetch(
     `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/raw/upload`,
     {
@@ -215,7 +214,7 @@ export function SimpleImageUpload({ value, onChange }: Props) {
       formData.append('file', file)
       formData.append(
         'upload_preset',
-        import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
+        import.meta.env.VITE_CLOUDINARY_IMAGE_PRESET,
       )
       formData.append('folder', 'avatars')
 
@@ -282,7 +281,6 @@ export function SimpleImageUpload({ value, onChange }: Props) {
           </div>
         )}
       </div>
-
       <div className="flex items-center gap-2">
         <button
           type="button"
@@ -351,7 +349,7 @@ export function SimpleDocumentUpload({
       formData.append('file', file)
       formData.append(
         'upload_preset',
-        import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
+        import.meta.env.VITE_CLOUDINARY_FILE_PRESET,
       )
       formData.append('folder', 'documents')
 

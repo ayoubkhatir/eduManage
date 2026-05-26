@@ -16,8 +16,6 @@ export const getAnnouncementsListQueryOptions = (
       const response = await getAnnouncementsServerFn({
         data: { schoolId, filters },
       })
-      //filters || {}
-      console.log('Announcements response:', response)
 
       if (!response.success) {
         throw new Error("Error when fetching announcements")

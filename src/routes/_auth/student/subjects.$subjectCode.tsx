@@ -1,162 +1,42 @@
-// import { createFileRoute } from '@tanstack/react-router'
-// import { Skeleton } from 'boneyard-js/react'
 
-// import type { Resource } from '@/services/api/teacher/types/modelType'
-// import { columns } from '@/components/teacher/resources/columns'
-// import {
-//   getAllCollectionsQueryOptions,
-//   getResourcesQueryOptions,
-// } from '@/services/api/teacher/collection/hooks.ts'
-// import { getResourcesSchema } from '#/schemas/resources.schema'
-// import { useQuery } from '@tanstack/react-query'
-// import DataTable from '#/components/admin/Table/dataTable'
-// import { getCoreRowModel, useReactTable } from '@tanstack/react-table'
-
-// export const Route = createFileRoute('/student/subjects')({
-//   component: Courses,
-//   pendingComponent: CoursesPending,
-//   head: () => ({
-//     meta: [{ title: 'Student | Subjects - EduManage' }],
-//   }),
-//   loaderDeps: ({ search }) => search,
-//   loader: async ({ context, deps }) => {
-//     // await new Promise((resolve) => setTimeout(resolve, 2000))
-//     return Promise.all([
-//       context.queryClient.ensureQueryData(getAllCollectionsQueryOptions(false)),
-//       context.queryClient.ensureQueryData(
-//         getResourcesQueryOptions(undefined, deps),
-//       ),
-//     ])
-//   },
-//   validateSearch: getResourcesSchema,
-// })
-
-// function CoursesPending() {
-//   return (
-//     <Skeleton name="student-courses-page" loading>
-//       <CoursesContent />
-//     </Skeleton>
-//   )
-// }
-
-// function Courses() {
-//   return (
-//     <Skeleton name="student-courses-page" loading={false}>
-//       <CoursesContent />
-//     </Skeleton>
-//   )
-// }
-
-// function CoursesContent() {
-//   return (
-//     // <div className="overflow-auto min-h-screen bg-background-light dark:bg-background-dark text-[#0d121b] dark:text-white flex flex-col p-6 md:p-10">
-//     <main className="flex-1 overflow-y-auto bg-background-light p-4 dark:bg-background-dark md:p-8">
-//       {/* Breadcrumbs */}
-//       {/* <nav className="mb-6 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-//         <a className="hover:text-primary" href="#">
-//           Home
-//         </a>
-//         <span className="material-symbols-outlined text-[16px]">
-//           chevron_right
-//         </span>
-//         <a className="hover:text-primary" href="#">
-//           Student
-//         </a>
-//         <span className="material-symbols-outlined text-[16px]">
-//           chevron_right
-//         </span>
-//         <span className="font-medium text-[#0d121b] dark:text-white">
-//           Resources
-//         </span>
-//       </nav> */}
-//       {/* Page Header */}
-//       <div className="mb-8 flex flex-col justify-between gap-6 md:flex-row md:items-end">
-//         <div>
-//           <h1 className="text-3xl font-black tracking-tight text-[#0d121b] dark:text-white md:text-4xl">
-//             Learning Resources
-//           </h1>
-//           <p className="mt-2 text-base text-[#4c669a] dark:text-gray-400">
-//             Access educational materials, assignments, and reference docs shared
-//             by your teachers.
-//           </p>
-//         </div>
-//       </div>
-
-//       <div className="px-6 pb-12 py-5">
-//         {/* <Skeleton name="resources-table" loading={isResourcesInitialLoading}> */}
-//         <CoursesTableFetchWrapper />
-//         {/* </Skeleton> */}
-//       </div>
-//     </main>
-//     // </div>
-//   )
-// }
-
-// function CoursesTableFetchWrapper() {
-//   const { dateAdded, fileName, pageIndex, pageSize, size, sortBy, type } =
-//     Route.useSearch()
-//   const { data: resourcesData, status: fetchStatus } = useQuery({
-//     ...getResourcesQueryOptions(undefined, {
-//       dateAdded,
-//       fileName,
-//       pageIndex,
-//       pageSize,
-//       size,
-//       sortBy,
-//       type,
-//     }),
-//   })
-//   console.log({ resourcesData })
-//   // const paginationState = { pageIndex, pageSize }
-//   // const rowCount = (resourcesData || { rowCount: 0 }).rowCount
-//   // return (
-//   //   <ResourcesTable
-//   //     data={resourcesData}
-//   //     columns={columns}
-//   //     pagination={paginationState}
-//   //     paginationOptions={{
-//   //       onPaginationChange: (pagination) => {
-//   //         setFilters(
-//   //           typeof pagination === 'function'
-//   //             ? pagination(paginationState)
-//   //             : pagination,
-//   //         )
-//   //       },
-//   //       rowCount,
-//   //     }}
-//   //     filters={filters}
-//   //     onFilterChange={setFilters}
-//   //   />
-//   // )
-
-//   if (fetchStatus === 'pending') {
-//     return 'Pending'
-//   }
-//   if (fetchStatus === 'error') {
-//     return 'Error'
-//   }
-//   return <CoursesTable data={resourcesData.data} />
-// }
-
-// function CoursesTable({ data }: { data: Resource[] }) {
-//   const table = useReactTable({
-//     data,
-//     columns,
-//     getCoreRowModel: getCoreRowModel(),
-//   })
-//   return <DataTable table={table} />
-// }
-
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute} from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 import { zodValidator } from '@tanstack/zod-adapter'
 import { useQuery } from '@tanstack/react-query'
 
-import { getResourcesSchema } from '#/schemas/resources.schema'
-import { columns } from '@/components/resources/columns'
-import { getResourcesQueryOptions } from '#/hooks/resources/hooks'
+import {
+  getResourcesSchema,
+} from '#/schemas/resources.schema'
+import { SearchInput } from '#/components/admin/SearchInput'
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from '#/components/ui/select'
+import { getResourceColumns } from '@/components/resources/columns'
 import { ResourcesTable } from '#/components/teacher/resources/resources-table'
+import { getResourcesQueryOptions } from '#/hooks/resources/hooks'
+
+import {
+  Search,
+  FileType,
+  HardDrive,
+  Calendar,
+  ArrowUpDown,
+  X,
+  FilterX,
+  AlertCircle,
+  BookOpen,
+} from 'lucide-react'
+import { ResourceTypeEnum} from '#/server/db/schema'
+
+import { useMemo, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
+import type { StudentUser } from '#/types/studentTypes'
+import useDebounce from '#/hooks/use-debounce'
 
 export const Route = createFileRoute('/_auth/student/subjects/$subjectCode')({
   component: StudentResourcesPage,
@@ -166,16 +46,20 @@ export const Route = createFileRoute('/_auth/student/subjects/$subjectCode')({
   ),
   loaderDeps: ({ search }) => search,
   loader: async ({ context, params: { subjectCode }, deps }) => {
-    // IMPORTANT:
-    // replace this with the real student profile id if authState.user.id is only the auth user id
+      const currentUser = (await FetchCurrentUserServerFn({
+                          data: context.authState.user!,
+                          })) as StudentUser
+          
+      if (!currentUser) throw new Error('Unauthorized')
 
     await context.queryClient.ensureQueryData(
       getResourcesQueryOptions({
         ...deps,
         subjectCode,
-        // studentId: context.authState.user.roleId,
+        studentId: currentUser.info.id,
       }),
     )
+    return { currentUser }
   },
 })
 
@@ -195,17 +79,56 @@ function StudentResourcesPage() {
   )
 }
 
+const typeOptions = [
+  { value: 'all', label: 'All types' },
+  ...Object.values(ResourceTypeEnum).map((t) => ({ value: t, label: t.toUpperCase() })),
+]
+
+const sortOptions = [
+  { value: 'newest', label: 'Newest First' },
+  { value: 'oldest', label: 'Oldest First' },
+  { value: 'name', label: 'Name A-Z' },
+  { value: 'size', label: 'Size' },
+] as const
+
 function StudentResourcesContent() {
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
-  // const { authState } = Route.useRouteContext()
-  const { subjectCode } = Route.useParams()
+  
+  const { currentUser } = Route.useLoaderData()
+  const [localSize, setLocalSize] = useState(search.size)
+  const debouncedSize = useDebounce(localSize, 500)
+  const [localClassId, setLocalClassId] = useState(search.classId ?? '')
+  const debouncedClassId = useDebounce(localClassId, 500)
 
+  function updateSearch(nextSearch: Partial<typeof search>) {
+    navigate({
+      search: (current) => ({
+        ...current,
+        ...nextSearch,
+      }),
+    })
+  }
+
+  useEffect(() => {
+    if (debouncedSize !== search.size) {
+      updateSearch({ size: debouncedSize, pageIndex: 1 })
+    }
+  }, [debouncedSize])
+
+  useEffect(() => {
+    const classIdToUpdate = debouncedClassId || undefined
+    if (classIdToUpdate !== search.classId) {
+      updateSearch({ classId: classIdToUpdate, pageIndex: 1 })
+    }
+  }, [debouncedClassId])
+
+  const { subjectCode } = Route.useParams()
   const { data, status } = useQuery(
     getResourcesQueryOptions({
       ...search,
       subjectCode,
-      // studentId: authState.user.roleId,
+      teacherId: currentUser.info.id,
     }),
   )
 
@@ -214,16 +137,44 @@ function StudentResourcesContent() {
     pageSize: search.pageSize,
   }
 
-  function setFilters(nextFilters: Partial<typeof search>) {
+  const hasActiveFilters = useMemo(
+    () =>
+      search.fileName !== '' ||
+      search.type !== '' ||
+      search.size !== '' ||
+      search.dateAdded !== '' ||
+      search.classId !== undefined,
+    [search],
+  )
+
+  const activeFilterCount = useMemo(
+    () =>
+      [search.fileName, search.type, search.size, search.dateAdded].filter(Boolean).length +
+      (search.classId ? 1 : 0),
+    [search],
+  )
+
+  function clearAllFilters() {
     navigate({
-      to: '.',
-      search: (prev) => ({
-        ...prev,
-        ...nextFilters,
-      }),
-      replace: true,
+      search: {
+        fileName: '',
+        type: '',
+        dateAdded: '',
+        size: '',
+        sortBy: search.sortBy,
+        pageIndex: 1,
+        pageSize: search.pageSize,
+        classId: undefined,
+      },
     })
   }
+
+  
+
+  const columns = useMemo(
+      () => getResourceColumns(),
+      [],
+  )
 
   return (
     <motion.main
@@ -232,47 +183,203 @@ function StudentResourcesContent() {
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
       className="flex-1 overflow-y-auto bg-background-light p-4 dark:bg-background-dark md:p-8"
     >
-      <div className="mb-8 flex flex-col justify-between gap-6 md:flex-row md:items-end">
-        <div>
-          <h1 className="text-3xl font-black tracking-tight text-[#0d121b] dark:text-white md:text-4xl">
-            Learning Resources
-          </h1>
-          <p className="mt-2 text-base text-[#4c669a] dark:text-gray-400">
-            Access educational materials, assignments, and reference docs shared
-            by your teachers.
-          </p>
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-8 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+          <div>
+            <h1 className="text-3xl font-black tracking-tight text-[#0d121b] dark:text-white md:text-4xl">
+              Learning Resources
+            </h1>
+            <p className="mt-2 text-base text-[#4c669a] dark:text-gray-400">
+              Manage and organize educational materials, assignments, and reference documents.
+            </p>
+          </div>
         </div>
+
+        <div className="mb-6 rounded-2xl border border-border/70 bg-card p-5 shadow-sm">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+            <div className="relative sm:col-span-2 lg:col-span-1 xl:col-span-2">
+              <Search className="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
+              <SearchInput
+                className="h-10 rounded-lg border-border bg-muted/30 pl-9 text-sm shadow-none transition-colors hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring/40"
+                placeholder="Search by file name..."
+                value={search.fileName}
+                onSearch={(value) =>
+                  updateSearch({ fileName: value, pageIndex: 1 })
+                }
+              />
+            </div>
+
+            <Select
+              
+              value={search.type || 'all'}
+              onValueChange={(v) =>
+                updateSearch({ type: v === 'all' ? '' : v, pageIndex: 1 })
+              }
+            >
+              <SelectTrigger className="h-10 w-full rounded-lg border-border bg-muted/30 text-sm shadow-none transition-colors hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring/40 ">
+                <FileType className="mr-2 size-4 shrink-0 text-muted-foreground" />
+                <SelectValue placeholder="All types" />
+              </SelectTrigger>
+              <SelectContent className="border-border bg-card">
+                {typeOptions.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <div className="relative">
+              <HardDrive className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="number"
+                inputMode="decimal"
+                min="0"
+                value={localSize ? localSize.replace(/\s*mb$/i, '') : ''}
+                onChange={(e) =>
+                  setLocalSize(e.target.value ? `${e.target.value} MB` : '')
+                }
+                className="h-9 w-full rounded-lg border border-border bg-muted/30 pl-9 pr-12 text-sm text-foreground outline-none transition-[color,box-shadow,background-color] placeholder:text-muted-foreground hover:bg-muted/50 focus:border-ring focus:ring-[3px] focus:ring-ring/40 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                placeholder="Size"
+              />
+              <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                MB
+              </span>
+            </div>
+
+            <div className="relative">
+              <Calendar className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="date"
+                value={search.dateAdded}
+                onChange={(e) =>
+                  updateSearch({ dateAdded: e.target.value, pageIndex: 1 })
+                }
+                className="h-9 w-full rounded-lg border border-border bg-muted/30 pl-9 pr-8 text-sm text-foreground outline-none transition-[color,box-shadow,background-color] hover:bg-muted/50 focus:border-ring focus:ring-[3px] focus:ring-ring/40"
+              />
+              {search.dateAdded && (
+                <button
+                  type="button"
+                  onClick={() => updateSearch({ dateAdded: '', pageIndex: 1 })}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                >
+                  <X className="size-3.5" />
+                </button>
+              )}
+            </div>
+
+            <Select
+              value={search.sortBy}
+              onValueChange={(v) =>
+                updateSearch({ sortBy: v as typeof search.sortBy, pageIndex: 1 })
+              }
+            >
+              <SelectTrigger className="h-10 w-full rounded-lg border-border bg-muted/30 text-sm shadow-none transition-colors hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring/40">
+                <ArrowUpDown className="mr-2 size-4 shrink-0 text-muted-foreground" />
+                <SelectValue placeholder="Sort" />
+              </SelectTrigger>
+              <SelectContent className="border-border bg-card">
+                {sortOptions.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <div className="relative">
+              <BookOpen className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                className="h-10 w-full rounded-lg border border-border bg-muted/30 pl-9 pr-8 text-sm text-foreground outline-none transition-[color,box-shadow,background-color] placeholder:text-muted-foreground hover:bg-muted/50 focus:border-ring focus:ring-[3px] focus:ring-ring/40"
+                placeholder="Class ID"
+                value={localClassId}
+                onChange={(event) =>
+                  setLocalClassId(event.target.value)
+                }
+              />
+              {localClassId && (
+                <button
+                  type="button"
+                  onClick={() => setLocalClassId('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                >
+                  <X className="size-3.5" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          {hasActiveFilters && (
+            <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-4">
+              <span className="text-xs font-medium text-muted-foreground">
+                {activeFilterCount} active filter{activeFilterCount !== 1 ? 's' : ''}
+              </span>
+              <button
+                type="button"
+                onClick={clearAllFilters}
+                className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              >
+                <FilterX className="size-3.5" />
+                Clear all
+              </button>
+            </div>
+          )}
+        </div>
+
+        {status === 'pending' ? (
+          <div className="rounded-xl border border-border bg-card p-12">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 border-b border-border pb-3">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="h-3 flex-1 animate-pulse rounded bg-muted" />
+                ))}
+              </div>
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="flex items-center gap-3 py-2">
+                  <div className="h-4 w-1/4 animate-pulse rounded bg-muted" />
+                  <div className="h-4 w-1/6 animate-pulse rounded bg-muted" />
+                  <div className="h-4 w-1/6 animate-pulse rounded bg-muted" />
+                  <div className="h-4 w-1/6 animate-pulse rounded bg-muted" />
+                  <div className="h-4 w-1/12 animate-pulse rounded bg-muted" />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : status === 'error' ? (
+          <div className="rounded-xl border border-red-200 bg-red-50 p-12 text-center dark:border-red-900 dark:bg-red-950/30">
+            <AlertCircle className="mx-auto mb-3 size-10 text-red-400" />
+            <p className="text-sm font-medium text-red-600 dark:text-red-400">
+              Failed to load resources.
+            </p>
+            <p className="mt-1 text-xs text-red-500 dark:text-red-400">
+              Please try refreshing the page.
+            </p>
+          </div>
+        ) : (
+          <ResourcesTable
+            data={data.data}
+            columns={columns}
+            pagination={pagination}
+            paginationOptions={{
+              rowCount: data.pagination.totalCount,
+              onPaginationChange: (paginationState) => {
+                const nextPagination =
+                  typeof paginationState === 'function'
+                    ? paginationState(pagination)
+                    : paginationState
+
+                navigate({
+                  search: (s) => ({
+                    ...s,
+                    pageIndex: nextPagination.pageIndex,
+                    pageSize: nextPagination.pageSize,
+                  }),
+                })
+              },
+            }}
+          />
+        )}
       </div>
-
-      {status === 'pending' ? (
-        <div className="text-sm text-muted-foreground">
-          Loading resources...
-        </div>
-      ) : status === 'error' ? (
-        <div className="text-sm text-red-500">Failed to load resources.</div>
-      ) : (
-        <ResourcesTable
-          data={data.data}
-          columns={columns}
-          pagination={pagination}
-          paginationOptions={{
-            rowCount: data.pagination.totalCount,
-            onPaginationChange: (paginationState) => {
-              const nextPagination =
-                typeof paginationState === 'function'
-                  ? paginationState(pagination)
-                  : paginationState
-
-              setFilters({
-                pageIndex: nextPagination.pageIndex,
-                pageSize: nextPagination.pageSize,
-              })
-            },
-          }}
-          filters={{ ...search, subjectCode }}
-          onFilterChange={setFilters}
-        />
-      )}
     </motion.main>
   )
 }

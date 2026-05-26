@@ -7,7 +7,7 @@ export function cn(...inputs: Array<ClassValue>) {
 }
 
 export function stripHtmlTags(html: string): string {
-  if (!html) return ''
+  if (!html || !document) return ''
   const div = document.createElement('div')
   div.innerHTML = html
   return div.textContent || div.innerText || ''

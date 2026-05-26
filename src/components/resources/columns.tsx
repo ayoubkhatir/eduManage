@@ -1,38 +1,77 @@
 import type { ResourceDto } from '#/types/resourcesTypes'
 import type { ColumnDef } from '@tanstack/react-table'
+import { Download, Trash2 } from 'lucide-react'
 
-const typeUrl: Partial<Record<string, { icon: string; color: string }>> = {
+type ResourceColumnActions = {
+  onDownload?: (resource: ResourceDto) => void
+  onDelete?: (resource: ResourceDto) => void
+}
+
+const typeConfig: Record<string, { label: string; bg: string; text: string; ring: string }> = {
   pdf: {
-    icon: 'picture_as_pdf',
-    color: 'text-red-500 dark:text-red-400',
+    label: 'PDF',
+    bg: 'bg-red-50 dark:bg-red-950/40',
+    text: 'text-red-600 dark:text-red-400',
+    ring: 'ring-red-500/20 dark:ring-red-400/20',
   },
   docx: {
-    icon: 'description',
-    color: 'text-blue-500 dark:text-blue-400',
+    label: 'DOCX',
+    bg: 'bg-blue-50 dark:bg-blue-950/40',
+    text: 'text-blue-600 dark:text-blue-400',
+    ring: 'ring-blue-500/20 dark:ring-blue-400/20',
   },
   xlsx: {
-    icon: 'grid_on',
-    color: 'text-green-500 dark:text-green-400',
+    label: 'XLSX',
+    bg: 'bg-emerald-50 dark:bg-emerald-950/40',
+    text: 'text-emerald-600 dark:text-emerald-400',
+    ring: 'ring-emerald-500/20 dark:ring-emerald-400/20',
   },
   png: {
-    icon: 'image',
-    color: 'text-yellow-500 dark:text-yellow-400',
+    label: 'PNG',
+    bg: 'bg-amber-50 dark:bg-amber-950/40',
+    text: 'text-amber-600 dark:text-amber-400',
+    ring: 'ring-amber-500/20 dark:ring-amber-400/20',
   },
   zip: {
-    icon: 'folder_zip',
-    color: 'text-purple-500 dark:text-purple-400',
+    label: 'ZIP',
+    bg: 'bg-violet-50 dark:bg-violet-950/40',
+    text: 'text-violet-600 dark:text-violet-400',
+    ring: 'ring-violet-500/20 dark:ring-violet-400/20',
   },
   mp4: {
-    icon: 'movie',
-    color: 'text-pink-500 dark:text-pink-400',
+    label: 'MP4',
+    bg: 'bg-pink-50 dark:bg-pink-950/40',
+    text: 'text-pink-600 dark:text-pink-400',
+    ring: 'ring-pink-500/20 dark:ring-pink-400/20',
   },
   pptx: {
-    icon: 'slideshow',
-    color: 'text-orange-500 dark:text-orange-400',
+    label: 'PPTX',
+    bg: 'bg-orange-50 dark:bg-orange-950/40',
+    text: 'text-orange-600 dark:text-orange-400',
+    ring: 'ring-orange-500/20 dark:ring-orange-400/20',
+  },
+  txt: {
+    label: 'TXT',
+    bg: 'bg-slate-50 dark:bg-slate-800',
+    text: 'text-slate-600 dark:text-slate-400',
+    ring: 'ring-slate-400/20 dark:ring-slate-500/20',
   },
 }
 
-export const columns: Array<ColumnDef<ResourceDto>> = [
+function getTypeConfig(type: string) {
+  return typeConfig[type] ?? {
+    label: type.toUpperCase(),
+    bg: 'bg-slate-50 dark:bg-slate-800',
+    text: 'text-slate-600 dark:text-slate-400',
+    ring: 'ring-slate-400/20 dark:ring-slate-500/20',
+  }
+}
+
+export function getResourceColumns({
+  onDownload,
+  onDelete,
+}: ResourceColumnActions = {}): Array<ColumnDef<ResourceDto>> {
+  return [
   {
     id: 'fileName',
     header: 'File Name',
@@ -41,15 +80,19 @@ export const columns: Array<ColumnDef<ResourceDto>> = [
       const fileType = row.original.type || ''
 
       return (
-        <div className="flex items-center gap-2">
-          <span
-            className={`material-symbols-outlined text-[20px] ${
-              typeUrl[fileType]?.color || 'text-slate-500 dark:text-slate-400'
-            }`}
-          >
-            {typeUrl[fileType]?.icon ?? 'draft'}
+        <div className="flex items-center gap-3">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-border bg-muted/30">
+            <span
+              className={`text-xs font-bold ${
+                getTypeConfig(fileType).text
+              }`}
+            >
+              {fileType.toUpperCase() || '??'}
+            </span>
+          </div>
+          <span className="truncate text-sm font-medium text-foreground">
+            {fileName}
           </span>
-          <span className="truncate"> {fileName} </span>
         </div>
       )
     },
@@ -57,48 +100,87 @@ export const columns: Array<ColumnDef<ResourceDto>> = [
   {
     accessorKey: 'type',
     header: 'Type',
+    cell: ({ row }) => {
+      const fileType = row.original.type || ''
+      const config = getTypeConfig(fileType)
+
+      return (
+        <span
+          className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${config.bg} ${config.text} ${config.ring}`}
+        >
+          {config.label}
+        </span>
+      )
+    },
   },
   {
     accessorKey: 'dateAdded',
     header: 'Date Added',
     cell: ({ row }) => {
       const value = row.original.dateAdded
-      return <span>{new Date(value).toLocaleDateString()} </span>
+      if (!value) return <span className="text-muted-foreground">—</span>
+      const date = new Date(value)
+      const formatted = date.toLocaleDateString(undefined, {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      })
+      return (
+        <span className="text-sm text-muted-foreground whitespace-nowrap">
+          {formatted}
+        </span>
+      )
     },
   },
   {
     accessorKey: 'size',
     header: 'Size',
+    cell: ({ row }) => {
+      const size = row.original.size
+      return (
+        <span className="text-sm text-muted-foreground whitespace-nowrap">
+          {size || '—'}
+        </span>
+      )
+    },
   },
   {
     id: 'actions',
     header: '',
     cell: ({ row }) => {
-      const fileName = row.original.fileName
+      const resource = row.original
+      const fileName = resource.fileName
 
       return (
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center justify-end gap-1">
           <button
-            className="cursor-pointer rounded p-1.5 text-slate-400 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400 transition-colors"
+            className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             title={`Download ${fileName}`}
             type="button"
+            onClick={() => {
+              if (resource.fileUrl) {
+                onDownload?.(resource)
+                window.open(resource.fileUrl, '_blank', 'noopener,noreferrer')
+              }
+            }}
+            disabled={!resource.fileUrl}
           >
-            <span className="material-symbols-outlined text-[20px]">
-              download
-            </span>
+            <Download className="size-4" />
           </button>
 
-          <button
-            className="cursor-pointer rounded p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors"
-            title={`Delete ${fileName}`}
-            type="button"
-          >
-            <span className="material-symbols-outlined text-[20px]">
-              delete
-            </span>
-          </button>
+          {onDelete && (
+            <button
+              className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+              title={`Delete ${fileName}`}
+              type="button"
+              onClick={() => onDelete(resource)}
+            >
+              <Trash2 className="size-4" />
+            </button>
+          )}
         </div>
       )
     },
   },
-]
+  ]
+}

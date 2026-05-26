@@ -140,6 +140,7 @@ class ResourcesController {
                     type: resourcesTable.type,
                     dateAdded: resourcesTable.dateAdded,
                     size: resourcesTable.size,
+                    fileUrl: resourcesTable.fileUrl,
                 })
                 .from(resourcesTable)
                 .where(whereClause)
@@ -161,6 +162,7 @@ class ResourcesController {
             type: row.type,
             dateAdded: row.dateAdded.toISOString(),
             size: row.size,
+            fileUrl: row.fileUrl ?? '',
         }))
 
         if (input.sortBy === 'size') {
@@ -214,6 +216,15 @@ class ResourcesController {
             })
             .returning()
         return resource
+    }
+
+    async deleteResource(resourceId: string) {
+        const [deletedResource] = await this.db
+            .delete(resourcesTable)
+            .where(eq(resourcesTable.id, resourceId))
+            .returning()
+
+        return deletedResource
     }
 }
 

@@ -37,8 +37,8 @@ export default function SettingsComp({ admin }: { admin: AuthUser }) {
 
         <div className="flex flex-col gap-6">
           {/* General Information */}
-          <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
-            <div className="flex items-center justify-between border-b border-slate-100 p-6 dark:border-white/[0.06]">
+          <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/6 dark:bg-white/2">
+            <div className="flex items-center justify-between border-b border-slate-100 p-6 dark:border-white/6">
               <div>
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                   General Information

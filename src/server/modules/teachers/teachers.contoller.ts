@@ -94,7 +94,7 @@ class TeachersController {
         if (normalizedStatus) {
             conditions.push(
                 eq(teachersTable.status, normalizedStatus as StatusEnum)
-                
+
             )
         }
 
@@ -931,5 +931,6 @@ class TeachersController {
             },
         }
     }
+
 }
 export const teachersController = new TeachersController(db)
