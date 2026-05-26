@@ -53,7 +53,8 @@ import {
   StudentClassSelector,
   StudentGradeSelector,
 } from '#/components/studentsSelectors'
-import { AddSubjectDialog } from '#/routes/_auth/admin/teachers/$teacherId/AddSubjectDialog'
+import { AddSubjectDialog } from '#/components/Dialogs/AddSubjectDialog'
+import type { TeacherUser } from '#/types/teacherTypes'
 
 export const Route = createFileRoute(
   '/_auth/admin/teachers/$teacherId/assignements',
@@ -80,7 +81,16 @@ export const Route = createFileRoute(
     context.queryClient.ensureQueryData({
       ...getTeacherAssignementsQueryOptions(teacherId),
     })
-    return { currentUser }
+    return { currentUser, teacher }
+  },
+  staticData: {
+    breadcrumb: [
+      'Teachers',
+      (match) =>
+        (match.loaderData as { teacher: TeacherUser })?.teacher?.name ??
+        `Teacher ${match.params.teacherId}`,
+      'Assignements',
+    ],
   },
 })
 

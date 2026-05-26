@@ -5,7 +5,6 @@ import generateId from "../../utils/id_generator";
 import { generateTemporaryPassword } from "../../utils/temp_password_generator";
 import { handlePassword } from "#/server/utils/handle-password";
 import { StudentUserDto, type AddStudentType, type EditStudentType, type GetStudentsType, type StudentUser } from "#/types/studentTypes";
-import { getAllStudentsServerFn } from "./students.server-functions";
 
 
 class StudentsController {
@@ -443,42 +442,6 @@ class StudentsController {
 }
 
 export const studentsController = new StudentsController(db);
-
-export const getStudentsQueryOptions = ({
-    page,
-    search,
-    size,
-    sortOrder,
-    sortBy,
-    status,
-    classe,
-    grade
-}: GetStudentsType) => ({
-    queryKey: ['students', page, search, size, sortOrder, sortBy, status, classe, grade],
-    queryFn: async () => {
-        const response = await getAllStudentsServerFn({
-            data: {
-                page,
-                search,
-                size,
-                sortOrder,
-                sortBy,
-                status,
-                classe,
-                grade
-            },
-        })
-
-        if (response.success)
-            return {
-                data: response.data,
-                pagination: response.pagination,
-            }
-        else throw new Error(response.message)
-    },
-    // placeholderData: keepPreviousData,
-})
-
 
 // this function is not in use now 
 // async function findStudentByUserId(

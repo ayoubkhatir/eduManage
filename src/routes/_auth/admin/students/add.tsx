@@ -9,7 +9,7 @@ import { FormProvider } from 'react-hook-form'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
 import type { AdminUser } from '#/types/usersTypes'
 import { SimpleImageUpload } from '#/components/cloudinary-uploader'
-import { getAllClassesQueryOptions } from '#/server/modules/classes/classes.controller'
+import { getAllClassesQueryOptions } from '#/hooks/classes/hooks'
 import {
   StudentClassSelector,
   StudentGradeSelector,
@@ -17,9 +17,6 @@ import {
 
 export const Route = createFileRoute('/_auth/admin/students/add')({
   component: RouteComponent,
-  head: () => ({
-    meta: [{ title: 'Admin | Add Student - EduManage' }],
-  }),
   loader: async ({ context }) => {
     const currentUser = (await FetchCurrentUserServerFn({
       data: context.authState.user!,
@@ -30,6 +27,13 @@ export const Route = createFileRoute('/_auth/admin/students/add')({
     })
     return { currentUser }
   },
+  staticData: {
+    breadcrumb: ['Students', 'Add'],
+  },
+
+  head: () => ({
+    meta: [{ title: 'Admin | Add Student - EduManage' }],
+  }),
 })
 
 function RouteComponent() {

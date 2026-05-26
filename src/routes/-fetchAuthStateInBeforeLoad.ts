@@ -1,5 +1,4 @@
 import { UserGenderEnum, UserRoleEnum } from "#/server/db/schema"
-import { authController } from "#/server/modules/auth/auth.controller"
 import type { AuthUser } from "#/types/authTypes"
 import type { StudentUser } from "#/types/studentTypes"
 import type { TeacherUser } from "#/types/teacherTypes"
@@ -23,6 +22,7 @@ const AuthUserSchema = z.object({
 export const FetchCurrentUserServerFn = createServerFn({ method: "GET" })
     .inputValidator(AuthUserSchema)
     .handler(async ({ data: user }) => {
+        const { authController } = await import("#/server/modules/auth/auth.controller")
         const info = await authController.fetchUserRoleData(user.id, user.role)!
 
         let currentUser: AuthUser;

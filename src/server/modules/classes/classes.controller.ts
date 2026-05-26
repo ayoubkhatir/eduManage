@@ -2,7 +2,6 @@ import { db, type Database } from "#/server/db/db";
 import { classesTable, users } from "#/server/db/schema";
 import type { AddClassSchema } from "#/types/classesTypes";
 import { eq } from "drizzle-orm";
-import { getAllClassesServerFn } from "./classes.server-functions";
 
 class ClassesController {
     constructor(private readonly db: Database) { }
@@ -71,21 +70,3 @@ class ClassesController {
 
 
 export const classesController = new ClassesController(db);
-
-
-export const getAllClassesQueryOptions = (schoolId: string) => ({
-    queryKey: ['classes', schoolId],
-    queryFn: async () => {
-        try {
-            const response = await getAllClassesServerFn({ data: schoolId })
-            if (!response.success) {
-                throw new Error('Announcement not found')
-            }
-            return response.data
-        }
-        catch (error) {
-            throw new Error("Error when fetching classes")
-        }
-    }
-
-})

@@ -8,7 +8,7 @@ import {
     addSubjectSchema,
 } from '#/schemas/subjects.schema'
 import type { AddSubjectSchema } from '#/types/subjectsTypes'
-import { addSubjectServerFn, getStudentSubjectsServerFn, getTeacherSubjectsServerFn } from '#/server/modules/subjects/subjects.server-functions'
+import { addSubjectServerFn, getAllSchoolSubjectsServerFn, getStudentSubjectsServerFn, getTeacherSubjectsServerFn } from '#/server/modules/subjects/subjects.server-functions'
 import { StatusEnum } from '#/server/db/schema'
 
 export function useAddSubject(
@@ -75,6 +75,19 @@ export function useAddSubject(
         onSubmit,
         isPending,
         errors,
+    }
+}
+
+export const getAllSubjectsQueryOptions = (schoolId: string) => {
+    return {
+        queryKey: ['subjects'],
+        queryFn: async () => {
+            const response = await getAllSchoolSubjectsServerFn({ data: schoolId })
+            if (response.success) {
+                return response.data
+            }
+            else throw new Error()
+        },
     }
 }
 

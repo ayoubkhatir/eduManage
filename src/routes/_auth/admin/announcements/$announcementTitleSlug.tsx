@@ -1,8 +1,9 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { getAnnouncementByTitleSlugQueryOptions } from '#/hooks/admin/hooks'
-import NotificationDetail from '#/components/notificationDetail'
 import Loading from '#/components/loading'
+import AnnouncementDetail from '#/components/admin/Announcement/AnnouncementDetail'
+import type { AnnouncementWithAuthor } from '#/types/announcementTypes'
 
 export const Route = createFileRoute(
   '/_auth/admin/announcements/$announcementTitleSlug',
@@ -17,15 +18,24 @@ export const Route = createFileRoute(
       />
     </div>
   ),
+  loader: async ({ context, params }) => {
+    const announcement = await context.queryClient.ensureQueryData({
+      ...getAnnouncementByTitleSlugQueryOptions(params.announcementTitleSlug),
+    })
+    return { announcement }
+  },
+  staticData: {
+    breadcrumb: [
+      'Announcements',
+      (match) =>
+        (match.loaderData as { announcement: AnnouncementWithAuthor })
+          ?.announcement?.title ??
+        `Announcement ${match.params.announcementTitleSlug}`,
+    ],
+  },
   head: () => ({
     meta: [{ title: 'Owner | Announcement - EduManage' }],
   }),
-
-  loader: async ({ context, params }) => {
-    await context.queryClient.ensureQueryData({
-      ...getAnnouncementByTitleSlugQueryOptions(params.announcementTitleSlug),
-    })
-  },
 })
 
 function AnnouncementDetailPage() {
@@ -63,7 +73,7 @@ function AnnouncementDetailPage() {
         </span>
         Back to announcements
       </Link>
-      <NotificationDetail announcement={announcement}></NotificationDetail>
+      <AnnouncementDetail announcement={announcement} />
     </div>
   )
 }

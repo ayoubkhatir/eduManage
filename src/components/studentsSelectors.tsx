@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from '#/components/ui/select'
 import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
-import { getAllClassesQueryOptions } from '#/server/modules/classes/classes.controller'
+import { getAllClassesQueryOptions } from '#/hooks/classes/hooks'
 import { useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { Controller, useFormContext, type Path } from 'react-hook-form'

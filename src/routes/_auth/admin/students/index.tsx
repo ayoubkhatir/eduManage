@@ -17,7 +17,7 @@ import { motion } from 'framer-motion'
 import { StatusFilter } from '#/components/admin/FilterComp'
 import { getStudentsSchema } from '#/schemas/students.schema'
 import { StatusEnum } from '#/server/db/schema'
-import { getStudentsQueryOptions } from '#/server/modules/students/students.controller'
+import { getStudentsQueryOptions } from '#/hooks/students/hooks'
 
 export const Route = createFileRoute('/_auth/admin/students/')({
   component: RouteComponent,
@@ -28,6 +28,9 @@ export const Route = createFileRoute('/_auth/admin/students/')({
     context.queryClient.ensureQueryData(getStudentsQueryOptions(deps))
   },
   validateSearch: zodValidator(getStudentsSchema),
+  staticData: {
+    breadcrumb: 'Students',
+  },
 })
 
 function RouteComponent() {
