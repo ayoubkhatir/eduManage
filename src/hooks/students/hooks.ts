@@ -180,7 +180,6 @@ export function useEditStudent(edited: StudentUser) {
       telNumber: data.telNumber,
       studentId: data.studentId
     }
-    console.log({ newData })
     editStudent(newData, {
       onSuccess: () => {
         toast.success("Edit User Success")

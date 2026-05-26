@@ -22,7 +22,6 @@ export function useAnnouncementForm(user: TeacherUser | AdminUser) {
     control,
     handleSubmit,
     reset,
-    watch,
     formState
   } = useForm<CreateAnnouncementType>({
     resolver: zodResolver(createAnnouncementSchema),
@@ -52,7 +51,6 @@ export function useAnnouncementForm(user: TeacherUser | AdminUser) {
       toast.error('Failed to create announcement. Please try again.')
     },
   })
-  console.log({ formState, values: watch() })
 
   const onSubmit: SubmitHandler<CreateAnnouncementType> = useCallback(
     async (data) => {

@@ -45,8 +45,6 @@ function AnnouncementDetailPage() {
     ...getAnnouncementByTitleSlugQueryOptions(announcementTitleSlug),
   })
 
-  console.log({ announcement })
-
   if (status === 'error') {
     return (
       <div className="flex flex-col items-center justify-center gap-4 px-8 py-16 text-center">

@@ -240,8 +240,6 @@ class TeachersController {
                 )
         )
 
-        console.log(data)
-
         return {
             data,
             pagination: {
@@ -255,7 +253,6 @@ class TeachersController {
      * Create user + teacher profile in one transaction
      */
     async createTeacher(data: AddTeacherType) {
-        console.log({ inputData: data })
         const userId = crypto.randomUUID();
         const passwordHash = await handlePassword.hash(generateTemporaryPassword(data.name))
         const dateOfBirth = toDateOnly(data.dateOfBirth)
@@ -291,7 +288,6 @@ class TeachersController {
                 password: passwordHash,
                 createdAt: new Date(),
             }).returning()
-            console.log(createdAccount)
 
             const [createdTeacher] = await this.db
                 .insert(teachersTable)
@@ -310,7 +306,6 @@ class TeachersController {
 
             return result
         } catch (error) {
-            console.log({ error })
             await this.db.delete(users).where(eq(users.id, userId)).catch(() => undefined)
             throw error
         }
@@ -685,7 +680,6 @@ class TeachersController {
     }
 
     async assignTeacherToClassAndSubject(data: AssignTeacherType) {
-        console.log({ input: data })
         const teacher = await db.query.teachersTable.findFirst({
             where: and(
                 eq(teachersTable.id, data.teacherId),

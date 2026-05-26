@@ -239,7 +239,6 @@ export function AnnouncementsStatCards({
     getAnnouncementsListQueryOptions(schoolId, filters),
   )
 
-  console.log({ announcements, fetchStatus })
   if (fetchStatus === 'error') return null
   const cards = useMemo<UICardType[]>(
     () => [

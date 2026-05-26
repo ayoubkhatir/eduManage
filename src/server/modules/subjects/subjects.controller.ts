@@ -148,7 +148,6 @@ class SubjectsController {
                 }
             }
         })
-        console.log({ student })
         return student?.class.assignments.map(ass => ass.subject) ?? []
     }
 
@@ -165,7 +164,6 @@ class SubjectsController {
                 }
             }
         })
-        console.log({ teacher })
         return teacher?.assignments.map(ass => ass.subject) ?? []
     }
 }

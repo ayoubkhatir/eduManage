@@ -1,27 +1,13 @@
-"use client"
-
 import { useCallback, useEffect, useState } from "react"
 import { useThrottledCallback } from "@/hooks/use-throttled-callback"
 
 export type RectState = Omit<DOMRect, "toJSON">
 
 export interface ElementRectOptions {
-  /**
-   * The element to track. Can be an Element, ref, or selector string.
-   * Defaults to document.body if not provided.
-   */
+
   element?: Element | React.RefObject<Element> | string | null
-  /**
-   * Whether to enable rect tracking
-   */
   enabled?: boolean
-  /**
-   * Throttle delay in milliseconds for rect updates
-   */
   throttleMs?: number
-  /**
-   * Whether to use ResizeObserver for more accurate tracking
-   */
   useResizeObserver?: boolean
 }
 

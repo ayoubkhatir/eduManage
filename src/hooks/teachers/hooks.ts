@@ -55,7 +55,6 @@ export function useAddTeacher(schoolId: string) {
 
   const { mutate: addTeacher } = useMutation({
     mutationFn: async (data: AddTeacherType) => {
-      console.log(data)
       const response = await addTeacherServerFn({ data })
       if (response.success) return response.data
       const message =
@@ -75,11 +74,9 @@ export function useAddTeacher(schoolId: string) {
 
 
   function onSubmit(data: AddTeacherType) {
-    console.log({ formData: data })
     addTeacher(data, {
       onSuccess: () => {
         toast.success("Teacher added")
-        console.log("teacher added")
       },
       onError: (error) => {
         toast.error(error.message || "Error has occured")
@@ -129,7 +126,6 @@ export function useEditTeacher(editedTeacher: TeacherUser) {
   })
 
   function onSubmit(data: EditTeacherType) {
-    console.log({ formData: data })
     editTeacher(data, {
       onSuccess: () => {
         toast.success("Teacher updated")
@@ -196,7 +192,6 @@ export function useAssignTeacher(teacherId: string, schoolId: string) {
     mutationFn: async (data: AssignTeacherType) => {
       const response = await assignTeacherToClassAndSubjectServerFn({ data })
       if (response.success) return response.data
-      console.log({ response })
       throw new Error("Error occured")
     },
     onSuccess: async () => {
@@ -210,7 +205,6 @@ export function useAssignTeacher(teacherId: string, schoolId: string) {
   })
 
   async function onSubmit(data: AssignTeacherType) {
-    console.log({ assignData: data })
     assignTeacher(data)
   }
 
@@ -261,7 +255,6 @@ export function useUpdateTeacherSettings(teacher: TeacherUser) {
       toast.error("Error occured")
     }
   })
-  console.log({ errors: form.formState.errors })
   const onSubmit = async (data: EditTeacherType) => {
     updateTeacherSettings(data)
     form.reset()

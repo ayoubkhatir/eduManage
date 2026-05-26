@@ -152,7 +152,6 @@ class AuthService {
         const existingSession = await db.query.session.findFirst({
             where: (sessions, { eq }) => eq(sessions.token, currentRefreshToken),
         });
-        console.log({ existingSession })
 
         if (!existingSession) {
             return null;
@@ -201,7 +200,6 @@ class AuthService {
             .then(r => console.log("Update Result", { r }));
 
         const user = await this.findUserById(existingSession.userId);
-        console.log({ user })
 
         if (!user || !isUserRole(user.role)) {
             // NOT AWAITED

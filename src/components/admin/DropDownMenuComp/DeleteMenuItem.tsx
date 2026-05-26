@@ -62,7 +62,6 @@ export default function DeleteMenuItem({ role, id }: Props) {
                     toast.success('Element deleted')
                   },
                   onError(error) {
-                    console.log({ error })
                     toast.error('Element not deleted')
                   },
                 })

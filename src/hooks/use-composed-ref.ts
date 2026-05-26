@@ -1,8 +1,5 @@
-"use client"
-
 import { useCallback, useRef } from "react"
 
-// basically Exclude<React.ClassAttributes<T>["ref"], string>
 type UserRef<T> =
   | ((instance: T | null) => void)
   | React.RefObject<T | null>

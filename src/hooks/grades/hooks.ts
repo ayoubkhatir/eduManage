@@ -9,7 +9,6 @@ export const getAllGradesQueryOptions = () => ({
       const response = await getAllGradesServerFn()
       return response.success ? response.data : []
     } catch (error) {
-      console.log({ error })
       return []
     }
   },

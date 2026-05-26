@@ -111,7 +111,6 @@ function TeacherAssignmentsPage() {
   })
 
   const { form, onSubmit } = useAssignTeacher(teacherId, currentUser.id)
-  console.log({ errors: form.formState.errors })
 
   if (fetchStatus === 'error' || !teacherData) throw notFound()
   const ref = useRef<HTMLFormElement | null>(null)

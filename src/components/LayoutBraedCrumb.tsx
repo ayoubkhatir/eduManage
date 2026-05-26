@@ -29,7 +29,6 @@ export function LayoutBreadcrumb() {
     })
     .filter((crumb) => crumb.label !== '')
 
-  console.log({ breadcrumbs, matches })
   return (
     <>
       {breadcrumbs.length > 0 && (

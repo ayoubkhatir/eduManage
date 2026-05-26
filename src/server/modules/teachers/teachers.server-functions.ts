@@ -27,9 +27,6 @@ export const getTeachersServerFn = createServerFn({ method: "GET" })
 export const addTeacherServerFn = createServerFn({ method: 'POST' })
     .inputValidator(addTeacherSchema)
     .handler(async ({ data: body }) => {
-        // the real import is at the top this looks like it does nothing
-        console.log("data : ", body)
-        // const { teachersController } = await import('./teachers.contoller')
         try {
             const data = await teachersController.createTeacher(body)
             return successResponse(data) as APIResponse<TeacherUser>
@@ -78,7 +75,6 @@ export const editTeacherServerFn = createServerFn({ method: 'POST' })
             const data = await teachersController.updateTeacher(body)
             return successResponse(data) as APIResponse<TeacherUser>
         } catch (error) {
-            console.log({ error })
             return mapDbError(error) as APIResponse<TeacherUser>
         }
     })
