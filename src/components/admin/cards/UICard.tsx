@@ -1,4 +1,7 @@
-import { getAnnouncementsListQueryOptions } from '#/hooks/admin/hooks'
+import {
+  getAnnouncementsListQueryOptions,
+  getDashboardStatsQueryOptions,
+} from '#/hooks/admin/hooks'
 import { getStudentsStatsServerFn } from '#/server/modules/students/students.server-functions'
 import { getTeachersStatsServerFn } from '#/server/modules/teachers/teachers.server-functions'
 import type { GetAnnouncementsFiltersSchema } from '#/types/announcementTypes'
@@ -277,6 +280,64 @@ export function AnnouncementsStatCards({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {cards.map((card) => (
+        <UICardComponent {...card} key={card.id} />
+      ))}
+    </div>
+  )
+}
+
+export function DashboardStatCards({ schoolId }: { schoolId: ID }) {
+  const { data: dashboardStat, status: fetchStatus } = useQuery({
+    ...getDashboardStatsQueryOptions(schoolId),
+  })
+
+  const cards = useMemo<UICardType[]>(
+    () => [
+      {
+        id: 'total-students',
+        iconName: 'school',
+        iconColor: 'blue',
+        stateIcon: 'trending_up',
+        percentage: 0,
+        cardTitle: 'Total Students',
+        info: dashboardStat?.totalStudents ?? 0,
+      },
+      {
+        id: 'total-teachers',
+        iconName: 'school',
+        iconColor: 'green',
+        stateIcon: 'trending_up',
+        percentage: 0,
+        cardTitle: 'totalTeachers',
+        info: dashboardStat?.totalTeachers ?? 0,
+      },
+      {
+        id: 'total-grades',
+        iconName: 'person',
+        iconColor: 'blue',
+        stateIcon: 'trending_up',
+        percentage: 0,
+        cardTitle: 'totalGrades',
+        info: dashboardStat?.totalGrades ?? 0,
+      },
+      {
+        id: 'total-classes',
+        iconName: 'person_add',
+        iconColor: 'green',
+        stateIcon: 'trending_up',
+        percentage: 0,
+        cardTitle: 'totalClasses',
+        info: dashboardStat?.totalClasses ?? 0,
+      },
+    ],
+    [dashboardStat],
+  )
+
+  if (fetchStatus === 'pending') return <UICardSkeleton count={2} />
+  if (fetchStatus === 'error') return null
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ">
       {cards.map((card) => (
         <UICardComponent {...card} key={card.id} />
       ))}
