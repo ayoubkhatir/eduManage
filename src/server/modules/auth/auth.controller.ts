@@ -258,7 +258,7 @@ class AuthController implements IAuthController {
     }
 
     // async fetchSchoolID(userId: ID) {
-        
+
     // }
 
     async fetchUserRoleData(userId: ID, role: UserRoleEnum) {

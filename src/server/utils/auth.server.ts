@@ -6,6 +6,7 @@ import { db } from "../db/db.ts";
 import { handlePassword } from "./handle-password.ts";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { UserGenderEnum, UserRoleEnum } from "../db/schema.ts";
+import generateId from "./id_generator.ts";
 
 const baseURL = process.env.BETTER_AUTH_URL;
 const basePath = "/api/better-auth";
@@ -37,6 +38,12 @@ export const auth = betterAuth({
     database: drizzleAdapter(db, {
         provider: "pg",
     }),
+    advanced: {
+        // generateId: () => generateId(),
+        database: {
+            generateId: () => generateId(),
+        }
+    },
     // plugins: [bearer(), openAPI(), tanstackStartCookies()],
     plugins: [openAPI(), tanstackStartCookies()],
 
@@ -79,4 +86,5 @@ export const auth = betterAuth({
         expiresIn: SESSION_EXPIRES_IN_SECONDS,
         updateAge: SESSION_UPDATE_AGE_SECONDS,
     },
+
 });

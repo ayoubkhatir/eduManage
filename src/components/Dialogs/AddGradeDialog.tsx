@@ -46,6 +46,8 @@ export function AddGradeDialog({
     resolver: standardSchemaResolver(addGradeSchema),
   })
 
+  console.log({ errors: form.formState.errors })
+
   const { mutate, isPending } = useMutation({
     mutationFn: async (data: AddGradeSchema) => {
       const response = await addGradeServerFn({ data })

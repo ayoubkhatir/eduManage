@@ -32,6 +32,7 @@ export const Route = createFileRoute('/_auth/admin/grades/')({
 function RouteComponent() {
   const { currentUser } = Route.useLoaderData()
   const adminId = currentUser.info.id
+  console.log(adminId)
 
   const { data: grades } = useSuspenseQuery({
     ...getAllGradesWithClassesAndSubjectsQueryOptions(),

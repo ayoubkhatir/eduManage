@@ -16,7 +16,7 @@ export function useAnnouncementForm(user: TeacherUser | AdminUser) {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  const { register, control, handleSubmit, reset, watch, formState } =
+  const { register, control, handleSubmit, reset, formState } =
     useForm<CreateAnnouncementType>({
       resolver: zodResolver(createAnnouncementSchema),
       mode: 'onSubmit',
@@ -32,7 +32,6 @@ export function useAnnouncementForm(user: TeacherUser | AdminUser) {
             : UserRoleEnum.TEACHER
               ? (user as TeacherUser).info.schoolId
               : '',
-        // BECAUSE THE COMPILER THINK role CAN BE ALSO A STUDENT, BUT IN THIS CASE THE user IS ONLY A TEACHER OR ADMIN
       },
     })
 

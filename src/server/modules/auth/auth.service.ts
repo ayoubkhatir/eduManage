@@ -2,9 +2,10 @@
 import { db } from "../../db/db.js";
 import { adminsTable, session, UserRoleEnum } from "../../db/schema.js";
 import { eq } from "drizzle-orm";
-import { randomBytes, randomUUID } from "node:crypto";
+import { randomBytes} from "node:crypto";
 import { SignJWT } from "jose";
 import { setCookie } from "@tanstack/react-start/server";
+import generateId from "#/server/utils/id_generator.js";
 
 const SESSION_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours instead of 7 days
 const ACCESS_TOKEN_TTL_SECONDS = 15 * 60;
@@ -132,8 +133,7 @@ class AuthService {
     }
 
     async addAdmin(data: any, schoolName: string) {
-        const schoolId = randomUUID();
-
+        const schoolId = generateId()
         const [admin] = await db.insert(adminsTable).values({
             id: schoolId,
             userId: data.user.id,

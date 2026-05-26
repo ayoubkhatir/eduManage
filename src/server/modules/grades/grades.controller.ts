@@ -65,6 +65,7 @@ class GradesController {
                 levelOrder
             })
             .returning()
+        console.log({ grade })
         return grade
     }
 

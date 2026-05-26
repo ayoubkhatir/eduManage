@@ -280,7 +280,7 @@ class TeachersController {
                 emailVerified: false
             }).returning()
 
-            const createdAccount = await this.db.insert(account).values({
+            await this.db.insert(account).values({
                 id: generateId(),
                 userId,
                 accountId: userId,
