@@ -48,7 +48,7 @@ function getInitials(name: string) {
     .slice(0, 2)
 }
 
-export default function NotificationDetail({
+export default function AnnouncementDetail({
   announcement,
 }: {
   announcement: AnnouncementWithAuthor

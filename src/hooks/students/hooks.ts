@@ -194,6 +194,50 @@ export function useEditStudent(edited: StudentUser) {
   return { studentForm, onSubmit }
 }
 
+export const getStudentsQueryOptions = ({
+  page,
+  search,
+  size,
+  sortOrder,
+  sortBy,
+  status,
+  classe,
+  grade,
+}: GetStudentsType) => ({
+  queryKey: [
+    'students',
+    page,
+    search,
+    size,
+    sortOrder,
+    sortBy,
+    status,
+    classe,
+    grade,
+  ],
+  queryFn: async () => {
+    const response = await getAllStudentsServerFn({
+      data: {
+        page,
+        search,
+        size,
+        sortOrder,
+        sortBy,
+        status,
+        classe,
+        grade,
+      },
+    })
+
+    if (response.success)
+      return {
+        data: response.data,
+        pagination: response.pagination,
+      }
+    else throw new Error(response.message)
+  },
+})
+
 // delete student
 export function useDeleteStudent() {
   const queryClient = useQueryClient()

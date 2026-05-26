@@ -6,8 +6,8 @@ import { getAllGradesWithClassesAndSubjectsQueryOptions } from '#/hooks/grades/h
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
 import type { AdminUser } from '#/types/usersTypes'
 import { motion } from 'framer-motion'
-import { AddClassDialog } from '#/components/AddClassDialog'
-import { AddSubjectDialog } from '#/components/AddSubjectDialog'
+import { AddClassDialog } from '#/components/Dialogs/AddClassDialog'
+import { AddSubjectDialog } from '#/components/Dialogs/AddSubjectDialog'
 import { DeleteClass } from '#/components/admin/DeleteComp'
 import { Trash2 } from 'lucide-react'
 
@@ -31,7 +31,15 @@ export const Route = createFileRoute('/_auth/admin/grades/$name')({
     const currentUser = (await FetchCurrentUserServerFn({
       data: context.authState.user!,
     })) as AdminUser
-    return { currentUser }
+    return { currentUser, grade }
+  },
+  staticData: {
+    breadcrumb: [
+      'Grades',
+      (match) =>
+        (match.loaderData as { grade: { name: string } })?.grade?.name ??
+        `Grades ${match.params.name}`,
+    ],
   },
 })
 

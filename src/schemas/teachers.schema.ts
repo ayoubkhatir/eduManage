@@ -32,23 +32,6 @@ export const editTeacherSchema = z
 
 
 
-export const teacherIdSchema = z.object({
-    teacherId: z.string().min(1),
-})
-
-
-
-export const teacherUserIdSchema = z.object({
-    userId: z.string().min(1),
-})
-
-
-
-export const schoolIdSchema = z.object({
-    schoolId: validCuidSchema,
-})
-
-
 
 export const assignTeacherSchema = z.object({
     schoolId: validCuidSchema,

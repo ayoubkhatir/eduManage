@@ -17,15 +17,17 @@ const logInSearchSchema = z.object({
 export type logInSearch = z.infer<typeof logInSearchSchema>
 
 const getRedirectToFromRole = (role: UserRoleEnum) =>
-  role === UserRoleEnum.ADMIN ? '/admin/dashboard' : `/${role.toLowerCase()}/calendar`
+  role === UserRoleEnum.ADMIN
+    ? '/admin/dashboard'
+    : `/${role.toLowerCase()}/calendar`
 
 export const Route = createFileRoute('/log-in')({
   beforeLoad: async () => {
-      const authState = await getSession()
-      if (authState && authState.user) {
-        const role = authState.user.role
-        throw redirect({ to: getRedirectToFromRole(role) })
-      }
+    const authState = await getSession()
+    if (authState && authState.user) {
+      const role = authState.user.role
+      throw redirect({ to: getRedirectToFromRole(role) })
+    }
   },
   component: login,
   head: () => ({

@@ -6,7 +6,6 @@ import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
 import type { AdminUser } from '#/types/usersTypes'
 import Loading from '#/components/loading'
 import { getAnnouncementsListQueryOptions } from '#/hooks/admin/hooks'
-
 import {
   AnnouncementAudienceEnum,
   announcementAudienceList,
@@ -52,34 +51,6 @@ function Announcement() {
       transition={{ duration: 0.5 }}
       className="flex-1 py-8 px-4 sm:px-8 flex flex-col w-full overflow-y-auto gap-8 relative"
     >
-      {/* <div className="flex flex-col gap-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div className="flex flex-col gap-2">
-            <h2 className="text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">
-              Announcements Dashboard
-            </h2>
-            <p className="text-slate-500 dark:text-[#9da6b9] text-base font-normal">
-              Manage and broadcast school-wide updates.
-            </p>
-          </div>
-          <Link
-            to="/admin/createAnnouncement"
-            className="flex items-center gap-2 justify-center rounded-lg h-8 px-5 py-6  bg-primary  hover:bg-blue-700 dark:hover:bg-blue-500 text-white text-md font-bold active:scale-95 cursor-pointer"
-          >
-            <button className="flex shrink-0 items-center gap-2 justify-center rounded-lg h-8 px-5 py-6  bg-primary  hover:bg-blue-700 dark:hover:bg-blue-500 text-white text-md font-bold active:scale-95 cursor-pointer">
-              <span className="material-symbols-outlined text-[18px]">add</span>
-              <span>Create Announcement</span>
-            </button>
-          </Link>
-        </div>
-
-        <Suspense fallback={<UICardSkeleton count={3} />}>
-          <AnnouncementsStatCards
-            schoolId={currentUser.info.id}
-            filters={{ audience, search }}
-          />
-        </Suspense>
-      </div> */}
       <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-white dark:bg-[#1e293b] p-2 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
         <div className="w-full md:w-96">
           <SearchInput

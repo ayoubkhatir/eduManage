@@ -7,12 +7,6 @@ import { UserGenderEnum } from '#/server/db/schema'
 import type { GetAnnouncementsFiltersSchema } from '#/types/announcementTypes'
 
 export type AnnouncementListProps = {
-  // data?: Array<AnnouncementWithAuthor>
-  // isLoading?: boolean
-  // error?: any
-  // selectedAudience: string
-  // searchText?: string
-  // detailTo?: string
   schoolId: string
   filters: GetAnnouncementsFiltersSchema
 }
@@ -55,45 +49,13 @@ const getAudienceColors = (audience: string) => {
   }
 }
 
-// const filterAnnouncements = (
-//   data: Array<AnnouncementWithAuthor>,
-//   searchText = '',
-//   selectedAudience = 'All School',
-// ) => {
-//   const lowerSearch = searchText.trim().toLowerCase()
-
-//   return data.filter((announcement) => {
-//     // Filter by audience :
-//     if (
-//       selectedAudience !== 'All School' &&
-//       announcement.audience !== selectedAudience
-//     ) {
-//       return false
-//     }
-
-//     // Filter by search text :
-//     if (!lowerSearch) return true
-
-//     const cleanContent = stripHtmlTags(announcement.description)
-//     const haystack =
-//       `${announcement.title} ${cleanContent} ${announcement.audience}`.toLowerCase()
-//     return haystack.includes(lowerSearch)
-//   })
-// }
-
 export default function AnnouncementsList({
   schoolId,
   filters,
 }: AnnouncementListProps) {
   const { status, data } = useSuspenseQuery(
     getAnnouncementsListQueryOptions(schoolId, filters),
-    // searchText ? { search: searchText } : {},
   )
-  console.log({ data })
-  // const isLoading = propIsLoading || announcementsQuery.isLoading
-  // const error = propError || announcementsQuery.error
-  // const data = propData || announcementsQuery.data // || propData
-
   if (status === 'error') {
     return (
       <p className="text-[#4c669a] dark:text-[#9da6b9] text-center py-10 pl-8 text-base font-normal">
@@ -117,18 +79,6 @@ export default function AnnouncementsList({
     )
   }
 
-  // const filteredData = filterAnnouncements(data, searchText, selectedAudience)
-
-  // if (filteredData.length === 0) {
-  //   return (
-  //     <div className="flex items-center justify-center py-20">
-  //       <p className="text-[#4b5563] dark:text-[#9da6b9]">
-  //         No announcements match your filters.
-  //       </p>
-  //     </div>
-  //   )
-  // }
-
   return (
     <div className="flex flex-col gap-4">
       {data.map((announcement) => {
@@ -143,21 +93,6 @@ export default function AnnouncementsList({
             <div
               role="button"
               tabIndex={0}
-              // onClick={() =>
-              //   navigate({
-              //     to: '/admin/announcements/$announcementId',
-              //     params: { announcementId: announcement.id },
-              //   })
-              // }
-              // onKeyDown={(e) => {
-              //   if (e.key === 'Enter' || e.key === ' ') {
-              //     e.preventDefault()
-              //     navigate({
-              //       to: '/admin/announcements/$announcementId',
-              //       params: { announcementId: announcement.id },
-              //     })
-              //   }
-              // }}
               className={`group relative flex flex-col md:flex-row gap-6 p-6 rounded-xl bg-white dark:bg-[#1e293b] border-l-4 ${audienceColors.border} shadow-sm hover:shadow-md cursor-pointer`}
               style={{ transition: 'box-shadow 0.2s ease-in-out' }}
             >

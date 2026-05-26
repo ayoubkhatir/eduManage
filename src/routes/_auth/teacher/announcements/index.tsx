@@ -3,7 +3,6 @@ import { Suspense } from 'react'
 import AnnouncementsList from '#/components/announcementsList'
 import { motion } from 'framer-motion'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
-import type { TeacherUser } from '#/types/teacherTypes'
 import Loading from '#/components/loading'
 import { getAnnouncementsListQueryOptions } from '#/hooks/admin/hooks'
 import {
@@ -16,6 +15,7 @@ import {
 } from '#/server/db/schema'
 import { SearchInput } from '#/components/admin/SearchInput'
 import { getAnnouncementsFiltersSchema } from '#/schemas/announcement.schema'
+import type { TeacherUser } from '#/types/teacherTypes'
 
 export const Route = createFileRoute('/_auth/teacher/announcements/')({
   component: Announcement,

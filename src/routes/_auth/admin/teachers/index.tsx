@@ -16,7 +16,7 @@ import { TeachersStatCards } from '#/components/admin/cards/UICard'
 import type { GetTeachersType } from '#/types/teacherTypes'
 import { motion } from 'framer-motion'
 import { StatusFilter, SubjectsFilter } from '#/components/admin/FilterComp.jsx'
-import { getAllSubjectsQueryOptions } from '#/server/modules/subjects/subjects.controller'
+import { getAllSubjectsQueryOptions } from '#/hooks/subjects/hooks'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
 import type { AdminUser } from '#/types/usersTypes'
 import { StatusEnum } from '#/server/db/schema'
@@ -25,9 +25,9 @@ const getTeachersQueryOptions = ({
   page,
   search,
   size,
-  status,
   sortOrder,
   sortBy,
+  status,
   subject,
 }: GetTeachersType) => ({
   queryKey: [
@@ -76,6 +76,9 @@ export const Route = createFileRoute('/_auth/admin/teachers/')({
     return { currentUser }
   },
   validateSearch: zodValidator(getTeachersSchema),
+  staticData: {
+    breadcrumb: 'Teachers',
+  },
 })
 
 function RouteComponent() {

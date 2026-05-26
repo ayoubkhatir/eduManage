@@ -16,6 +16,9 @@ export const Route = createFileRoute('/_auth/admin/teachers/add')({
     })) as AdminUser
     return { currentUser }
   },
+  staticData: {
+    breadcrumb: ['Teachers', 'Add'],
+  },
   head: () => ({
     meta: [{ title: 'Admin | Add Teacher - EduManage' }],
   }),

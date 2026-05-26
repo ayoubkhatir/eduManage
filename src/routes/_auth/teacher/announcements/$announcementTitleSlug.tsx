@@ -1,8 +1,8 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { getAnnouncementByTitleSlugQueryOptions } from '#/hooks/admin/hooks'
-import NotificationDetail from '#/components/notificationDetail'
 import Loading from '#/components/loading'
+import AnnouncementDetail from '#/components/admin/Announcement/AnnouncementDetail'
 
 export const Route = createFileRoute(
   '/_auth/teacher/announcements/$announcementTitleSlug',
@@ -63,7 +63,7 @@ function AnnouncementDetailPage() {
         </span>
         Back to announcements
       </Link>
-      <NotificationDetail announcement={announcement}></NotificationDetail>
+      <AnnouncementDetail announcement={announcement} />
     </div>
   )
 }

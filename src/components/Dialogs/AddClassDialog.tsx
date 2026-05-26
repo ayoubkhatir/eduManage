@@ -21,7 +21,7 @@ import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
 import { useAddClass } from '#/hooks/classes/hooks'
 // import { getAllClassesQueryOptions } from '#/server/modules/classes/classes.controller'
 // import SelectWrapper from './admin/Wrappers/SelectWrapper'
-import InputWrapper from './admin/Wrappers/InputWrapper'
+import InputWrapper from '../admin/Wrappers/InputWrapper'
 
 type AddClassDialogProps = {
   schoolId: string
@@ -55,7 +55,7 @@ export function AddClassDialog({
     ...getAllGradesQueryOptions(),
   })
 
-  // const { data: classes } = useQuery(getAllClassesQueryOptions(schoolId)) 
+  // const { data: classes } = useQuery(getAllClassesQueryOptions(schoolId))
   // this line with the select wrapper are used to map all the existing classes
 
   useEffect(() => {

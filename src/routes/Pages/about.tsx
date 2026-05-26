@@ -93,7 +93,7 @@ function Story() {
           <FadeIn delay={100}>
             <div className="relative">
               <div className="rounded-2xl border border-slate-200/80 bg-white p-2 shadow-2xl shadow-slate-900/5 dark:border-white/8 dark:bg-white/3 dark:shadow-black/30">
-                <div className="flex aspect-[4/3] items-center justify-center rounded-xl bg-linear-to-br from-primary/5 to-blue-500/5">
+                <div className="flex aspect-4/3 items-center justify-center rounded-xl bg-linear-to-br from-primary/5 to-blue-500/5">
                   <div className="text-center">
                     <Icon
                       name="diversity_3"

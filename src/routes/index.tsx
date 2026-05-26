@@ -14,7 +14,9 @@ import {
 import { getSession } from '#/lib/auth'
 
 const getRedirectToFromRole = (role: UserRoleEnum) =>
-  role === UserRoleEnum.ADMIN ? '/admin/dashboard' : `/${role.toLowerCase()}/calendar`
+  role === UserRoleEnum.ADMIN
+    ? '/admin/dashboard'
+    : `/${role.toLowerCase()}/calendar`
 
 export const Route = createFileRoute('/')({
   beforeLoad: async () => {
@@ -24,7 +26,9 @@ export const Route = createFileRoute('/')({
       throw redirect({ to: getRedirectToFromRole(role) })
     }
   },
-  staticData: true,
+  // staticData: {
+  //   breadcrumb: ['EduManage', 'Home'],
+  // },
   component: App,
   head: () => ({
     meta: [
@@ -67,7 +71,7 @@ function Navbar() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <a href="#" className="flex items-center gap-2.5 group">
-          <div className="flex size-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary-soft text-white shadow-md shadow-primary/20 transition-all group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-primary/30">
+          <div className="flex size-9 items-center justify-center rounded-xl bg-linear-to-br from-primary to-primary-soft text-white shadow-md shadow-primary/20 transition-all group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-primary/30">
             <Icon name="school" className="text-xl" />
           </div>
           <span className="text-lg font-bold tracking-tight text-foreground">

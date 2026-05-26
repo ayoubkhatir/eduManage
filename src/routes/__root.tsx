@@ -2,6 +2,7 @@ import {
   HeadContent,
   Scripts,
   createRootRouteWithContext,
+  type AnyRouteMatch,
 } from '@tanstack/react-router'
 
 // import appCss from '../styles.css?url'
@@ -19,6 +20,17 @@ import { Toaster } from '#/components/ui/sonner'
 import { ThemeProvider } from '#/features/theme/theme-provider'
 
 const THEME_INIT_SCRIPT = `(function(){try{var stored=window.localStorage.getItem('theme');var mode=(stored==='light'||stored==='dark'||stored==='auto')?stored:'auto';var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var resolved=mode==='auto'?(prefersDark?'dark':'light'):mode;var root=document.documentElement;root.classList.remove('light','dark');root.classList.add(resolved);if(mode==='auto'){root.removeAttribute('data-theme')}else{root.setAttribute('data-theme',mode)}root.style.colorScheme=resolved;}catch(e){}})();`
+
+export type BreadcrumbItemValue =
+  | string
+  | ((match: AnyRouteMatch) => string | string[])
+export type BreadcrumbValue = BreadcrumbItemValue | BreadcrumbItemValue[]
+
+declare module '@tanstack/react-router' {
+  interface StaticDataRouteOption {
+    breadcrumb?: BreadcrumbValue
+  }
+}
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   {
@@ -58,8 +70,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         suppressHydrationWarning
         className="font-sans antialiased wrap-anywhere selection:bg-[rgba(79,184,178,0.24)]"
       >
-        <Toaster richColors closeButton position="top-center" />
-
         <Root>{children}</Root>
         <Scripts />
         <script
@@ -92,17 +102,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 
 import { AnimatePresence } from 'framer-motion'
 
-
 function Root({ children }: { children: ReactNode }) {
-  
-
   return (
     <>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
-          <AnimatePresence mode="wait">
-              {children}
-          </AnimatePresence>
+          <Toaster richColors closeButton position="top-center" />
+          <AnimatePresence mode="wait">{children}</AnimatePresence>
         </ThemeProvider>
       </QueryClientProvider>
     </>

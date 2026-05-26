@@ -26,7 +26,7 @@ export default function Loading({
         </h2>
       ) : null}
       {description ? (
-        <p className="max-w-sm text-center text-muted-foreground text-gray-600 dark:text-gray-400">
+        <p className="max-w-sm text-center text-gray-600 dark:text-gray-400">
           {description}
         </p>
       ) : null}

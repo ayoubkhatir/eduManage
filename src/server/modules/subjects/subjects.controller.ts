@@ -2,8 +2,6 @@ import type { AddSubjectSchema, SubjectWithGrade } from "#/types/subjectsTypes";
 import { db, type Database } from "#/server/db/db";
 import { gradesTable, gradeSubjectsTable, StatusEnum, studentsTable, subjectsTable, teachersTable } from "#/server/db/schema";
 import { and, eq, inArray } from "drizzle-orm";
-import { getAllSchoolSubjectsServerFn } from "./subjects.server-functions";
-import type { ID } from "#/types/authTypes";
 
 class SubjectsController {
     constructor(private readonly db: Database) { }
@@ -172,17 +170,3 @@ class SubjectsController {
     }
 }
 export const subjectsController = new SubjectsController(db)
-
-export const getAllSubjectsQueryOptions = (schoolId: ID) => {
-    return {
-        queryKey: ['subjects'],
-        queryFn: async () => {
-            const response = await getAllSchoolSubjectsServerFn({ data: schoolId })
-            if (response.success) {
-                return response.data
-            }
-
-            else throw new Error
-        },
-    }
-}

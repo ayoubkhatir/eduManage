@@ -54,7 +54,7 @@ export default function AnnouncementCard(props: AnnouncementCardType) {
   const statusStyle = statusStyles[props.status] ?? statusStyles.PUBLISHED
 
   return (
-    <article className="group relative flex flex-col gap-4 rounded-2xl border border-slate-200/70 bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-white/[0.06] dark:bg-white/[0.02]">
+    <article className="group relative flex flex-col gap-4 rounded-2xl border border-slate-200/70 bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-white/6 dark:bg-white/2">
       {/* Top row: badges */}
       <div className="flex flex-wrap items-center gap-2">
         {props.isPinned && (

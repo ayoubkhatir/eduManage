@@ -63,12 +63,6 @@ class AnnouncementController {
                         ),
                     )
                     : undefined,
-                // eq(announcementsTable.audience, filters.audience),
-                // or(
-                //     ilike(announcementsTable.title, `%${filters.search}%`),
-                //     ilike(announcementsTable.slug, `%${filters.search}%`),
-                //     ilike(announcementsTable.description, `%${filters.search}%`)
-                //  )
             ),
             limit: 10,
             with: {

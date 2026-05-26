@@ -1,5 +1,4 @@
 import { getAnnouncementsListQueryOptions } from '#/hooks/admin/hooks'
-
 import { getStudentsStatsServerFn } from '#/server/modules/students/students.server-functions'
 import { getTeachersStatsServerFn } from '#/server/modules/teachers/teachers.server-functions'
 import type { GetAnnouncementsFiltersSchema } from '#/types/announcementTypes'
@@ -56,7 +55,7 @@ export default function UICardComponent({
 
   return (
     <div className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md dark:border-slate-700 dark:bg-slate-800 dark:hover:border-slate-600">
-      <div className="absolute -right-4 -top-4 h-20 w-20 rounded-full bg-gradient-to-br from-transparent to-slate-50/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100 dark:to-slate-700/30" />
+      <div className="absolute -right-4 -top-4 h-20 w-20 rounded-full bg-linear-to-br from-transparent to-slate-50/50 opacity-0 transition-opacity duration-200 group-hover:opacity-100 dark:to-slate-700/30" />
       <div className="relative">
         <div className="mb-4 flex items-start justify-between gap-4">
           <div

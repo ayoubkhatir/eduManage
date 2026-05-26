@@ -2,9 +2,10 @@ import { Controller } from 'react-hook-form'
 import QuillEditor from '@/components/ui/quillEditor'
 import { useAnnouncementForm } from '@/hooks/use-announcement-form'
 import type { AdminUser } from '#/types/usersTypes'
+import type { TeacherUser } from '#/types/teacherTypes'
 import { announcementAudienceList } from '#/server/db/schema'
 
-export function AnnouncementForm({ user }: { user: AdminUser }) {
+export function AnnouncementForm({ user }: { user: AdminUser | TeacherUser }) {
   const {
     register,
     control,
@@ -59,9 +60,6 @@ export function AnnouncementForm({ user }: { user: AdminUser }) {
                   {audience}
                 </option>
               ))}
-              {/* <option value="All School">All School</option>
-              <option value="Students">Students</option>
-              <option value="Teachers">Teachers</option> */}
             </select>
             {errors.audience && (
               <span className="text-xs text-red-500 mt-1">
@@ -69,7 +67,6 @@ export function AnnouncementForm({ user }: { user: AdminUser }) {
               </span>
             )}
           </div>
-
           <div className="flex flex-col gap-2">
             <label className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
               Content
