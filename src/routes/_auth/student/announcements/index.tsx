@@ -82,7 +82,7 @@ function Announcement() {
         }
       >
         <AnnouncementsList
-          schoolId={currentUser.info.id}
+          schoolId={currentUser.info.schoolId}
           filters={{ search, audience }}
           role="student"
         />
