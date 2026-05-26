@@ -73,10 +73,10 @@ export const Route = createFileRoute('/_auth/teacher/subjects/$subjectCode')({
   ),
   loaderDeps: ({ search }) => search,
   loader: async ({ context, params: { subjectCode }, deps }) => {
-      const currentUser = (await FetchCurrentUserServerFn({
-            data: context.authState.user!,
-          })) as TeacherUser
-    
+    const currentUser = (await FetchCurrentUserServerFn({
+      data: context.authState.user!,
+    })) as TeacherUser
+
     if (!currentUser) throw new Error('Unauthorized')
 
     await context.queryClient.ensureQueryData(
@@ -88,6 +88,14 @@ export const Route = createFileRoute('/_auth/teacher/subjects/$subjectCode')({
     )
 
     return { currentUser }
+  },
+  staticData: {
+    breadcrumb: [
+      'Subject',
+      (match) =>
+        (match.loaderData as { subject: { name: string } })?.subject?.name ??
+        `Subject ${match.params.subjectCode}`,
+    ],
   },
 })
 
@@ -109,7 +117,10 @@ function StudentResourcesPage() {
 
 const typeOptions = [
   { value: 'all', label: 'All types' },
-  ...Object.values(ResourceTypeEnum).map((t) => ({ value: t, label: t.toUpperCase() })),
+  ...Object.values(ResourceTypeEnum).map((t) => ({
+    value: t,
+    label: t.toUpperCase(),
+  })),
 ]
 
 const sortOptions = [
@@ -164,8 +175,9 @@ function StudentResourcesContent() {
 
   const activeFilterCount = useMemo(
     () =>
-      [search.fileName, search.type, search.size, search.dateAdded].filter(Boolean).length +
-      (search.classId ? 1 : 0),
+      [search.fileName, search.type, search.size, search.dateAdded].filter(
+        Boolean,
+      ).length + (search.classId ? 1 : 0),
     [search],
   )
 
@@ -205,7 +217,9 @@ function StudentResourcesContent() {
       setResourceToDelete(undefined)
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : 'Failed to delete resource')
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to delete resource',
+      )
     },
   })
 
@@ -237,7 +251,8 @@ function StudentResourcesContent() {
               Learning Resources
             </h1>
             <p className="mt-2 text-base text-[#4c669a] dark:text-gray-400">
-              Manage and organize educational materials, assignments, and reference documents.
+              Manage and organize educational materials, assignments, and
+              reference documents.
             </p>
           </div>
           <AddResourceDialog
@@ -262,7 +277,6 @@ function StudentResourcesContent() {
             </div>
 
             <Select
-              
               value={search.type || 'all'}
               onValueChange={(v) =>
                 updateSearch({ type: v === 'all' ? '' : v, pageIndex: 1 })
@@ -326,7 +340,10 @@ function StudentResourcesContent() {
             <Select
               value={search.sortBy}
               onValueChange={(v) =>
-                updateSearch({ sortBy: v as typeof search.sortBy, pageIndex: 1 })
+                updateSearch({
+                  sortBy: v as typeof search.sortBy,
+                  pageIndex: 1,
+                })
               }
             >
               <SelectTrigger className="h-10 w-full rounded-lg border-border bg-muted/30 text-sm shadow-none transition-colors hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring/40">
@@ -358,7 +375,9 @@ function StudentResourcesContent() {
               {search.classId && (
                 <button
                   type="button"
-                  onClick={() => updateSearch({ classId: undefined, pageIndex: 1 })}
+                  onClick={() =>
+                    updateSearch({ classId: undefined, pageIndex: 1 })
+                  }
                   className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                 >
                   <X className="size-3.5" />
@@ -370,7 +389,8 @@ function StudentResourcesContent() {
           {hasActiveFilters && (
             <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-4">
               <span className="text-xs font-medium text-muted-foreground">
-                {activeFilterCount} active filter{activeFilterCount !== 1 ? 's' : ''}
+                {activeFilterCount} active filter
+                {activeFilterCount !== 1 ? 's' : ''}
               </span>
               <button
                 type="button"
@@ -389,7 +409,10 @@ function StudentResourcesContent() {
             <div className="space-y-4">
               <div className="flex items-center gap-3 border-b border-border pb-3">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className="h-3 flex-1 animate-pulse rounded bg-muted" />
+                  <div
+                    key={i}
+                    className="h-3 flex-1 animate-pulse rounded bg-muted"
+                  />
                 ))}
               </div>
               {Array.from({ length: 5 }).map((_, i) => (
@@ -447,7 +470,6 @@ function StudentResourcesContent() {
         >
           <AlertDialogContent size="sm">
             <AlertDialogHeader>
-              
               <AlertDialogTitle>
                 Delete {resourceToDelete?.fileName ?? 'this resource'}?
               </AlertDialogTitle>

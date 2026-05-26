@@ -83,6 +83,14 @@ const getAssessmentMarksQueryOptions = (assessmentId?: string) =>
 
 export const Route = createFileRoute('/_auth/teacher/marks/$classId')({
   component: RouteComponent,
+  staticData: {
+    breadcrumb: [
+      'Marks',
+      (match) =>
+        (match.loaderData as { Marks: { name: string } })?.Marks?.name ??
+        `Marks ${match.params.name}`,
+    ],
+  },
 })
 
 function RouteComponent() {
@@ -273,7 +281,12 @@ function RouteComponent() {
   const maxScore = assessmentMarksQuery.data?.assessment.maxScore ?? 20
 
   return (
-    <motion.main initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex-1 min-w-0 ">
+    <motion.main
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      className="flex-1 min-w-0 "
+    >
       <div className="px-6 py-6 space-y-6">
         <div className="flex flex-col gap-3">
           <Link
@@ -878,9 +891,7 @@ function EmptyState({
       <h4 className="mt-3 font-semibold text-foreground dark:text-white">
         {title}
       </h4>
-      <p className="mt-1 text-sm text-muted-foreground">
-        {description}
-      </p>
+      <p className="mt-1 text-sm text-muted-foreground">{description}</p>
     </div>
   )
 }

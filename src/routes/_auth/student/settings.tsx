@@ -14,6 +14,9 @@ export const Route = createFileRoute('/_auth/student/settings')({
     })) as StudentUser
     return { currentUser }
   },
+  staticData:{
+    breadcrumb: 'Settings',
+  },
   head: () => ({
     meta: [{ title: 'Student | Settings - EduManage' }],
   }),

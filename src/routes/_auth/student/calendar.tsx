@@ -8,9 +8,7 @@ import type { EventPropGetter, View } from 'react-big-calendar'
 import type { OwnerEvent } from '@/components/admin/calendar/model'
 import { CalendarToolbar } from '@/components/admin/calendar/CalendarToolbar'
 import { EventDetailDialog } from '@/components/admin/calendar/EventDetailDialog'
-import {
-  EVENT_COLORS,
-} from '@/components/admin/calendar/model'
+import { EVENT_COLORS } from '@/components/admin/calendar/model'
 import { UpcomingEventsPanel } from '@/components/admin/calendar/UpcomingEventsPanel'
 import useGetEvents from '@/hooks/events/hooks'
 import { motion } from 'framer-motion'
@@ -32,7 +30,9 @@ export const Route = createFileRoute('/_auth/student/calendar')({
   loader: async ({ context }) => {
     const user = context?.authState?.user
     if (!user) throw new Error('Missing auth state')
-    const currentUser = (await FetchCurrentUserServerFn({ data: user })) as StudentUser
+    const currentUser = (await FetchCurrentUserServerFn({
+      data: user,
+    })) as StudentUser
     return { currentUser }
   },
   pendingComponent: () => (
@@ -45,6 +45,9 @@ export const Route = createFileRoute('/_auth/student/calendar')({
   head: () => ({
     meta: [{ title: 'Student | School Calendar - EduManage' }],
   }),
+  staticData: {
+    breadcrumb: 'Calendar',
+  },
 })
 
 function RouteComponent() {
@@ -97,7 +100,10 @@ function StudentCalendarContent() {
         eventDate.setHours(0, 0, 0, 0)
         const nowDate = new Date(now)
         nowDate.setHours(0, 0, 0, 0)
-        return eventDate.getTime() === nowDate.getTime() || eventDate.getTime() === tomorrowStart.getTime()
+        return (
+          eventDate.getTime() === nowDate.getTime() ||
+          eventDate.getTime() === tomorrowStart.getTime()
+        )
       })
       .sort((a, b) => a.start.getTime() - b.start.getTime())
   }, [events])
@@ -148,13 +154,17 @@ function StudentCalendarContent() {
         className="w-full h-full group relative  border border-zinc-800  p-6 transition-all duration-300 hover:border-indigo-500 hover:shadow-[inset_0_-12px_12px_rgba(99,102,241,0.45)] cursor-pointer"
       >
         {children}
-        
       </div>
     )
   }
 
   return (
-    <motion.main initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex flex-col md:flex-row p-6 gap-6 min-h-screen">
+    <motion.main
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      className="flex flex-col md:flex-row p-6 gap-6 min-h-screen"
+    >
       <aside className="w-full md:w-72 flex flex-col gap-5 shrink-0">
         <UpcomingEventsPanel
           upcomingEvents={upcomingEvents}

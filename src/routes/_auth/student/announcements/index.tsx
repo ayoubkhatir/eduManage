@@ -35,6 +35,9 @@ export const Route = createFileRoute('/_auth/student/announcements/')({
   head: () => ({
     meta: [{ title: 'Owner | Announcements - EduManage' }],
   }),
+  staticData: {
+    breadcrumb: 'Announcements',
+  },
 })
 
 function Announcement() {

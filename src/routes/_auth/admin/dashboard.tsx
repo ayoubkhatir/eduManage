@@ -157,7 +157,7 @@ function RouteComponent() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-primary-deep p-6 shadow-lg shadow-primary/20"
+                className="relative overflow-hidden rounded-2xl bg-linear-to-br from-primary to-primary-deep p-6 shadow-lg shadow-primary/20"
               >
                 <div className="absolute inset-0 bg-white/5" />
                 <div className="relative z-10">

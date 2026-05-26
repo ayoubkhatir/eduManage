@@ -1,5 +1,3 @@
-
-
 import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 import { zodValidator } from '@tanstack/zod-adapter'
@@ -19,16 +17,20 @@ export const Route = createFileRoute('/_auth/student/subjects/$subjectCode')({
   ),
   loaderDeps: ({ search }) => search,
   loader: async ({ context, params: { subjectCode }, deps }) => {
-    // IMPORTANT:
-    // replace this with the real student profile id if authState.user.id is only the auth user id
-
     await context.queryClient.ensureQueryData(
       getResourcesQueryOptions({
         ...deps,
         subjectCode,
-        // studentId: context.authState.user.roleId,
       }),
     )
+  },
+  staticData: {
+    breadcrumb: [
+      'Subject',
+      (match) =>
+        (match.loaderData as { subject: { name: string } })?.subject?.name ??
+        `Subject ${match.params.subjectCode}`,
+    ],
   },
 })
 

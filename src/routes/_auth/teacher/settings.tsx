@@ -17,26 +17,15 @@ export const Route = createFileRoute('/_auth/teacher/settings')({
     })) as TeacherUser
     return { currentUser }
   },
+  staticData: {
+    breadcrumb: 'Settings',
+  },
   head: () => ({
     meta: [{ title: 'Teacher | Settings - EduManage' }],
   }),
-  // loader: async () => {
-  // const user = context.authState.user
-  // if (!user) throw new Error('Unauthorized')
-  // const userId = user.id
-  // await context.queryClient.prefetchQuery({
-  //   ...getTeacherQueryOptions({ fetchBy: 'userId', userId }),
-  // })
-  // },
 })
 
 function RouteComponent() {
-  // const user = useAuth((s) => s.user) as TeacherUser | null
-  // if (!user) throw new Error('Unauthorized')
-  // const { data: teacherData } = useSuspenseQuery({
-  //   ...getTeacherQueryOptions({ fetchBy: 'userId', userId: user.id }),
-  // })
-
   const { currentUser } = Route.useLoaderData()
   return (
     <Skeleton name="teacher-settings-page" loading={false}>

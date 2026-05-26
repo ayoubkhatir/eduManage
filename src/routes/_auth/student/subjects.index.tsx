@@ -28,6 +28,9 @@ export const Route = createFileRoute('/_auth/student/subjects/')({
       ...getStudentSubjectsQueryOptions(studentId),
     })
   },
+  staticData: {
+    breadcrumb: 'Subjects',
+  },
 })
 
 function StudentSubjectsPending() {
@@ -59,7 +62,12 @@ function StudentSubjectsContent() {
   const subjects = (data ?? []) as SubjectItem[]
 
   return (
-    <motion.main initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }} className="flex-1 overflow-y-auto p-4 pt-2 md:p-6">
+    <motion.main
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      className="flex-1 overflow-y-auto p-4 pt-2 md:p-6"
+    >
       <div className="mx-auto flex max-w-7xl flex-col gap-6">
         {/* Page heading */}
         <div>
@@ -155,9 +163,7 @@ function InfoBox({ label, value }: { label: string; value: string }) {
       <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
         {label}
       </p>
-      <p className="mt-1 text-sm font-semibold text-foreground">
-        {value}
-      </p>
+      <p className="mt-1 text-sm font-semibold text-foreground">{value}</p>
     </div>
   )
 }

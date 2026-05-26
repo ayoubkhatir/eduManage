@@ -10,6 +10,9 @@ export const Route = createFileRoute('/_auth/teacher/createAnnouncement')({
     })) as AdminUser
     return { currentUser }
   },
+  staticData: {
+    breadcrumb: 'Add',
+  },
   component: RouteComponent,
 })
 

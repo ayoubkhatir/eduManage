@@ -51,7 +51,6 @@ import { Route as AuthAdminAnnouncementsIndexRouteImport } from './routes/_auth/
 import { Route as AuthTeacherSubjectsSubjectCodeRouteImport } from './routes/_auth/teacher/subjects/$subjectCode'
 import { Route as AuthTeacherMarksClassIdRouteImport } from './routes/_auth/teacher/marks/$classId'
 import { Route as AuthTeacherClassesClassIdRouteImport } from './routes/_auth/teacher/classes/$classId'
-import { Route as AuthTeacherAttendanceClassIdRouteImport } from './routes/_auth/teacher/attendance/$classId'
 import { Route as AuthTeacherAnnouncementsAnnouncementTitleSlugRouteImport } from './routes/_auth/teacher/announcements/$announcementTitleSlug'
 import { Route as AuthStudentSubjectsSubjectCodeRouteImport } from './routes/_auth/student/subjects.$subjectCode'
 import { Route as AuthStudentAnnouncementsAnnouncementTitleSlugRouteImport } from './routes/_auth/student/announcements/$announcementTitleSlug'
@@ -282,12 +281,6 @@ const AuthTeacherClassesClassIdRoute =
     path: '/classes/$classId',
     getParentRoute: () => AuthTeacherRoute,
   } as any)
-const AuthTeacherAttendanceClassIdRoute =
-  AuthTeacherAttendanceClassIdRouteImport.update({
-    id: '/attendance/$classId',
-    path: '/attendance/$classId',
-    getParentRoute: () => AuthTeacherRoute,
-  } as any)
 const AuthTeacherAnnouncementsAnnouncementTitleSlugRoute =
   AuthTeacherAnnouncementsAnnouncementTitleSlugRouteImport.update({
     id: '/announcements/$announcementTitleSlug',
@@ -390,7 +383,6 @@ export interface FileRoutesByFullPath {
   '/student/announcements/$announcementTitleSlug': typeof AuthStudentAnnouncementsAnnouncementTitleSlugRoute
   '/student/subjects/$subjectCode': typeof AuthStudentSubjectsSubjectCodeRoute
   '/teacher/announcements/$announcementTitleSlug': typeof AuthTeacherAnnouncementsAnnouncementTitleSlugRoute
-  '/teacher/attendance/$classId': typeof AuthTeacherAttendanceClassIdRoute
   '/teacher/classes/$classId': typeof AuthTeacherClassesClassIdRoute
   '/teacher/marks/$classId': typeof AuthTeacherMarksClassIdRoute
   '/teacher/subjects/$subjectCode': typeof AuthTeacherSubjectsSubjectCodeRoute
@@ -445,7 +437,6 @@ export interface FileRoutesByTo {
   '/student/announcements/$announcementTitleSlug': typeof AuthStudentAnnouncementsAnnouncementTitleSlugRoute
   '/student/subjects/$subjectCode': typeof AuthStudentSubjectsSubjectCodeRoute
   '/teacher/announcements/$announcementTitleSlug': typeof AuthTeacherAnnouncementsAnnouncementTitleSlugRoute
-  '/teacher/attendance/$classId': typeof AuthTeacherAttendanceClassIdRoute
   '/teacher/classes/$classId': typeof AuthTeacherClassesClassIdRoute
   '/teacher/marks/$classId': typeof AuthTeacherMarksClassIdRoute
   '/teacher/subjects/$subjectCode': typeof AuthTeacherSubjectsSubjectCodeRoute
@@ -502,7 +493,6 @@ export interface FileRoutesById {
   '/_auth/student/announcements/$announcementTitleSlug': typeof AuthStudentAnnouncementsAnnouncementTitleSlugRoute
   '/_auth/student/subjects/$subjectCode': typeof AuthStudentSubjectsSubjectCodeRoute
   '/_auth/teacher/announcements/$announcementTitleSlug': typeof AuthTeacherAnnouncementsAnnouncementTitleSlugRoute
-  '/_auth/teacher/attendance/$classId': typeof AuthTeacherAttendanceClassIdRoute
   '/_auth/teacher/classes/$classId': typeof AuthTeacherClassesClassIdRoute
   '/_auth/teacher/marks/$classId': typeof AuthTeacherMarksClassIdRoute
   '/_auth/teacher/subjects/$subjectCode': typeof AuthTeacherSubjectsSubjectCodeRoute
@@ -559,7 +549,6 @@ export interface FileRouteTypes {
     | '/student/announcements/$announcementTitleSlug'
     | '/student/subjects/$subjectCode'
     | '/teacher/announcements/$announcementTitleSlug'
-    | '/teacher/attendance/$classId'
     | '/teacher/classes/$classId'
     | '/teacher/marks/$classId'
     | '/teacher/subjects/$subjectCode'
@@ -614,7 +603,6 @@ export interface FileRouteTypes {
     | '/student/announcements/$announcementTitleSlug'
     | '/student/subjects/$subjectCode'
     | '/teacher/announcements/$announcementTitleSlug'
-    | '/teacher/attendance/$classId'
     | '/teacher/classes/$classId'
     | '/teacher/marks/$classId'
     | '/teacher/subjects/$subjectCode'
@@ -670,7 +658,6 @@ export interface FileRouteTypes {
     | '/_auth/student/announcements/$announcementTitleSlug'
     | '/_auth/student/subjects/$subjectCode'
     | '/_auth/teacher/announcements/$announcementTitleSlug'
-    | '/_auth/teacher/attendance/$classId'
     | '/_auth/teacher/classes/$classId'
     | '/_auth/teacher/marks/$classId'
     | '/_auth/teacher/subjects/$subjectCode'
@@ -1004,13 +991,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthTeacherClassesClassIdRouteImport
       parentRoute: typeof AuthTeacherRoute
     }
-    '/_auth/teacher/attendance/$classId': {
-      id: '/_auth/teacher/attendance/$classId'
-      path: '/attendance/$classId'
-      fullPath: '/teacher/attendance/$classId'
-      preLoaderRoute: typeof AuthTeacherAttendanceClassIdRouteImport
-      parentRoute: typeof AuthTeacherRoute
-    }
     '/_auth/teacher/announcements/$announcementTitleSlug': {
       id: '/_auth/teacher/announcements/$announcementTitleSlug'
       path: '/announcements/$announcementTitleSlug'
@@ -1161,7 +1141,6 @@ interface AuthTeacherRouteChildren {
   AuthTeacherCreateAnnouncementRoute: typeof AuthTeacherCreateAnnouncementRoute
   AuthTeacherSettingsRoute: typeof AuthTeacherSettingsRoute
   AuthTeacherAnnouncementsAnnouncementTitleSlugRoute: typeof AuthTeacherAnnouncementsAnnouncementTitleSlugRoute
-  AuthTeacherAttendanceClassIdRoute: typeof AuthTeacherAttendanceClassIdRoute
   AuthTeacherClassesClassIdRoute: typeof AuthTeacherClassesClassIdRoute
   AuthTeacherMarksClassIdRoute: typeof AuthTeacherMarksClassIdRoute
   AuthTeacherSubjectsSubjectCodeRoute: typeof AuthTeacherSubjectsSubjectCodeRoute
@@ -1176,7 +1155,6 @@ const AuthTeacherRouteChildren: AuthTeacherRouteChildren = {
   AuthTeacherSettingsRoute: AuthTeacherSettingsRoute,
   AuthTeacherAnnouncementsAnnouncementTitleSlugRoute:
     AuthTeacherAnnouncementsAnnouncementTitleSlugRoute,
-  AuthTeacherAttendanceClassIdRoute: AuthTeacherAttendanceClassIdRoute,
   AuthTeacherClassesClassIdRoute: AuthTeacherClassesClassIdRoute,
   AuthTeacherMarksClassIdRoute: AuthTeacherMarksClassIdRoute,
   AuthTeacherSubjectsSubjectCodeRoute: AuthTeacherSubjectsSubjectCodeRoute,

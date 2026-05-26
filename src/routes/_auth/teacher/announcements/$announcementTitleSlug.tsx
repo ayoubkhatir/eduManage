@@ -3,6 +3,7 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import { getAnnouncementByTitleSlugQueryOptions } from '#/hooks/admin/hooks'
 import Loading from '#/components/loading'
 import AnnouncementDetail from '#/components/admin/Announcement/AnnouncementDetail'
+import type { AnnouncementWithAuthor } from '#/types/announcementTypes'
 
 export const Route = createFileRoute(
   '/_auth/teacher/announcements/$announcementTitleSlug',
@@ -25,6 +26,15 @@ export const Route = createFileRoute(
     await context.queryClient.ensureQueryData({
       ...getAnnouncementByTitleSlugQueryOptions(params.announcementTitleSlug),
     })
+  },
+  staticData: {
+    breadcrumb: [
+      'Announcements',
+      (match) =>
+        (match.loaderData as { announcement: AnnouncementWithAuthor })
+          ?.announcement?.title ??
+        `Announcement ${match.params.announcementTitleSlug}`,
+    ],
   },
 })
 
