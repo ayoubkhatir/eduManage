@@ -3,13 +3,14 @@ import { Skeleton } from 'boneyard-js/react'
 import { queryOptions, useQuery, keepPreviousData } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { zodValidator } from '@tanstack/zod-adapter'
-import type { TeacherClassItem } from '#/types/teacherTypes'
+import type { TeacherClassItem, TeacherUser } from '#/types/teacherTypes'
 import { getTeacherClassesDashboardServerFn } from '#/server/modules/teachers/teachers.server-functions'
 import {
   getTeacherClassesSchema,
   type GetTeacherClassesSchema,
 } from '#/schemas/teachers.schema'
 import { motion } from 'framer-motion'
+import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
 
 /**
  * Route: /teacher/classes
@@ -62,12 +63,12 @@ import { motion } from 'framer-motion'
 //   return response.data
 // }
 
-const teacherId = 'cjeqi4oqhvn5'
 const getTeacherClassesQueryOptions = ({
   page,
   search,
   size,
   status,
+  teacherId,
 }: GetTeacherClassesSchema) =>
   queryOptions({
     queryKey: ['teacher-classes', page, search, size, status],
@@ -91,9 +92,15 @@ export const Route = createFileRoute('/_auth/teacher/classes/')({
   ),
   loaderDeps: ({ search }) => search,
   loader: async ({ context, deps }) => {
+    const currentUser = await (FetchCurrentUserServerFn({
+      data: context.authState.user!,
+    })) as TeacherUser
+
+    if (!currentUser) throw new Error('Unauthorized')
     await context.queryClient.ensureQueryData(
-      getTeacherClassesQueryOptions({ ...deps, teacherId }),
+      getTeacherClassesQueryOptions({ ...deps, teacherId : currentUser!.info!.id }),
     )
+    return { currentUser }
   },
   staticData: {
     breadcrumb: 'Classes',
@@ -120,6 +127,7 @@ function RouteComponent() {
 }
 
 function TeacherClassesContent() {
+  const { currentUser } = Route.useLoaderData()
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
   const router = useRouter()
@@ -148,7 +156,7 @@ function TeacherClassesContent() {
   const refreshPage = () => router.invalidate()
 
   const { data, isLoading, isError, isFetching, refetch } = useQuery(
-    getTeacherClassesQueryOptions({ ...filters, teacherId }),
+    getTeacherClassesQueryOptions({ ...filters, teacherId : currentUser!.info!.id }),
   )
 
   const classes = data?.data ?? []

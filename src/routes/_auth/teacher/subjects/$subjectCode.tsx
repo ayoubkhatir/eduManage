@@ -57,13 +57,14 @@ import {
   deleteResourceServerFn,
 } from '#/server/modules/resources/resources.server-functions'
 import { toast } from 'sonner'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { SimpleDocumentUpload } from '#/components/cloudinary-uploader'
 import { motion } from 'framer-motion'
 import z from 'zod'
 import type { AddResourceSchema } from '#/types/resourcesTypes'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
 import type { TeacherUser } from '#/types/teacherTypes'
+import useDebounce from '#/hooks/use-debounce'
 
 export const Route = createFileRoute('/_auth/teacher/subjects/$subjectCode')({
   component: StudentResourcesPage,
@@ -139,6 +140,10 @@ function StudentResourcesContent() {
   const [resourceToDelete, setResourceToDelete] = useState<
     { id: string; fileName: string } | undefined
   >(undefined)
+  const [localSize, setLocalSize] = useState(search.size)
+  const debouncedSize = useDebounce(localSize, 500)
+  const [localClassId, setLocalClassId] = useState(search.classId ?? '')
+  const debouncedClassId = useDebounce(localClassId, 500)
 
   const { subjectCode } = Route.useParams()
   const { data, status } = useQuery(
@@ -163,6 +168,26 @@ function StudentResourcesContent() {
     })
   }
 
+  useEffect(() => {
+    if (debouncedSize !== search.size) {
+      updateSearch({ size: debouncedSize, pageIndex: 1 })
+    }
+  }, [debouncedSize])
+
+  useEffect(() => {
+    const classIdToUpdate = debouncedClassId || undefined
+    if (classIdToUpdate !== search.classId) {
+      updateSearch({ classId: classIdToUpdate, pageIndex: 1 })
+    }
+  }, [debouncedClassId])
+
+  const activeFilterCount = useMemo(
+    () =>
+      [search.fileName, search.type, search.size, search.dateAdded].filter(Boolean).length +
+      (search.classId ? 1 : 0),
+    [search],
+  )
+
   const hasActiveFilters = useMemo(
     () =>
       search.fileName !== '' ||
@@ -172,22 +197,6 @@ function StudentResourcesContent() {
       search.classId !== undefined,
     [search],
   )
-
-  const activeFilterCount = useMemo(
-    () =>
-      [search.fileName, search.type, search.size, search.dateAdded].filter(
-        Boolean,
-      ).length + (search.classId ? 1 : 0),
-    [search],
-  )
-
-  const sizeInMb = useMemo(() => {
-    const normalized = search.size.trim()
-    const match = normalized.match(/^(\d+(?:\.\d+)?)\s*mb$/i)
-    if (match) return match[1]
-
-    return /^(\d+(?:\.\d+)?)$/.test(normalized) ? normalized : ''
-  }, [search.size])
 
   function clearAllFilters() {
     navigate({
@@ -301,12 +310,9 @@ function StudentResourcesContent() {
                 type="number"
                 inputMode="decimal"
                 min="0"
-                value={sizeInMb}
+                value={localSize ? localSize.replace(/\s*mb$/i, '') : ''}
                 onChange={(e) =>
-                  updateSearch({
-                    size: e.target.value ? `${e.target.value} MB` : '',
-                    pageIndex: 1,
-                  })
+                  setLocalSize(e.target.value ? `${e.target.value} MB` : '')
                 }
                 className="h-9 w-full rounded-lg border border-border bg-muted/30 pl-9 pr-12 text-sm text-foreground outline-none transition-[color,box-shadow,background-color] placeholder:text-muted-foreground hover:bg-muted/50 focus:border-ring focus:ring-[3px] focus:ring-ring/40 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                 placeholder="Size"
@@ -364,20 +370,15 @@ function StudentResourcesContent() {
               <input
                 className="h-10 w-full rounded-lg border border-border bg-muted/30 pl-9 pr-8 text-sm text-foreground outline-none transition-[color,box-shadow,background-color] placeholder:text-muted-foreground hover:bg-muted/50 focus:border-ring focus:ring-[3px] focus:ring-ring/40"
                 placeholder="Class ID"
-                value={search.classId ?? ''}
+                value={localClassId}
                 onChange={(event) =>
-                  updateSearch({
-                    classId: event.target.value || undefined,
-                    pageIndex: 1,
-                  })
+                  setLocalClassId(event.target.value)
                 }
               />
-              {search.classId && (
+              {localClassId && (
                 <button
                   type="button"
-                  onClick={() =>
-                    updateSearch({ classId: undefined, pageIndex: 1 })
-                  }
+                  onClick={() => setLocalClassId('')}
                   className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                 >
                   <X className="size-3.5" />
