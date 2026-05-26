@@ -423,10 +423,10 @@ function Roles() {
       redirect: '/teacher/calendar',
       cta: 'Login as Teacher',
     },
-    {
+      {
       icon: 'backpack',
       title: 'Students',
-      desc: 'Access grades, schedules, and assignments instantly from your computer or phone.',
+      desc: 'Access grades, schedules, and assignements instantly from your computer or phone.',
       role: UserRoleEnum.STUDENT,
       redirect: '/student/calendar',
       cta: 'Login as Student',

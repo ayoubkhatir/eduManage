@@ -56,10 +56,12 @@ function Admin() {
     <Skeleton name="admin-layout" loading={false}>
       <div className="flex h-screen overflow-hidden bg-background text-slate-900 dark:text-slate-100">
         <SideBar currentUser={currentUser} info={info} />
-        <main className="relative flex min-w-0 flex-1 flex-col overflow-y-auto">
+        <main className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto">
           <TopNav />
           <LayoutBreadcrumb />
-          <Outlet />
+          <div className="flex min-h-0 flex-1 flex-col">
+            <Outlet />
+          </div>
         </main>
       </div>
     </Skeleton>

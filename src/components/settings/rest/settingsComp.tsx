@@ -242,10 +242,10 @@ export default function SettingsComp({
                   <div className="flex items-center justify-between py-4">
                     <div>
                       <p className="text-sm font-medium text-slate-900 dark:text-white">
-                        Assignment Due Dates
+                        Assignement Due Dates
                       </p>
                       <p className="text-xs text-slate-500 dark:text-slate-400">
-                        Receive alerts 24h before an assignment is due.
+                        Receive alerts 24h before an assignement is due.
                       </p>
                     </div>
                     <Switch defaultChecked className="shrink-0" />

@@ -264,7 +264,7 @@ function StudentResourcesContent() {
               Learning Resources
             </h1>
             <p className="mt-2 text-base text-[#4c669a] dark:text-gray-400">
-              Manage and organize educational materials, assignments, and
+              Manage and organize educational materials, assignements, and
               reference documents.
             </p>
           </div>

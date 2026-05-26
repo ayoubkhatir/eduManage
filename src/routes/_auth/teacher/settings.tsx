@@ -240,10 +240,10 @@ function SettingsComp({ teacher }: { teacher: TeacherUser }) {
                   <div className="flex items-center justify-between py-4">
                     <div>
                       <p className="text-sm font-medium text-foreground">
-                        Assignment Due Dates
+                        Assignement Due Dates
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        Receive alerts 24h before an assignment is due.
+                        Receive alerts 24h before an assignement is due.
                       </p>
                     </div>
                     <Switch defaultChecked className="shrink-0" />

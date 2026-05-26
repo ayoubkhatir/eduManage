@@ -156,7 +156,7 @@ function RouteComponent() {
                   icon="verified"
                 />
                 <SummaryCard
-                  title="Active Assignments"
+                  title="Active Assignements"
                   value={activeAssignments.length}
                   icon="task_alt"
                 />
@@ -179,7 +179,7 @@ function RouteComponent() {
                       {teachers.length === 0 ? (
                         <EmptyState
                           title="No teachers assigned"
-                          description="This class does not have any teacher assignments yet."
+                          description="This class does not have any teacher assignements yet."
                           icon="school"
                         />
                       ) : (
@@ -264,12 +264,12 @@ function RouteComponent() {
                     </div>
 
                     <div className="p-5">
-                      <p className="text-sm text-slate-500 dark:text-slate-400">
+                        <p className="text-sm text-slate-500 dark:text-slate-400">
                         This page is currently powered by class teacher
-                        assignments. It can be upgraded later with full class
+                        assignements. It can be upgraded later with full class
                         info, student count, roster, schedule, and marks
                         summaries.
-                      </p>
+                        </p>
                     </div>
                   </div>
                 </aside>
