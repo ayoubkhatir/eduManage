@@ -1,3 +1,4 @@
+import generateId  from '#/server/utils/id_generator'
 import { format } from 'date-fns'
 
 export type OwnerEvent = {
@@ -44,7 +45,7 @@ export function emptyForm(start?: Date, end?: Date): EventForm {
   const e = end ?? new Date(s.getTime() + 60 * 60 * 1000)
 
   return {
-    id: crypto.randomUUID(),
+    id: generateId(),
     title: '',
     start: toDatetimeLocal(s),
     end: toDatetimeLocal(e),

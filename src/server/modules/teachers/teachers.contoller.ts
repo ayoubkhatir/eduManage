@@ -1,7 +1,6 @@
 import { db, type Database } from "#/server/db/db";
 import { account, adminsTable, classesTable, gradesTable, StatusEnum, studentsTable, subjectsTable, teacherAssignmentsTable, teachersTable, UserGenderEnum, UserRoleEnum, users } from "#/server/db/schema";
 import { and, asc, count, desc, eq, exists, gte, ilike, inArray, lt, or, sql, SQL } from "drizzle-orm"
-import { generateTemporaryPassword } from "#/server/utils/temp_password_generator";
 import { handlePassword } from "#/server/utils/handle-password";
 import generateId from "#/server/utils/id_generator";
 import type { AddTeacherType, AssignTeacherType, EditTeacherType, GetTeacherClassesType, GetTeachersType } from "#/types/teacherTypes";
@@ -253,7 +252,7 @@ class TeachersController {
      * Create user + teacher profile in one transaction
      */
     async createTeacher(data: AddTeacherType) {
-        const userId = crypto.randomUUID();
+        const userId = generateId();
         const passwordHash = await handlePassword.hash("teacher123")
         const dateOfBirth = toDateOnly(data.dateOfBirth)
         const joiningDate = toDateOnly(new Date())
@@ -284,7 +283,7 @@ class TeachersController {
                 id: generateId(),
                 userId,
                 accountId: userId,
-                providerId: "credentials",
+                providerId: "credential",
                 password: passwordHash,
                 createdAt: new Date(),
             }).returning()

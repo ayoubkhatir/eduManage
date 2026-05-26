@@ -3,7 +3,7 @@ import { db } from "#/server/db/db.js";
 import { UserRoleEnum } from "#/server/db/schema.js";
 import type { ID } from "#/types/authTypes.js";
 import { auth } from "../../utils/auth.server.js";
-import type { LoginBody, RegisterBody } from "./auth.schema.js";
+import type { LoginBody, RegisterBody, ForgotPasswordBody, ResetPasswordBody } from "./auth.schema.js";
 import { authService } from "./auth.service.js";
 import { deleteCookie, getCookie, } from '@tanstack/react-start/server'
 
@@ -14,6 +14,8 @@ interface IAuthController {
     logout: (headers: Headers) => Promise<Record<string, any>>
     refresh: (headers: Headers) => Promise<Record<string, any>>
     loginOAuth: (provider: "google" | "facebook") => Promise<Record<string, any>>
+    forgotPassword: (input: ForgotPasswordBody, headers: Headers) => Promise<Record<string, any>>
+    resetPassword: (input: ResetPasswordBody, headers: Headers) => Promise<Record<string, any>>
 }
 
 
@@ -255,6 +257,91 @@ class AuthController implements IAuthController {
             message: "Failed to initiate social login",
         }
 
+    }
+
+    async forgotPassword(input: { email: string }, headers: Headers) {
+        try {
+            const user = await authService.findUserByEmail(input.email);
+            
+            if (!user) {
+                // Return success even if user doesn't exist for security reasons
+                return {
+                    success: true,
+                    message: "If an account exists with this email, a password reset link will be sent",
+                    status: 200,
+                };
+            }
+
+            const data = await auth.api.forgetPassword({
+                body: {
+                    email: input.email,
+                    redirectURL: `${process.env.BETTER_AUTH_URL || 'http://localhost:5173'}/reset-password`,
+                },
+                headers: headers,
+            });
+
+            if (!data) {
+                return {
+                    success: false,
+                    message: "Failed to send password reset link",
+                    status: 400,
+                };
+            }
+
+            return {
+                success: true,
+                message: "Password reset link sent to your email",
+                status: 200,
+            };
+        } catch (error: any) {
+            console.log("\x1b[36m[server]\x1b[0m " + error)
+            return {
+                success: false,
+                message: authService.getErrorMessage(error, "Failed to process password reset request"),
+                status: authService.getErrorStatus(error, 400),
+            };
+        }
+    }
+
+    async resetPassword(input: { token: string; password: string; confirmPassword: string }, headers: Headers) {
+        try {
+            if (input.password !== input.confirmPassword) {
+                return {
+                    success: false,
+                    message: "Passwords do not match",
+                    status: 400,
+                };
+            }
+
+            const data = await auth.api.resetPassword({
+                body: {
+                    token: input.token,
+                    password: input.password,
+                },
+                headers: headers,
+            });
+
+            if (!data) {
+                return {
+                    success: false,
+                    message: "Failed to reset password. The link may have expired.",
+                    status: 400,
+                };
+            }
+
+            return {
+                success: true,
+                message: "Password reset successfully",
+                status: 200,
+            };
+        } catch (error: any) {
+            console.log("\x1b[36m[server]\x1b[0m " + error)
+            return {
+                success: false,
+                message: authService.getErrorMessage(error, "Failed to reset password"),
+                status: authService.getErrorStatus(error, 400),
+            };
+        }
     }
 
     // async fetchSchoolID(userId: ID) {

@@ -1,6 +1,6 @@
 import { createServerFn, } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server"
-import { loginSchema, registerSchema } from "./auth.schema";
+import { loginSchema, registerSchema, forgotPasswordSchema, resetPasswordSchema } from "./auth.schema";
 import { authController } from "./auth.controller";
 import { z } from "zod";
 import { auth } from "#/server/utils/auth.server";
@@ -42,3 +42,17 @@ export const loginOAuthServer = createServerFn({ method: "POST" })
         const { provider } = data
         return authController.loginOAuth(provider)
     });
+
+export const forgotPasswordServerFn = createServerFn({ method: "POST" })
+    .inputValidator(forgotPasswordSchema)
+    .handler(({ data }) => {
+        const headers = getRequestHeaders();
+        return authController.forgotPassword(data, headers)
+    })
+
+export const resetPasswordServerFn = createServerFn({ method: "POST" })
+    .inputValidator(resetPasswordSchema)
+    .handler(({ data }) => {
+        const headers = getRequestHeaders();
+        return authController.resetPassword(data, headers)
+    })

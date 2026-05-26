@@ -60,13 +60,13 @@ function RouteComponent() {
 
 function TeacherCalendarContent() {
   const { currentUser } = Route.useLoaderData()
-  const teacherUserId = currentUser.id
+  const teacherId = currentUser.info.id
 
   const {
     data: eventsData,
     isLoading: isEventsLoading,
     isError: isEventsError,
-  } = useGetEvents(undefined, teacherUserId)
+  } = useGetEvents(undefined, teacherId)
 
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [view, setView] = useState<View>(Views.MONTH)

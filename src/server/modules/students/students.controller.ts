@@ -2,7 +2,6 @@ import { db, type Database } from "#/server/db/db";
 import { account, classesTable, gradesTable, StatusEnum, studentsTable, teachersTable, UserRoleEnum, users } from "#/server/db/schema";
 import { and, asc, count, desc, eq, gte, ilike, lt, or, sql, SQL } from "drizzle-orm";
 import generateId from "../../utils/id_generator";
-import { generateTemporaryPassword } from "../../utils/temp_password_generator";
 import { handlePassword } from "#/server/utils/handle-password";
 import { StudentUserDto, type AddStudentType, type EditStudentType, type GetStudentsType, type StudentUser } from "#/types/studentTypes";
 import type { ID } from "#/types/authTypes";
@@ -264,7 +263,7 @@ class StudentsController {
                 id: generateId(),
                 userId,
                 accountId: userId,
-                providerId: "credentials",
+                providerId: "credential",
                 password: passwordHash,
                 createdAt: new Date(),
             })

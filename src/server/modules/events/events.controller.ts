@@ -17,14 +17,13 @@ class EventsController {
         // endDate,
     }: GetEventsType) {
         const conditions = []
-        let teacherId: string;
+        let teacherId: string | undefined;
         if (!classId && teacherUserId) {
-            teacherId = await this.db.query.teachersTable.findFirst({
+            const teacher = await this.db.query.teachersTable.findFirst({
                 where: eq(teachersTable.userId, teacherUserId),
                 columns: { id: true }
-            }).then(r => r!.id)
-        } else {
-            teacherId = ""
+            })
+            teacherId = teacher?.id
         }
         if (!isOwner) {
             // if (startDate) {

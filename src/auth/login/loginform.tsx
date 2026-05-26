@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useLogin } from '#/hooks/auth/hooks'
+import { Link } from '@tanstack/react-router'
 import type { UserRole } from '#/types/authTypes'
 
 export default function Loginform({
@@ -59,12 +60,12 @@ export default function Loginform({
           >
             Password
           </label>
-          <a
+          <Link
+            to="/forgot-password"
             className="text-xs font-medium text-primary transition-colors hover:text-primary/80"
-            href="#"
           >
             Forgot password?
-          </a>
+          </Link>
         </div>
         <div className="relative">
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">

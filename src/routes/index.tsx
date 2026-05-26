@@ -191,6 +191,171 @@ function MobileSidebar() {
   )
 }
 
+/* ─── DashboardPreview ─── */
+function DashboardPreview() {
+  const statCards = [
+    { icon: 'school', color: 'bg-blue-50 text-blue-600 dark:bg-blue-500/15 dark:text-blue-400', label: 'Total Students', value: '2,450' },
+    { icon: 'badge', color: 'bg-green-50 text-green-600 dark:bg-green-500/15 dark:text-green-400', label: 'Total Teachers', value: '128' },
+    { icon: 'workspaces', color: 'bg-purple-50 text-purple-600 dark:bg-purple-500/15 dark:text-purple-400', label: 'Total Grades', value: '12' },
+    { icon: 'meeting_room', color: 'bg-orange-50 text-orange-600 dark:bg-orange-500/15 dark:text-orange-400', label: 'Total Classes', value: '48' },
+  ]
+
+  const quickActions = ['Add Teacher', 'Add Student', 'Add Announcement', 'Add Grade']
+
+  const recentActivities = [
+    { initials: 'JD', bg: 'bg-indigo-100 dark:bg-indigo-900/40', text: 'text-indigo-600 dark:text-indigo-300', name: 'John Doe', detail: 'New Registration', role: 'Student', roleBg: 'bg-blue-100 dark:bg-blue-500/20', roleText: 'text-blue-800 dark:text-blue-300', action: 'Completed enrollment form', time: '2 mins ago' },
+    { initials: 'SM', bg: 'bg-emerald-100 dark:bg-emerald-900/40', text: 'text-emerald-600 dark:text-emerald-300', name: 'Sarah Miller', detail: 'Fee Payment', role: 'Parent', roleBg: 'bg-purple-100 dark:bg-purple-500/20', roleText: 'text-purple-800 dark:text-purple-300', action: 'Paid tuition for Q3', time: '15 mins ago' },
+  ]
+
+  return (
+    <div className="relative rounded-2xl border border-slate-200/80 bg-white p-3 shadow-2xl shadow-slate-900/5 dark:border-white/8 dark:bg-white/3 dark:shadow-black/30">
+      <div className="overflow-hidden rounded-xl bg-white dark:bg-slate-900">
+        {/* Dashboard inner */}
+        <div className="p-4 sm:p-5 space-y-5">
+          {/* Header */}
+          <div>
+            <h3 className="text-base font-bold text-slate-900 dark:text-white">Dashboard</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Overview of your school&apos;s performance</p>
+          </div>
+
+          {/* Stat cards */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {statCards.map((card) => (
+              <div key={card.label} className="rounded-lg border border-slate-100 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/50 p-3">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className={`flex size-7 items-center justify-center rounded-lg ${card.color}`}>
+                    <span className="material-symbols-outlined text-sm">{card.icon}</span>
+                  </div>
+                  <span className="inline-flex items-center rounded-full bg-green-50 px-1.5 py-0.5 text-[10px] font-semibold text-green-700 dark:bg-green-500/10 dark:text-green-400">
+                    <span className="material-symbols-outlined text-[10px]">trending_up</span>
+                    +12%
+                  </span>
+                </div>
+                <p className="text-[10px] font-medium text-slate-500 dark:text-slate-400">{card.label}</p>
+                <p className="text-lg font-bold text-slate-900 dark:text-white">{card.value}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Chart + Quick Actions */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {/* Chart area */}
+            <div className="lg:col-span-2 rounded-xl border border-slate-100 dark:border-slate-700/50 bg-slate-50/30 dark:bg-slate-800/30 p-4">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Enrollment Growth</h4>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">Academic Year 2023-2024</p>
+                </div>
+                <div className="text-[10px] text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1">
+                  Last 6 Months
+                </div>
+              </div>
+              {/* Mini chart SVG */}
+              <svg viewBox="0 0 300 100" className="w-full h-24" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="rgb(59,130,246)" stopOpacity="0.3" />
+                    <stop offset="100%" stopColor="rgb(59,130,246)" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M0,80 Q25,70 50,60 T100,45 T150,35 T200,30 T250,20 T300,10"
+                  fill="none"
+                  stroke="rgb(59,130,246)"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M0,80 Q25,70 50,60 T100,45 T150,35 T200,30 T250,20 T300,10 L300,100 L0,100 Z"
+                  fill="url(#chartGrad)"
+                />
+                {/* Dots */}
+                {[0, 50, 100, 150, 200, 250, 300].map((x, i) => (
+                  <circle key={i} cx={x} cy={[80, 60, 45, 35, 30, 20, 10][i]} r="3" fill="rgb(59,130,246)" stroke="white" strokeWidth="1.5" />
+                ))}
+              </svg>
+            </div>
+
+            {/* Quick Actions + System Status */}
+            <div className="space-y-3">
+              <div className="rounded-xl border border-slate-100 dark:border-slate-700/50 bg-slate-50/30 dark:bg-slate-800/30 p-4">
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-3">Quick Actions</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {quickActions.map((action) => (
+                    <div key={action} className="flex flex-col items-center justify-center gap-1 rounded-lg border border-slate-100 dark:border-slate-700/50 bg-white dark:bg-slate-800 p-2.5 transition-all hover:border-primary/30 hover:bg-primary/5">
+                      <span className="material-symbols-outlined text-lg text-slate-400 dark:text-slate-500">group_add</span>
+                      <span className="text-[9px] font-semibold text-slate-600 dark:text-slate-300">{action}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="relative overflow-hidden rounded-xl bg-linear-to-br from-primary to-blue-700 p-4 shadow-md">
+                <div className="absolute inset-0 bg-white/5" />
+                <div className="relative z-10">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className="material-symbols-outlined text-yellow-300 text-sm">verified</span>
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-white/70">System Status</span>
+                  </div>
+                  <h4 className="text-sm font-bold text-white">All Systems Normal</h4>
+                  <p className="text-[10px] text-white/70">Server maintenance scheduled for Sunday, 2:00 AM.</p>
+                </div>
+                <span className="material-symbols-outlined absolute -bottom-3 -right-3 text-6xl text-white/10">dns</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Recent Activities */}
+          <div className="rounded-xl border border-slate-100 dark:border-slate-700/50 overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-slate-700/50">
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white">Recent Activities</h4>
+              <button type="button" className="text-[10px] font-semibold text-primary hover:text-primary/80">View All</button>
+            </div>
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b border-slate-100 dark:border-slate-700/50 bg-slate-50/50 dark:bg-slate-800/50 text-[9px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  <th className="px-4 py-2.5">User / Event</th>
+                  <th className="px-4 py-2.5">Role</th>
+                  <th className="px-4 py-2.5">Action Type</th>
+                  <th className="px-4 py-2.5 text-right">Time</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
+                {recentActivities.map((row, i) => (
+                  <tr key={i} className="transition-all hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <td className="px-4 py-2.5">
+                      <div className="flex items-center gap-2">
+                        <div className={`flex size-7 items-center justify-center rounded-full ${row.bg} ${row.text} text-[10px] font-bold`}>
+                          {row.initials}
+                        </div>
+                        <div>
+                          <p className="text-[11px] font-medium text-slate-900 dark:text-white">{row.name}</p>
+                          <p className="text-[9px] text-slate-500 dark:text-slate-400">{row.detail}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <span className={`inline-flex items-center rounded-full ${row.roleBg} ${row.roleText} px-2 py-0.5 text-[9px] font-medium`}>
+                        {row.role}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2.5">
+                      <p className="text-[11px] text-slate-700 dark:text-slate-300">{row.action}</p>
+                    </td>
+                    <td className="px-4 py-2.5 text-right">
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">{row.time}</p>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 /* ─── Hero ─── */
 function Hero() {
   return (
@@ -256,35 +421,9 @@ function Hero() {
             </div>
           </FadeIn>
 
-          {/* Hero image / mockup */}
-          <FadeIn delay={360} className="mt-16 w-full max-w-3xl">
-            <div className="relative rounded-2xl border border-slate-200/80 bg-white p-2 shadow-2xl shadow-slate-900/5 dark:border-white/8 dark:bg-white/3 dark:shadow-black/30">
-              <div className="overflow-hidden rounded-xl bg-linear-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 aspect-video flex items-center justify-center">
-                <div className="text-center">
-                  <Icon
-                    name="dashboard"
-                    className="text-6xl text-slate-400 dark:text-slate-600"
-                  />
-                  <p className="mt-3 text-sm font-medium text-slate-500 dark:text-slate-500">
-                    Dashboard Preview
-                  </p>
-                </div>
-              </div>
-            </div>
-            {/* Floating badge */}
-            <div className="absolute -right-4 -bottom-4 flex items-center gap-3 rounded-xl border border-slate-200/80 bg-white px-4 py-3 shadow-lg dark:border-white/8 dark:bg-surface-dark sm:-right-8 sm:-bottom-6">
-              <div className="flex size-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
-                <Icon name="trending_up" className="text-xl" />
-              </div>
-              <div>
-                <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
-                  Attendance
-                </p>
-                <p className="text-base font-bold text-slate-900 dark:text-white">
-                  98% Today
-                </p>
-              </div>
-            </div>
+          {/* Dashboard preview mockup */}
+          <FadeIn delay={360} className="mt-16 w-full max-w-5xl">
+            <DashboardPreview />
           </FadeIn>
         </div>
       </Section>

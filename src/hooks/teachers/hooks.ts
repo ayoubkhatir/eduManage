@@ -37,7 +37,8 @@ export function useAddTeacher(schoolId: string) {
       gender: UserGenderEnum.MALE,
       email: "new_teacher@email.com",
       dateOfBirth: new Date().toISOString(),
-      address: "Hassi El Ghela"
+      address: "Hassi El Ghela",
+      about: "",
     },
   })
 
