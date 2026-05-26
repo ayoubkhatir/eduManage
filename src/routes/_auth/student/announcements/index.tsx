@@ -6,10 +6,7 @@ import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
 import type { AdminUser } from '#/types/usersTypes'
 import Loading from '#/components/loading'
 import { getAnnouncementsListQueryOptions } from '#/hooks/admin/hooks'
-import {
-  AnnouncementsStatCards,
-  UICardSkeleton,
-} from '#/components/admin/cards/UICard'
+
 import {
   AnnouncementAudienceEnum,
   announcementAudienceList,

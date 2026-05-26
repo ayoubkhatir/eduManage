@@ -3,7 +3,7 @@ import { Suspense } from 'react'
 import AnnouncementsList from '#/components/announcementsList'
 import { motion } from 'framer-motion'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
-import type { TeacherUser } from '#/types/usersTypes'
+import type { TeacherUser } from '#/types/teacherTypes'
 import Loading from '#/components/loading'
 import { getAnnouncementsListQueryOptions } from '#/hooks/admin/hooks'
 import {

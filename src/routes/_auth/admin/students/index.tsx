@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
-import { useQuery, useSuspenseQuery } from '@tanstack/react-query'
+import {  useSuspenseQuery } from '@tanstack/react-query'
 import { zodValidator } from '@tanstack/zod-adapter'
 import { CustomPagination } from '@/components/admin/PaginationComp'
 import { SearchInput } from '@/components/admin/SearchInput'

@@ -168,15 +168,16 @@ export function getResourceColumns({
             <Download className="size-4" />
           </button>
 
-          <button
-            className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-            title={`Delete ${fileName}`}
-            type="button"
-            onClick={() => onDelete?.(resource)}
-            disabled={!onDelete}
-          >
-            <Trash2 className="size-4" />
-          </button>
+          {onDelete && (
+            <button
+              className="inline-flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+              title={`Delete ${fileName}`}
+              type="button"
+              onClick={() => onDelete(resource)}
+            >
+              <Trash2 className="size-4" />
+            </button>
+          )}
         </div>
       )
     },
