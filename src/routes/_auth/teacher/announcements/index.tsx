@@ -40,7 +40,7 @@ export const Route = createFileRoute('/_auth/teacher/announcements/')({
     breadcrumb: 'Announcements',
   },
   head: () => ({
-    meta: [{ title: 'Owner | Announcements - EduManage' }],
+    meta: [{ title: 'Teacher | Announcements - EduManage' }],
   }),
 })
 
@@ -69,7 +69,7 @@ function Announcement() {
             </p>
           </div>
           <Link
-            to="/admin/createAnnouncement"
+            to="/teacher/createAnnouncement"
             className="flex items-center gap-2 justify-center rounded-lg h-8 px-5 py-6  bg-primary  hover:bg-blue-700 dark:hover:bg-blue-500 text-white text-md font-bold active:scale-95 cursor-pointer"
           >
             <button className="flex shrink-0 items-center gap-2 justify-center rounded-lg h-8 px-5 py-6  bg-primary  hover:bg-blue-700 dark:hover:bg-blue-500 text-white text-md font-bold active:scale-95 cursor-pointer">
@@ -81,7 +81,7 @@ function Announcement() {
 
         <Suspense fallback={<UICardSkeleton count={3} />}>
           <AnnouncementsStatCards
-            schoolId={currentUser.info.id}
+            schoolId={currentUser.info.schoolId}
             filters={{ audience, search }}
           />
         </Suspense>
@@ -117,8 +117,9 @@ function Announcement() {
         }
       >
         <AnnouncementsList
-          schoolId={currentUser.info.id}
+          schoolId={currentUser.info.schoolId}
           filters={{ search, audience }}
+          role="teacher"
         />
       </Suspense>
 

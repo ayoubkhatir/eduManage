@@ -119,17 +119,19 @@ function StudentResourcesContent() {
   }
 
   useEffect(() => {
+    if (debouncedSize !== localSize) return
     if (debouncedSize !== search.size) {
       updateSearch({ size: debouncedSize, pageIndex: 1 })
     }
-  }, [debouncedSize])
+  }, [debouncedSize, localSize, search.size])
 
   useEffect(() => {
+    if (debouncedClassId !== localClassId) return
     const classIdToUpdate = debouncedClassId || undefined
     if (classIdToUpdate !== search.classId) {
       updateSearch({ classId: classIdToUpdate, pageIndex: 1 })
     }
-  }, [debouncedClassId])
+  }, [debouncedClassId, localClassId, search.classId])
 
   const { subjectCode } = Route.useParams()
   const { data, status } = useQuery(
@@ -164,6 +166,8 @@ function StudentResourcesContent() {
   )
 
   function clearAllFilters() {
+    setLocalSize('')
+    setLocalClassId('')
     navigate({
       search: {
         fileName: '',

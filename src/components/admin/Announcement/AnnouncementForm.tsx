@@ -55,11 +55,13 @@ export function AnnouncementForm({ user }: { user: AdminUser | TeacherUser }) {
               {...register('audience')}
               className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary"
             >
-              {announcementAudienceList.map((audience) => (
-                <option key={audience} value={audience}>
-                  {audience}
-                </option>
-              ))}
+              {announcementAudienceList
+                .filter((s) => s.toLowerCase() !== 'teachers')
+                .map((audience) => (
+                  <option key={audience} value={audience}>
+                    {audience}
+                  </option>
+                ))}
             </select>
             {errors.audience && (
               <span className="text-xs text-red-500 mt-1">

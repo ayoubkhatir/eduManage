@@ -1,13 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { AnnouncementForm } from '@/components/admin/Announcement/AnnouncementForm'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
-import type { AdminUser } from '#/types/usersTypes'
+import type { TeacherUser } from '#/types/teacherTypes'
 
 export const Route = createFileRoute('/_auth/teacher/createAnnouncement')({
   loader: async ({ context }) => {
     const currentUser = (await FetchCurrentUserServerFn({
       data: context.authState.user!,
-    })) as AdminUser
+    })) as TeacherUser
     return { currentUser }
   },
   staticData: {

@@ -119,6 +119,7 @@ function Announcement() {
         <AnnouncementsList
           schoolId={currentUser.info.id}
           filters={{ search, audience }}
+          role="admin"
         />
       </Suspense>
 
