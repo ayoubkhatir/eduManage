@@ -3,8 +3,9 @@ import QuillEditor from '@/components/ui/quillEditor'
 import { useAnnouncementForm } from '@/hooks/use-announcement-form'
 import type { AdminUser } from '#/types/usersTypes'
 import { announcementAudienceList } from '#/server/db/schema'
+import type { TeacherUser } from '#/types/teacherTypes'
 
-export function AnnouncementForm({ user }: { user: AdminUser }) {
+export function AnnouncementForm({ user }: { user: AdminUser | TeacherUser }) {
   const {
     register,
     control,

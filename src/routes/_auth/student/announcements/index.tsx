@@ -3,19 +3,16 @@ import { Suspense } from 'react'
 import AnnouncementsList from '#/components/announcementsList'
 import { motion } from 'framer-motion'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
-import type { AdminUser } from '#/types/usersTypes'
 import Loading from '#/components/loading'
 import { getAnnouncementsListQueryOptions } from '#/hooks/admin/hooks'
-import {
-  AnnouncementsStatCards,
-  UICardSkeleton,
-} from '#/components/admin/cards/UICard'
+
 import {
   AnnouncementAudienceEnum,
   announcementAudienceList,
 } from '#/server/db/schema'
 import { SearchInput } from '#/components/admin/SearchInput'
 import { getAnnouncementsFiltersSchema } from '#/schemas/announcement.schema'
+import type { StudentUser } from '#/types/studentTypes'
 
 export const Route = createFileRoute('/_auth/student/announcements/')({
   component: Announcement,
@@ -26,7 +23,7 @@ export const Route = createFileRoute('/_auth/student/announcements/')({
   loader: async ({ context, deps }) => {
     const currentUser = (await FetchCurrentUserServerFn({
       data: context.authState.user!,
-    })) as AdminUser
+    })) as StudentUser
 
     context.queryClient.ensureQueryData({
       ...getAnnouncementsListQueryOptions(currentUser.id, {
@@ -37,7 +34,7 @@ export const Route = createFileRoute('/_auth/student/announcements/')({
     return { currentUser }
   },
   head: () => ({
-    meta: [{ title: 'Owner | Announcements - EduManage' }],
+    meta: [{ title: 'Student | Announcements - EduManage' }],
   }),
 })
 
@@ -116,6 +113,7 @@ function Announcement() {
         <AnnouncementsList
           schoolId={currentUser.info.id}
           filters={{ search, audience }}
+          role="student"
         />
       </Suspense>
 

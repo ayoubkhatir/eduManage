@@ -12,49 +12,29 @@ import { createAnnouncementSchema } from '#/schemas/announcement.schema'
 import { AnnouncementAudienceEnum, UserRoleEnum } from '#/server/db/schema'
 import type { TeacherUser } from '#/types/teacherTypes'
 
-// const createAnnouncement = async (payload: AnnouncementPayload) => {
-//   const response = await fetch('http://localhost:4000/announcements', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({
-//       ...payload,
-//       id: Date.now().toString(),
-//     }),
-//   })
-
-//   if (!response.ok) {
-//     throw new Error('Failed to create announcement')
-//   }
-
-//   return response.json()
-// }
-
 export function useAnnouncementForm(user: TeacherUser | AdminUser) {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  const {
-    register,
-    control,
-    handleSubmit,
-    reset,
-    watch,
-    formState
-  } = useForm<CreateAnnouncementType>({
-    resolver: zodResolver(createAnnouncementSchema),
-    mode: 'onSubmit',
-    reValidateMode: 'onChange',
-    defaultValues: {
-      title: '',
-      description: '',
-      audience: AnnouncementAudienceEnum.ALL,
-      authorId: user.id,
-      schoolId: user.role === UserRoleEnum.ADMIN ? user.info.id : UserRoleEnum.TEACHER ? user.info.id : ""
-      // BECAUSE THE COMPILER THINK role CAN BE ALSO A STUDENT, BUT IN THIS CASE THE user IS ONLY A TEACHER OR ADMIN
-    },
-  })
+  const { register, control, handleSubmit, reset, watch, formState } =
+    useForm<CreateAnnouncementType>({
+      resolver: zodResolver(createAnnouncementSchema),
+      mode: 'onSubmit',
+      reValidateMode: 'onChange',
+      defaultValues: {
+        title: '',
+        description: '',
+        audience: AnnouncementAudienceEnum.PUBLIC,
+        authorId: user.id,
+        schoolId:
+          user.role === UserRoleEnum.ADMIN
+            ? (user as AdminUser).info.id
+            : UserRoleEnum.TEACHER
+              ? (user as TeacherUser).info.schoolId
+              : '',
+        // BECAUSE THE COMPILER THINK role CAN BE ALSO A STUDENT, BUT IN THIS CASE THE user IS ONLY A TEACHER OR ADMIN
+      },
+    })
 
   const createAnnouncementMutation = useMutation({
     mutationFn: async (data: CreateAnnouncementType) => {
@@ -65,7 +45,9 @@ export function useAnnouncementForm(user: TeacherUser | AdminUser) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['announcements'] })
       toast.success('Announcement created successfully!')
-      navigate({ to: '/admin/announcements' })
+      user.role === UserRoleEnum.ADMIN
+        ? navigate({ to: '/admin/announcements' })
+        : navigate({ to: '/teacher/announcements' })
     },
     onError: () => {
       toast.error('Failed to create announcement. Please try again.')
@@ -76,14 +58,10 @@ export function useAnnouncementForm(user: TeacherUser | AdminUser) {
   const onSubmit: SubmitHandler<CreateAnnouncementType> = useCallback(
     async (data) => {
       await createAnnouncementMutation.mutateAsync(data)
-      // authorId: user.info.id, // TODO: Get current user
-      // schoolId: user.info.id,
-
       reset({
         title: '',
         description: '',
-        audience: AnnouncementAudienceEnum.ALL,
-        // status: 'DRAFT',
+        audience: AnnouncementAudienceEnum.PUBLIC,
       })
     },
     [createAnnouncementMutation, reset],

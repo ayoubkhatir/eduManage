@@ -5,94 +5,23 @@ import { getAnnouncementsListQueryOptions } from '#/hooks/admin/hooks'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { UserGenderEnum } from '#/server/db/schema'
 import type { GetAnnouncementsFiltersSchema } from '#/types/announcementTypes'
+import { AnnouncementCard } from './AnnouncmentCard'
 
 export type AnnouncementListProps = {
-  // data?: Array<AnnouncementWithAuthor>
-  // isLoading?: boolean
-  // error?: any
-  // selectedAudience: string
-  // searchText?: string
-  // detailTo?: string
   schoolId: string
   filters: GetAnnouncementsFiltersSchema
+  role: string
 }
-
-const getAudienceColors = (audience: string) => {
-  switch (audience) {
-    case 'All School':
-      return {
-        bg: 'bg-slate-50',
-        text: 'text-slate-700',
-        darkBg: 'dark:bg-slate-500/20',
-        darkText: 'dark:text-slate-300',
-        ring: 'ring-slate-500/20',
-        border: 'border-slate-500',
-      }
-    case 'Students':
-      return {
-        bg: 'bg-blue-50',
-        text: 'text-blue-700',
-        darkBg: 'dark:bg-blue-500/10',
-        ring: 'ring-blue-500/20',
-        border: 'border-blue-500',
-      }
-    case 'Teachers':
-      return {
-        bg: 'bg-purple-50',
-        text: 'text-purple-700',
-        darkBg: 'dark:bg-purple-500/10',
-        ring: 'ring-purple-500/20',
-        border: 'border-purple-500',
-      }
-    default:
-      return {
-        bg: 'bg-gray-50',
-        text: 'text-gray-700',
-        darkBg: 'dark:bg-gray-500/10',
-        ring: 'ring-gray-500/20',
-        border: 'border-gray-500',
-      }
-  }
-}
-
-// const filterAnnouncements = (
-//   data: Array<AnnouncementWithAuthor>,
-//   searchText = '',
-//   selectedAudience = 'All School',
-// ) => {
-//   const lowerSearch = searchText.trim().toLowerCase()
-
-//   return data.filter((announcement) => {
-//     // Filter by audience :
-//     if (
-//       selectedAudience !== 'All School' &&
-//       announcement.audience !== selectedAudience
-//     ) {
-//       return false
-//     }
-
-//     // Filter by search text :
-//     if (!lowerSearch) return true
-
-//     const cleanContent = stripHtmlTags(announcement.description)
-//     const haystack =
-//       `${announcement.title} ${cleanContent} ${announcement.audience}`.toLowerCase()
-//     return haystack.includes(lowerSearch)
-//   })
-// }
 
 export default function AnnouncementsList({
   schoolId,
   filters,
+  role,
 }: AnnouncementListProps) {
   const { status, data } = useSuspenseQuery(
     getAnnouncementsListQueryOptions(schoolId, filters),
-    // searchText ? { search: searchText } : {},
   )
   console.log({ data })
-  // const isLoading = propIsLoading || announcementsQuery.isLoading
-  // const error = propError || announcementsQuery.error
-  // const data = propData || announcementsQuery.data // || propData
 
   if (status === 'error') {
     return (
@@ -117,95 +46,34 @@ export default function AnnouncementsList({
     )
   }
 
-  // const filteredData = filterAnnouncements(data, searchText, selectedAudience)
-
-  // if (filteredData.length === 0) {
-  //   return (
-  //     <div className="flex items-center justify-center py-20">
-  //       <p className="text-[#4b5563] dark:text-[#9da6b9]">
-  //         No announcements match your filters.
-  //       </p>
-  //     </div>
-  //   )
-  // }
-
   return (
     <div className="flex flex-col gap-4">
       {data.map((announcement) => {
-        const audienceColors = getAudienceColors(announcement.audience)
-
-        return (
+        return role === 'admin' ? (
           <Link
             to={`/admin/announcements/$announcementTitleSlug`}
             params={{ announcementTitleSlug: announcement.slug }}
             key={announcement.slug}
           >
-            <div
-              role="button"
-              tabIndex={0}
-              // onClick={() =>
-              //   navigate({
-              //     to: '/admin/announcements/$announcementId',
-              //     params: { announcementId: announcement.id },
-              //   })
-              // }
-              // onKeyDown={(e) => {
-              //   if (e.key === 'Enter' || e.key === ' ') {
-              //     e.preventDefault()
-              //     navigate({
-              //       to: '/admin/announcements/$announcementId',
-              //       params: { announcementId: announcement.id },
-              //     })
-              //   }
-              // }}
-              className={`group relative flex flex-col md:flex-row gap-6 p-6 rounded-xl bg-white dark:bg-[#1e293b] border-l-4 ${audienceColors.border} shadow-sm hover:shadow-md cursor-pointer`}
-              style={{ transition: 'box-shadow 0.2s ease-in-out' }}
-            >
-              <div className="flex-1 flex flex-col gap-3">
-                <div className="flex items-center gap-3 flex-wrap">
-                  <span
-                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${audienceColors.bg} ${audienceColors.text} ${audienceColors.darkBg} ${audienceColors.darkText} ${audienceColors.ring} ${audienceColors.border}`}
-                  >
-                    {announcement.audience}
-                  </span>
-                </div>
-
-                <h4 className="text-xl font-bold text-slate-900 dark:text-white">
-                  {announcement.title}
-                </h4>
-
-                <p className="text-slate-600 dark:text-[#9da6b9] line-clamp-2">
-                  {stripHtmlTags(announcement.description)}
-                </p>
-
-                <div className="flex items-center gap-4 mt-1 text-sm text-slate-400 dark:text-slate-500 flex-wrap">
-                  <span className="flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[16px]">
-                      calendar_today
-                    </span>
-                    {announcement.createdAt.toISOString().split('T')[0]}
-                  </span>
-
-                  <span className="flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[16px]">
-                      person
-                    </span>
-                    {announcement.author.gender === UserGenderEnum.MALE
-                      ? 'Mr'
-                      : 'Ms'}
-                    {announcement.author.name}({announcement.author.role})
-                  </span>
-                </div>
-              </div>
-
-              <div className="hidden md:flex shrink-0 items-center self-center">
-                <span className="material-symbols-outlined text-gray-400 group-hover:text-black dark:text-[#4b5563] dark:group-hover:text-white">
-                  chevron_right
-                </span>
-              </div>
-            </div>
+            <AnnouncementCard announcement={announcement} />
           </Link>
-        )
+        ) : role === 'teacher' ? (
+          <Link
+            to={`/teacher/announcements/$announcementTitleSlug`}
+            params={{ announcementTitleSlug: announcement.slug }}
+            key={announcement.slug}
+          >
+            <AnnouncementCard announcement={announcement} />
+          </Link>
+        ) : role === 'student' ? (
+          <Link
+            to={`/student/announcements/$announcementTitleSlug`}
+            params={{ announcementTitleSlug: announcement.slug }}
+            key={announcement.slug}
+          >
+            <AnnouncementCard announcement={announcement} />
+          </Link>
+        ) : null
       })}
     </div>
   )

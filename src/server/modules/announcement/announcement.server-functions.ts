@@ -1,51 +1,53 @@
-import { createAnnouncementSchema, getAnnouncementsSchema } from "#/schemas/announcement.schema";
-import { internalServerErrorResponse, successResponse, type APIResponse } from "#/server/utils/response.type";
-import { createServerFn } from "@tanstack/react-start";
-import { announcementsController } from "./announcement.controller";
-import { validCuidSchema, validSlugSchema } from "#/schemas/shared.schema";
-import type { AnnouncementWithAuthor } from "#/types/announcementTypes";
+import {
+  createAnnouncementSchema,
+  getAnnouncementsSchema,
+} from '#/schemas/announcement.schema'
+import {
+  internalServerErrorResponse,
+  successResponse,
+  type APIResponse,
+} from '#/server/utils/response.type'
+import { createServerFn } from '@tanstack/react-start'
+import { announcementsController } from './announcement.controller'
+import { validCuidSchema, validSlugSchema } from '#/schemas/shared.schema'
+import type { AnnouncementWithAuthor } from '#/types/announcementTypes'
 
-export const createAnnouncementServerFn = createServerFn({ method: "POST" })
-    .inputValidator(createAnnouncementSchema)
-    .handler(({ data }) => {
-        try {
-            return successResponse(announcementsController.createAnnouncement(data)) as APIResponse<{
-                id: string;
-            }[]>
-        } catch (e) {
-            console.log({ error: e })
-            return internalServerErrorResponse() as APIResponse<{
-                id: string;
-            }[]>
-        }
-    })
+export const createAnnouncementServerFn = createServerFn({ method: 'POST' })
+  .inputValidator(createAnnouncementSchema)
+  .handler(({ data }) => {
+    return successResponse(announcementsController.createAnnouncement(data))
+  })
 
+export const getAnnouncementsServerFn = createServerFn({ method: 'GET' })
+  .inputValidator(getAnnouncementsSchema)
+  .handler(({ data: { schoolId, filters } }) => {
+    return successResponse(
+      announcementsController.getAnnouncementsBySchool(schoolId, filters), //add id to getAnnouncementsBySchool to get the schoolId from the request context instead of passing it as a parameter
+    )
+  })
 
-export const getAnnouncementsServerFn = createServerFn({ method: "GET" })
-    .inputValidator(getAnnouncementsSchema)
-    .handler(({ data: { schoolId, filters } }) => {
-        try {
-            return successResponse(announcementsController.getAnnouncementsBySchool(schoolId, filters)) as APIResponse<AnnouncementWithAuthor[]>
-        } catch (error) {
-            console.log({ error })
-            return internalServerErrorResponse() as APIResponse<AnnouncementWithAuthor[]>
-        }
-    })
+export const getAnnouncementByIdServerFn = createServerFn({ method: 'GET' })
+  .inputValidator(validCuidSchema)
+  .handler(({ data: AnnouncementId }) =>
+    successResponse(
+      announcementsController.getAnnouncementByTitleSlug(AnnouncementId),
+    ),
+  )
 
-
-export const getAnnouncementByIdServerFn = createServerFn({ method: "GET" })
-    .inputValidator(validCuidSchema)
-    .handler(({ data: AnnouncementId }) => successResponse(announcementsController.getAnnouncementByTitleSlug(AnnouncementId)))
-
-
-export const getAnnouncementByTitleSlugServerFn = createServerFn({ method: "GET" })
-    .inputValidator(validSlugSchema())
-    .handler(({ data: AnnouncementTitleSlug }) => {
-        console.log({ AnnouncementTitleSlug })
-        try {
-            return successResponse(announcementsController.getAnnouncementByTitleSlug(AnnouncementTitleSlug)) as APIResponse<AnnouncementWithAuthor>
-        } catch (error) {
-            console.log({ error })
-            return internalServerErrorResponse() as APIResponse<AnnouncementWithAuthor>
-        }
-    })
+export const getAnnouncementByTitleSlugServerFn = createServerFn({
+  method: 'GET',
+})
+  .inputValidator(validSlugSchema())
+  .handler(({ data: AnnouncementTitleSlug }) => {
+    console.log({ AnnouncementTitleSlug })
+    try {
+      return successResponse(
+        announcementsController.getAnnouncementByTitleSlug(
+          AnnouncementTitleSlug,
+        ),
+      ) as APIResponse<AnnouncementWithAuthor>
+    } catch (error) {
+      console.log({ error })
+      return internalServerErrorResponse() as APIResponse<AnnouncementWithAuthor>
+    }
+  })
