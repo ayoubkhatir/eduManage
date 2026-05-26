@@ -203,7 +203,7 @@ function OwnerStudentDetailContent() {
                         label="Enrollment Date"
                         form={studentForm}
                       />
-                      <StudentGradeSelector />
+                      <StudentGradeSelector schoolId={currentUser.info.id} />
                       <StudentClassSelector schoolId={currentUser.info.id} />
                     </div>
                   </div>

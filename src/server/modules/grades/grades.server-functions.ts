@@ -5,7 +5,8 @@ import { addGradeSchema } from "#/schemas/grades.schema";
 import { validCuidSchema } from "#/schemas/shared.schema";
 
 export const getAllGradesServerFn = createServerFn({ method: "GET" })
-    .handler(async () => successResponse(await gradesController.getAllGrades()))
+    .inputValidator(validCuidSchema)
+    .handler(async ({ data: schoolId }) => successResponse(await gradesController.getAllGrades(schoolId)))
 
 export const getAllGradesWithClassesAndSubjectsServerFn = createServerFn({ method: "GET" })
     .handler(async () => successResponse(await gradesController.getAllGradesWithClassesAndSubjects()))

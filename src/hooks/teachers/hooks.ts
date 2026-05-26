@@ -90,6 +90,7 @@ export function useAddTeacher(schoolId: string) {
 
 
 export function useEditTeacher(editedTeacher: TeacherUser) {
+
   const teacherForm: UseFormReturn<EditTeacherType> = useForm<EditTeacherType>({
     defaultValues: {
       teacherId: editedTeacher.info.id,
@@ -107,6 +108,7 @@ export function useEditTeacher(editedTeacher: TeacherUser) {
   })
 
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
   const { mutate: editTeacher } = useMutation({
     mutationFn: async (data: EditTeacherType) => {
@@ -130,6 +132,7 @@ export function useEditTeacher(editedTeacher: TeacherUser) {
     editTeacher(data, {
       onSuccess: () => {
         toast.success("Teacher updated")
+        navigate({ to: "/admin/teachers" })
       },
       onError: () => {
         toast.error("Error occured")

@@ -14,18 +14,34 @@ import {
 } from '#/components/admin/Table/dataTable'
 import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
 import { motion } from 'framer-motion'
-import { StatusFilter } from '#/components/admin/FilterComp'
+import {
+  ClasseFilter,
+  GradeFilter,
+  StatusFilter,
+} from '#/components/admin/FilterComp'
 import { getStudentsSchema } from '#/schemas/students.schema'
 import { StatusEnum } from '#/server/db/schema'
 import { getStudentsQueryOptions } from '#/hooks/students/hooks'
+import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
+import type { AdminUser } from '#/types/usersTypes'
+import { getAllClassesQueryOptions } from '#/hooks/classes/hooks'
 
 export const Route = createFileRoute('/_auth/admin/students/')({
   component: RouteComponent,
   pendingComponent: AdminStudentsPending,
   loaderDeps: ({ search }) => search,
   loader: async ({ context, deps }) => {
-    context.queryClient.ensureQueryData(getAllGradesQueryOptions())
+    const currentUser = (await FetchCurrentUserServerFn({
+      data: context.authState.user!,
+    })) as AdminUser
+    context.queryClient.ensureQueryData(
+      getAllGradesQueryOptions(currentUser.info.id),
+    )
+    context.queryClient.ensureQueryData(
+      getAllClassesQueryOptions(currentUser.info.id),
+    )
     context.queryClient.ensureQueryData(getStudentsQueryOptions(deps))
+    return { currentUser }
   },
   validateSearch: zodValidator(getStudentsSchema),
   staticData: {
@@ -51,12 +67,23 @@ function AdminStudentsPending() {
 
 function AdminStudentsContent() {
   const navigate = Route.useNavigate()
+  const { currentUser } = Route.useLoaderData()
 
-  const { size, search, status } = Route.useSearch({
+  const { data: gradesData } = useSuspenseQuery(
+    getAllGradesQueryOptions(currentUser.info.id),
+  )
+
+  const { data: classesData } = useSuspenseQuery(
+    getAllClassesQueryOptions(currentUser.info.id),
+  )
+
+  const { size, search, status, classe, grade } = Route.useSearch({
     select: (s) => ({
       size: s.size,
       search: s.search,
       status: s.status,
+      classe: s.classe,
+      grade: s.grade,
     }),
   })
 
@@ -115,6 +142,36 @@ function AdminStudentsContent() {
                 })
               }
             />
+            <GradeFilter
+              data={gradesData.map((grade) => ({
+                label: grade.name,
+                value: grade.id,
+              }))}
+              value={grade}
+              onChange={(value) =>
+                navigate({
+                  search: (s) => ({
+                    ...s,
+                    grade: value === 'all' ? undefined : value,
+                  }),
+                })
+              }
+            />
+            <ClasseFilter
+              data={classesData.map((classe) => ({
+                label: classe.name,
+                value: classe.id,
+              }))}
+              value={classe}
+              onChange={(value) =>
+                navigate({
+                  search: (s) => ({
+                    ...s,
+                    classe: value === 'all' ? undefined : value,
+                  }),
+                })
+              }
+            />
           </div>
         </div>
 
@@ -151,7 +208,6 @@ function MainPageContent() {
       grade,
       classe,
     }),
-    // placeholderData: keepPreviousData,
   })
   const navigate = Route.useNavigate()
 
