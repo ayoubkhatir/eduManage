@@ -50,3 +50,7 @@ export const deleteStudentServerFn = createServerFn({ method: "POST" })
 
 export const getStudentsStatsServerFn = createServerFn({ method: "GET" })
     .handler(async () => successResponse(await studentsController.getStudentsStats()))
+
+export const getDashboardStatsServerFn = createServerFn({ method: "GET" })
+    .inputValidator(validCuidSchema)
+    .handler(async ({ data: schoolId }) => successResponse(await studentsController.getDashboardStats(schoolId)))

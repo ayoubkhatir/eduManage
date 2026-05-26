@@ -1,5 +1,6 @@
 import type { AnnouncementAudienceEnum } from '#/server/db/schema'
 import { getAnnouncementByIdServerFn, getAnnouncementByTitleSlugServerFn, getAnnouncementsServerFn } from '#/server/modules/announcement/announcement.server-functions'
+import { getDashboardStatsServerFn } from '#/server/modules/students/students.server-functions'
 
 export type AnnouncementsListFilters = {
   audience: AnnouncementAudienceEnum,
@@ -86,3 +87,21 @@ export const getAnnouncementByIdQueryOptions = (announcementId: string) => ({
     }
   },
 })
+
+export const getDashboardStatsQueryOptions = (schoolId: string) => {
+  return {
+    queryKey: ['dashboardStats'],
+    queryFn: async () => {
+      try {
+        const response = await getDashboardStatsServerFn({ data: schoolId })
+        if (!response.success) {
+          throw new Error('Dashboard stats not found')
+        }
+        return response.data
+      } catch (error) {
+        console.error('Error fetching dashboard stats:', error)
+        throw error
+      }
+    },
+  }
+}

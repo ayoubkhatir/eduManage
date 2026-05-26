@@ -1,10 +1,11 @@
 import { db, type Database } from "#/server/db/db";
-import { account, classesTable, gradesTable, StatusEnum, studentsTable, UserRoleEnum, users } from "#/server/db/schema";
+import { account, classesTable, gradesTable, StatusEnum, studentsTable, teachersTable, UserRoleEnum, users } from "#/server/db/schema";
 import { and, asc, count, desc, eq, gte, ilike, lt, or, sql, SQL } from "drizzle-orm";
 import generateId from "../../utils/id_generator";
 import { generateTemporaryPassword } from "../../utils/temp_password_generator";
 import { handlePassword } from "#/server/utils/handle-password";
 import { StudentUserDto, type AddStudentType, type EditStudentType, type GetStudentsType, type StudentUser } from "#/types/studentTypes";
+import type { ID } from "#/types/authTypes";
 
 
 class StudentsController {
@@ -439,11 +440,41 @@ class StudentsController {
             totalMonthEnrollments,
         }
     }
+    async getDashboardStats(schoolId: ID) {
+        const [{ totalStudents }] = await this.db
+            .select({ totalStudents: count() })
+            .from(studentsTable)
+            .where(eq(studentsTable.schoolId, schoolId))
+
+        const [{ totalTeachers }] = await this.db
+            .select({ totalTeachers: count() })
+            .from(teachersTable)
+            .where(eq(teachersTable.schoolId, schoolId))
+
+        const [{ totalGrades }] = await this.db
+            .select({ totalGrades: count() })
+            .from(gradesTable)
+            .where(eq(gradesTable.schoolId, schoolId))
+
+        const [{ totalClasses }] = await this.db
+            .select({ totalClasses: count() })
+            .from(classesTable)
+            .where(eq(classesTable.schoolId, schoolId))
+
+        return {
+            totalStudents,
+            totalTeachers,
+            totalGrades,
+            totalClasses,
+        }
+    }
+
+
 }
 
 export const studentsController = new StudentsController(db);
 
-// this function is not in use now 
+// this function is not in use now
 // async function findStudentByUserId(
 //     userId: string,
 // ) {

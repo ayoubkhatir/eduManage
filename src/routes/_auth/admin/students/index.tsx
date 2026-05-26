@@ -51,8 +51,6 @@ function AdminStudentsPending() {
 
 function AdminStudentsContent() {
   const navigate = Route.useNavigate()
-  // const { data } = useQuery(getAllGradesQueryOptions())
-  // this should be for the filter
 
   const { size, search, status } = Route.useSearch({
     select: (s) => ({
