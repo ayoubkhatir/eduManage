@@ -115,10 +115,14 @@ export function StudentClassSelector<
   )
 }
 
-export function StudentGradeSelector<T extends { gradeId: string }>() {
+export function StudentGradeSelector<T extends { gradeId: string }>({
+  schoolId,
+}: {
+  schoolId: string
+}) {
   const form = useFormContext<T>()
   const { data: grades, status: fetchStatus } = useQuery({
-    ...getAllGradesQueryOptions(),
+    ...getAllGradesQueryOptions(schoolId),
   })
 
   const gradesOptions = useMemo(

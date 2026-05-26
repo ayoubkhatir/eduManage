@@ -42,7 +42,7 @@ export function AddSubjectDialog({
   })
 
   const { data: grades, status: fetchStatus } = useQuery({
-    ...getAllGradesQueryOptions(),
+    ...getAllGradesQueryOptions(schoolId),
   })
 
   useEffect(() => {

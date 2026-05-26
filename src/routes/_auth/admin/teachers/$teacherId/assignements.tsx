@@ -77,7 +77,9 @@ export const Route = createFileRoute(
     })) as AdminUser
 
     if (!teacher) throw notFound()
-    context.queryClient.ensureQueryData({ ...getAllGradesQueryOptions() })
+    context.queryClient.ensureQueryData({
+      ...getAllGradesQueryOptions(currentUser.info.id),
+    })
     context.queryClient.ensureQueryData({
       ...getTeacherAssignementsQueryOptions(teacherId),
     })
@@ -161,7 +163,9 @@ function TeacherAssignmentsPage() {
                     >
                       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                         <div className="flex flex-col gap-2.5">
-                          <StudentGradeSelector />
+                          <StudentGradeSelector
+                            schoolId={currentUser.info.id}
+                          />
                           <div className="flex items-start gap-1">
                             <SubjectsSelector schoolId={currentUser.info.id} />
                             <AddSubjectDialog

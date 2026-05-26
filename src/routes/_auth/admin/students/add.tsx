@@ -21,7 +21,9 @@ export const Route = createFileRoute('/_auth/admin/students/add')({
     const currentUser = (await FetchCurrentUserServerFn({
       data: context.authState.user!,
     })) as AdminUser
-    context.queryClient.ensureQueryData({ ...getAllGradesQueryOptions() })
+    context.queryClient.ensureQueryData({
+      ...getAllGradesQueryOptions(currentUser.info.id),
+    })
     context.queryClient.ensureQueryData({
       ...getAllClassesQueryOptions(currentUser.info.id),
     })
@@ -156,7 +158,7 @@ function RouteComponent() {
                           label="Enrollment Date"
                           form={studentForm}
                         />
-                        <StudentGradeSelector />
+                        <StudentGradeSelector schoolId={currentUser.info.id} />
                         <StudentClassSelector schoolId={currentUser.info.id} />
                       </div>
                     </div>

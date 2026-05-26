@@ -2,22 +2,23 @@ import { eq } from "drizzle-orm";
 import type { AddGradeSchema } from "#/schemas/grades.schema";
 import { db, type Database } from "#/server/db/db";
 import { gradesTable } from "#/server/db/schema";
+import type { ID } from "#/types/authTypes";
 
 class GradesController {
     constructor(private readonly db: Database) { }
 
-    async getAllGrades() {
+    async getAllGrades(schoolId: ID) {
         return this.db.query.gradesTable.findMany({
             columns: {
                 name: true,
                 id: true
-            }
+            },
+            where: eq(gradesTable.schoolId, schoolId)
         })
     }
 
     async getAllGradesWithClassesAndSubjects() {
         const grades = await this.db.query.gradesTable.findMany({
-            // where: eq(gradesTable.status, "Active"),
             with: {
                 classes: {
                     columns: {

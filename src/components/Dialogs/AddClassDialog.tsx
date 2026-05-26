@@ -19,8 +19,6 @@ import {
 
 import { getAllGradesQueryOptions } from '#/hooks/grades/hooks'
 import { useAddClass } from '#/hooks/classes/hooks'
-// import { getAllClassesQueryOptions } from '#/server/modules/classes/classes.controller'
-// import SelectWrapper from './admin/Wrappers/SelectWrapper'
 import InputWrapper from '../admin/Wrappers/InputWrapper'
 
 type AddClassDialogProps = {
@@ -52,7 +50,7 @@ export function AddClassDialog({
   })
 
   const { data: grades, status: fetchStatus } = useQuery({
-    ...getAllGradesQueryOptions(),
+    ...getAllGradesQueryOptions(schoolId),
   })
 
   // const { data: classes } = useQuery(getAllClassesQueryOptions(schoolId))
