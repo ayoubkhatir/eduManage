@@ -62,13 +62,13 @@ function Navbar() {
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      className={`fixed inset-x-0 top-0 z-50 overflow-x-hidden transition-all duration-300 ${
         scrolled
           ? 'border-b border-border/60 bg-background/80 backdrop-blur-xl shadow-sm'
           : 'border-b border-transparent bg-transparent'
       }`}
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <a href="#" className="flex items-center gap-2.5 group">
           <div className="flex size-9 items-center justify-center rounded-xl bg-linear-to-br from-primary to-primary-soft text-white shadow-md shadow-primary/20 transition-all group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-primary/30">
@@ -93,8 +93,15 @@ function Navbar() {
         </nav>
 
         {/* Right side */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-shrink-0">
           <ModeToggle />
+          <button
+            className="md:hidden cursor-pointer rounded-xl p-2 text-muted-foreground transition-all hover:text-foreground hover:bg-accent"
+            onClick={toggleSideBar}
+            aria-label="Open menu"
+          >
+            <Icon name="menu" className="text-[22px]" />
+          </button>
           <Link
             to="/log-in"
             search={{
@@ -105,13 +112,6 @@ function Navbar() {
           >
             Sign in
           </Link>
-          <button
-            className="cursor-pointer rounded-xl p-2 text-muted-foreground transition-all hover:text-foreground hover:bg-accent md:hidden"
-            onClick={toggleSideBar}
-            aria-label="Open menu"
-          >
-            <Icon name="menu" />
-          </button>
         </div>
       </div>
     </motion.header>
@@ -141,7 +141,7 @@ function MobileSidebar() {
 
   return (
     <div
-      className={`fixed inset-0 top-16 z-50 md:hidden ${isOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
+      className={`fixed inset-x-0 top-16 bottom-0 z-50 md:hidden ${isOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
       role="dialog"
       aria-modal="true"
       aria-hidden={!isOpen}
@@ -154,7 +154,7 @@ function MobileSidebar() {
         aria-label="Close menu"
       />
       <aside
-        className="absolute right-0 top-0 h-full w-72 border-l border-slate-200/60 bg-white shadow-2xl dark:border-white/6 dark:bg-background-dark transition-transform duration-300 ease-out"
+        className="absolute right-0 top-0 h-full w-72 max-w-[85vw] border-l border-slate-200/60 bg-white shadow-2xl dark:border-white/6 dark:bg-background-dark transition-transform duration-300 ease-out"
         style={{ transform: isOpen ? 'translateX(0)' : 'translateX(100%)' }}
       >
         <div className="flex flex-col gap-1 p-4">
@@ -855,7 +855,7 @@ function App() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="min-h-screen bg-background text-foreground antialiased"
+        className="min-h-screen bg-background text-foreground antialiased overflow-x-hidden"
       >
         <Navbar />
         <MobileSidebar />
