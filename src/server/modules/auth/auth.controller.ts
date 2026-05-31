@@ -261,12 +261,10 @@ class AuthController implements IAuthController {
 
     async forgotPassword(input: { email: string }) {
         try {
-            // Verify whether a user exists for the provided email.
+            
             const user = await authService.findUserByEmail(input.email);
 
-            // Return a simple acknowledgement. Caller may navigate to the reset
-            // page after this; actual password reset will be performed by the
-            // reset endpoint which calls Better Auth with token+password.
+            
             return {
                 success: true,
                 message: 'If an account exists with this email, you may proceed to reset the password',
