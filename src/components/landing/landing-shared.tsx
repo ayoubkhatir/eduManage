@@ -148,26 +148,26 @@ export function Footer() {
       title: 'Product',
       links: [
         { label: 'Features', href: '/#features' },
-        { label: 'Pricing', href: '/pricing' },
-        { label: 'Security', href: '/pages/security' },
-        { label: 'Changelog', href: '/pages/changelog' },
+        { label: 'Pricing', href: '/Pages/pricing' },
+        { label: 'Security', href: '/Pages/security' },
+        { label: 'Changelog', href: '/Pages/changelog' },
       ],
     },
     {
       title: 'Company',
       links: [
-        { label: 'About', href: '/pages/about' },
-        { label: 'Careers', href: '/pages/careers' },
-        { label: 'Blog', href: '/pages/blog' },
-        { label: 'Press', href: '/pages/press' },
+        { label: 'About', href: '/Pages/about' },
+        { label: 'Careers', href: '/Pages/careers' },
+        { label: 'Blog', href: '/Pages/blog' },
+        { label: 'Press', href: '/Pages/press' },
       ],
     },
     {
       title: 'Resources',
       links: [
-        { label: 'Documentation', href: '/pages/documentation' },
-        { label: 'Help Center', href: '/pages/help' },
-        { label: 'Community', href: '/pages/community' },
+        { label: 'Documentation', href: '/Pages/documentation' },
+        { label: 'Help Center', href: '/Pages/help' },
+        { label: 'Community', href: '/Pages/community' },
         { label: 'Contact', href: '/#contact' },
       ],
     },
@@ -224,7 +224,7 @@ export function Footer() {
                 {col.links.map((link) => (
                   <li key={link.label}>
                     <Link
-                      to={'/Pages/about'}
+                      to={link.href}
                       className="text-sm text-slate-500 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
                     >
                       {link.label}

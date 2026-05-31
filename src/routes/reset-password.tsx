@@ -8,6 +8,7 @@ import Screen from '#/auth/login/components/screen'
 
 const resetPasswordSearchSchema = z.object({
   token: z.string().optional(),
+  email: z.email().optional(),
 })
 
 export type ResetPasswordSearch = z.infer<typeof resetPasswordSearchSchema>

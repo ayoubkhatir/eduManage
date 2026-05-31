@@ -259,39 +259,21 @@ class AuthController implements IAuthController {
 
     }
 
-    async forgotPassword(input: { email: string }, headers: Headers) {
+    async forgotPassword(input: { email: string }) {
         try {
+            // Verify whether a user exists for the provided email.
             const user = await authService.findUserByEmail(input.email);
-            
-            if (!user) {
-                // Return success even if user doesn't exist for security reasons
-                return {
-                    success: true,
-                    message: "If an account exists with this email, a password reset link will be sent",
-                    status: 200,
-                };
-            }
 
-            const data = await auth.api.forgetPassword({
-                body: {
-                    email: input.email,
-                    redirectURL: `${process.env.BETTER_AUTH_URL || 'http://localhost:5173'}/reset-password`,
-                },
-                headers: headers,
-            });
-
-            if (!data) {
-                return {
-                    success: false,
-                    message: "Failed to send password reset link",
-                    status: 400,
-                };
-            }
-
+            // Return a simple acknowledgement. Caller may navigate to the reset
+            // page after this; actual password reset will be performed by the
+            // reset endpoint which calls Better Auth with token+password.
             return {
                 success: true,
-                message: "Password reset link sent to your email",
+                message: 'If an account exists with this email, you may proceed to reset the password',
                 status: 200,
+                data: {
+                    exists: !!user,
+                },
             };
         } catch (error: any) {
             console.log("\x1b[36m[server]\x1b[0m " + error)
@@ -316,7 +298,7 @@ class AuthController implements IAuthController {
             const data = await auth.api.resetPassword({
                 body: {
                     token: input.token,
-                    password: input.password,
+                    newPassword: input.password,
                 },
                 headers: headers,
             });

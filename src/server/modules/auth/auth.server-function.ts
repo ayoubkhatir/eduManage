@@ -46,8 +46,7 @@ export const loginOAuthServer = createServerFn({ method: "POST" })
 export const forgotPasswordServerFn = createServerFn({ method: "POST" })
     .inputValidator(forgotPasswordSchema)
     .handler(({ data }) => {
-        const headers = getRequestHeaders();
-        return authController.forgotPassword(data, headers)
+        return authController.forgotPassword(data)
     })
 
 export const resetPasswordServerFn = createServerFn({ method: "POST" })

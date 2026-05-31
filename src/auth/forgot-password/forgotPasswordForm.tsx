@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from '@tanstack/react-router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -21,16 +22,18 @@ export default function ForgotPasswordForm() {
       email: '',
     },
   })
+  const navigate = useNavigate()
 
   const mutation = useMutation({
     mutationFn: (data: ForgotPasswordFormData) =>
       forgotPasswordServerFn({ data }),
     onSuccess: () => {
-      setSuccessMessage(
-        'Check your email for a link to reset your password'
-      )
+      setSuccessMessage('Check your email for a link to reset your password')
       setErrorMessage(null)
+      // Navigate to reset page (we include the email so user lands on the page)
+      const email = form.getValues().email || ''
       form.reset()
+      navigate({ to: '/reset-password', search: { email } })
     },
     onError: (error: any) => {
       setErrorMessage(
@@ -43,6 +46,7 @@ export default function ForgotPasswordForm() {
   const onSubmit = async (data: ForgotPasswordFormData) => {
     mutation.mutate(data)
   }
+
 
   return (
     <form

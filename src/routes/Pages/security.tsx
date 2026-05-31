@@ -8,7 +8,7 @@ export const Route = createFileRoute('/Pages/security')({
 })
 
 const features = [
-  { icon: 'encryption', title: 'End-to-End Encryption', desc: 'All data is encrypted in transit using TLS 1.3 and at rest using AES-256. Your information stays private and secure.' },
+  { icon: 'lock', title: 'End-to-End Encryption', desc: 'All data is encrypted in transit using TLS 1.3 and at rest using AES-256. Your information stays private and secure.' },
   { icon: 'verified_user', title: 'SOC 2 Compliant', desc: 'We undergo rigorous third-party audits to ensure our security controls meet the highest industry standards.' },
   { icon: 'shield', title: 'Access Control', desc: 'Role-based access control ensures that users only see what they need. Granular permissions for every action.' },
   { icon: 'backup', title: 'Automated Backups', desc: 'Data is backed up every 6 hours across multiple geographic regions. Recovery point objective under 15 minutes.' },

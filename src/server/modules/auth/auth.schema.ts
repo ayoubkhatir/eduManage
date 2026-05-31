@@ -25,7 +25,7 @@ export const registerSchema = z.object({
 
 
 export const forgotPasswordSchema = z.object({
-    email: z.email("Invalid email address"),
+    email: z.email('Invalid email address'),
 })
 
 export const resetPasswordSchema = z.object({

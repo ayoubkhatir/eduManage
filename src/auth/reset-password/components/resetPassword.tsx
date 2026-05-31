@@ -3,7 +3,7 @@ import ResetPasswordForm from '../resetPasswordForm'
 import type { ResetPasswordSearch } from '#/routes/reset-password'
 
 export default function ResetPassword() {
-  const { token } = useSearch({ from: '/reset-password' }) as ResetPasswordSearch
+  const { token, email } = useSearch({ from: '/reset-password' }) as ResetPasswordSearch & { email?: string }
 
   return (
     <div className="flex w-full flex-col justify-center overflow-y-auto px-5 py-8 sm:px-8 lg:w-[45%] lg:px-12 xl:px-16 bg-white dark:bg-[#0d1117] z-10">
@@ -28,10 +28,18 @@ export default function ResetPassword() {
           </p>
         </div>
 
-        {!token && (
+        {!token && !email && (
           <div className="rounded-xl bg-yellow-50 p-4 mb-6 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800">
             <p className="text-sm text-yellow-700 dark:text-yellow-300">
               Invalid or expired reset link. Please request a new password reset.
+            </p>
+          </div>
+        )}
+
+        {email && (
+          <div className="rounded-xl bg-blue-50 p-4 mb-6 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+            <p className="text-sm text-blue-700 dark:text-blue-300">
+              A reset request was submitted for <strong>{email}</strong>. If you received an email, follow its link to complete the reset. You can also set a new password here if you already have a valid token.
             </p>
           </div>
         )}
