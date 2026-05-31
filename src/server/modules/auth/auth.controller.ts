@@ -262,7 +262,7 @@ class AuthController implements IAuthController {
     async forgotPassword(input: { email: string }, headers: Headers) {
         try {
             const user = await authService.findUserByEmail(input.email);
-            
+
             if (!user) {
                 // Return success even if user doesn't exist for security reasons
                 return {
@@ -316,7 +316,7 @@ class AuthController implements IAuthController {
             const data = await auth.api.resetPassword({
                 body: {
                     token: input.token,
-                    password: input.password,
+                    newPassword: input.password,
                 },
                 headers: headers,
             });

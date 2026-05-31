@@ -4,9 +4,10 @@ import type { SQL } from "drizzle-orm";
 import { db } from "../db.js";
 import { classesTable, eventsTable, resourcesTable, subjectsTable } from "../schema.js";
 import type { AddEventType, Event } from "#/types/eventsTypes.js";
+import generateId from "#/lib/id_generator.js";
 
 export async function createEvent(data: AddEventType): Promise<Event[]> {
-  const payload = { ...data, id: crypto.randomUUID() };
+  const payload = { ...data, id: generateId() };
   const rows = await db.insert(eventsTable).values(payload).returning();
   return rows;
 }

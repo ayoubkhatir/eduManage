@@ -3,7 +3,7 @@ import { faker } from "@faker-js/faker";
 import { eq, inArray } from "drizzle-orm";
 import { db } from "#/server/db/db";
 import * as schema from "#/server/db/schema";
-import generateId from "#/server/utils/id_generator";
+import generateId from "#/lib/id_generator";
 import { handlePassword } from "#/server/utils/handle-password";
 
 faker.seed(42);
@@ -88,7 +88,7 @@ async function backfillSchoolAccounts(schoolId: string, schoolName: string) {
 	];
 
 	const usersToBackfill = await db
-			.select({ id: schema.users.id, name: schema.users.name, role: schema.users.role })
+		.select({ id: schema.users.id, name: schema.users.name, role: schema.users.role })
 		.from(schema.users)
 		.where(inArray(schema.users.id, userIds));
 

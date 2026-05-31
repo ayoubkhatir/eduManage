@@ -1,4 +1,4 @@
-import generateId  from '#/server/utils/id_generator'
+import generateId from '#/lib/id_generator'
 import { format } from 'date-fns'
 
 export type OwnerEvent = {

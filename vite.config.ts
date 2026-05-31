@@ -1,9 +1,8 @@
 import { defineConfig } from 'vite'
-// import { nitro } from "nitro/vite"
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import { fileURLToPath } from 'node:url'
-
 import viteReact from '@vitejs/plugin-react'
+import { nitro } from 'nitro/vite';
 import tailwindcss from '@tailwindcss/vite'
 
 const config = defineConfig({
@@ -16,18 +15,11 @@ const config = defineConfig({
     tsconfigPaths: true,
   },
   plugins: [
-    // devtools(),
     tailwindcss(),
-    tanstackStart(
-      //   spa: {
-      //     enabled: true,
-      //     prerender: {
-      //       enabled: false
-      //     }
-      //   }
-    ),
-    // nitro({ preset: "bun" }),
-    viteReact()],
+    tanstackStart(),
+    nitro(),
+    viteReact()
+  ],
 })
 
 export default config

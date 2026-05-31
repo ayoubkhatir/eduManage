@@ -166,7 +166,7 @@ function TeacherAssignmentsPage() {
                           <StudentGradeSelector
                             schoolId={currentUser.info.id}
                           />
-                          <div className="flex items-start gap-1">
+                          <div className="flex items-end gap-1">
                             <SubjectsSelector schoolId={currentUser.info.id} />
                             <AddSubjectDialog
                               schoolId={currentUser.info.id}
@@ -180,12 +180,12 @@ function TeacherAssignmentsPage() {
                           </div>
                         </div>
 
-                                        <div className="flex flex-col gap-2.5">
-                                            <StudentClassSelector
-                                              schoolId={currentUser.info.id}
-                                            />
-                                            <IsPrimaryTeacherCheckboxInput />
-                                          </div>
+                        <div className="flex flex-col gap-2.5">
+                          <StudentClassSelector
+                            schoolId={currentUser.info.id}
+                          />
+                          <IsPrimaryTeacherCheckboxInput />
+                        </div>
                       </div>
 
                       <div className="flex justify-end">

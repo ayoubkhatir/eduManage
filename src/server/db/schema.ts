@@ -11,7 +11,7 @@ import {
   date,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-import generateId from "../utils/id_generator";
+import generateId from "../../lib/id_generator";
 
 // * enums :
 

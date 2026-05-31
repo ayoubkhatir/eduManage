@@ -1,9 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
-import { studentsController } from "./students.controller";
 import { paginatedSuccessResponse, successResponse, type APIResponse, type APIErrorResponses } from "#/server/utils/response.type";
-import { addStudentSchema, editStudentSchema, getStudentsSchema } from "#/schemas/students.schema";
+import { addStudentSchema, dashboardPeriodSchema, editStudentSchema, getStudentsSchema } from "#/schemas/students.schema";
 import { validCuidSchema } from "#/schemas/shared.schema";
 import { mapDbError } from "#/server/utils/db_error_handling";
+import { studentsController } from "./students.controller";
 
 export const getAllStudentsServerFn = createServerFn({ method: "GET" })
     .inputValidator(getStudentsSchema)
@@ -51,6 +51,13 @@ export const deleteStudentServerFn = createServerFn({ method: "POST" })
 export const getStudentsStatsServerFn = createServerFn({ method: "GET" })
     .handler(async () => successResponse(await studentsController.getStudentsStats()))
 
+// related to dashboard 
+
 export const getDashboardStatsServerFn = createServerFn({ method: "GET" })
     .inputValidator(validCuidSchema)
     .handler(async ({ data: schoolId }) => successResponse(await studentsController.getDashboardStats(schoolId)))
+
+
+export const getDashboardChartServerFn = createServerFn({ method: "GET" })
+    .inputValidator(dashboardPeriodSchema)
+    .handler(async ({ data }) => successResponse(await studentsController.getDashboardChart({ ...data })))
