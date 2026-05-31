@@ -93,7 +93,7 @@ function Navbar() {
         </nav>
 
         {/* Right side */}
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           <ModeToggle />
           <button
             className="md:hidden cursor-pointer rounded-xl p-2 text-muted-foreground transition-all hover:text-foreground hover:bg-accent"

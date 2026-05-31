@@ -1,9 +1,9 @@
 import { db, type Database } from "#/server/db/db";
 import { account, classesTable, gradesTable, StatusEnum, studentsTable, teachersTable, UserRoleEnum, users } from "#/server/db/schema";
 import { and, asc, count, desc, eq, gte, ilike, lt, or, sql, SQL } from "drizzle-orm";
-import generateId from "../../utils/id_generator";
+import generateId from "../../../lib/id_generator";
 import { handlePassword } from "#/server/utils/handle-password";
-import { StudentUserDto, type AddStudentType, type EditStudentType, type GetStudentsType, type StudentUser } from "#/types/studentTypes";
+import { DashboardPeriodEnum, StudentUserDto, type AddStudentType, type DashboardPeriod, type EditStudentType, type GetStudentsType, type StudentUser } from "#/types/studentTypes";
 import type { ID } from "#/types/authTypes";
 
 
@@ -143,98 +143,7 @@ class StudentsController {
             },
         }
     }
-    // async listStudents({ classe, grade, page, search, size, sortOrder, sortBy, status }: GetStudentsType) {
-    //     const safePage = Math.max(1, page ?? 1)
-    //     const safeSize = Math.max(1, size ?? 10)
-    //     const offset = (safePage - 1) * safeSize
 
-    //     const conditions: SQL<unknown>[] = []
-
-    //     const normalizedSearch = search?.trim()
-    //     const normalizedStatus = status?.trim()
-    //     const normalizedClass = classe?.trim()
-    //     const normalizedGrade = grade?.trim()
-
-    //     const sortColumn =
-    //         sortBy === 'email'
-    //             ? sql`lower(${users.email})`
-    //             : sql`lower(${users.name})`
-
-    //     const orderDirection =
-    //         sortOrder === 'desc'
-    //             ? desc(sortColumn)
-    //             : asc(sortColumn)
-
-
-
-    //     if (normalizedSearch) {
-    //         conditions.push(
-    //             or(
-    //                 ilike(users.name, `%${normalizedSearch}%`),
-    //                 ilike(users.email, `%${normalizedSearch}%`)
-    //             ) as SQL<unknown>
-    //         );
-    //     }
-
-    //     if (normalizedStatus) {
-    //         conditions.push(
-    //             eq(studentsTable.status, normalizedStatus as StatusEnum)
-    //         )
-    //     }
-
-    //     const whereClause = conditions.length > 0 ? and(...conditions) : undefined
-
-    //     const [rows, totalResult] = await Promise.all([
-    //         this.db
-    //             .select({
-    //                 student: studentsTable,
-    //                 user: users,
-    //                 classe: {
-    //                     id: classesTable.id,
-    //                     name: classesTable.name,
-    //                 },
-    //                 grade: {
-    //                     id: gradesTable.id,
-    //                     name: gradesTable.name,
-    //                 },
-    //             })
-    //             .from(studentsTable)
-    //             .innerJoin(users, eq(studentsTable.userId, users.id))
-    //             .innerJoin(classesTable, eq(studentsTable.classId, classesTable.id))
-    //             .innerJoin(gradesTable, eq(classesTable.gradeId, gradesTable.id)).where(whereClause)
-    //             .orderBy(orderDirection)
-    //             .limit(safeSize)
-    //             .offset(offset),
-
-    //         this.db
-    //             .select({
-    //                 total: count(),
-    //             })
-    //             .from(studentsTable)
-    //             .innerJoin(users, eq(studentsTable.userId, users.id))
-    //             .innerJoin(classesTable, eq(studentsTable.classId, classesTable.id))
-    //             .innerJoin(gradesTable, eq(classesTable.gradeId, gradesTable.id))
-    //             .where(whereClause),
-    //     ])
-
-    //     const totalCount = Number(totalResult[0]?.total ?? 0)
-    //     const totalPages = Math.ceil(totalCount / safeSize)
-
-    //     const data = rows.map(({
-    //         student,
-    //         user,
-    //         classe,
-    //         grade
-    //     }) => StudentUserDto(student, user, classe, grade))
-
-    //     return {
-    //         data,
-    //         pagination: {
-    //             totalCount,
-    //             totalPages,
-    //         },
-    //     }
-    // }
 
     async addStudent(data: AddStudentType) {
         const userId = generateId();
@@ -439,6 +348,9 @@ class StudentsController {
             totalMonthEnrollments,
         }
     }
+
+    // related to dashboard
+
     async getDashboardStats(schoolId: ID) {
         const [{ totalStudents }] = await this.db
             .select({ totalStudents: count() })
@@ -468,9 +380,196 @@ class StudentsController {
         }
     }
 
+    async getDashboardChart({
+        schoolId,
+        period,
+    }: DashboardPeriod) {
+        const now = new Date()
 
+        let startDate = new Date()
+        let labels: string[] = []
+
+        switch (period) {
+            case DashboardPeriodEnum.MONTH:
+                startDate = new Date(
+                    now.getFullYear(),
+                    now.getMonth(),
+                    1,
+                )
+
+                labels = [
+                    'Week 1',
+                    'Week 2',
+                    'Week 3',
+                    'Week 4',
+                ]
+                break
+
+            case DashboardPeriodEnum.HALFYEAR:
+                startDate = new Date(
+                    now.getFullYear(),
+                    now.getMonth() - 5,
+                    1,
+                )
+
+                labels = [
+                    'Jan',
+                    'Feb',
+                    'Mar',
+                    'Apr',
+                    'May',
+                    'Jun',
+                ]
+                break
+
+            case DashboardPeriodEnum.YEAR:
+                startDate = new Date(
+                    now.getFullYear() - 1,
+                    now.getMonth(),
+                    1,
+                )
+
+                labels = [
+                    'Jan',
+                    'Feb',
+                    'Mar',
+                    'Apr',
+                    'May',
+                    'Jun',
+                    'Jul',
+                    'Aug',
+                    'Sep',
+                    'Oct',
+                    'Nov',
+                    'Dec',
+                ]
+                break
+        }
+
+        const startDateString = startDate
+            .toISOString()
+            .split('T')[0]
+
+        const students = await this.db
+            .select({
+                enrollmentDate:
+                    studentsTable.enrollmentDate,
+            })
+            .from(studentsTable)
+            .where(
+                and(
+                    gte(
+                        studentsTable.enrollmentDate,
+                        startDateString,
+                    ),
+
+                    eq(
+                        studentsTable.schoolId,
+                        schoolId,
+                    ),
+                ),
+            )
+
+        // ----------------------------------------
+        // CREATE COUNTERS
+        // ----------------------------------------
+
+        let data: number[] = []
+
+        switch (period) {
+            case DashboardPeriodEnum.MONTH: {
+                // 4 weeks
+
+                const weeks = [0, 0, 0, 0]
+
+                students.forEach((student) => {
+                    const date = new Date(
+                        student.enrollmentDate,
+                    )
+
+                    const day = date.getDate()
+
+                    if (day <= 7) weeks[0]++
+                    else if (day <= 14) weeks[1]++
+                    else if (day <= 21) weeks[2]++
+                    else weeks[3]++
+                })
+
+                data = weeks
+                break
+            }
+
+            case DashboardPeriodEnum.HALFYEAR: {
+                // 6 months
+
+                const months = [0, 0, 0, 0, 0, 0]
+
+                students.forEach((student) => {
+                    const date = new Date(
+                        student.enrollmentDate,
+                    )
+
+                    const diff =
+                        now.getMonth() - date.getMonth()
+
+                    if (diff >= 0 && diff < 6) {
+                        months[5 - diff]++
+                    }
+                })
+
+                data = months
+                break
+            }
+
+            case DashboardPeriodEnum.YEAR: {
+                // 12 months
+
+                const months = [
+                    0, 0, 0, 0, 0, 0,
+                    0, 0, 0, 0, 0, 0,
+                ]
+
+                students.forEach((student) => {
+                    const date = new Date(
+                        student.enrollmentDate,
+                    )
+
+                    const month = date.getMonth()
+
+                    months[month]++
+                })
+
+                data = months
+                break
+            }
+        }
+
+        return {
+            labels,
+
+            datasets: [
+                {
+                    label: 'Enrollments',
+
+                    data,
+
+                    borderColor: '#3b82f6',
+
+                    backgroundColor:
+                        'rgba(59, 130, 246, 0.2)',
+
+                    tension: 0.4,
+
+                    pointRadius: 5,
+
+                    pointHoverRadius: 7,
+
+                    fill: true,
+                },
+            ],
+        }
+    }
 }
-
 export const studentsController = new StudentsController(db);
 
 // this function is not in use now

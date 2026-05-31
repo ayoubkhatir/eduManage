@@ -2,6 +2,7 @@ import { eq } from "drizzle-orm";
 import { db, type Database } from "../db.js";
 import { users } from "../schema.js";
 import type { AuthUser } from "#/types/authTypes.js";
+import generateId from "#/lib/id_generator.js";
 
 // the types here should be updated.there is no more user and newUser types
 
@@ -17,12 +18,12 @@ export interface IUsersRepository {
 class UsersRepository implements IUsersRepository {
   constructor(private readonly db: Database) { }
 
-  
+
   async createUser(data: AuthUser): Promise<AuthUser[]> {
-  
+
     // the id generation should be handled in the database i guess.
 
-    const payload = { ...data, id: crypto.randomUUID() };
+    const payload = { ...data, id: generateId() };
     const rows = await this.db.insert(users).values(payload).returning();
     return rows;
   }

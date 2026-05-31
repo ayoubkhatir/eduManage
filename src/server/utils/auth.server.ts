@@ -1,14 +1,13 @@
 import { betterAuth } from "better-auth";
 import { openAPI } from "better-auth/plugins";
-// import { bearer } from "better-auth/plugins/bearer";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../db/db.ts";
 import { handlePassword } from "./handle-password.ts";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { UserGenderEnum, UserRoleEnum } from "../db/schema.ts";
-import generateId from "./id_generator.ts";
+import generateId from "../../lib/id_generator.ts";
 
-const baseURL = process.env.BETTER_AUTH_URL;
+// const baseURL = process.env.BETTER_AUTH_URL;
 const basePath = "/api/better-auth";
 const SESSION_EXPIRES_IN_SECONDS = 60 * 60 * 24 * 7;
 const SESSION_UPDATE_AGE_SECONDS = 60 * 60 * 24;
@@ -33,18 +32,16 @@ const socialProviders = {
 };
 
 export const auth = betterAuth({
-    baseURL,
+    // baseURL,
     basePath,
     database: drizzleAdapter(db, {
         provider: "pg",
     }),
     advanced: {
-        // generateId: () => generateId(),
         database: {
             generateId: () => generateId(),
         }
     },
-    // plugins: [bearer(), openAPI(), tanstackStartCookies()],
     plugins: [openAPI(), tanstackStartCookies()],
 
     user: {

@@ -324,10 +324,6 @@ class AuthController implements IAuthController {
         }
     }
 
-    // async fetchSchoolID(userId: ID) {
-
-    // }
-
     async fetchUserRoleData(userId: ID, role: UserRoleEnum) {
         switch (role) {
             case UserRoleEnum.ADMIN:
@@ -387,10 +383,6 @@ class AuthController implements IAuthController {
                 const { assignments, ...restRawTeacher } = rawTeacher!;
                 const teacher = { subjects: assignments.map(ass => ass.subject), ...restRawTeacher }
                 return { role, admin: null, teacher: teacher!, student: null };
-            // case UserRoleEnum.STUDENT:
-
-            // case UserRoleEnum.TEACHER:
-            //     return
         }
     }
 }

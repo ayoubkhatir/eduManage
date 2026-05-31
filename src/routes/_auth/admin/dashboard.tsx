@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 import { motion } from 'framer-motion'
@@ -22,12 +21,6 @@ export const Route = createFileRoute('/_auth/admin/dashboard')({
 })
 
 function RouteComponent() {
-  const [year, setYear] = useState<boolean>(false)
-
-  function changeChart() {
-    setYear((state) => !state)
-  }
-
   const { currentUser } = Route.useLoaderData()
 
   return (
@@ -62,25 +55,7 @@ function RouteComponent() {
               }}
               className="lg:col-span-2 rounded-2xl border border-border/60 bg-card p-6 shadow-sm"
             >
-              <div className="mb-6 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <h3 className="text-lg font-bold text-foreground">
-                    Enrollment Growth
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    Academic Year 2023-2024
-                  </p>
-                </div>
-                <select
-                  className="mt-2 cursor-pointer rounded-xl border border-border bg-muted/50 px-3 py-2 text-sm text-foreground outline-none transition-all focus:border-primary focus:ring-1 focus:ring-primary sm:mt-0"
-                  onChange={changeChart}
-                  value={year ? 'year' : '6months'}
-                >
-                  <option value="6months">Last 6 Months</option>
-                  <option value="year">Last Year</option>
-                </select>
-              </div>
-              <DashboardChart props={year} />
+              <DashboardChart schoolId={currentUser.info.id} />
             </motion.section>
             <section className="flex flex-col gap-6">
               <motion.div

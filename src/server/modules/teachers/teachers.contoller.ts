@@ -2,7 +2,7 @@ import { db, type Database } from "#/server/db/db";
 import { account, adminsTable, classesTable, gradesTable, StatusEnum, studentsTable, subjectsTable, teacherAssignmentsTable, teachersTable, UserGenderEnum, UserRoleEnum, users } from "#/server/db/schema";
 import { and, asc, count, desc, eq, exists, gte, ilike, inArray, lt, or, sql, SQL } from "drizzle-orm"
 import { handlePassword } from "#/server/utils/handle-password";
-import generateId from "#/server/utils/id_generator";
+import generateId from "#/lib/id_generator";
 import type { AddTeacherType, AssignTeacherType, EditTeacherType, GetTeacherClassesType, GetTeachersType } from "#/types/teacherTypes";
 import { TeacherUserDto } from "#/types/teacherTypes";
 

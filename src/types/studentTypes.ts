@@ -1,6 +1,7 @@
 import * as schema from '#/server/db/schema'
 import {
   addStudentSchema,
+  dashboardPeriodSchema,
   editStudentSchema,
   getStudentsSchema,
   studentSearchSchema,
@@ -53,3 +54,17 @@ export function StudentUserDto(
     },
   }
 }
+
+
+
+// related to dashboard  
+export enum DashboardPeriodEnum {
+  MONTH = 'month',
+  HALFYEAR = '6months',
+  YEAR = 'year'
+}
+
+// inferred type from schema
+export type DashboardPeriod = z.infer<
+  typeof dashboardPeriodSchema
+>
