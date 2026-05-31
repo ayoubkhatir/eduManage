@@ -152,10 +152,10 @@ function RouteComponent() {
               <table className="w-full text-left">
                 <thead>
                   <tr className="border-b border-border/40 bg-muted/20 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    <th className="px-6 py-4">User / Event</th>
-                    <th className="px-6 py-4">Role</th>
-                    <th className="px-6 py-4">Action Type</th>
-                    <th className="px-6 py-4 text-right">Time</th>
+                    <th className="px-4 py-3 sm:px-6 sm:py-4">User / Event</th>
+                    <th className="px-4 py-3 sm:px-6 sm:py-4">Role</th>
+                    <th className="px-4 py-3 sm:px-6 sm:py-4">Action Type</th>
+                    <th className="px-4 py-3 sm:px-6 sm:py-4 text-right">Time</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/40">
@@ -202,10 +202,10 @@ function RouteComponent() {
                       key={i}
                       className="transition-all hover:bg-muted/30 group cursor-pointer"
                     >
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
+                      <td className="px-4 py-3 sm:px-6 sm:py-4">
+                        <div className="flex items-center gap-3 min-w-0 flex-nowrap">
                           <div
-                            className={`flex size-9 items-center justify-center rounded-full ${row.bg} ${row.text} text-sm font-bold`}
+                            className={`flex size-8 sm:size-9 items-center justify-center rounded-full ${row.bg} ${row.text} text-sm font-bold flex-shrink-0`}
                           >
                             {row.icon ? (
                               <span className="material-symbols-outlined text-lg">
@@ -215,32 +215,28 @@ function RouteComponent() {
                               row.initials
                             )}
                           </div>
-                          <div>
-                            <p className="text-sm font-medium text-foreground">
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-foreground truncate">
                               {row.name}
                             </p>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-xs text-muted-foreground truncate">
                               {row.detail}
                             </p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-3 sm:px-6 sm:py-4">
                         <span
-                          className={`inline-flex items-center rounded-full ${row.roleBg} ${row.roleText} px-2.5 py-0.5 text-xs font-medium`}
+                          className={`inline-flex items-center rounded-full ${row.roleBg} ${row.roleText} px-2.5 py-0.5 text-xs font-medium whitespace-nowrap`}
                         >
                           {row.role}
                         </span>
                       </td>
-                      <td className="px-6 py-4">
-                        <p className="text-sm text-foreground/80">
-                          {row.action}
-                        </p>
+                      <td className="px-4 py-3 sm:px-6 sm:py-4">
+                        <p className="text-sm text-foreground/80 truncate">{row.action}</p>
                       </td>
-                      <td className="px-6 py-4 text-right">
-                        <p className="text-sm text-muted-foreground">
-                          {row.time}
-                        </p>
+                      <td className="px-4 py-3 sm:px-6 sm:py-4 text-right">
+                        <p className="text-sm text-muted-foreground whitespace-nowrap">{row.time}</p>
                       </td>
                     </tr>
                   ))}

@@ -50,7 +50,7 @@ export function SideBar({ info, currentUser }: SideBarProps) {
         <Drawer open={isOpen} onOpenChange={setOpen} direction="left">
           <DrawerTrigger asChild>
             <button
-              className="fixed top-3 left-3 z-40 flex size-8 cursor-pointer items-center justify-center rounded-lg bg-white/80 text-slate-600 backdrop-blur-sm transition-colors hover:bg-white dark:bg-background-dark/80 dark:text-slate-400 dark:hover:bg-background-dark"
+              className="fixed top-4 left-3 z-40 flex size-8 cursor-pointer items-center justify-center rounded-lg bg-white/80 text-slate-600 backdrop-blur-sm transition-colors hover:bg-white dark:bg-background-dark/80 dark:text-slate-400 dark:hover:bg-background-dark"
               aria-label="Toggle navigation menu"
               type="button"
             >
@@ -60,7 +60,7 @@ export function SideBar({ info, currentUser }: SideBarProps) {
             </button>
           </DrawerTrigger>
 
-          <DrawerContent className="w-72 border-r border-slate-200/60 bg-white dark:border-white/6 dark:bg-[#0d1117]">
+          <DrawerContent className="w-72 max-w-[85vw] border-r border-slate-200/60 bg-white dark:border-white/6 dark:bg-[#0d1117]">
             <DialogTitle className="sr-only">Navigation</DialogTitle>
             <div className="flex h-screen flex-col justify-between p-4">
               <SideBarContent
