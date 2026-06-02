@@ -70,7 +70,7 @@ export const Route = createFileRoute('/_auth/teacher/subjects/$subjectCode')({
   component: StudentResourcesPage,
   pendingComponent: StudentResourcesPending,
   validateSearch: zodValidator(
-    getResourcesSchema.omit({ teacherId: true, subjectCode: true }),
+    getResourcesSchema.omit({ teacherId: true, subjectCode: true , schoolId: true }),
   ),
   loaderDeps: ({ search }) => search,
   loader: async ({ context, params: { subjectCode }, deps }) => {
@@ -85,6 +85,7 @@ export const Route = createFileRoute('/_auth/teacher/subjects/$subjectCode')({
         ...deps,
         subjectCode,
         teacherId: currentUser.info.id,
+        schoolId: currentUser.info.schoolId,
       }),
     )
 
@@ -151,6 +152,7 @@ function StudentResourcesContent() {
       ...search,
       subjectCode,
       teacherId: currentUser.info.id,
+      schoolId: currentUser.info.schoolId,
     }),
   )
 

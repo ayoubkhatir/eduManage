@@ -23,7 +23,7 @@ export type StudentUser = Omit<AuthUser, 'info'> & {
   }
 }
 
-export type GetStudentsType = z.infer<typeof getStudentsSchema>
+export type GetStudentsType = z.infer<typeof getStudentsSchema> 
 
 export type AddStudentType = z.infer<typeof addStudentSchema>
 

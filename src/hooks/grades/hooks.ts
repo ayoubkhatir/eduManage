@@ -1,3 +1,4 @@
+
 import { deleteGradeServerFn, getAllGradesServerFn, getAllGradesWithClassesAndSubjectsServerFn } from "#/server/modules/grades/grades.server-functions"
 import type { ID } from "#/types/authTypes"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -16,11 +17,11 @@ export const getAllGradesQueryOptions = (schoolId: ID) => ({
 })
 
 
-export const getAllGradesWithClassesAndSubjectsQueryOptions = () => ({
+export const getAllGradesWithClassesAndSubjectsQueryOptions = (schoolId : string) => ({
   queryKey: ['grades', 'grades_classes_subjects'],
   queryFn: async () => {
     try {
-      const response = await getAllGradesWithClassesAndSubjectsServerFn()
+      const response = await getAllGradesWithClassesAndSubjectsServerFn({ data: schoolId })
       return response.success ? response.data : []
     } catch (error) {
       console.log({ error })

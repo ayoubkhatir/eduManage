@@ -15,8 +15,12 @@ export const Route = createFileRoute('/_auth/admin/grades/$name')({
   component: RouteComponent,
   pendingComponent: () => <GradeDetailsSkeleton />,
   loader: async ({ context, params }) => {
+    const currentUser = (await FetchCurrentUserServerFn({
+      data: context.authState.user!,
+    })) as AdminUser
+
     const grades = await context.queryClient.ensureQueryData({
-      ...getAllGradesWithClassesAndSubjectsQueryOptions(),
+      ...getAllGradesWithClassesAndSubjectsQueryOptions(currentUser.info.id),
     })
 
     const grade = grades.find(
@@ -28,9 +32,6 @@ export const Route = createFileRoute('/_auth/admin/grades/$name')({
       throw notFound()
     }
 
-    const currentUser = (await FetchCurrentUserServerFn({
-      data: context.authState.user!,
-    })) as AdminUser
     return { currentUser, grade }
   },
   staticData: {
@@ -49,7 +50,7 @@ function RouteComponent() {
 
   const { name } = Route.useParams()
   const { data: grades } = useSuspenseQuery({
-    ...getAllGradesWithClassesAndSubjectsQueryOptions(),
+    ...getAllGradesWithClassesAndSubjectsQueryOptions(currentUser.info.id),
   })
 
   const grade = grades.find(

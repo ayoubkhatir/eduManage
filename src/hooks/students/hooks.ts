@@ -69,7 +69,7 @@ export function useAddStudent(schoolId: string) {
     addStudent(data, {
       onSuccess: () => {
         toast.success("User Added", { description: "Redirection to students page..." })
-        navigate({ to: "/admin/students" })
+        navigate({ to: "/admin/students"  })
       },
       onError: () => {
         toast.error("Error occured")
@@ -95,15 +95,17 @@ export const getStudentQueryOptions = (studentId: string) => ({
 
 // get student list
 export function useGetStudents({
+  schoolId,
   page,
   search,
   size,
-}: Partial<GetStudentsType>) {
+}: Partial<Omit<GetStudentsType , "schoolId">> & { schoolId: string }) {
   return useQuery({
     queryKey: ['students', page, search, size],
     queryFn: async () =>
       getAllStudentsServerFn({
         data: {
+          schoolId,
           page,
           search,
           size,
@@ -194,6 +196,7 @@ export function useEditStudent(edited: StudentUser) {
 }
 
 export const getStudentsQueryOptions = ({
+  schoolId,
   page,
   search,
   size,
@@ -202,7 +205,7 @@ export const getStudentsQueryOptions = ({
   status,
   classe,
   grade,
-}: GetStudentsType) => ({
+}: GetStudentsType & { schoolId: string }) => ({
   queryKey: [
     'students',
     page,
@@ -217,6 +220,7 @@ export const getStudentsQueryOptions = ({
   queryFn: async () => {
     const response = await getAllStudentsServerFn({
       data: {
+        schoolId,
         page,
         search,
         size,

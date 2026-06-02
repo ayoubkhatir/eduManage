@@ -48,16 +48,18 @@ type CalEvent = Omit<EventForm, 'start' | 'end'> & {
 export function GlobalCalendar({
   className,
   teacherId,
+  schoolId
 }: {
   className?: string
   teacherId?: string
+  schoolId: string
 }) {
   const isTeacher = !!teacherId
   const {
     data: rawEvents,
     isLoading,
     isError,
-  } = useGetEvents(className, teacherId)
+  } = useGetEvents(schoolId, className ,  teacherId)
   const [view, setView] = useState<View>(Views.MONTH)
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [detailEvent, setDetailEvent] = useState<CalEvent | null>(null)

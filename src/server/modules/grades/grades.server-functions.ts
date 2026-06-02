@@ -9,7 +9,8 @@ export const getAllGradesServerFn = createServerFn({ method: "GET" })
     .handler(async ({ data: schoolId }) => successResponse(await gradesController.getAllGrades(schoolId)))
 
 export const getAllGradesWithClassesAndSubjectsServerFn = createServerFn({ method: "GET" })
-    .handler(async () => successResponse(await gradesController.getAllGradesWithClassesAndSubjects()))
+    .inputValidator(validCuidSchema)
+    .handler(async ({ data: schoolId }) => successResponse(await gradesController.getAllGradesWithClassesAndSubjects(schoolId)))
 
 export const addGradeServerFn = createServerFn({ method: "POST" })
     .inputValidator(addGradeSchema)

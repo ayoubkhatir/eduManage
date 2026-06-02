@@ -208,7 +208,7 @@ function OwnerStudentDetailContent() {
                     </div>
                   </div>
                   <div className="p-6 bg-[#f8f9fc] dark:bg-[#151a25] border-t border-[#f0f2f4] dark:border-gray-800 flex flex-col-reverse sm:flex-row items-center justify-end gap-4 rounded-b-xl">
-                    <Link to="/admin/students">
+                    <Link to="/admin/students" >
                       <button
                         type="button"
                         className="w-full sm:w-auto h-10 px-6 rounded-lg border border-transparent text-[#616f89] dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 font-bold text-sm transition-colors cursor-pointer"

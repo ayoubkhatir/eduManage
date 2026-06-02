@@ -34,5 +34,5 @@ export const studentSearchSchema = z.object({
 
 export const dashboardPeriodSchema = z.object({
   period: z.enum(DashboardPeriodEnum),
-  schoolId: z.string(),
+  schoolId: validCuidSchema,
 })

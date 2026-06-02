@@ -49,13 +49,12 @@ class ResourcesController {
         const offset = (safePage - 1) * safeSize
 
         const conditions: SQL<unknown>[] = []
+        conditions.push(eq(resourcesTable.schoolId, input.schoolId))
 
         const normalizedFileName = input.fileName.trim()
         const normalizedType = input.type.trim()
 
-        if (input.schoolId) {
-            conditions.push(eq(resourcesTable.schoolId, input.schoolId))
-        }
+        
 
         if (normalizedFileName) {
             conditions.push(ilike(resourcesTable.fileName, `%${normalizedFileName}%`))

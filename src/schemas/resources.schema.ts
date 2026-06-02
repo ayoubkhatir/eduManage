@@ -15,7 +15,7 @@ export const getResourcesSchema = z.object({
     subjectCode: z.string(),
     teacherId: validCuidSchema.optional(),
     studentId: validCuidSchema.optional(),
-    schoolId: validCuidSchema.optional(),
+    schoolId: validCuidSchema,
 })
 
 

@@ -6,7 +6,7 @@ import { mapDbError } from "#/server/utils/db_error_handling";
 import { studentsController } from "./students.controller";
 
 export const getAllStudentsServerFn = createServerFn({ method: "GET" })
-    .inputValidator(getStudentsSchema)
+    .inputValidator(getStudentsSchema.extend({ schoolId: validCuidSchema }))
     .handler(async ({ data: search_queries }) => {
         const { data, pagination } = await studentsController.listStudents(search_queries);
         return paginatedSuccessResponse(data, pagination);

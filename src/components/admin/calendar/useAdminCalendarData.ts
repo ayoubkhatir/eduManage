@@ -10,8 +10,8 @@ type ApiEvent = Omit<OwnerEvent, 'start' | 'end'> & {
 	end: string | Date
 }
 
-export function useAdminCalendarData(schoolId?: string) {
-	const { data: studentsResp } = useGetStudents({})
+export function useAdminCalendarData(schoolId: string) {
+	const { data: studentsResp } = useGetStudents({schoolId})
 	const studentsData = studentsResp?.data ?? []
 
 	const { data: teachersResp } = useQuery({
@@ -28,7 +28,7 @@ export function useAdminCalendarData(schoolId?: string) {
 		data: eventsData,
 		isLoading: isEventsLoading,
 		isError: isEventsError,
-	} = useGetEvents(undefined, undefined, true)
+	} = useGetEvents(schoolId, undefined, undefined, true)
 
 	const events = useMemo<Array<OwnerEvent>>(
 		() =>

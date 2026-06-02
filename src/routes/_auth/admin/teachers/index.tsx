@@ -22,6 +22,7 @@ import type { AdminUser } from '#/types/usersTypes'
 import { StatusEnum } from '#/server/db/schema'
 
 const getTeachersQueryOptions = ({
+  schoolId,
   page,
   search,
   size,
@@ -29,7 +30,7 @@ const getTeachersQueryOptions = ({
   sortBy,
   status,
   subject,
-}: GetTeachersType) => ({
+}: GetTeachersType & { schoolId: string }) => ({
   queryKey: [
     'teachers',
     page,
@@ -43,6 +44,7 @@ const getTeachersQueryOptions = ({
   queryFn: async () => {
     const response = await getTeachersServerFn({
       data: {
+        schoolId,
         page,
         search,
         size,
@@ -66,10 +68,10 @@ export const Route = createFileRoute('/_auth/admin/teachers/')({
   pendingComponent: AdminTeachersPending,
   loaderDeps: ({ search }) => search,
   loader: async ({ context, deps }) => {
-    context.queryClient.ensureQueryData(getTeachersQueryOptions(deps))
     const currentUser = (await FetchCurrentUserServerFn({
       data: context.authState.user!,
     })) as AdminUser
+    context.queryClient.ensureQueryData(getTeachersQueryOptions({ ...deps, schoolId : currentUser.info.id }))
     context.queryClient.ensureQueryData(
       getAllSubjectsQueryOptions(currentUser.info.id),
     )
@@ -186,13 +188,13 @@ function AdminTeachersContent() {
           </div>
         </div>
 
-        <MainPageContent />
+        <MainPageContent schoolId = {currentUser.info.id} />
       </IndexPageComponent>
     </motion.div>
   )
 }
 
-function MainPageContent() {
+function MainPageContent({ schoolId }: { schoolId: string }) {
   const navigate = Route.useNavigate()
   const { size, page, search, sortBy, sortOrder, status, subject } =
     Route.useSearch({
@@ -208,6 +210,7 @@ function MainPageContent() {
     })
   const { data: teachersData, status: fetchStatus } = useQuery({
     ...getTeachersQueryOptions({
+      schoolId,
       page,
       size,
       search,

@@ -17,8 +17,9 @@ class GradesController {
         })
     }
 
-    async getAllGradesWithClassesAndSubjects() {
+    async getAllGradesWithClassesAndSubjects(schoolId : string) {
         const grades = await this.db.query.gradesTable.findMany({
+            where: eq(gradesTable.schoolId, schoolId),
             with: {
                 classes: {
                     columns: {

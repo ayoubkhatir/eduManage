@@ -17,7 +17,7 @@ import type { TeacherUser } from "#/types/teacherTypes";
 
 
 export const getTeachersServerFn = createServerFn({ method: "GET" })
-    .inputValidator(getTeachersSchema)
+    .inputValidator(getTeachersSchema.extend({ schoolId: validCuidSchema }))
     .handler(async ({ data: search_queries }) => {
         const { data, pagination } = await teachersController.listTeachers(search_queries)
         return paginatedSuccessResponse(data, pagination);

@@ -5,6 +5,7 @@ export const getEventsSchema = z.object({
     classId: validCuidSchema.optional(),
     teacherUserId: validCuidSchema.optional(),
     isOwner: z.boolean().default(false),
+    schoolId : validCuidSchema,
     startDate: z.string().optional(),
     endDate: z.string().optional(),
 })

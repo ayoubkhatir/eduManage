@@ -2,6 +2,7 @@ import { useQuery, queryOptions } from '@tanstack/react-query'
 import { getEventsServerFn } from '#/server/modules/events/events.server-functions'
 
 export const useGetEventsOptions = (
+    schoolId : string,
     classId?: string,
     teacherUserId?: string,
     isOwner = false,
@@ -20,6 +21,7 @@ export const useGetEventsOptions = (
             const response = await getEventsServerFn({
                 data: {
                     classId,
+                    schoolId,
                     teacherUserId,
                     isOwner,
                     startDate: isOwner ? undefined : now.toISOString(),
@@ -34,9 +36,10 @@ export const useGetEventsOptions = (
 }
 
 export default function useGetEvents(
+    schoolId : string,
     classId?: string,
     teacherUserId?: string,
     isOwner = false,
 ) {
-    return useQuery(useGetEventsOptions(classId, teacherUserId, isOwner))
+    return useQuery(useGetEventsOptions(schoolId,classId, teacherUserId, isOwner))
 }

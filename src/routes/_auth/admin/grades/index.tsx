@@ -16,12 +16,12 @@ export const Route = createFileRoute('/_auth/admin/grades/')({
   component: RouteComponent,
   pendingComponent: () => <GradesCardsSkeleton />,
   loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData({
-      ...getAllGradesWithClassesAndSubjectsQueryOptions(),
-    })
     const currentUser = (await FetchCurrentUserServerFn({
       data: context.authState.user!,
     })) as AdminUser
+    await context.queryClient.ensureQueryData({
+      ...getAllGradesWithClassesAndSubjectsQueryOptions(currentUser.info.id),
+    })
     return { currentUser }
   },
   staticData: {
@@ -35,7 +35,7 @@ function RouteComponent() {
   console.log(adminId)
 
   const { data: grades } = useSuspenseQuery({
-    ...getAllGradesWithClassesAndSubjectsQueryOptions(),
+    ...getAllGradesWithClassesAndSubjectsQueryOptions(currentUser.info.id),
   })
 
   return (

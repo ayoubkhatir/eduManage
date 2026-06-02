@@ -17,7 +17,7 @@ export const addTeacherSchema = addUserSchema.extend({
 
 export const editTeacherSchema = z
     .object({
-        teacherId: z.string().min(1),
+        teacherId: validCuidSchema,
         name: z.string().min(2).max(50),
         email: z.email(),
         image: z.string().nullable(),

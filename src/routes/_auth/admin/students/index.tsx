@@ -40,7 +40,7 @@ export const Route = createFileRoute('/_auth/admin/students/')({
     context.queryClient.ensureQueryData(
       getAllClassesQueryOptions(currentUser.info.id),
     )
-    context.queryClient.ensureQueryData(getStudentsQueryOptions(deps))
+    context.queryClient.ensureQueryData(getStudentsQueryOptions({...deps , schoolId : currentUser.info.id}))
     return { currentUser }
   },
   validateSearch: zodValidator(getStudentsSchema),
@@ -176,14 +176,14 @@ function AdminStudentsContent() {
         </div>
 
         <Suspense fallback={<CustomDataTableSkeleton rows={size} cols={6} />}>
-          <MainPageContent />
+          <MainPageContent schoolId={currentUser.info.id} />
         </Suspense>
       </IndexPageComponent>
     </motion.div>
   )
 }
 
-function MainPageContent() {
+function MainPageContent({schoolId} : {schoolId: string}) {
   const { size, page, search, sortBy, sortOrder, status, grade, classe } =
     Route.useSearch({
       select: (s) => ({
@@ -199,6 +199,7 @@ function MainPageContent() {
     })
   const { data: studentsData, status: fetchStatus } = useSuspenseQuery({
     ...getStudentsQueryOptions({
+      schoolId,
       size,
       page,
       search,

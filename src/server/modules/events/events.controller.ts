@@ -10,6 +10,7 @@ class EventsController {
     constructor(private readonly db: Database) { }
 
     async listEvents({
+        schoolId,
         classId,
         teacherUserId,
         isOwner,
@@ -17,6 +18,7 @@ class EventsController {
         // endDate,
     }: GetEventsType) {
         const conditions = []
+        conditions.push(eq(eventsTable.schoolId, schoolId))
         let teacherId: string | undefined;
         if (!classId && teacherUserId) {
             const teacher = await this.db.query.teachersTable.findFirst({
@@ -26,14 +28,6 @@ class EventsController {
             teacherId = teacher?.id
         }
         if (!isOwner) {
-            // if (startDate) {
-            //     conditions.push(gte(eventsTable.start, new Date(startDate)))
-            // }
-
-            // if (endDate) {
-            //     conditions.push(lte(eventsTable.end, new Date(endDate)))
-            // }
-
             if (classId) {
                 conditions.push(eq(eventsTable.classId, classId))
             } else if (!!teacherId) {
@@ -96,30 +90,7 @@ class EventsController {
             teacherId: e.teacher?.id ?? null
         }))
 
-        // const rows = await this.db
-        //     .select({
-        //         id: eventsTable.id,
-        //         title: eventsTable.title,
-        //         start: eventsTable.start,
-        //         end: eventsTable.end,
-        //         color: eventsTable.color,
-        //         description: eventsTable.description,
-        //         allDay: eventsTable.allDay,
-        //         repeatWeekly: eventsTable.repeatWeekly,
-        //         isClass: eventsTable.isClass,
-
-        //         classId: classesTable.id,
-        //         className: classesTable.name,
-
-        //         teacherId: teachersTable.id,
-        //         teacherName: usersTable.username,
-        //     })
-        //     .from(eventsTable)
-        //     .leftJoin(classesTable, eq(eventsTable.classId, classesTable.id))
-        //     .leftJoin(teachersTable, eq(eventsTable.teacherId, teachersTable.id))
-        //     .leftJoin(usersTable, eq(teachersTable.userId, usersTable.id))
-        //     .where(whereClause)
-        //     .orderBy(asc(eventsTable.start))
+        
 
         return rows.map((row) => ({
             id: row.id,

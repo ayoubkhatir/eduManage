@@ -11,6 +11,7 @@ class StudentsController {
     constructor(private readonly db: Database) { }
 
     async listStudents({
+        schoolId,
         classe,
         grade,
         page,
@@ -19,13 +20,13 @@ class StudentsController {
         sortOrder,
         sortBy,
         status,
-    }: GetStudentsType) {
+    }: GetStudentsType & { schoolId: string }) {
         const safePage = Math.max(1, page ?? 1)
         const safeSize = Math.max(1, size ?? 10)
         const offset = (safePage - 1) * safeSize
 
         const conditions: SQL<unknown>[] = []
-
+        conditions.push(eq(studentsTable.schoolId, schoolId))
         const normalizedSearch = search?.trim()
         const normalizedStatus = status?.trim()
         const normalizedClass = classe?.trim()
