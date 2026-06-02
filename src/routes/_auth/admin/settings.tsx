@@ -24,7 +24,6 @@ export const Route = createFileRoute('/_auth/admin/settings')({
 
 function RouteComponent() {
   const { currentUser } = Route.useLoaderData()
-  // const user = useAuth((s) => s.user)
   return (
     <Skeleton name="admin-settings-page" loading={false}>
       <motion.div

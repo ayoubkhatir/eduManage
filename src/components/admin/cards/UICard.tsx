@@ -39,8 +39,6 @@ export type UICardType = {
   id: string
   iconName: string
   iconColor: CardColor
-  stateIcon: string
-  percentage: number
   cardTitle: string
   info: string | number
 }
@@ -48,12 +46,9 @@ export type UICardType = {
 export default function UICardComponent({
   iconName,
   iconColor,
-  stateIcon,
-  percentage,
   cardTitle,
   info,
 }: UICardType) {
-  const isPositive = percentage >= 0
   const displayInfo = typeof info === 'number' ? info.toLocaleString() : info
 
   return (
@@ -68,22 +63,6 @@ export default function UICardComponent({
               {iconName}
             </span>
           </div>
-
-          <span
-            className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${
-              isPositive
-                ? 'bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400'
-                : 'bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-400'
-            }`}
-          >
-            <span className="material-symbols-outlined text-sm">
-              {stateIcon}
-            </span>
-            <span>
-              {isPositive && percentage > 0 ? '+' : ''}
-              {percentage}%
-            </span>
-          </span>
         </div>
 
         <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
@@ -104,9 +83,6 @@ export function UICardSkeletonItem() {
       <div className="mb-4 flex items-start justify-between gap-4">
         {/* Icon */}
         <Skeleton className="h-11 w-11 rounded-xl" />
-
-        {/* Percentage badge */}
-        {/* <Skeleton className="h-6 w-16 rounded-full" /> */}
       </div>
 
       {/* Title */}

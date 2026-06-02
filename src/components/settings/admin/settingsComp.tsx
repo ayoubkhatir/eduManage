@@ -179,8 +179,8 @@ export default function SettingsComp({ admin }: { admin: AuthUser }) {
           </section>
 
           {/* Feature Toggles */}
-          <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
-            <div className="flex items-center justify-between border-b border-slate-100 p-6 dark:border-white/[0.06]">
+          <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/6 dark:bg-white/2">
+            <div className="flex items-center justify-between border-b border-slate-100 p-6 dark:border-white/6">
               <div>
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                   Access &amp; Feature Controls
@@ -240,8 +240,8 @@ export default function SettingsComp({ admin }: { admin: AuthUser }) {
           </section>
 
           {/* Security */}
-          <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
-            <div className="flex items-center justify-between border-b border-slate-100 p-6 dark:border-white/[0.06]">
+          <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/6 dark:bg-white/2">
+            <div className="flex items-center justify-between border-b border-slate-100 p-6 dark:border-white/6">
               <div>
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">
                   Security
