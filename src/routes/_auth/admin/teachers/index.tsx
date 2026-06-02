@@ -71,7 +71,9 @@ export const Route = createFileRoute('/_auth/admin/teachers/')({
     const currentUser = (await FetchCurrentUserServerFn({
       data: context.authState.user!,
     })) as AdminUser
-    context.queryClient.ensureQueryData(getTeachersQueryOptions({ ...deps, schoolId : currentUser.info.id }))
+    context.queryClient.ensureQueryData(
+      getTeachersQueryOptions({ ...deps, schoolId: currentUser.info.id }),
+    )
     context.queryClient.ensureQueryData(
       getAllSubjectsQueryOptions(currentUser.info.id),
     )
@@ -122,7 +124,7 @@ function AdminTeachersContent() {
       className="flex-1 w-full overflow-y-auto overflow-x-auto flex flex-col gap-6"
     >
       <IndexPageComponent role="Teacher">
-        <TeachersStatCards />
+        <TeachersStatCards schoolId={currentUser.info.id} />
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="relative flex-1 max-w-sm">
@@ -188,7 +190,7 @@ function AdminTeachersContent() {
           </div>
         </div>
 
-        <MainPageContent schoolId = {currentUser.info.id} />
+        <MainPageContent schoolId={currentUser.info.id} />
       </IndexPageComponent>
     </motion.div>
   )

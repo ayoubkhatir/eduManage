@@ -155,7 +155,8 @@ export const getTeachersByClassServerFn = createServerFn({ method: 'GET' })
     })
 
 export const getTeachersStatsServerFn = createServerFn({ method: "GET" })
-    .handler(async () => successResponse(await teachersController.getTeachersStats()))
+    .inputValidator(validCuidSchema)
+    .handler(async ({ data: schoolId }) => successResponse(await teachersController.getTeachersStats(schoolId)))
 
 // export const assignTeacherToClassAndSubjectServerFn = createServerFn({ method: "POST" })
 //     .inputValidator(assignTeacherSchema)

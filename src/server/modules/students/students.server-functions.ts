@@ -49,7 +49,8 @@ export const deleteStudentServerFn = createServerFn({ method: "POST" })
     .handler(async ({ data: studentId }) => await studentsController.deleteStudent(studentId))
 
 export const getStudentsStatsServerFn = createServerFn({ method: "GET" })
-    .handler(async () => successResponse(await studentsController.getStudentsStats()))
+    .inputValidator(validCuidSchema)
+    .handler(async ({ data: schoolId }) => successResponse(await studentsController.getStudentsStats(schoolId)))
 
 // related to dashboard 
 

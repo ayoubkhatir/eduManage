@@ -645,7 +645,7 @@ class TeachersController {
     //     }
     // }
 
-    async getTeachersStats() {
+    async getTeachersStats(schoolId: string) {
         const now = new Date()
 
         const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
@@ -655,18 +655,25 @@ class TeachersController {
             await Promise.all([
                 this.db
                     .select({ totalTeachers: count() })
-                    .from(teachersTable),
-
+                    .from(teachersTable)
+                    .where(eq(teachersTable.schoolId, schoolId)),
+                    
                 this.db
                     .select({ totalActiveTeachers: count() })
                     .from(teachersTable)
-                    .where(eq(teachersTable.status, StatusEnum.ACTIVE)),
+                    .where(
+                        and(
+                            eq(teachersTable.schoolId, schoolId),
+                            eq(teachersTable.status, StatusEnum.ACTIVE)
+                        )
+                    ),
 
                 this.db
                     .select({ totalNewThisMonth: count() })
                     .from(teachersTable)
                     .where(
                         and(
+                            eq(teachersTable.schoolId, schoolId),
                             gte(teachersTable.joiningDate, startOfMonth.toISOString()),
                             lt(teachersTable.joiningDate, startOfNextMonth.toISOString()),
                         ),

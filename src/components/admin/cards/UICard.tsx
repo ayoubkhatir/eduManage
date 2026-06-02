@@ -10,10 +10,10 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 
-const getTeacherStatsQueryOptions = () => ({
+const getTeacherStatsQueryOptions = (schoolId: ID) => ({
   queryKey: ['teachers', 'stats'],
   queryFn: async () => {
-    const response = await getTeachersStatsServerFn()
+    const response = await getTeachersStatsServerFn({ data: schoolId })
     if (response.success) return response.data
     else
       return {
@@ -128,9 +128,9 @@ export function UICardSkeleton({ count = 4 }: { count?: number }) {
   )
 }
 
-export function TeachersStatCards() {
+export function TeachersStatCards({ schoolId }: { schoolId: ID }) {
   const { data: teachersStat, status: fetchStatus } = useQuery({
-    ...getTeacherStatsQueryOptions(),
+    ...getTeacherStatsQueryOptions(schoolId),
   })
 
   const cards = useMemo<UICardType[]>(
@@ -178,10 +178,10 @@ export function TeachersStatCards() {
   )
 }
 
-const getStudentsStatsQueryOptions = () => ({
+const getStudentsStatsQueryOptions = (schoolId: ID) => ({
   queryKey: ['students', 'stats'],
   queryFn: async () => {
-    const response = await getStudentsStatsServerFn()
+    const response = await getStudentsStatsServerFn({ data: schoolId })
     if (response.success) return response.data
     return {
       totalStudents: 0,
@@ -190,9 +190,9 @@ const getStudentsStatsQueryOptions = () => ({
   },
 })
 
-export function StudentsStatCards() {
+export function StudentsStatCards({ schoolId }: { schoolId: ID }) {
   const { data: studentsStat, status: fetchStatus } = useQuery({
-    ...getStudentsStatsQueryOptions(),
+    ...getStudentsStatsQueryOptions(schoolId),
   })
 
   const cards = useMemo<UICardType[]>(

@@ -205,7 +205,7 @@ function RouteComponent() {
                       <td className="px-4 py-3 sm:px-6 sm:py-4">
                         <div className="flex items-center gap-3 min-w-0 flex-nowrap">
                           <div
-                            className={`flex size-8 sm:size-9 items-center justify-center rounded-full ${row.bg} ${row.text} text-sm font-bold flex-shrink-0`}
+                            className={`flex size-8 sm:size-9 items-center justify-center rounded-full ${row.bg} ${row.text} text-sm font-bold shrink-0`}
                           >
                             {row.icon ? (
                               <span className="material-symbols-outlined text-lg">

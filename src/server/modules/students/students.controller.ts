@@ -324,7 +324,7 @@ class StudentsController {
         return deletedStudent;
     }
 
-    async getStudentsStats() {
+    async getStudentsStats(schoolId: ID) {
         const now = new Date()
 
         const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
@@ -333,12 +333,14 @@ class StudentsController {
         const [{ totalStudents }] = await this.db
             .select({ totalStudents: count() })
             .from(studentsTable)
+            .where(eq(studentsTable.schoolId, schoolId))
 
         const [{ totalMonthEnrollments }] = await this.db
             .select({ totalMonthEnrollments: count() })
             .from(studentsTable)
             .where(
                 and(
+                    eq(studentsTable.schoolId, schoolId),
                     gte(studentsTable.enrollmentDate, startOfMonth.toISOString()),
                     lt(studentsTable.enrollmentDate, startOfNextMonth.toISOString()),
                 ),

@@ -40,7 +40,9 @@ export const Route = createFileRoute('/_auth/admin/students/')({
     context.queryClient.ensureQueryData(
       getAllClassesQueryOptions(currentUser.info.id),
     )
-    context.queryClient.ensureQueryData(getStudentsQueryOptions({...deps , schoolId : currentUser.info.id}))
+    context.queryClient.ensureQueryData(
+      getStudentsQueryOptions({ ...deps, schoolId: currentUser.info.id }),
+    )
     return { currentUser }
   },
   validateSearch: zodValidator(getStudentsSchema),
@@ -95,7 +97,7 @@ function AdminStudentsContent() {
       className="flex-1 w-full overflow-x-auto flex flex-col gap-6"
     >
       <IndexPageComponent role="Student">
-        <StudentsStatCards />
+        <StudentsStatCards schoolId={currentUser.info.id} />
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="relative flex-1 max-w-sm">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-[20px] pointer-events-none">
@@ -183,7 +185,7 @@ function AdminStudentsContent() {
   )
 }
 
-function MainPageContent({schoolId} : {schoolId: string}) {
+function MainPageContent({ schoolId }: { schoolId: string }) {
   const { size, page, search, sortBy, sortOrder, status, grade, classe } =
     Route.useSearch({
       select: (s) => ({
