@@ -414,7 +414,13 @@ class TeachersController {
      * Update both user and teacher tables
      */
     async updateTeacher(input: EditTeacherType) {
-        const dateOfBirth = toDateOnly(input.dateOfBirth)
+        const {
+            assignmentDueDates,
+            schoolAnnouncements,
+            emailMarketing,
+            ...dbInput
+        } = input
+        const dateOfBirth = toDateOnly(dbInput.dateOfBirth)
 
         const [existingTeacher] = await this.db
             .select({
@@ -422,7 +428,7 @@ class TeachersController {
                 userId: teachersTable.userId,
             })
             .from(teachersTable)
-            .where(eq(teachersTable.id, input.teacherId))
+            .where(eq(teachersTable.id, dbInput.teacherId))
 
         if (!existingTeacher) {
             throw new Error("Teacher not found")
@@ -431,23 +437,23 @@ class TeachersController {
         await this.db
             .update(users)
             .set({
-                email: input.email,
-                name: input.name,
-                telNumber: input.telNumber,
-                image: input.image,
-                gender: input.gender,
+                email: dbInput.email,
+                name: dbInput.name,
+                telNumber: dbInput.telNumber,
+                image: dbInput.image,
+                gender: dbInput.gender,
             })
             .where(eq(users.id, existingTeacher.userId))
 
         await this.db
             .update(teachersTable)
             .set({
-                status: input.status,
-                address: input.address,
+                status: dbInput.status,
+                address: dbInput.address,
                 dateOfBirth,
-                about: input.about
+                about: dbInput.about
             })
-            .where(eq(teachersTable.id, input.teacherId))
+            .where(eq(teachersTable.id, dbInput.teacherId))
 
         const [updatedTeacher] = await this.db
             .select({
@@ -470,7 +476,7 @@ class TeachersController {
             })
             .from(teachersTable)
             .innerJoin(users, eq(teachersTable.userId, users.id))
-            .where(eq(teachersTable.id, input.teacherId))
+            .where(eq(teachersTable.id, dbInput.teacherId))
 
         return updatedTeacher
     }

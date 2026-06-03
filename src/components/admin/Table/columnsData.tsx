@@ -22,17 +22,16 @@ import {
 import { AssignTeacherMenuItem } from '../DropDownMenuComp/AssignTeacherMenuItem'
 import { Badge } from '#/components/ui/badge'
 import { StatusEnum, UserGenderEnum } from '#/server/db/schema'
-// Cloudinary SDKs removed; construct URLs directly when needed
+import type { StudentUser } from '#/types/studentTypes'
+import type { TeacherUser } from '#/types/teacherTypes'
 
 function getCloudinaryUrl(publicId: string, size?: number) {
-  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dziurs45p'
+  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
   if (!publicId) return ''
   if (/^https?:\/\//i.test(publicId)) return publicId
   const transformation = size ? `c_thumb,w_${size},h_${size},g_face` : ''
   return `https://res.cloudinary.com/${cloudName}/image/upload/${transformation}/${publicId}`
 }
-import type { StudentUser } from '#/types/studentTypes'
-import type { TeacherUser } from '#/types/teacherTypes'
 
 export function UserAvatar({
   image,

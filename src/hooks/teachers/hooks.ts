@@ -241,6 +241,9 @@ export function useUpdateTeacherSettings(teacher: TeacherUser) {
       address: teacher.info.address,
       dateOfBirth: teacher.info.dateOfBirth,
       status: teacher.info.status,
+      assignmentDueDates: true,
+      schoolAnnouncements: true,
+      emailMarketing: false,
     }
   })
   const router = useRouter()

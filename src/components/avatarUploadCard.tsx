@@ -1,12 +1,23 @@
 import { uploadToCloudinary } from '#/components/cloudinary-uploader'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '#/components/ui/dialog'
-import { CameraIcon, Loader2Icon, Trash2Icon, UploadIcon, UserCircleIcon } from 'lucide-react'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '#/components/ui/dialog'
+import {
+  CameraIcon,
+  Loader2Icon,
+  Trash2Icon,
+  UploadIcon,
+  UserCircleIcon,
+} from 'lucide-react'
 import { useRef, useState } from 'react'
 import type { FieldValues, Path, UseFormReturn } from 'react-hook-form'
 
 function getCloudinaryUrl(publicId: string, size?: number) {
-  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dziurs45p'
-  // If publicId looks like a full URL, return as-is
+  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
   if (/^https?:\/\//i.test(publicId)) return publicId
 
   const transformation = size ? `c_thumb,w_${size},h_${size},g_face` : ''
@@ -204,7 +215,9 @@ export function AvatarUploadCard<T extends FieldValues>({
             </div>
 
             {error ? (
-              <p className="w-full text-sm text-red-500 wrap-break-word">{error}</p>
+              <p className="w-full text-sm text-red-500 wrap-break-word">
+                {error}
+              </p>
             ) : null}
           </div>
         </DialogContent>

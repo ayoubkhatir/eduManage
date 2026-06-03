@@ -28,6 +28,10 @@ export const editTeacherSchema = z
         address: z.string().min(1),
         dateOfBirth: z.string().min(1),
         status: statusSchema,
+
+        assignmentDueDates: z.boolean().optional(),
+        schoolAnnouncements: z.boolean().optional(),
+        emailMarketing: z.boolean().optional(),
     })
 
 

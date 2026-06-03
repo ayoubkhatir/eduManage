@@ -11,7 +11,7 @@ export const paginationQueriesSchema = z.object({
 });
 
 
-export const phoneNumberSchema = z.string().regex(/^(?:06|05|07)\d{8}$/, 'Phone number is not valid')
+export const phoneNumberSchema = z.string().regex(/^(?:\+213|0)(?:5|6|7)\d{8}$/, 'Phone number is not valid')
 
 export const roleSchema = z.enum(UserRoleEnum)
 export const authRoleSchema = z.enum(UserRoleEnum)

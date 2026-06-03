@@ -319,6 +319,25 @@ class StudentsController {
 
     }
 
+    async updateStudentSettings(data: { studentId: string, name: string, telNumber?: string, image?: string | null }) {
+        const foundStudent = await this.db.query.studentsTable.findFirst({
+            where: eq(studentsTable.id, data.studentId),
+            columns: { userId: true }
+        });
+        if (!foundStudent) throw new Error("Student not found");
+
+        await this.db
+            .update(users)
+            .set({
+                name: data.name,
+                ...(data.telNumber !== undefined ? { telNumber: data.telNumber } : {}),
+                ...(data.image !== undefined ? { image: data.image } : {}),
+            })
+            .where(eq(users.id, foundStudent.userId))
+
+        return { success: true }
+    }
+
     async deleteStudent(studentId: string) {
         const [deletedStudent] = await this.db.delete(studentsTable).where(eq(studentsTable.id, studentId)).returning();
         return deletedStudent;
