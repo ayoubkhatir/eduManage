@@ -51,18 +51,18 @@ export function useAddStudent(schoolId: string) {
   const studentForm = useForm<AddStudentType>({
     resolver: standardSchemaResolver(addStudentSchema),
     defaultValues: {
-      telNumber: '11111111',
+      telNumber: '',
       status: StatusEnum.NEW,
       schoolId,
-      parentPhoneNumber: '11111111',
-      parentName: 'Mohammed',
-      name: 'Abdelouadoud',
+      parentPhoneNumber: '',
+      parentName: '',
+      name: '',
       image: undefined,
       gender: UserGenderEnum.MALE,
       enrollmentDate: new Date().toISOString(),
-      email: 'abdelouadoud_student@email.com',
+      email: '',
       dateOfBirth: new Date().toISOString(),
-      address: 'Hassi El Ghela',
+      address: '',
     },
   })
   function onSubmit(data: AddStudentType) {

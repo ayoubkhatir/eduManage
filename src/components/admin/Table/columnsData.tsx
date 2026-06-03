@@ -263,6 +263,7 @@ export const TeacherColumns: Array<ColumnDef<TeacherUser>> = [
     cell: ({ row }) => (
       <div className="flex items-center justify-center">
         <div className="relative">
+          {/* <UserAvatar size={10} image={row.original.image} /> */}
           <ImageColumnUI image={row.original.image} />
         </div>
       </div>
