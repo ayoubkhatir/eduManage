@@ -5,11 +5,8 @@ import { motion } from 'framer-motion'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
 import Loading from '#/components/loading'
 import { getAnnouncementsListQueryOptions } from '#/hooks/admin/hooks'
-import {
-  AnnouncementAudienceEnum,
-  announcementAudienceList,
-} from '#/server/db/schema'
 import { SearchInput } from '#/components/admin/SearchInput'
+import { AnnouncementAudienceEnum } from '#/server/db/schema'
 import { getAnnouncementsFiltersSchema } from '#/schemas/announcement.schema'
 import type { StudentUser } from '#/types/studentTypes'
 
@@ -18,7 +15,7 @@ export const Route = createFileRoute('/_auth/student/announcements/')({
 
   validateSearch: getAnnouncementsFiltersSchema,
 
-  loaderDeps: ({ search }) => search,
+  loaderDeps: ({ search }) => ({ search: search.search }),
   loader: async ({ context, deps }) => {
     const currentUser = (await FetchCurrentUserServerFn({
       data: context.authState.user!,
@@ -27,7 +24,7 @@ export const Route = createFileRoute('/_auth/student/announcements/')({
     context.queryClient.ensureQueryData({
       ...getAnnouncementsListQueryOptions(currentUser.id, {
         search: deps.search,
-        audience: deps.audience,
+        audience: AnnouncementAudienceEnum.PUBLIC,
       }),
     })
     return { currentUser }
@@ -43,8 +40,8 @@ export const Route = createFileRoute('/_auth/student/announcements/')({
 function Announcement() {
   const { currentUser } = Route.useLoaderData()
   const navigate = Route.useNavigate()
-  const { search, audience } = Route.useSearch({
-    select: (s) => ({ search: s.search, audience: s.audience }),
+  const { search } = Route.useSearch({
+    select: (s) => ({ search: s.search }),
   })
 
   return (
@@ -69,9 +66,6 @@ function Announcement() {
             }
           />
         </div>
-        <div className="flex gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
-          <AudienceSelect />
-        </div>
       </div>
       <Suspense
         fallback={
@@ -86,7 +80,7 @@ function Announcement() {
       >
         <AnnouncementsList
           schoolId={currentUser.info.schoolId}
-          filters={{ search, audience }}
+          filters={{ search, audience: AnnouncementAudienceEnum.PUBLIC }}
           role="student"
         />
       </Suspense>
@@ -95,41 +89,5 @@ function Announcement() {
         <p className="text-[#4b5563] text-md">End of Announcements</p>
       </div>
     </motion.div>
-  )
-}
-
-function AudienceSelect() {
-  const navigate = Route.useNavigate()
-  const audience = Route.useSearch({ select: (s) => s.audience })
-
-  return (
-    <select
-      className="flex items-center h-12 rounded-lg border-none bg-gray-100 px-4 py-0 pr-8 pl-8 text-sm font-medium text-slate-500 
-    focus:ring-0 border-slate-100 dark:border-gray-700/50  dark:text-white  dark:bg-[#1E2532] hover:bg-primary/5 dark:hover:bg-primary/10 hover:border-primary/30 dark:hover:border-primary/40 hover:text-primary dark:hover:text-blue-400 group cursor-pointer"
-      style={{
-        transition:
-          'background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out',
-      }}
-      value={audience}
-      onChange={(e) =>
-        navigate({
-          to: '.',
-          search: (s) => ({
-            ...s,
-            audience: announcementAudienceList.includes(
-              e.target.value as AnnouncementAudienceEnum,
-            )
-              ? (e.target.value as AnnouncementAudienceEnum)
-              : AnnouncementAudienceEnum.PUBLIC,
-          }),
-        })
-      }
-    >
-      {announcementAudienceList.map((audience) => (
-        <option key={audience} value={audience}>
-          {audience}
-        </option>
-      ))}
-    </select>
   )
 }

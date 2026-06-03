@@ -61,15 +61,16 @@ class AnnouncementController {
       await db.query.announcementsTable.findMany({
         where: and(
           eq(announcementsTable.schoolId, schoolId),
-          filters.audience !== AnnouncementAudienceEnum.PUBLIC
-            ? eq(announcementsTable.audience, filters.audience)
-            : undefined,
+          filters.audience === AnnouncementAudienceEnum.PUBLIC
+            ? or(
+                eq(announcementsTable.audience, AnnouncementAudienceEnum.PUBLIC),
+                eq(announcementsTable.audience, AnnouncementAudienceEnum.STUDENTS),
+              )
+            : eq(announcementsTable.audience, filters.audience),
           filters.search
             ? or(
                 ilike(announcementsTable.title, `%${filters.search}%`),
-
                 ilike(announcementsTable.slug, `%${filters.search}%`),
-
                 ilike(announcementsTable.description, `%${filters.search}%`),
               )
             : undefined,
