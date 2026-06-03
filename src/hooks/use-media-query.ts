@@ -1,7 +1,5 @@
 import * as React from 'react'
 
-
-
 interface UseMediaQueryOptions {
   defaultValue?: boolean
   initializeWithValue?: boolean

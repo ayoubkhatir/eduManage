@@ -42,8 +42,9 @@ export function LeftPanel() {
             Start managing your school efficiently
           </h1>
           <p className="mt-2 text-sm leading-relaxed text-slate-300">
-            Join thousands of education leaders who trust EduManage to streamline
-            operations, track performance, and connect their community.
+            Join thousands of education leaders who trust EduManage to
+            streamline operations, track performance, and connect their
+            community.
           </p>
         </div>
 
@@ -66,7 +67,10 @@ export function LeftPanel() {
           <div>
             <div className="flex items-center gap-0.5 text-amber-400">
               {Array.from({ length: 5 }).map((_, i) => (
-                <span key={i} className="material-symbols-outlined text-xs filled">
+                <span
+                  key={i}
+                  className="material-symbols-outlined text-xs filled"
+                >
                   star
                 </span>
               ))}

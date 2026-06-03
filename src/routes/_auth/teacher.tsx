@@ -38,8 +38,6 @@ const info = {
   ],
 }
 
-
-
 function Teacher() {
   const { currentUser } = Route.useLoaderData()
   return (

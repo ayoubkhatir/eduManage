@@ -171,7 +171,6 @@
   pointer-events: auto;
 }
 
-
 .admin-calendar-view .admin .rbc-day-bg::after {
   content: '+';
   position: absolute;
@@ -219,7 +218,6 @@
   opacity: 0.9;
   transform: scale(1);
 }
-
 
 /* ── date-cell cursor ── */
 .admin-big-calendar .rbc-date-cell {
@@ -529,6 +527,5 @@
   background: #4d88f0;
   color: #fff;
 }
-
 
 /* * Teacher and student calendar view */

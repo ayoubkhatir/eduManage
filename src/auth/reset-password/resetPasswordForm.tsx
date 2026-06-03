@@ -7,24 +7,30 @@ import { useSearch, useNavigate } from '@tanstack/react-router'
 import { resetPasswordServerFn } from '#/server/modules/auth/auth.server-function'
 import type { ResetPasswordSearch } from '#/routes/reset-password'
 
-const resetPasswordSchema = z.object({
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  confirmPassword: z.string().min(8, 'Password must be at least 8 characters'),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"],
-})
+const resetPasswordSchema = z
+  .object({
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+    confirmPassword: z
+      .string()
+      .min(8, 'Password must be at least 8 characters'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  })
 
 type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>
 
 export default function ResetPasswordForm() {
   const navigate = useNavigate()
-  const { token } = useSearch({ from: '/reset-password' }) as ResetPasswordSearch
+  const { token } = useSearch({
+    from: '/reset-password',
+  }) as ResetPasswordSearch
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  
+
   const form = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
@@ -46,7 +52,7 @@ export default function ResetPasswordForm() {
     },
     onError: (error: any) => {
       setErrorMessage(
-        error?.message || 'Failed to reset password. Please try again.'
+        error?.message || 'Failed to reset password. Please try again.',
       )
       setSuccessMessage(null)
     },
@@ -54,7 +60,9 @@ export default function ResetPasswordForm() {
 
   const onSubmit = async (data: ResetPasswordFormData) => {
     if (!token) {
-      setErrorMessage('Invalid reset link. Please request a new password reset.')
+      setErrorMessage(
+        'Invalid reset link. Please request a new password reset.',
+      )
       return
     }
     mutation.mutate(data)
@@ -129,7 +137,9 @@ export default function ResetPasswordForm() {
             placeholder="Confirm password"
             type={showConfirmPassword ? 'text' : 'password'}
             aria-describedby={
-              form.formState.errors.confirmPassword ? 'confirmPassword-error' : undefined
+              form.formState.errors.confirmPassword
+                ? 'confirmPassword-error'
+                : undefined
             }
           />
           <button
@@ -174,9 +184,7 @@ export default function ResetPasswordForm() {
 
       {/* Messages */}
       {errorMessage && (
-        <p className="text-center text-sm text-red-500">
-          {errorMessage}
-        </p>
+        <p className="text-center text-sm text-red-500">{errorMessage}</p>
       )}
       {successMessage && (
         <div className="rounded-xl bg-green-50 p-4 dark:bg-green-900/20">

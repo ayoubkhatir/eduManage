@@ -11,10 +11,12 @@ export type AuthState = {
   logout: () => void
 }
 
-export type InitialAuthProps = Omit<AuthState, 'setToken' | 'setUser' | 'logout'>
+export type InitialAuthProps = Omit<
+  AuthState,
+  'setToken' | 'setUser' | 'logout'
+>
 
 export async function syncAuthSession(): Promise<InitialAuthProps> {
-
   try {
     const { data } = await refreshServerFn()
     if (!data) {

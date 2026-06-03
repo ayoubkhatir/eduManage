@@ -15,7 +15,7 @@ type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>
 export default function ForgotPasswordForm() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  
+
   const form = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
@@ -37,7 +37,7 @@ export default function ForgotPasswordForm() {
     },
     onError: (error: any) => {
       setErrorMessage(
-        error?.message || 'Failed to send reset link. Please try again.'
+        error?.message || 'Failed to send reset link. Please try again.',
       )
       setSuccessMessage(null)
     },
@@ -46,7 +46,6 @@ export default function ForgotPasswordForm() {
   const onSubmit = async (data: ForgotPasswordFormData) => {
     mutation.mutate(data)
   }
-
 
   return (
     <form
@@ -110,9 +109,7 @@ export default function ForgotPasswordForm() {
 
       {/* Messages */}
       {errorMessage && (
-        <p className="text-center text-sm text-red-500">
-          {errorMessage}
-        </p>
+        <p className="text-center text-sm text-red-500">{errorMessage}</p>
       )}
       {successMessage && (
         <div className="rounded-xl bg-green-50 p-4 dark:bg-green-900/20">

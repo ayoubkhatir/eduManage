@@ -1,11 +1,6 @@
-import type { addSubjectSchema } from '#/schemas/subjects.schema';
-import * as schema from '#/server/db/schema';
-import z from "zod";
-
-
-
-
-
+import type { addSubjectSchema } from '#/schemas/subjects.schema'
+import * as schema from '#/server/db/schema'
+import z from 'zod'
 
 export type Subject = typeof schema.subjectsTable.$inferSelect
 

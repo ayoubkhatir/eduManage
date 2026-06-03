@@ -19,24 +19,23 @@ export const Route = createFileRoute('/forgot-password')({
 
 function ForgotPasswordRoute() {
   return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4 }}
-        className="bg-background text-foreground h-screen overflow-hidden overflow-x-hidden relative"
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
+      className="bg-background text-foreground h-screen overflow-hidden overflow-x-hidden relative"
+    >
+      <Link
+        to="/"
+        className="absolute top-4 left-4 z-20 flex items-center gap-1.5 rounded-xl border border-border bg-background/80 px-3 py-2 text-sm font-medium text-muted-foreground shadow-sm backdrop-blur-sm transition-all hover:bg-accent hover:text-foreground"
       >
-        <Link
-          to="/"
-          className="absolute top-4 left-4 z-20 flex items-center gap-1.5 rounded-xl border border-border bg-background/80 px-3 py-2 text-sm font-medium text-muted-foreground shadow-sm backdrop-blur-sm transition-all hover:bg-accent hover:text-foreground"
-        >
-          <span className="material-symbols-outlined text-lg">arrow_back</span>
-          Back to home
-        </Link>
-        <div className="flex h-full w-full flex-row">
-          <ForgotPassword />
-          <Screen />
-        </div>
-      </motion.div>
-
+        <span className="material-symbols-outlined text-lg">arrow_back</span>
+        Back to home
+      </Link>
+      <div className="flex h-full w-full flex-row">
+        <ForgotPassword />
+        <Screen />
+      </div>
+    </motion.div>
   )
 }

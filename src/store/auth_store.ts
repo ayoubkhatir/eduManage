@@ -1,4 +1,3 @@
-
 // import { create , useStore } from 'zustand'
 // import {  useContext } from "react"
 // import {AuthStoreContext} from "#/providers/authProvider"
@@ -14,8 +13,8 @@
 
 // export type InitialAuthProps = Omit<AuthState, 'setToken' | 'setUser' | 'logout'>
 
-// export const createAuthStore = (initialProps? : Partial<InitialAuthProps>) => { 
-  
+// export const createAuthStore = (initialProps? : Partial<InitialAuthProps>) => {
+
 //   return create<AuthState>((set) => ({
 //     user: initialProps?.user || null,
 //     token: initialProps?.token || null,

@@ -1,6 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
-import { PageLayout, Section, FadeIn, Icon } from '#/components/landing/landing-shared'
+import {
+  PageLayout,
+  Section,
+  FadeIn,
+  Icon,
+} from '#/components/landing/landing-shared'
 
 export const Route = createFileRoute('/Pages/community')({
   component: RouteComponent,
@@ -8,10 +13,26 @@ export const Route = createFileRoute('/Pages/community')({
 })
 
 const channels = [
-  { icon: 'forum', title: 'Discussion Forums', desc: 'Ask questions, share tips, and connect with other EduManage users.' },
-  { icon: 'lightbulb', title: 'Feature Requests', desc: 'Suggest and vote on new features to help shape our roadmap.' },
-  { icon: 'groups', title: 'User Groups', desc: 'Join regional and interest-based groups to network with peers.' },
-  { icon: 'school', title: 'Webinars & Events', desc: 'Attend live training sessions, Q&As, and community meetups.' },
+  {
+    icon: 'forum',
+    title: 'Discussion Forums',
+    desc: 'Ask questions, share tips, and connect with other EduManage users.',
+  },
+  {
+    icon: 'lightbulb',
+    title: 'Feature Requests',
+    desc: 'Suggest and vote on new features to help shape our roadmap.',
+  },
+  {
+    icon: 'groups',
+    title: 'User Groups',
+    desc: 'Join regional and interest-based groups to network with peers.',
+  },
+  {
+    icon: 'school',
+    title: 'Webinars & Events',
+    desc: 'Attend live training sessions, Q&As, and community meetups.',
+  },
 ]
 
 function RouteComponent() {
@@ -25,12 +46,15 @@ function RouteComponent() {
           <Section>
             <div className="mx-auto max-w-2xl text-center">
               <FadeIn>
-                <p className="text-sm font-semibold uppercase tracking-widest text-primary">Community</p>
+                <p className="text-sm font-semibold uppercase tracking-widest text-primary">
+                  Community
+                </p>
                 <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl">
                   Together we grow
                 </h1>
                 <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">
-                  Join a global community of educators, administrators, and innovators shaping the future of education.
+                  Join a global community of educators, administrators, and
+                  innovators shaping the future of education.
                 </p>
               </FadeIn>
             </div>
@@ -38,12 +62,19 @@ function RouteComponent() {
             <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2">
               {channels.map((c, i) => (
                 <FadeIn key={c.title} delay={i * 80}>
-                  <a href="#" className="group flex h-full flex-col rounded-2xl border border-slate-200/80 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/30 dark:border-white/6border-white/[0.06] dark:bg-white/3 dark:hover:border-primary/40">
+                  <a
+                    href="#"
+                    className="group flex h-full flex-col rounded-2xl border border-slate-200/80 bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/30 dark:border-white/6border-white/[0.06] dark:bg-white/3 dark:hover:border-primary/40"
+                  >
                     <div className="mb-5 flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-white dark:bg-primary/10">
                       <Icon name={c.icon} className="text-2xl" />
                     </div>
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">{c.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{c.desc}</p>
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                      {c.title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                      {c.desc}
+                    </p>
                   </a>
                 </FadeIn>
               ))}

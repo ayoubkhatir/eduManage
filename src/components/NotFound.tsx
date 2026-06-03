@@ -1,7 +1,7 @@
 import { Link, useNavigate, useRouter } from '@tanstack/react-router'
 import { motion } from 'framer-motion'
 
-export function NotFound( ) {
+export function NotFound() {
   const navigate = useNavigate()
   const router = useRouter()
   return (
@@ -11,13 +11,15 @@ export function NotFound( ) {
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
       className="flex flex-col items-center justify-center h-screen p-4 text-center bg-background text-foreground"
     >
-      <span className="material-symbols-outlined text-7xl text-muted-foreground/30 mb-4">error_outline</span>
+      <span className="material-symbols-outlined text-7xl text-muted-foreground/30 mb-4">
+        error_outline
+      </span>
       <h1 className="text-4xl font-bold mb-2">404</h1>
       <p className="text-xl font-semibold mb-2">Page Not Found</p>
       <p className="text-muted-foreground mb-8 max-w-md">
         The page you are looking for does not exist.
       </p>
-      
+
       <div className="flex flex-wrap items-center justify-center gap-3">
         <button
           type="button"

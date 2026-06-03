@@ -155,7 +155,9 @@ function RouteComponent() {
                     <th className="px-4 py-3 sm:px-6 sm:py-4">User / Event</th>
                     <th className="px-4 py-3 sm:px-6 sm:py-4">Role</th>
                     <th className="px-4 py-3 sm:px-6 sm:py-4">Action Type</th>
-                    <th className="px-4 py-3 sm:px-6 sm:py-4 text-right">Time</th>
+                    <th className="px-4 py-3 sm:px-6 sm:py-4 text-right">
+                      Time
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/40">
@@ -233,10 +235,14 @@ function RouteComponent() {
                         </span>
                       </td>
                       <td className="px-4 py-3 sm:px-6 sm:py-4">
-                        <p className="text-sm text-foreground/80 truncate">{row.action}</p>
+                        <p className="text-sm text-foreground/80 truncate">
+                          {row.action}
+                        </p>
                       </td>
                       <td className="px-4 py-3 sm:px-6 sm:py-4 text-right">
-                        <p className="text-sm text-muted-foreground whitespace-nowrap">{row.time}</p>
+                        <p className="text-sm text-muted-foreground whitespace-nowrap">
+                          {row.time}
+                        </p>
                       </td>
                     </tr>
                   ))}

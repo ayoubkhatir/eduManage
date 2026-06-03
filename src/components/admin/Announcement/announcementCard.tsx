@@ -10,10 +10,7 @@ export type AnnouncementCardType = {
   isRead?: boolean
 }
 
-const audienceStyles: Record<
-  string,
-  { bg: string; text: string }
-> = {
+const audienceStyles: Record<string, { bg: string; text: string }> = {
   'All School': {
     bg: 'bg-slate-700 dark:bg-slate-600',
     text: 'text-slate-100',
@@ -50,7 +47,8 @@ const statusStyles: Record<
 }
 
 export default function AnnouncementCard(props: AnnouncementCardType) {
-  const audienceStyle = audienceStyles[props.audience] ?? audienceStyles['All School']
+  const audienceStyle =
+    audienceStyles[props.audience] ?? audienceStyles['All School']
   const statusStyle = statusStyles[props.status] ?? statusStyles.PUBLISHED
 
   return (

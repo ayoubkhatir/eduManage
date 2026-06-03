@@ -1,6 +1,6 @@
-import * as schema from '#/server/db/schema';
-import { addGradeSchema } from "#/schemas/grades.schema";
-import z from "zod";
+import * as schema from '#/server/db/schema'
+import { addGradeSchema } from '#/schemas/grades.schema'
+import z from 'zod'
 
 export type Grade = typeof schema.gradesTable.$inferSelect
 
@@ -25,7 +25,3 @@ export type GradeCardProps = {
     }>
   }
 }
-
-
-
-

@@ -1,19 +1,29 @@
-import { useMutation } from "@tanstack/react-query"
-import { useNavigate } from "@tanstack/react-router"
-import { useState } from "react"
-import { useForm } from "react-hook-form"
+import { useMutation } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { loginFieldsSchema, signupFieldsSchema, type LoginFields, type SignupFields } from '../../schemas/auth.schema'
-import type { UserRole, AuthResult, LoginRequest, RegisterRequest } from '../../types/authTypes'
+import {
+  loginFieldsSchema,
+  signupFieldsSchema,
+  type LoginFields,
+  type SignupFields,
+} from '../../schemas/auth.schema'
+import type {
+  UserRole,
+  AuthResult,
+  LoginRequest,
+  RegisterRequest,
+} from '../../types/authTypes'
 // import { useAuth } from "#/store/auth_store"
-import { loginServerFn, registerServerFn, logoutServerFn } from "#/server/modules/auth/auth.server-function"
+import {
+  loginServerFn,
+  registerServerFn,
+  logoutServerFn,
+} from '#/server/modules/auth/auth.server-function'
 
 import type { SubmitHandler } from 'react-hook-form'
-
-
-
-
 
 export function useLogout() {
   const navigate = useNavigate()
@@ -24,14 +34,13 @@ export function useLogout() {
       if (!response.success) {
         throw new Error('Failed to logout')
       }
-      return ""//response.message
+      return '' //response.message
     },
     onSuccess: () => {
       navigate({ to: '/', replace: true })
     },
   })
 }
-
 
 export function useLogin(redirectTo: string, role: UserRole) {
   const navigate = useNavigate()
@@ -63,7 +72,6 @@ export function useLogin(redirectTo: string, role: UserRole) {
 
   /* Submit function */
   const onSubmit: SubmitHandler<LoginFields> = async (data) => {
-
     setErrorMessage(null)
 
     const callbackURL =
@@ -90,9 +98,9 @@ export function useLogin(redirectTo: string, role: UserRole) {
       to:
         redirectTo.startsWith('http://') || redirectTo.startsWith('https://')
           ? (() => {
-            const url = new URL(redirectTo)
-            return `${url.pathname}${url.search}${url.hash}` || '/'
-          })()
+              const url = new URL(redirectTo)
+              return `${url.pathname}${url.search}${url.hash}` || '/'
+            })()
           : redirectTo,
       replace: true,
     })
@@ -105,12 +113,10 @@ export function useSignup() {
   const navigate = useNavigate()
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
-
   const form = useForm<SignupFields>({
     resolver: zodResolver(signupFieldsSchema),
     mode: 'onBlur',
     reValidateMode: 'onChange',
-
   })
   // const setToken = useAuth((s) => s.setToken)
   // const setUser = useAuth((s) => s.setUser)
@@ -130,7 +136,6 @@ export function useSignup() {
   })
 
   const onSubmit: SubmitHandler<SignupFields> = async (data) => {
-
     setErrorMessage(null)
 
     const redirectPath = '/admin/dashboard'

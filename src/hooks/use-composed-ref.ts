@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react"
+import { useCallback, useRef } from 'react'
 
 type UserRef<T> =
   | ((instance: T | null) => void)
@@ -7,9 +7,9 @@ type UserRef<T> =
   | undefined
 
 const updateRef = <T>(ref: NonNullable<UserRef<T>>, value: T | null) => {
-  if (typeof ref === "function") {
+  if (typeof ref === 'function') {
     ref(value)
-  } else if (ref && typeof ref === "object" && "current" in ref) {
+  } else if (ref && typeof ref === 'object' && 'current' in ref) {
     // Safe assignment without MutableRefObject
     ;(ref as { current: T | null }).current = value
   }
@@ -17,13 +17,13 @@ const updateRef = <T>(ref: NonNullable<UserRef<T>>, value: T | null) => {
 
 export const useComposedRef = <T extends HTMLElement>(
   libRef: React.RefObject<T | null>,
-  userRef: UserRef<T>
+  userRef: UserRef<T>,
 ) => {
   const prevUserRef = useRef<UserRef<T>>(null)
 
   return useCallback(
     (instance: T | null) => {
-      if (libRef && "current" in libRef) {
+      if (libRef && 'current' in libRef) {
         ;(libRef as { current: T | null }).current = instance
       }
 
@@ -37,7 +37,7 @@ export const useComposedRef = <T extends HTMLElement>(
         updateRef(userRef, instance)
       }
     },
-    [libRef, userRef]
+    [libRef, userRef],
   )
 }
 

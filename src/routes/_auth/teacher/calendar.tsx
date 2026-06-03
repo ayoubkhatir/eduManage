@@ -66,7 +66,7 @@ function TeacherCalendarContent() {
     data: eventsData,
     isLoading: isEventsLoading,
     isError: isEventsError,
-  } = useGetEvents(currentUser.info.schoolId,undefined, teacherId)
+  } = useGetEvents(currentUser.info.schoolId, undefined, teacherId)
 
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [view, setView] = useState<View>(Views.MONTH)

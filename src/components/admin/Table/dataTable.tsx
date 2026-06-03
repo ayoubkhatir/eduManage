@@ -115,10 +115,7 @@ export function CustomDataTableSkeleton({ rows, cols }: SkeletonTableProps) {
 
         <tbody>
           {Array.from({ length: rows }).map((_, rowIndex) => (
-            <tr
-              key={rowIndex}
-              className="border-t border-border"
-            >
+            <tr key={rowIndex} className="border-t border-border">
               {Array.from({ length: cols }).map((__, colIndex) => (
                 <td key={colIndex} className="px-4 py-3">
                   <Skeleton className="h-4 w-full bg-muted rounded" />

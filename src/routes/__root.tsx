@@ -47,8 +47,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           title: 'TanStack Start Starter',
         },
       ],
-      links: [
-      ],
+      links: [],
     }),
 
     shellComponent: RootDocument,

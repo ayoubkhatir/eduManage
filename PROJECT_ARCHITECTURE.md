@@ -1,7 +1,7 @@
 ﻿# PROJECT ARCHITECTURE — EduManage
 
 > **Internal Engineering Documentation**
-> *Version 1.0 — Generated from codebase analysis*
+> _Version 1.0 — Generated from codebase analysis_
 
 ---
 
@@ -23,11 +23,11 @@ Domain entities include Grades, Classes, Subjects, Teachers, Students, Assessmen
 
 ### 1.3 Target Users & Use Cases
 
-| User | Primary Use Cases |
-|---|---|
+| User         | Primary Use Cases                                                                                                                          |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | School Admin | Create/manage grades, classes, subjects; onboard teachers & students; assign teachers; view analytics; post announcements; manage calendar |
-| Teacher | View assigned classes & subjects; record marks; create assessments; share resources; view timetable; post announcements |
-| Student | View subjects & grades; check marks; browse resources; view calendar; read announcements |
+| Teacher      | View assigned classes & subjects; record marks; create assessments; share resources; view timetable; post announcements                    |
+| Student      | View subjects & grades; check marks; browse resources; view calendar; read announcements                                                   |
 
 ### 1.4 Platform Goals
 
@@ -44,31 +44,31 @@ Domain entities include Grades, Classes, Subjects, Teachers, Students, Assessmen
 
 ### 2.1 Frontend Framework — React 19 + TanStack Start
 
-| Aspect | Detail |
-|---|---|
-| Library | react@^19.2.0 with react-dom@^19.2.0 |
-| Meta-framework | @tanstack/react-start — SSR-capable React framework |
-| Rationale | Provides first-class SSR, streaming, server functions (RPC), and tight integration with TanStack Router and TanStack Query — all within a single project without needing Next.js or Remix |
+| Aspect         | Detail                                                                                                                                                                                    |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Library        | react@^19.2.0 with react-dom@^19.2.0                                                                                                                                                      |
+| Meta-framework | @tanstack/react-start — SSR-capable React framework                                                                                                                                       |
+| Rationale      | Provides first-class SSR, streaming, server functions (RPC), and tight integration with TanStack Router and TanStack Query — all within a single project without needing Next.js or Remix |
 
 ### 2.2 Routing — TanStack Router
 
-| Aspect | Detail |
-|---|---|
-| Library | @tanstack/react-router with file-based route tree |
-| Rationale | Full type safety across route params, search params, loader data, and context. Supports nested layouts, beforeLoad guards, and SSR streaming. Auto-generates routeTree.gen.ts via the Vite plugin |
-| Integration | Router context carries queryClient; setupRouterSsrQueryIntegration bridges SSR and client hydration |
+| Aspect      | Detail                                                                                                                                                                                            |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Library     | @tanstack/react-router with file-based route tree                                                                                                                                                 |
+| Rationale   | Full type safety across route params, search params, loader data, and context. Supports nested layouts, beforeLoad guards, and SSR streaming. Auto-generates routeTree.gen.ts via the Vite plugin |
+| Integration | Router context carries queryClient; setupRouterSsrQueryIntegration bridges SSR and client hydration                                                                                               |
 
 ### 2.3 State Management & Data Fetching
 
-| Aspect | Detail |
-|---|---|
-| Server state | @tanstack/react-query (v5) |
+| Aspect       | Detail                                                 |
+| ------------ | ------------------------------------------------------ |
+| Server state | @tanstack/react-query (v5)                             |
 | Client state | zustand@^5.0.9 (sidebar visibility, active navigation) |
-| Query client | refetchOnWindowFocus: true |
+| Query client | refetchOnWindowFocus: true                             |
 
 ### 2.4 Server Functions / API Layer
 
-Server functions (createServerFn from @tanstack/react-start) act as the RPC bridge. Functions are collocated with frontend code but execute on the server — no REST or GraphQL boilerplate. Each domain module in src/server/modules/ exposes a *.server-functions.ts file.
+Server functions (createServerFn from @tanstack/react-start) act as the RPC bridge. Functions are collocated with frontend code but execute on the server — no REST or GraphQL boilerplate. Each domain module in src/server/modules/ exposes a \*.server-functions.ts file.
 
 ### 2.5 Database — PostgreSQL (Neon Serverless)
 
@@ -165,11 +165,13 @@ src/
 ### 3.3 Domain Module Organisation
 
 Each server module bundles:
+
 - **Controller** (business logic, class-based)
 - **Server Functions** (RPC endpoints)
 - **Optional Service / Repository**
 
 Client side per domain:
+
 - **Hooks** in src/hooks/{domain}/hooks.ts
 - **Components** in src/components/
 - **Route files** in src/routes/
@@ -198,18 +200,18 @@ RootDocument
 
 ### 3.6 Separation of Concerns
 
-| Concern | Location |
-|---|---|
-| Route definitions | src/routes/ |
-| Auth guards | beforeLoad in route files |
-| Data fetching patterns | src/hooks/{domain}/hooks.ts |
-| Validation schemas | src/schemas/ |
-| Business logic | src/server/modules/*/controllers |
-| RPC layer | src/server/modules/*/server-functions |
-| Database access | src/server/db/ + controllers |
-| UI components | src/components/ |
-| Client state | src/store/ (Zustand) |
-| Types | src/types/ + inferred from Zod + Drizzle |
+| Concern                | Location                                 |
+| ---------------------- | ---------------------------------------- |
+| Route definitions      | src/routes/                              |
+| Auth guards            | beforeLoad in route files                |
+| Data fetching patterns | src/hooks/{domain}/hooks.ts              |
+| Validation schemas     | src/schemas/                             |
+| Business logic         | src/server/modules/\*/controllers        |
+| RPC layer              | src/server/modules/\*/server-functions   |
+| Database access        | src/server/db/ + controllers             |
+| UI components          | src/components/                          |
+| Client state           | src/store/ (Zustand)                     |
+| Types                  | src/types/ + inferred from Zod + Drizzle |
 
 ### 3.7 Type Safety Chain
 
@@ -234,16 +236,16 @@ Database: PostgreSQL PK/FK constraints, unique indexes, enums
 
 TanStack Router with file-based naming (auto-generated routeTree.gen.ts):
 
-| File Pattern | Route |
-|---|---|
-| __root.tsx | Root layout (HTML shell, providers) |
-| index.tsx | / Landing page |
-| _auth.tsx | Layout route for authenticated pages |
-| _auth/admin.tsx | Admin role layout |
-| _auth/admin/dashboard.tsx | /admin/dashboard |
-| _auth/admin/students.$studentId.tsx | /admin/students/:studentId |
-| _auth/auth.api.$.tsx | Catch-all for Better Auth API |
-| log-in.tsx | /log-in |
+| File Pattern                         | Route                                |
+| ------------------------------------ | ------------------------------------ |
+| \_\_root.tsx                         | Root layout (HTML shell, providers)  |
+| index.tsx                            | / Landing page                       |
+| \_auth.tsx                           | Layout route for authenticated pages |
+| \_auth/admin.tsx                     | Admin role layout                    |
+| \_auth/admin/dashboard.tsx           | /admin/dashboard                     |
+| \_auth/admin/students.$studentId.tsx | /admin/students/:studentId           |
+| \_auth/auth.api.$.tsx                | Catch-all for Better Auth API        |
+| log-in.tsx                           | /log-in                              |
 
 ### 4.2 Nested Layouts
 
@@ -262,7 +264,8 @@ __root.tsx
 ### 4.3 Authentication Guards
 
 Three levels:
-1. _auth.tsx beforeLoad redirects to /log-in if no session
+
+1. \_auth.tsx beforeLoad redirects to /log-in if no session
 2. Role layout beforeLoad redirects to correct role route if mismatch
 3. Landing page index.tsx redirects authenticated users to their dashboard
 
@@ -306,6 +309,7 @@ No global store for application data. Server state lives in React Query cache. O
 ### 6.1 Database Tables
 
 Core Application Tables (15):
+
 - users: Authentication and profile base
 - admins: School profile, root of school hierarchy
 - grades: Academic levels (1AM, 2AM, etc.)
@@ -339,6 +343,7 @@ Single db.ts file initializes Drizzle with Neon HTTP driver and exports the data
 ### 6.4 Repository Layer
 
 src/server/db/repo/ contains repository implementations. Currently:
+
 - UsersRepository (class-based with IUsersRepository interface)
 - EventsRepository (functional CRUD with filter support)
 
@@ -357,6 +362,7 @@ Standardized error types: ValidationError, HTTPError, InternalServerError, Datab
 ### 7.1 Auth Flow
 
 Primary auth is Better Auth with:
+
 - Email/password with bcrypt hashing (12 salt rounds)
 - OAuth via Google and Facebook
 - JWT session tokens (7-day expiry, 1-day update age)
@@ -365,7 +371,7 @@ Primary auth is Better Auth with:
 
 ### 7.2 Route Protection
 
-- _auth.tsx beforeLoad checks session via getSession()
+- \_auth.tsx beforeLoad checks session via getSession()
 - Role layouts verify user.role matches route prefix
 - Landing page redirects authenticated users to appropriate dashboard
 
@@ -384,6 +390,7 @@ Based on shadcn/ui New York style with Tailwind CSS v4. CSS custom properties de
 ### 8.2 Component Strategy
 
 Three tiers of components:
+
 1. Primitives (src/components/ui/): 24+ atomic components (button, input, table, dialog, etc.)
 2. Shared composites (src/components/): SideBar, TopNav, LayoutBreadcrumb, PaginationComp, etc.
 3. Domain-specific (src/components/admin/, src/components/teacher/): Feature-specific components
@@ -414,6 +421,7 @@ Boneyard-JS skeleton system uses JSON bone files defining loading templates for 
 ### 8.8 Animation System
 
 Framer Motion provides:
+
 - Page entrance animations (fade-in-up, scale-in)
 - Staggered children animations
 - AnimatePresence for route transitions
@@ -473,11 +481,12 @@ Custom ThemeProvider with View Transitions API, system preference detection, loc
 The presence of both Better Auth and a custom JWT system (auth.middleware.ts, syncAuthSession.ts, authStore) creates confusion and potential security gaps.
 
 **Recommendation**: Fully migrate to Better Auth and remove all legacy auth code, including:
+
 - src/server/middlewares/auth.middleware.ts
 - src/lib/syncAuthSession.ts
 - src/store/auth_store.ts
 - src/providers/authProvider.tsx
-- src/routes/_auth/-check-user-beforeLoad.ts
+- src/routes/\_auth/-check-user-beforeLoad.ts
 
 ### 10.2 Inconsistent Server-Function Patterns
 
@@ -496,6 +505,7 @@ The 835-line schema.ts file will become unwieldy as the project grows.
 Only test infrastructure (Vitest, Testing Library) is installed with no tests written.
 
 **Recommendation**: Add tests incrementally:
+
 - Unit tests for controllers (Vitest)
 - Integration tests for server functions
 - Component tests for key UI components
@@ -530,6 +540,7 @@ The Quill rich-text editor for announcements could introduce XSS vulnerabilities
 No CI pipeline, lint checks, or automated test runs configured.
 
 **Recommendation**: Set up GitHub Actions (or similar) for:
+
 - Lint + type check on PRs
 - Test execution on push
 - Build verification
@@ -658,12 +669,14 @@ The schema already supports multi-school via schoolId, but there is no tenant is
 ### 12.1 Onboarding
 
 The project has good onboarding foundations:
+
 - Comprehensive seed script generates realistic data
 - Drizzle Studio for database inspection
-- Clear package.json scripts (dev, build, test, lint, db:*)
+- Clear package.json scripts (dev, build, test, lint, db:\*)
 - README with basic setup instructions
 
 Improvements needed:
+
 - Add CONTRIBUTING.md with detailed setup guide
 - Document environment variable requirements
 - Add architecture decision records (ADRs)
@@ -678,12 +691,14 @@ Improvements needed:
 ### 12.3 Maintainability
 
 Strengths:
+
 - Domain-organized modules
 - Consistent hook patterns
 - Shared schema and type system
 - shadcn/ui component conventions
 
 Weaknesses:
+
 - Single large schema file
 - Some deprecated code paths
 - Inconsistent error handling patterns
@@ -698,6 +713,7 @@ Weaknesses:
 ### 12.5 Team Scalability
 
 The current architecture supports teams of 3-5 developers well. As the team grows, the project would benefit from:
+
 - Stricter module boundaries
 - API documentation
 - Feature flags
@@ -786,6 +802,7 @@ EduManage is a well-architected, modern full-stack school management platform th
 **Scalability Potential**: The serverless-friendly architecture (Neon Postgres, TanStack Start server functions, Cloudinary for media) can scale well for hundreds of schools. Multi-tenancy is already designed into the schema via schoolId. With proper caching, rate limiting, and infrastructure automation, the platform could support thousands of concurrent users.
 
 **Engineering Direction**: The primary recommendations are:
+
 1. Clean up deprecated code paths
 2. Add comprehensive test coverage
 3. Standardise patterns (error handling, response types)

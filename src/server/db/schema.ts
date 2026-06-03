@@ -9,60 +9,77 @@ import {
   index,
   uniqueIndex,
   date,
-} from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
-import generateId from "../../lib/id_generator";
+} from 'drizzle-orm/pg-core'
+import { relations } from 'drizzle-orm'
+import generateId from '../../lib/id_generator'
 
 // * enums :
 
 export enum UserRoleEnum {
-  STUDENT = "Student",
-  ADMIN = "Admin",
-  TEACHER = "Teacher"
+  STUDENT = 'Student',
+  ADMIN = 'Admin',
+  TEACHER = 'Teacher',
 }
-export const userRolesList = Object.values(UserRoleEnum) as [UserRoleEnum, ...UserRoleEnum[]];
-export const dbRoleEnum = pgEnum("role", userRolesList);
+export const userRolesList = Object.values(UserRoleEnum) as [
+  UserRoleEnum,
+  ...UserRoleEnum[],
+]
+export const dbRoleEnum = pgEnum('role', userRolesList)
 
 export enum StatusEnum {
-  ACTIVE = "Active",
-  NEW = "New",
-  INACTIVE = "Inactive",
-  PENDING = "Pending"
+  ACTIVE = 'Active',
+  NEW = 'New',
+  INACTIVE = 'Inactive',
+  PENDING = 'Pending',
 }
-export const statusList = Object.values(StatusEnum) as [StatusEnum, ...StatusEnum[]]
-export const dbStatusEnum = pgEnum("status", statusList);
+export const statusList = Object.values(StatusEnum) as [
+  StatusEnum,
+  ...StatusEnum[],
+]
+export const dbStatusEnum = pgEnum('status', statusList)
 
 export enum UserGenderEnum {
-  MALE = "Male",
-  FEMALE = "Female"
+  MALE = 'Male',
+  FEMALE = 'Female',
 }
-export const userGendersList = Object.values(UserGenderEnum) as [UserGenderEnum, ...UserGenderEnum[]]
-export const dbGenderEnum = pgEnum("gender", userGendersList);
+export const userGendersList = Object.values(UserGenderEnum) as [
+  UserGenderEnum,
+  ...UserGenderEnum[],
+]
+export const dbGenderEnum = pgEnum('gender', userGendersList)
 
 export enum AnnouncementAudienceEnum {
-  PUBLIC = "Public",
-  TEACHERS = "Teachers",
-  STUDENTS = "Students"
+  PUBLIC = 'Public',
+  TEACHERS = 'Teachers',
+  STUDENTS = 'Students',
 }
 
-export const announcementAudienceList = Object.values(AnnouncementAudienceEnum) as [AnnouncementAudienceEnum, ...AnnouncementAudienceEnum[]]
-export const dbAnnouncementAudienceEnum = pgEnum("announcement_audience", announcementAudienceList);
+export const announcementAudienceList = Object.values(
+  AnnouncementAudienceEnum,
+) as [AnnouncementAudienceEnum, ...AnnouncementAudienceEnum[]]
+export const dbAnnouncementAudienceEnum = pgEnum(
+  'announcement_audience',
+  announcementAudienceList,
+)
 
-export const users = pgTable("users", {
-  id: text("id").primaryKey().$defaultFn(() => generateId()).notNull(),
-  email: varchar("email", { length: 255 }).notNull().unique(),
-  emailVerified: boolean("email_verified").default(false).notNull(),
-  image: text("image"),
-  gender: dbGenderEnum("gender").notNull(),
-  name: varchar("name", { length: 50 }).notNull(),
-  telNumber: varchar("tel_number", { length: 20 }),
-  role: dbRoleEnum("role").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
+export const users = pgTable('users', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => generateId())
+    .notNull(),
+  email: varchar('email', { length: 255 }).notNull().unique(),
+  emailVerified: boolean('email_verified').default(false).notNull(),
+  image: text('image'),
+  gender: dbGenderEnum('gender').notNull(),
+  name: varchar('name', { length: 50 }).notNull(),
+  telNumber: varchar('tel_number', { length: 20 }),
+  role: dbRoleEnum('role').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at')
     .defaultNow()
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
-});
+})
 
 export const usersRelations = relations(users, ({ one, many }) => ({
   student: one(studentsTable),
@@ -71,18 +88,21 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   sessions: many(session),
   accounts: many(account),
   announcements: many(announcementsTable),
-}));
+}))
 
-export const adminsTable = pgTable("admins", {
-  id: text("school_id").primaryKey().$defaultFn(() => generateId()).notNull(),
-  userId: text("user_id")
+export const adminsTable = pgTable('admins', {
+  id: text('school_id')
+    .primaryKey()
+    .$defaultFn(() => generateId())
+    .notNull(),
+  userId: text('user_id')
     .notNull()
     .unique()
-    .references(() => users.id, { onDelete: "cascade" }),
-  schoolName: varchar("school_name", { length: 120 }).notNull(),
-  numberStudents: integer("number_students").notNull().default(0),
-  numberTeachers: integer("number_teachers").notNull().default(0),
-});
+    .references(() => users.id, { onDelete: 'cascade' }),
+  schoolName: varchar('school_name', { length: 120 }).notNull(),
+  numberStudents: integer('number_students').notNull().default(0),
+  numberTeachers: integer('number_teachers').notNull().default(0),
+})
 
 export const adminsRelations = relations(adminsTable, ({ one, many }) => ({
   user: one(users, {
@@ -94,7 +114,7 @@ export const adminsRelations = relations(adminsTable, ({ one, many }) => ({
   students: many(studentsTable),
   teachers: many(teachersTable),
   gradeSubjects: many(gradeSubjectsTable),
-}));
+}))
 
 /**
  * Grades table
@@ -104,30 +124,36 @@ export const adminsRelations = relations(adminsTable, ({ one, many }) => ({
  * - 3AM
  */
 export const gradesTable = pgTable(
-  "grades",
+  'grades',
   {
-    id: text("id").primaryKey().$defaultFn(() => generateId()).notNull(),
-    schoolId: text("school_id")
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => generateId())
+      .notNull(),
+    schoolId: text('school_id')
       .notNull()
-      .references(() => adminsTable.id, { onDelete: "cascade" }),
+      .references(() => adminsTable.id, { onDelete: 'cascade' }),
 
-    name: varchar("name", { length: 50 }).notNull(), // e.g. "1AM"
-    levelOrder: integer("level_order").notNull(), // e.g. 1, 2, 3...
-    status: dbStatusEnum("status").notNull().default(StatusEnum.NEW).$type<StatusEnum>(),
+    name: varchar('name', { length: 50 }).notNull(), // e.g. "1AM"
+    levelOrder: integer('level_order').notNull(), // e.g. 1, 2, 3...
+    status: dbStatusEnum('status')
+      .notNull()
+      .default(StatusEnum.NEW)
+      .$type<StatusEnum>(),
 
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
       .defaultNow()
       .$onUpdate(() => new Date())
       .notNull(),
   },
   (table) => ({
-    schoolGradeUnique: uniqueIndex("grades_school_id_name_unique").on(
+    schoolGradeUnique: uniqueIndex('grades_school_id_name_unique').on(
       table.schoolId,
-      table.name
+      table.name,
     ),
-  })
-);
+  }),
+)
 
 export const gradesRelations = relations(gradesTable, ({ one, many }) => ({
   school: one(adminsTable, {
@@ -146,33 +172,39 @@ export const gradesRelations = relations(gradesTable, ({ one, many }) => ({
  * - 2AM-A
  */
 export const classesTable = pgTable(
-  "classes",
+  'classes',
   {
-    id: text("id").primaryKey().$defaultFn(() => generateId()).notNull(),
-    schoolId: text("school_id")
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => generateId())
+      .notNull(),
+    schoolId: text('school_id')
       .notNull()
-      .references(() => adminsTable.id, { onDelete: "cascade" }),
+      .references(() => adminsTable.id, { onDelete: 'cascade' }),
 
-    gradeId: text("grade_id")
+    gradeId: text('grade_id')
       .notNull()
-      .references(() => gradesTable.id, { onDelete: "cascade" }),
+      .references(() => gradesTable.id, { onDelete: 'cascade' }),
 
-    name: varchar("name", { length: 40 }).notNull(), // e.g. "A", "B", "Science-1"
-    status: dbStatusEnum("status").notNull().default(StatusEnum.NEW).$type<StatusEnum>(),
+    name: varchar('name', { length: 40 }).notNull(), // e.g. "A", "B", "Science-1"
+    status: dbStatusEnum('status')
+      .notNull()
+      .default(StatusEnum.NEW)
+      .$type<StatusEnum>(),
 
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
       .defaultNow()
       .$onUpdate(() => new Date())
       .notNull(),
   },
   (table) => ({
-    gradeClassUnique: uniqueIndex("classes_grade_id_name_unique").on(
+    gradeClassUnique: uniqueIndex('classes_grade_id_name_unique').on(
       table.gradeId,
-      table.name
+      table.name,
     ),
-  })
-);
+  }),
+)
 
 export const classesRelations = relations(classesTable, ({ one, many }) => ({
   school: one(adminsTable, {
@@ -187,27 +219,33 @@ export const classesRelations = relations(classesTable, ({ one, many }) => ({
   assignments: many(teacherAssignmentsTable),
 }))
 
-export const studentsTable = pgTable("students", {
-  id: text("id").primaryKey().$defaultFn(() => generateId()).notNull(),
-  schoolId: text("school_id")
+export const studentsTable = pgTable('students', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => generateId())
+    .notNull(),
+  schoolId: text('school_id')
     .notNull()
-    .references(() => adminsTable.id, { onDelete: "cascade" }),
-  userId: text("user_id")
+    .references(() => adminsTable.id, { onDelete: 'cascade' }),
+  userId: text('user_id')
     .unique()
     .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
+    .references(() => users.id, { onDelete: 'cascade' }),
 
-  classId: text("class_id")
+  classId: text('class_id')
     .notNull()
-    .references(() => classesTable.id, { onDelete: "restrict" }),
+    .references(() => classesTable.id, { onDelete: 'restrict' }),
 
-  parentPhoneNumber: varchar("parent_phone_number", { length: 50 }).notNull(),
-  parentName: varchar("parent_name", { length: 120 }).notNull(),
-  status: dbStatusEnum("status").notNull().default(StatusEnum.NEW).$type<StatusEnum>(),
-  address: text("address").notNull(),
-  dateOfBirth: date("date_of_birth").notNull(),
-  enrollmentDate: date("enrollement_date").notNull(),
-});
+  parentPhoneNumber: varchar('parent_phone_number', { length: 50 }).notNull(),
+  parentName: varchar('parent_name', { length: 120 }).notNull(),
+  status: dbStatusEnum('status')
+    .notNull()
+    .default(StatusEnum.NEW)
+    .$type<StatusEnum>(),
+  address: text('address').notNull(),
+  dateOfBirth: date('date_of_birth').notNull(),
+  enrollmentDate: date('enrollement_date').notNull(),
+})
 
 export const studentsRelations = relations(studentsTable, ({ one }) => ({
   user: one(users, {
@@ -222,25 +260,31 @@ export const studentsRelations = relations(studentsTable, ({ one }) => ({
     fields: [studentsTable.classId],
     references: [classesTable.id],
   }),
-}));
+}))
 
-export const teachersTable = pgTable("teachers", {
-  id: text("id").primaryKey().$defaultFn(() => generateId()).notNull(),
+export const teachersTable = pgTable('teachers', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => generateId())
+    .notNull(),
 
-  schoolId: text("school_id")
+  schoolId: text('school_id')
     .notNull()
-    .references(() => adminsTable.id, { onDelete: "cascade" }),
+    .references(() => adminsTable.id, { onDelete: 'cascade' }),
 
-  userId: text("user_id")
+  userId: text('user_id')
     .notNull()
     .unique()
-    .references(() => users.id, { onDelete: "cascade" }),
+    .references(() => users.id, { onDelete: 'cascade' }),
 
-  address: text("address").notNull(),
-  dateOfBirth: date("date_of_birth").notNull(),
-  about: text("about").notNull().default(""),
-  joiningDate: date("joining_date").notNull(),
-  status: dbStatusEnum("status").notNull().default(StatusEnum.NEW).$type<StatusEnum>(),
+  address: text('address').notNull(),
+  dateOfBirth: date('date_of_birth').notNull(),
+  about: text('about').notNull().default(''),
+  joiningDate: date('joining_date').notNull(),
+  status: dbStatusEnum('status')
+    .notNull()
+    .default(StatusEnum.NEW)
+    .$type<StatusEnum>(),
 })
 
 export const teachersRelations = relations(teachersTable, ({ one, many }) => ({
@@ -256,30 +300,36 @@ export const teachersRelations = relations(teachersTable, ({ one, many }) => ({
 }))
 
 export const subjectsTable = pgTable(
-  "subjects",
+  'subjects',
   {
-    id: text("id").primaryKey().$defaultFn(() => generateId()).notNull(),
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => generateId())
+      .notNull(),
 
-    schoolId: text("school_id")
+    schoolId: text('school_id')
       .notNull()
-      .references(() => adminsTable.id, { onDelete: "cascade" }),
+      .references(() => adminsTable.id, { onDelete: 'cascade' }),
 
-    name: varchar("name", { length: 80 }).notNull(), // Math, Physics, Arabic
-    code: varchar("code", { length: 30 }).notNull(), // MATH, PHY
-    status: dbStatusEnum("status").notNull().default(StatusEnum.NEW).$type<StatusEnum>(),
+    name: varchar('name', { length: 80 }).notNull(), // Math, Physics, Arabic
+    code: varchar('code', { length: 30 }).notNull(), // MATH, PHY
+    status: dbStatusEnum('status')
+      .notNull()
+      .default(StatusEnum.NEW)
+      .$type<StatusEnum>(),
 
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
       .defaultNow()
       .$onUpdate(() => new Date())
       .notNull(),
   },
   (table) => ({
-    schoolSubjectUnique: uniqueIndex("subjects_school_id_name_unique").on(
+    schoolSubjectUnique: uniqueIndex('subjects_school_id_name_unique').on(
       table.schoolId,
-      table.name
+      table.name,
     ),
-  })
+  }),
 )
 
 export const subjectsRelations = relations(subjectsTable, ({ one, many }) => ({
@@ -292,47 +342,52 @@ export const subjectsRelations = relations(subjectsTable, ({ one, many }) => ({
 }))
 
 export const teacherAssignmentsTable = pgTable(
-  "teacher_assignments",
+  'teacher_assignments',
   {
-    id: text("id").primaryKey().$defaultFn(() => generateId()).notNull(),
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => generateId())
+      .notNull(),
 
-    schoolId: text("school_id")
+    schoolId: text('school_id')
       .notNull()
-      .references(() => adminsTable.id, { onDelete: "cascade" }),
+      .references(() => adminsTable.id, { onDelete: 'cascade' }),
 
-    teacherId: text("teacher_id")
+    teacherId: text('teacher_id')
       .notNull()
-      .references(() => teachersTable.id, { onDelete: "cascade" }),
+      .references(() => teachersTable.id, { onDelete: 'cascade' }),
 
-    subjectId: text("subject_id")
+    subjectId: text('subject_id')
       .notNull()
-      .references(() => subjectsTable.id, { onDelete: "cascade" }),
+      .references(() => subjectsTable.id, { onDelete: 'cascade' }),
 
-    classId: text("class_id")
+    classId: text('class_id')
       .notNull()
-      .references(() => classesTable.id, { onDelete: "cascade" }),
+      .references(() => classesTable.id, { onDelete: 'cascade' }),
 
     // optional but sometimes useful for faster filtering/reporting
-    gradeId: text("grade_id").references(() => gradesTable.id, {
-      onDelete: "cascade",
+    gradeId: text('grade_id').references(() => gradesTable.id, {
+      onDelete: 'cascade',
     }),
 
-    isPrimaryTeacher: boolean("is_primary_teacher").default(false).notNull(),
-    status: dbStatusEnum("status").notNull().default(StatusEnum.NEW).$type<StatusEnum>(),
+    isPrimaryTeacher: boolean('is_primary_teacher').default(false).notNull(),
+    status: dbStatusEnum('status')
+      .notNull()
+      .default(StatusEnum.NEW)
+      .$type<StatusEnum>(),
 
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
       .defaultNow()
       .$onUpdate(() => new Date())
       .notNull(),
   },
   (table) => ({
     uniqueTeacherClassSubject: uniqueIndex(
-      "teacher_assignments_teacher_class_subject_unique"
+      'teacher_assignments_teacher_class_subject_unique',
     ).on(table.teacherId, table.classId, table.subjectId),
-  })
+  }),
 )
-
 
 export const teacherAssignmentsRelations = relations(
   teacherAssignmentsTable,
@@ -353,13 +408,16 @@ export const teacherAssignmentsRelations = relations(
       fields: [teacherAssignmentsTable.classId],
       references: [classesTable.id],
     }),
-  })
+  }),
 )
 
 export const gradeSubjectsTable = pgTable(
   'grade_subjects',
   {
-    id: text('id').primaryKey().$defaultFn(() => generateId()).notNull(),
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => generateId())
+      .notNull(),
 
     schoolId: text('school_id')
       .notNull()
@@ -376,7 +434,10 @@ export const gradeSubjectsTable = pgTable(
     coefficient: integer('coefficient'),
     weeklyHours: integer('weekly_hours'),
 
-    status: dbStatusEnum('status').notNull().default(StatusEnum.NEW).$type<StatusEnum>(),
+    status: dbStatusEnum('status')
+      .notNull()
+      .default(StatusEnum.NEW)
+      .$type<StatusEnum>(),
 
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at')
@@ -411,171 +472,205 @@ export const gradeSubjectsRelations = relations(
 )
 
 export const assessmentPeriodsTable = pgTable(
-  "assessment_periods",
+  'assessment_periods',
   {
-    id: text("id").primaryKey().$defaultFn(() => generateId()).notNull(),
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => generateId())
+      .notNull(),
 
-    schoolId: text("school_id")
+    schoolId: text('school_id')
       .notNull()
-      .references(() => adminsTable.id, { onDelete: "cascade" }),
+      .references(() => adminsTable.id, { onDelete: 'cascade' }),
 
-    name: varchar("name", { length: 80 }).notNull(), // "Trimester 1", "Semester 2"
-    code: varchar("code", { length: 30 }), // T1, S2
-    startDate: timestamp("start_date").notNull(),
-    endDate: timestamp("end_date").notNull(),
-    status: dbStatusEnum("status").notNull().default(StatusEnum.NEW).$type<StatusEnum>(),
+    name: varchar('name', { length: 80 }).notNull(), // "Trimester 1", "Semester 2"
+    code: varchar('code', { length: 30 }), // T1, S2
+    startDate: timestamp('start_date').notNull(),
+    endDate: timestamp('end_date').notNull(),
+    status: dbStatusEnum('status')
+      .notNull()
+      .default(StatusEnum.NEW)
+      .$type<StatusEnum>(),
 
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
       .defaultNow()
       .$onUpdate(() => new Date())
       .notNull(),
   },
   (table) => ({
-    uniquePeriodPerSchool: uniqueIndex("assessment_periods_school_name_unique").on(
-      table.schoolId,
-      table.name
-    ),
-  })
+    uniquePeriodPerSchool: uniqueIndex(
+      'assessment_periods_school_name_unique',
+    ).on(table.schoolId, table.name),
+  }),
 )
 
 export enum AssessmentTypeEnum {
-  Homework = "Homework",
-  Quiz = "Quiz",
-  Test = "Test",
-  Exam = "Exam",
-  Project = "Project",
-  Participation = "Participation",
+  Homework = 'Homework',
+  Quiz = 'Quiz',
+  Test = 'Test',
+  Exam = 'Exam',
+  Project = 'Project',
+  Participation = 'Participation',
 }
 
-export const assessmentTypeEnum = pgEnum("assessment_type", Object.values(AssessmentTypeEnum) as [AssessmentTypeEnum, ...AssessmentTypeEnum[]])
-
-export const assessmentsTable = pgTable(
-  "assessments",
-  {
-    id: text("id").primaryKey().$defaultFn(() => generateId()).notNull(),
-
-    schoolId: text("school_id")
-      .notNull()
-      .references(() => adminsTable.id, { onDelete: "cascade" }),
-
-    classId: text("class_id")
-      .notNull()
-      .references(() => classesTable.id, { onDelete: "cascade" }),
-
-    subjectId: text("subject_id")
-      .notNull()
-      .references(() => subjectsTable.id, { onDelete: "cascade" }),
-
-    teacherAssignmentId: text("teacher_assignment_id")
-      .references(() => teacherAssignmentsTable.id, { onDelete: "set null" }),
-
-    periodId: text("period_id")
-      .references(() => assessmentPeriodsTable.id, { onDelete: "set null" }),
-
-    title: varchar("title", { length: 120 }).notNull(), // "Math Test 1"
-    type: assessmentTypeEnum("type").notNull().default(AssessmentTypeEnum.Test).$type<AssessmentTypeEnum>(),
-
-    maxScore: integer("max_score").notNull().default(20),
-    weight: integer("weight").notNull().default(1), // coefficient inside subject period
-    assessmentDate: timestamp("assessment_date"),
-    notes: text("notes"),
-
-    status: dbStatusEnum("status").notNull().default(StatusEnum.NEW).$type<StatusEnum>(),
-
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
-      .defaultNow()
-      .$onUpdate(() => new Date())
-      .notNull(),
-  }
+export const assessmentTypeEnum = pgEnum(
+  'assessment_type',
+  Object.values(AssessmentTypeEnum) as [
+    AssessmentTypeEnum,
+    ...AssessmentTypeEnum[],
+  ],
 )
 
+export const assessmentsTable = pgTable('assessments', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => generateId())
+    .notNull(),
+
+  schoolId: text('school_id')
+    .notNull()
+    .references(() => adminsTable.id, { onDelete: 'cascade' }),
+
+  classId: text('class_id')
+    .notNull()
+    .references(() => classesTable.id, { onDelete: 'cascade' }),
+
+  subjectId: text('subject_id')
+    .notNull()
+    .references(() => subjectsTable.id, { onDelete: 'cascade' }),
+
+  teacherAssignmentId: text('teacher_assignment_id').references(
+    () => teacherAssignmentsTable.id,
+    { onDelete: 'set null' },
+  ),
+
+  periodId: text('period_id').references(() => assessmentPeriodsTable.id, {
+    onDelete: 'set null',
+  }),
+
+  title: varchar('title', { length: 120 }).notNull(), // "Math Test 1"
+  type: assessmentTypeEnum('type')
+    .notNull()
+    .default(AssessmentTypeEnum.Test)
+    .$type<AssessmentTypeEnum>(),
+
+  maxScore: integer('max_score').notNull().default(20),
+  weight: integer('weight').notNull().default(1), // coefficient inside subject period
+  assessmentDate: timestamp('assessment_date'),
+  notes: text('notes'),
+
+  status: dbStatusEnum('status')
+    .notNull()
+    .default(StatusEnum.NEW)
+    .$type<StatusEnum>(),
+
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at')
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+})
+
 export const studentMarksTable = pgTable(
-  "student_marks",
+  'student_marks',
   {
-    id: text("id").primaryKey().$defaultFn(() => generateId()).notNull(),
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => generateId())
+      .notNull(),
 
-    schoolId: text("school_id")
+    schoolId: text('school_id')
       .notNull()
-      .references(() => adminsTable.id, { onDelete: "cascade" }),
+      .references(() => adminsTable.id, { onDelete: 'cascade' }),
 
-    assessmentId: text("assessment_id")
+    assessmentId: text('assessment_id')
       .notNull()
-      .references(() => assessmentsTable.id, { onDelete: "cascade" }),
+      .references(() => assessmentsTable.id, { onDelete: 'cascade' }),
 
-    studentId: text("student_id")
+    studentId: text('student_id')
       .notNull()
-      .references(() => studentsTable.id, { onDelete: "cascade" }),
+      .references(() => studentsTable.id, { onDelete: 'cascade' }),
 
-    score: integer("score"), // nullable until entered
-    absent: boolean("absent").notNull().default(false),
-    excused: boolean("excused").notNull().default(false),
-    comment: text("comment"),
+    score: integer('score'), // nullable until entered
+    absent: boolean('absent').notNull().default(false),
+    excused: boolean('excused').notNull().default(false),
+    comment: text('comment'),
 
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
       .defaultNow()
       .$onUpdate(() => new Date())
       .notNull(),
   },
   (table) => ({
-    uniqueAssessmentStudent: uniqueIndex("student_marks_assessment_student_unique").on(
-      table.assessmentId,
-      table.studentId
-    ),
-  })
+    uniqueAssessmentStudent: uniqueIndex(
+      'student_marks_assessment_student_unique',
+    ).on(table.assessmentId, table.studentId),
+  }),
 )
 
-export const assessmentPeriodsRelations = relations(assessmentPeriodsTable, ({ one, many }) => ({
-  school: one(adminsTable, {
-    fields: [assessmentPeriodsTable.schoolId],
-    references: [adminsTable.id],
+export const assessmentPeriodsRelations = relations(
+  assessmentPeriodsTable,
+  ({ one, many }) => ({
+    school: one(adminsTable, {
+      fields: [assessmentPeriodsTable.schoolId],
+      references: [adminsTable.id],
+    }),
+    assessments: many(assessmentsTable),
   }),
-  assessments: many(assessmentsTable),
-}))
+)
 
-export const assessmentsRelations = relations(assessmentsTable, ({ one, many }) => ({
-  school: one(adminsTable, {
-    fields: [assessmentsTable.schoolId],
-    references: [adminsTable.id],
+export const assessmentsRelations = relations(
+  assessmentsTable,
+  ({ one, many }) => ({
+    school: one(adminsTable, {
+      fields: [assessmentsTable.schoolId],
+      references: [adminsTable.id],
+    }),
+    class: one(classesTable, {
+      fields: [assessmentsTable.classId],
+      references: [classesTable.id],
+    }),
+    subject: one(subjectsTable, {
+      fields: [assessmentsTable.subjectId],
+      references: [subjectsTable.id],
+    }),
+    teacherAssignment: one(teacherAssignmentsTable, {
+      fields: [assessmentsTable.teacherAssignmentId],
+      references: [teacherAssignmentsTable.id],
+    }),
+    period: one(assessmentPeriodsTable, {
+      fields: [assessmentsTable.periodId],
+      references: [assessmentPeriodsTable.id],
+    }),
+    marks: many(studentMarksTable),
   }),
-  class: one(classesTable, {
-    fields: [assessmentsTable.classId],
-    references: [classesTable.id],
-  }),
-  subject: one(subjectsTable, {
-    fields: [assessmentsTable.subjectId],
-    references: [subjectsTable.id],
-  }),
-  teacherAssignment: one(teacherAssignmentsTable, {
-    fields: [assessmentsTable.teacherAssignmentId],
-    references: [teacherAssignmentsTable.id],
-  }),
-  period: one(assessmentPeriodsTable, {
-    fields: [assessmentsTable.periodId],
-    references: [assessmentPeriodsTable.id],
-  }),
-  marks: many(studentMarksTable),
-}))
+)
 
-export const studentMarksRelations = relations(studentMarksTable, ({ one }) => ({
-  school: one(adminsTable, {
-    fields: [studentMarksTable.schoolId],
-    references: [adminsTable.id],
+export const studentMarksRelations = relations(
+  studentMarksTable,
+  ({ one }) => ({
+    school: one(adminsTable, {
+      fields: [studentMarksTable.schoolId],
+      references: [adminsTable.id],
+    }),
+    assessment: one(assessmentsTable, {
+      fields: [studentMarksTable.assessmentId],
+      references: [assessmentsTable.id],
+    }),
+    student: one(studentsTable, {
+      fields: [studentMarksTable.studentId],
+      references: [studentsTable.id],
+    }),
   }),
-  assessment: one(assessmentsTable, {
-    fields: [studentMarksTable.assessmentId],
-    references: [assessmentsTable.id],
-  }),
-  student: one(studentsTable, {
-    fields: [studentMarksTable.studentId],
-    references: [studentsTable.id],
-  }),
-}))
+)
 
 export const eventsTable = pgTable('events', {
-  id: text('id').primaryKey().$defaultFn(() => generateId()).notNull(),
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => generateId())
+    .notNull(),
 
   schoolId: text('school_id')
     .notNull()
@@ -604,7 +699,10 @@ export const eventsTable = pgTable('events', {
   repeatWeekly: boolean('repeat_weekly').notNull().default(false),
   isClass: boolean('is_class').notNull().default(false),
 
-  status: dbStatusEnum('status').notNull().default(StatusEnum.NEW).$type<StatusEnum>(),
+  status: dbStatusEnum('status')
+    .notNull()
+    .default(StatusEnum.NEW)
+    .$type<StatusEnum>(),
 
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at')
@@ -632,24 +730,29 @@ export const eventsRelations = relations(eventsTable, ({ one }) => ({
   }),
 }))
 
-
 export enum ResourceTypeEnum {
-  PDF = "pdf",
-  DOCX = "docx",
-  XLSX = "xlsx",
-  PNG = "png",
-  ZIP = "zip",
-  MP4 = "mp4",
-  PPTX = "pptx",
-  TXT = "txt"
+  PDF = 'pdf',
+  DOCX = 'docx',
+  XLSX = 'xlsx',
+  PNG = 'png',
+  ZIP = 'zip',
+  MP4 = 'mp4',
+  PPTX = 'pptx',
+  TXT = 'txt',
 }
-export const resourceTypesList = Object.values(ResourceTypeEnum) as [ResourceTypeEnum, ...ResourceTypeEnum[]];
+export const resourceTypesList = Object.values(ResourceTypeEnum) as [
+  ResourceTypeEnum,
+  ...ResourceTypeEnum[],
+]
 export const resourceTypeEnum = pgEnum('resource_type', resourceTypesList)
 
 export const resourcesTable = pgTable(
   'resources',
   {
-    id: text('id').primaryKey().$defaultFn(() => generateId()).notNull(),
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => generateId())
+      .notNull(),
 
     schoolId: text('school_id')
       .notNull()
@@ -691,12 +794,9 @@ export const resourcesTable = pgTable(
       .notNull(),
   },
   (table) => ({
-    resourceScopedUnique: uniqueIndex('resources_school_subject_class_file_unique').on(
-      table.schoolId,
-      table.subjectId,
-      table.classId,
-      table.fileName,
-    ),
+    resourceScopedUnique: uniqueIndex(
+      'resources_school_subject_class_file_unique',
+    ).on(table.schoolId, table.subjectId, table.classId, table.fileName),
   }),
 )
 
@@ -719,13 +819,19 @@ export const resourcesRelations = relations(resourcesTable, ({ one }) => ({
   }),
 }))
 
-
 export const announcementsTable = pgTable(
   'announcements',
   {
-    id: text('id').primaryKey().$defaultFn(() => generateId()).notNull(),
-    schoolId: text('school_id').notNull().references(() => adminsTable.id, { onDelete: 'cascade' }),
-    authorId: text('author_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => generateId())
+      .notNull(),
+    schoolId: text('school_id')
+      .notNull()
+      .references(() => adminsTable.id, { onDelete: 'cascade' }),
+    authorId: text('author_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
     title: varchar('title', { length: 255 }).notNull(),
     slug: text('slug').notNull(),
     description: text('description').notNull().default(''),
@@ -735,101 +841,102 @@ export const announcementsTable = pgTable(
       .defaultNow()
       .$onUpdate(() => new Date())
       .notNull(),
-    audience: dbAnnouncementAudienceEnum('audience').notNull().default(AnnouncementAudienceEnum.PUBLIC).$type<AnnouncementAudienceEnum>(),
+    audience: dbAnnouncementAudienceEnum('audience')
+      .notNull()
+      .default(AnnouncementAudienceEnum.PUBLIC)
+      .$type<AnnouncementAudienceEnum>(),
   },
   (table) => ({
-    announcementScopedUnique: uniqueIndex('announcements_school_title_unique').on(
-      table.schoolId,
-      table.authorId,
-      table.title,
-    ),
+    announcementScopedUnique: uniqueIndex(
+      'announcements_school_title_unique',
+    ).on(table.schoolId, table.authorId, table.title),
   }),
 )
 
-export const announcementsRelations = relations(announcementsTable, ({ one }) => ({
-  school: one(adminsTable, {
-    fields: [announcementsTable.schoolId],
-    references: [adminsTable.id],
+export const announcementsRelations = relations(
+  announcementsTable,
+  ({ one }) => ({
+    school: one(adminsTable, {
+      fields: [announcementsTable.schoolId],
+      references: [adminsTable.id],
+    }),
+    author: one(users, {
+      fields: [announcementsTable.authorId],
+      references: [users.id],
+    }),
   }),
-  author: one(users, {
-    fields: [announcementsTable.authorId],
-    references: [users.id],
-  }),
-}))
-
+)
 
 // Better Auth tables
 export const session = pgTable(
-  "session",
+  'session',
   {
-    id: text("id").primaryKey(),
-    expiresAt: timestamp("expires_at").notNull(),
-    token: text("token").notNull().unique(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
+    id: text('id').primaryKey(),
+    expiresAt: timestamp('expires_at').notNull(),
+    token: text('token').notNull().unique(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
-    ipAddress: text("ip_address"),
-    userAgent: text("user_agent"),
-    userId: text("user_id")
+    ipAddress: text('ip_address'),
+    userAgent: text('user_agent'),
+    userId: text('user_id')
       .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
+      .references(() => users.id, { onDelete: 'cascade' }),
   },
-  (table) => [index("session_userId_idx").on(table.userId)],
-);
+  (table) => [index('session_userId_idx').on(table.userId)],
+)
 
 export const account = pgTable(
-  "account",
+  'account',
   {
-    id: text("id").primaryKey(),
-    accountId: text("account_id").notNull(),
-    providerId: text("provider_id").notNull(),
-    userId: text("user_id")
+    id: text('id').primaryKey(),
+    accountId: text('account_id').notNull(),
+    providerId: text('provider_id').notNull(),
+    userId: text('user_id')
       .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    accessToken: text("access_token"),
-    refreshToken: text("refresh_token"),
-    idToken: text("id_token"),
-    accessTokenExpiresAt: timestamp("access_token_expires_at"),
-    refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
-    scope: text("scope"),
-    password: text("password"),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
+      .references(() => users.id, { onDelete: 'cascade' }),
+    accessToken: text('access_token'),
+    refreshToken: text('refresh_token'),
+    idToken: text('id_token'),
+    accessTokenExpiresAt: timestamp('access_token_expires_at'),
+    refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
+    scope: text('scope'),
+    password: text('password'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
-  (table) => [index("account_userId_idx").on(table.userId)],
-);
+  (table) => [index('account_userId_idx').on(table.userId)],
+)
 
 export const verification = pgTable(
-  "verification",
+  'verification',
   {
-    id: text("id").primaryKey(),
-    identifier: text("identifier").notNull(),
-    value: text("value").notNull(),
-    expiresAt: timestamp("expires_at").notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at")
+    id: text('id').primaryKey(),
+    identifier: text('identifier').notNull(),
+    value: text('value').notNull(),
+    expiresAt: timestamp('expires_at').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at')
       .defaultNow()
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
-  (table) => [index("verification_identifier_idx").on(table.identifier)],
-);
-
-
+  (table) => [index('verification_identifier_idx').on(table.identifier)],
+)
 
 export const sessionRelations = relations(session, ({ one }) => ({
   users: one(users, {
     fields: [session.userId],
     references: [users.id],
   }),
-}));
+}))
 
 export const accountRelations = relations(account, ({ one }) => ({
   users: one(users, {
     fields: [account.userId],
     references: [users.id],
   }),
-}));
+}))

@@ -23,7 +23,7 @@ export type StudentUser = Omit<AuthUser, 'info'> & {
   }
 }
 
-export type GetStudentsType = z.infer<typeof getStudentsSchema> 
+export type GetStudentsType = z.infer<typeof getStudentsSchema>
 
 export type AddStudentType = z.infer<typeof addStudentSchema>
 
@@ -55,16 +55,12 @@ export function StudentUserDto(
   }
 }
 
-
-
-// related to dashboard  
+// related to dashboard
 export enum DashboardPeriodEnum {
   MONTH = 'month',
   HALFYEAR = '6months',
-  YEAR = 'year'
+  YEAR = 'year',
 }
 
 // inferred type from schema
-export type DashboardPeriod = z.infer<
-  typeof dashboardPeriodSchema
->
+export type DashboardPeriod = z.infer<typeof dashboardPeriodSchema>

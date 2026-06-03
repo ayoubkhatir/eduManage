@@ -81,7 +81,10 @@ export default function SideBar({ onNavigate }: WelcomeSideBarProps) {
         </div>
 
         {/* Nav links */}
-        <nav className="flex-1 overflow-y-auto px-3 py-3" aria-label="Mobile navigation">
+        <nav
+          className="flex-1 overflow-y-auto px-3 py-3"
+          aria-label="Mobile navigation"
+        >
           <div className="flex flex-col gap-0.5">
             {links.map((l) => (
               <a
@@ -90,7 +93,10 @@ export default function SideBar({ onNavigate }: WelcomeSideBarProps) {
                 onClick={handleNavigate(l.id)}
                 className="flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/5"
               >
-                <Icon name={l.icon} className="text-[20px] text-slate-400 dark:text-slate-500" />
+                <Icon
+                  name={l.icon}
+                  className="text-[20px] text-slate-400 dark:text-slate-500"
+                />
                 {l.label}
               </a>
             ))}
@@ -101,7 +107,10 @@ export default function SideBar({ onNavigate }: WelcomeSideBarProps) {
         <div className="border-t border-slate-200/60 dark:border-white/[0.06] p-4">
           <Link
             to="/log-in"
-            search={{ role: UserRoleEnum.ADMIN, redirectTo: '/admin/dashboard' }}
+            search={{
+              role: UserRoleEnum.ADMIN,
+              redirectTo: '/admin/dashboard',
+            }}
             className="flex cursor-pointer items-center justify-center gap-2 rounded-full bg-primary py-2.5 text-sm font-semibold text-white shadow-sm shadow-primary/25 transition-colors hover:bg-primary/90"
             onClick={close}
           >

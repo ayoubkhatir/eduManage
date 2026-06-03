@@ -179,13 +179,21 @@
 }
 
 @keyframes fade-out-theme {
-  from { opacity: 1; }
-  to { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
 
 @keyframes fade-in-theme {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* ─── Base ─── */
@@ -204,14 +212,20 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   letter-spacing: -0.02em;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 ::-webkit-scrollbar {
@@ -239,8 +253,12 @@ code {
 
 /* ─── Marquee ─── */
 @keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .animate-marquee {
@@ -253,43 +271,86 @@ code {
 
 /* ─── Utility animations ─── */
 @keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes scale-in {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes slide-in-right {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 @keyframes slide-in-left {
-  from { transform: translateX(-100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 @keyframes slide-in-up {
-  from { transform: translateY(100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes pulse-soft {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .animate-fade-in-up {
@@ -317,7 +378,12 @@ code {
 }
 
 .animate-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
@@ -327,16 +393,36 @@ code {
   animation: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.stagger-enter > *:nth-child(1) { animation-delay: 0ms; }
-.stagger-enter > *:nth-child(2) { animation-delay: 50ms; }
-.stagger-enter > *:nth-child(3) { animation-delay: 100ms; }
-.stagger-enter > *:nth-child(4) { animation-delay: 150ms; }
-.stagger-enter > *:nth-child(5) { animation-delay: 200ms; }
-.stagger-enter > *:nth-child(6) { animation-delay: 250ms; }
-.stagger-enter > *:nth-child(7) { animation-delay: 300ms; }
-.stagger-enter > *:nth-child(8) { animation-delay: 350ms; }
-.stagger-enter > *:nth-child(9) { animation-delay: 400ms; }
-.stagger-enter > *:nth-child(10) { animation-delay: 450ms; }
+.stagger-enter > *:nth-child(1) {
+  animation-delay: 0ms;
+}
+.stagger-enter > *:nth-child(2) {
+  animation-delay: 50ms;
+}
+.stagger-enter > *:nth-child(3) {
+  animation-delay: 100ms;
+}
+.stagger-enter > *:nth-child(4) {
+  animation-delay: 150ms;
+}
+.stagger-enter > *:nth-child(5) {
+  animation-delay: 200ms;
+}
+.stagger-enter > *:nth-child(6) {
+  animation-delay: 250ms;
+}
+.stagger-enter > *:nth-child(7) {
+  animation-delay: 300ms;
+}
+.stagger-enter > *:nth-child(8) {
+  animation-delay: 350ms;
+}
+.stagger-enter > *:nth-child(9) {
+  animation-delay: 400ms;
+}
+.stagger-enter > *:nth-child(10) {
+  animation-delay: 450ms;
+}
 
 /* ─── Glass morphism ─── */
 .glass {
@@ -436,8 +522,13 @@ code {
 
 /* ─── Accent glow (breathing pulse for busy states, per DESIGN.md §3.B) ─── */
 @keyframes accent-glow {
-  0%, 100% { box-shadow: 0 0 8px rgba(122, 162, 247, 0.3); }
-  50% { box-shadow: 0 0 20px rgba(122, 162, 247, 0.6); }
+  0%,
+  100% {
+    box-shadow: 0 0 8px rgba(122, 162, 247, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(122, 162, 247, 0.6);
+  }
 }
 
 .accent-glow {

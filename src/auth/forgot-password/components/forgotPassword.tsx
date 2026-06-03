@@ -21,7 +21,8 @@ export default function ForgotPassword() {
             Reset your password
           </h1>
           <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">
-            Enter your email address and we'll send you a link to reset your password
+            Enter your email address and we'll send you a link to reset your
+            password
           </p>
         </div>
 
@@ -31,10 +32,7 @@ export default function ForgotPassword() {
         {/* Back to login link */}
         <p className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
           Remember your password?{' '}
-          <Link
-            to="/"
-            className="font-semibold text-primary hover:underline"
-          >
+          <Link to="/" className="font-semibold text-primary hover:underline">
             Back to Home
           </Link>
         </p>

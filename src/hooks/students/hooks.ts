@@ -4,7 +4,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
-import { standardSchemaResolver } from "@hookform/resolvers/standard-schema"
+import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
 import { useForm } from 'react-hook-form'
 import {
   addStudentServerFn,
@@ -12,11 +12,11 @@ import {
   editStudentServerFn,
   getAllStudentsServerFn,
   getStudentByIdServerFn,
-} from '#/server/modules/students/students.server-functions';
-import type { StudentUser } from '#/types/studentTypes';
-import { useNavigate, useRouter } from '@tanstack/react-router';
-import { toast } from 'sonner';
-import { addStudentSchema, editStudentSchema } from '#/schemas/students.schema';
+} from '#/server/modules/students/students.server-functions'
+import type { StudentUser } from '#/types/studentTypes'
+import { useNavigate, useRouter } from '@tanstack/react-router'
+import { toast } from 'sonner'
+import { addStudentSchema, editStudentSchema } from '#/schemas/students.schema'
 import { StatusEnum, UserGenderEnum } from '#/server/db/schema'
 import type {
   AddStudentType,
@@ -42,38 +42,40 @@ export function useAddStudent(schoolId: string) {
       throw new Error(message)
     },
     onSuccess: async () => {
-      await queryClient.refetchQueries({ queryKey: ["students"] })
-      await queryClient.invalidateQueries({ queryKey: ["students"] })
-      await router.invalidate({ sync: true });
-    }
+      await queryClient.refetchQueries({ queryKey: ['students'] })
+      await queryClient.invalidateQueries({ queryKey: ['students'] })
+      await router.invalidate({ sync: true })
+    },
   })
 
   const studentForm = useForm<AddStudentType>({
     resolver: standardSchemaResolver(addStudentSchema),
     defaultValues: {
-      telNumber: "11111111",
+      telNumber: '11111111',
       status: StatusEnum.NEW,
       schoolId,
-      parentPhoneNumber: "11111111",
-      parentName: "Mohammed",
-      name: "Abdelouadoud",
+      parentPhoneNumber: '11111111',
+      parentName: 'Mohammed',
+      name: 'Abdelouadoud',
       image: undefined,
       gender: UserGenderEnum.MALE,
       enrollmentDate: new Date().toISOString(),
-      email: "abdelouadoud_student@email.com",
+      email: 'abdelouadoud_student@email.com',
       dateOfBirth: new Date().toISOString(),
-      address: "Hassi El Ghela"
-    }
+      address: 'Hassi El Ghela',
+    },
   })
   function onSubmit(data: AddStudentType) {
     addStudent(data, {
       onSuccess: () => {
-        toast.success("User Added", { description: "Redirection to students page..." })
-        navigate({ to: "/admin/students"  })
+        toast.success('User Added', {
+          description: 'Redirection to students page...',
+        })
+        navigate({ to: '/admin/students' })
       },
       onError: () => {
-        toast.error("Error occured")
-      }
+        toast.error('Error occured')
+      },
     })
   }
   return { studentForm, onSubmit }
@@ -84,7 +86,7 @@ export const getStudentQueryOptions = (studentId: string) => ({
   queryFn: async () => {
     const response = await getStudentByIdServerFn({ data: studentId })
     if (response.success) return response.data
-    throw new Error("user not found");
+    throw new Error('user not found')
   },
 })
 
@@ -99,7 +101,7 @@ export function useGetStudents({
   page,
   search,
   size,
-}: Partial<Omit<GetStudentsType , "schoolId">> & { schoolId: string }) {
+}: Partial<Omit<GetStudentsType, 'schoolId'>> & { schoolId: string }) {
   return useQuery({
     queryKey: ['students', page, search, size],
     queryFn: async () =>
@@ -116,9 +118,7 @@ export function useGetStudents({
         data: response.success ? response.data : [],
         pagination: {
           totalPages: response.success ? response.pagination.totalPages : 1,
-          totalElements: response.success
-            ? response.pagination.totalCount
-            : 0,
+          totalElements: response.success ? response.pagination.totalCount : 0,
         },
       }
     },
@@ -134,7 +134,7 @@ export function useEditStudent(edited: StudentUser) {
       parentPhoneNumber: edited.info.parentPhoneNumber,
       parentName: edited.info.parentName,
       name: edited.name,
-      image: edited.image ?? "",
+      image: edited.image ?? '',
       gender: edited.gender,
       enrollmentDate: new Date().toISOString(),
       email: edited.email,
@@ -143,7 +143,7 @@ export function useEditStudent(edited: StudentUser) {
       telNumber: edited.telNumber!,
       studentId: edited.info.id,
       classId: edited.info.class.id,
-      gradeId: edited.info.grade.id
+      gradeId: edited.info.grade.id,
     },
     resolver: standardSchemaResolver(editStudentSchema),
   })
@@ -154,11 +154,10 @@ export function useEditStudent(edited: StudentUser) {
     mutationFn: async (data: EditStudentType) => {
       try {
         const response = await editStudentServerFn({ data })
-        return response;
+        return response
       } catch (error) {
         console.log({ error })
       }
-
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['students'] })
@@ -180,15 +179,15 @@ export function useEditStudent(edited: StudentUser) {
       status: edited.info.status,
       image: data.image,
       telNumber: data.telNumber,
-      studentId: data.studentId
+      studentId: data.studentId,
     }
     editStudent(newData, {
       onSuccess: () => {
-        toast.success("Edit User Success")
+        toast.success('Edit User Success')
       },
       onError: () => {
-        toast.error("Error occured")
-      }
+        toast.error('Error occured')
+      },
     })
   }
 
@@ -246,7 +245,8 @@ export function useDeleteStudent() {
   const queryClient = useQueryClient()
   const router = useRouter()
   return useMutation({
-    mutationFn: (studentId: string) => deleteStudentServerFn({ data: studentId }),
+    mutationFn: (studentId: string) =>
+      deleteStudentServerFn({ data: studentId }),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['students'] })
       await router.invalidate()

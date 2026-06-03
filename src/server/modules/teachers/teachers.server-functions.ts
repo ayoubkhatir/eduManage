@@ -1,91 +1,91 @@
 import {
-    addTeacherSchema,
-    getTeachersSchema,
-    editTeacherSchema,
-    assignTeacherSchema,
-    updateTeacherAssignmentSchema,
-    classIdSchema,
-    getTeacherClassesSchema,
-} from "#/schemas/teachers.schema";
-import { createServerFn } from "@tanstack/react-start";
-import { paginatedSuccessResponse, successResponse, type APIResponse } from "#/server/utils/response.type";
-import { teachersController } from "./teachers.contoller";
-import { mapDbError } from "#/server/utils/db_error_handling";
-import { validCuidSchema } from "#/schemas/shared.schema";
-import type { StatusEnum } from "#/server/db/schema";
-import type { TeacherUser } from "#/types/teacherTypes";
+  addTeacherSchema,
+  getTeachersSchema,
+  editTeacherSchema,
+  assignTeacherSchema,
+  updateTeacherAssignmentSchema,
+  classIdSchema,
+  getTeacherClassesSchema,
+} from '#/schemas/teachers.schema'
+import { createServerFn } from '@tanstack/react-start'
+import {
+  paginatedSuccessResponse,
+  successResponse,
+  type APIResponse,
+} from '#/server/utils/response.type'
+import { teachersController } from './teachers.contoller'
+import { mapDbError } from '#/server/utils/db_error_handling'
+import { validCuidSchema } from '#/schemas/shared.schema'
+import type { StatusEnum } from '#/server/db/schema'
+import type { TeacherUser } from '#/types/teacherTypes'
 
-
-export const getTeachersServerFn = createServerFn({ method: "GET" })
-    .inputValidator(getTeachersSchema.extend({ schoolId: validCuidSchema }))
-    .handler(async ({ data: search_queries }) => {
-        const { data, pagination } = await teachersController.listTeachers(search_queries)
-        return paginatedSuccessResponse(data, pagination);
-    })
+export const getTeachersServerFn = createServerFn({ method: 'GET' })
+  .inputValidator(getTeachersSchema.extend({ schoolId: validCuidSchema }))
+  .handler(async ({ data: search_queries }) => {
+    const { data, pagination } =
+      await teachersController.listTeachers(search_queries)
+    return paginatedSuccessResponse(data, pagination)
+  })
 
 // Create
 export const addTeacherServerFn = createServerFn({ method: 'POST' })
-    .inputValidator(addTeacherSchema)
-    .handler(async ({ data: body }) => {
-        try {
-            const data = await teachersController.createTeacher(body)
-            return successResponse(data) as APIResponse<TeacherUser>
-        }
-        catch (error) {
-            console.log("\x1b[36m[server]\x1b[0m " + error)
-            return mapDbError(error) as APIResponse<TeacherUser>
-        }
-    })
+  .inputValidator(addTeacherSchema)
+  .handler(async ({ data: body }) => {
+    try {
+      const data = await teachersController.createTeacher(body)
+      return successResponse(data) as APIResponse<TeacherUser>
+    } catch (error) {
+      console.log('\x1b[36m[server]\x1b[0m ' + error)
+      return mapDbError(error) as APIResponse<TeacherUser>
+    }
+  })
 
 // Get all teachers in school
 export const getAllTeachersServerFn = createServerFn({ method: 'GET' })
-    .inputValidator(validCuidSchema)
-    .handler(async ({ data: schoolId }) => {
-        return successResponse(await teachersController.getTeachers(schoolId))
-    })
+  .inputValidator(validCuidSchema)
+  .handler(async ({ data: schoolId }) => {
+    return successResponse(await teachersController.getTeachers(schoolId))
+  })
 
 // Get one teacher by teacherId
 export const getTeacherServerFn = createServerFn({ method: 'GET' })
-    .inputValidator(validCuidSchema)
-    .handler(async ({ data: teacherId }) => {
-        return successResponse(await teachersController.getTeacherById(teacherId)
-        )
-    })
+  .inputValidator(validCuidSchema)
+  .handler(async ({ data: teacherId }) => {
+    return successResponse(await teachersController.getTeacherById(teacherId))
+  })
 
 // Get one teacher by teacherID
 export const getTeacherByIdServerFn = createServerFn({ method: 'GET' })
-    .inputValidator(validCuidSchema)
-    .handler(async ({ data: teacherId }) => {
-        return successResponse(await teachersController.getTeacherById(teacherId)
-        )
-    })
+  .inputValidator(validCuidSchema)
+  .handler(async ({ data: teacherId }) => {
+    return successResponse(await teachersController.getTeacherById(teacherId))
+  })
 // Get one teacher by userId
 export const getTeacherByUserIdServerFn = createServerFn({ method: 'GET' })
-    .inputValidator(validCuidSchema)
-    .handler(async ({ data: userId }) => {
-        return successResponse(await teachersController.getTeacherByUserId(userId)
-        )
-    })
+  .inputValidator(validCuidSchema)
+  .handler(async ({ data: userId }) => {
+    return successResponse(await teachersController.getTeacherByUserId(userId))
+  })
 
 // Update
 export const editTeacherServerFn = createServerFn({ method: 'POST' })
-    .inputValidator(editTeacherSchema)
-    .handler(async ({ data: body }) => {
-        try {
-            const data = await teachersController.updateTeacher(body)
-            return successResponse(data) as APIResponse<TeacherUser>
-        } catch (error) {
-            return mapDbError(error) as APIResponse<TeacherUser>
-        }
-    })
+  .inputValidator(editTeacherSchema)
+  .handler(async ({ data: body }) => {
+    try {
+      const data = await teachersController.updateTeacher(body)
+      return successResponse(data) as APIResponse<TeacherUser>
+    } catch (error) {
+      return mapDbError(error) as APIResponse<TeacherUser>
+    }
+  })
 
 // Delete
 export const deleteTeacherServerFn = createServerFn({ method: 'POST' })
-    .inputValidator(validCuidSchema)
-    .handler(async ({ data: teacherId }) => {
-        await teachersController.deleteTeacher(teacherId)
-        return { success: true }
-    })
+  .inputValidator(validCuidSchema)
+  .handler(async ({ data: teacherId }) => {
+    await teachersController.deleteTeacher(teacherId)
+    return { success: true }
+  })
 
 // Stats
 // export const getTeachersStatsServerFn = createServerFn({ method: 'GET' })
@@ -96,75 +96,87 @@ export const deleteTeacherServerFn = createServerFn({ method: 'POST' })
 //     })
 
 // Assign teacher -> class + subject
-export const assignTeacherToClassAndSubjectServerFn = createServerFn({ method: 'POST' })
-    .inputValidator(assignTeacherSchema)
-    .handler(async ({ data }) => {
-        try {
-            return successResponse(await teachersController.assignTeacherToClassAndSubject(data))
-        } catch (error) {
-            console.log("\x1b[36m[server]\x1b[0m " + error)
-            return mapDbError(error) as APIResponse<{
-                schoolId: string;
-                teacherId: string;
-                classId: string;
-                gradeId: string | null;
-                subjectId: string;
-                isPrimaryTeacher: boolean;
-                status: StatusEnum;
-                id: string;
-                createdAt: Date;
-                updatedAt: Date;
-            }>
-        }
-    })
+export const assignTeacherToClassAndSubjectServerFn = createServerFn({
+  method: 'POST',
+})
+  .inputValidator(assignTeacherSchema)
+  .handler(async ({ data }) => {
+    try {
+      return successResponse(
+        await teachersController.assignTeacherToClassAndSubject(data),
+      )
+    } catch (error) {
+      console.log('\x1b[36m[server]\x1b[0m ' + error)
+      return mapDbError(error) as APIResponse<{
+        schoolId: string
+        teacherId: string
+        classId: string
+        gradeId: string | null
+        subjectId: string
+        isPrimaryTeacher: boolean
+        status: StatusEnum
+        id: string
+        createdAt: Date
+        updatedAt: Date
+      }>
+    }
+  })
 
 // Update assignment
 export const updateTeacherAssignmentServerFn = createServerFn({
-    method: 'POST',
+  method: 'POST',
 })
-    .inputValidator(updateTeacherAssignmentSchema)
-    .handler(async ({ data }) => {
-        const { assignmentId, ...payload } = data
-        return successResponse(await teachersController.updateAssignment(assignmentId, payload)
-        )
-    })
+  .inputValidator(updateTeacherAssignmentSchema)
+  .handler(async ({ data }) => {
+    const { assignmentId, ...payload } = data
+    return successResponse(
+      await teachersController.updateAssignment(assignmentId, payload),
+    )
+  })
 
 // Remove assignment
 export const deleteTeacherAssignmentServerFn = createServerFn({
-    method: 'POST',
+  method: 'POST',
 })
-    .inputValidator(validCuidSchema)
-    .handler(async ({ data: assignmentId }) => {
-        successResponse(await teachersController.removeAssignment(assignmentId))
-    })
+  .inputValidator(validCuidSchema)
+  .handler(async ({ data: assignmentId }) => {
+    successResponse(await teachersController.removeAssignment(assignmentId))
+  })
 
 // Get all assignments for one teacher
 export const getTeacherAssignmentsServerFn = createServerFn({ method: 'GET' })
-    .inputValidator(validCuidSchema)
-    .handler(async ({ data: teacherId }) => {
-        return successResponse(await teachersController.getTeacherAssignments(teacherId)
-        )
-    })
+  .inputValidator(validCuidSchema)
+  .handler(async ({ data: teacherId }) => {
+    return successResponse(
+      await teachersController.getTeacherAssignments(teacherId),
+    )
+  })
 
 // Get all teachers assigned to one class
 export const getTeachersByClassServerFn = createServerFn({ method: 'GET' })
-    .inputValidator(classIdSchema)
-    .handler(async ({ data }) => {
-        return successResponse(await teachersController.getTeachersByClass(data.classId)
-        )
-    })
+  .inputValidator(classIdSchema)
+  .handler(async ({ data }) => {
+    return successResponse(
+      await teachersController.getTeachersByClass(data.classId),
+    )
+  })
 
-export const getTeachersStatsServerFn = createServerFn({ method: "GET" })
-    .inputValidator(validCuidSchema)
-    .handler(async ({ data: schoolId }) => successResponse(await teachersController.getTeachersStats(schoolId)))
+export const getTeachersStatsServerFn = createServerFn({ method: 'GET' })
+  .inputValidator(validCuidSchema)
+  .handler(async ({ data: schoolId }) =>
+    successResponse(await teachersController.getTeachersStats(schoolId)),
+  )
 
 // export const assignTeacherToClassAndSubjectServerFn = createServerFn({ method: "POST" })
 //     .inputValidator(assignTeacherSchema)
 //     .handler(async ({ data: body }) => teachersController.assignTeacherToClassAndSubject(body))
 
-
-export const getTeacherClassesDashboardServerFn = createServerFn({ method: 'GET' })
-    .inputValidator(getTeacherClassesSchema)
-    .handler(async ({ data }) => {
-        return successResponse(await teachersController.getTeacherClassesDashboard(data))
-    })
+export const getTeacherClassesDashboardServerFn = createServerFn({
+  method: 'GET',
+})
+  .inputValidator(getTeacherClassesSchema)
+  .handler(async ({ data }) => {
+    return successResponse(
+      await teachersController.getTeacherClassesDashboard(data),
+    )
+  })

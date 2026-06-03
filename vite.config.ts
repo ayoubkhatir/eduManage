@@ -14,12 +14,7 @@ const config = defineConfig({
     },
     tsconfigPaths: true,
   },
-  plugins: [
-    tailwindcss(),
-    tanstackStart(),
-    nitro(),
-    viteReact()
-  ],
+  plugins: [tailwindcss(), tanstackStart(), nitro(), viteReact()],
 })
 
 export default config

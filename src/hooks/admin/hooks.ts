@@ -1,15 +1,19 @@
 import type { AnnouncementAudienceEnum } from '#/server/db/schema'
-import { getAnnouncementByIdServerFn, getAnnouncementByTitleSlugServerFn, getAnnouncementsServerFn } from '#/server/modules/announcement/announcement.server-functions'
+import {
+  getAnnouncementByIdServerFn,
+  getAnnouncementByTitleSlugServerFn,
+  getAnnouncementsServerFn,
+} from '#/server/modules/announcement/announcement.server-functions'
 import { getDashboardStatsServerFn } from '#/server/modules/students/students.server-functions'
 
 export type AnnouncementsListFilters = {
-  audience: AnnouncementAudienceEnum,
+  audience: AnnouncementAudienceEnum
   search: string
 }
 
 export const getAnnouncementsListQueryOptions = (
   schoolId: string,
-  filters: AnnouncementsListFilters
+  filters: AnnouncementsListFilters,
 ) => ({
   queryKey: ['announcements', schoolId, filters],
   queryFn: async () => {
@@ -19,8 +23,7 @@ export const getAnnouncementsListQueryOptions = (
       })
 
       if (!response.success) {
-        throw new Error("Error when fetching announcements")
-
+        throw new Error('Error when fetching announcements')
       }
       return response.data
     } catch (error) {
@@ -31,7 +34,7 @@ export const getAnnouncementsListQueryOptions = (
 })
 
 export const getAnnouncementQueryOptions = (announcementId: string) => ({
-  queryKey: ['announcements', "announcementId", announcementId],
+  queryKey: ['announcements', 'announcementId', announcementId],
   queryFn: async () => {
     try {
       const response = await getAnnouncementByIdServerFn({
@@ -50,8 +53,10 @@ export const getAnnouncementQueryOptions = (announcementId: string) => ({
   },
 })
 
-export const getAnnouncementByTitleSlugQueryOptions = (announcementTitleSlug: string) => ({
-  queryKey: ['announcements', "announcementTitleSlug", announcementTitleSlug],
+export const getAnnouncementByTitleSlugQueryOptions = (
+  announcementTitleSlug: string,
+) => ({
+  queryKey: ['announcements', 'announcementTitleSlug', announcementTitleSlug],
   queryFn: async () => {
     try {
       const response = await getAnnouncementByTitleSlugServerFn({
@@ -71,7 +76,7 @@ export const getAnnouncementByTitleSlugQueryOptions = (announcementTitleSlug: st
 })
 
 export const getAnnouncementByIdQueryOptions = (announcementId: string) => ({
-  queryKey: ['announcements', "announcementId", announcementId],
+  queryKey: ['announcements', 'announcementId', announcementId],
   queryFn: async () => {
     try {
       const response = await getAnnouncementByIdServerFn({

@@ -1,80 +1,78 @@
-import { eq } from "drizzle-orm";
-import type { AddGradeSchema } from "#/schemas/grades.schema";
-import { db, type Database } from "#/server/db/db";
-import { gradesTable } from "#/server/db/schema";
-import type { ID } from "#/types/authTypes";
+import { eq } from 'drizzle-orm'
+import type { AddGradeSchema } from '#/schemas/grades.schema'
+import { db, type Database } from '#/server/db/db'
+import { gradesTable } from '#/server/db/schema'
+import type { ID } from '#/types/authTypes'
 
 class GradesController {
-    constructor(private readonly db: Database) { }
+  constructor(private readonly db: Database) {}
 
-    async getAllGrades(schoolId: ID) {
-        return this.db.query.gradesTable.findMany({
-            columns: {
+  async getAllGrades(schoolId: ID) {
+    return this.db.query.gradesTable.findMany({
+      columns: {
+        name: true,
+        id: true,
+      },
+      where: eq(gradesTable.schoolId, schoolId),
+    })
+  }
+
+  async getAllGradesWithClassesAndSubjects(schoolId: string) {
+    const grades = await this.db.query.gradesTable.findMany({
+      where: eq(gradesTable.schoolId, schoolId),
+      with: {
+        classes: {
+          columns: {
+            id: true,
+            name: true,
+          },
+        },
+        gradeSubjects: {
+          columns: {},
+          with: {
+            subject: {
+              columns: {
+                id: true,
                 name: true,
-                id: true
+                code: true,
+              },
             },
-            where: eq(gradesTable.schoolId, schoolId)
-        })
-    }
+          },
+        },
+      },
+    })
+    const gradesData = grades.map((g) => ({
+      id: g.id,
+      name: g.name,
+      levelOrder: g.levelOrder,
+      status: g.status,
+      classes: g.classes,
+      subjects: g.gradeSubjects.map((gs) => gs.subject),
+    }))
+    return gradesData
+  }
 
-    async getAllGradesWithClassesAndSubjects(schoolId : string) {
-        const grades = await this.db.query.gradesTable.findMany({
-            where: eq(gradesTable.schoolId, schoolId),
-            with: {
-                classes: {
-                    columns: {
-                        id: true,
-                        name: true
-                    }
-                },
-                gradeSubjects: {
-                    columns: {},
-                    with: {
-                        subject: {
-                            columns: {
-                                id: true,
-                                name: true,
-                                code: true
-                            }
-                        }
-                    }
-                }
-            }
-        })
-        const gradesData = grades.map(g => ({
-            id: g.id,
-            name: g.name,
-            levelOrder: g.levelOrder,
-            status: g.status,
-            classes: g.classes,
-            subjects: g.gradeSubjects.map(gs => gs.subject)
-        }))
-        return gradesData
-    }
-
-    async addGrade({
-        levelOrder,
-        name,
+  async addGrade({ levelOrder, name, schoolId, status }: AddGradeSchema) {
+    const [grade] = await this.db
+      .insert(gradesTable)
+      .values({
+        status,
         schoolId,
-        status
-    }: AddGradeSchema) {
-        const [grade] = await this.db
-            .insert(gradesTable)
-            .values({
-                status,
-                schoolId,
-                name,
-                levelOrder
-            })
-            .returning()
-        console.log({ grade })
-        return grade
-    }
+        name,
+        levelOrder,
+      })
+      .returning()
+    console.log({ grade })
+    return grade
+  }
 
-    async deleteGrade(gradeId: string) {
-        const [grade] = await this.db.delete(gradesTable).where(eq(gradesTable.id, gradeId)).returning()
-        return grade
-    }
+  async deleteGrade(gradeId: string) {
+    const [grade] = await this.db
+      .delete(gradesTable)
+      .where(eq(gradesTable.id, gradeId))
+      .returning()
+    return grade
+  }
 }
 
 export const gradesController = new GradesController(db)

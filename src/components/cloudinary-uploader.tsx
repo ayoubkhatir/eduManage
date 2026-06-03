@@ -151,15 +151,12 @@ export function SimpleCloudinaryUpload({
   )
 }
 
-// the function i need until now 
+// the function i need until now
 
 export async function uploadToCloudinary(file: File) {
   const formData = new FormData()
   formData.append('file', file)
-  formData.append(
-    'upload_preset',
-    import.meta.env.VITE_CLOUDINARY_FILE_PRESET,
-  )
+  formData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_FILE_PRESET)
   formData.append('folder', 'avatars')
   const response = await fetch(
     `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/raw/upload`,

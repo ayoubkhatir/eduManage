@@ -14,7 +14,7 @@ export const Route = createFileRoute('/_auth/student/settings')({
     })) as StudentUser
     return { currentUser }
   },
-  staticData:{
+  staticData: {
     breadcrumb: 'Settings',
   },
   head: () => ({

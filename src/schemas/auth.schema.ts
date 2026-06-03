@@ -1,39 +1,45 @@
-import z from "zod/v4"
-import { authRoleSchema, genderSchema} from "./shared.schema"
+import z from 'zod/v4'
+import { authRoleSchema, genderSchema } from './shared.schema'
 //import Signup from '../auth/signup/signupForm';
 
 export const loginSchema = z.object({
-    email: z.email(),
-    password: z.string().min(5),
-    rememberMe : z.boolean().optional(),
-    role : authRoleSchema,
-    callbackURL : z.string().optional(),
+  email: z.email(),
+  password: z.string().min(5),
+  rememberMe: z.boolean().optional(),
+  role: authRoleSchema,
+  callbackURL: z.string().optional(),
 })
-export const loginFieldsSchema = loginSchema.omit({ rememberMe: true, callbackURL: true , role: true })
+export const loginFieldsSchema = loginSchema.omit({
+  rememberMe: true,
+  callbackURL: true,
+  role: true,
+})
 
 const registerBaseSchema = z.object({
-    fullName: z.string().min(2, 'Full name is required'),
-    schoolName: z.string().min(2, 'School name is required'),
-    email: z.email('Invalid email address'),
-    gender : genderSchema,
-    password: z.string().min(8, 'Password must be at least 8 characters'),
-    confirmPassword: z.string(),
-    rememberMe : z.boolean().optional(),
-    callbackURL : z.string().optional(),
+  fullName: z.string().min(2, 'Full name is required'),
+  schoolName: z.string().min(2, 'School name is required'),
+  email: z.email('Invalid email address'),
+  gender: genderSchema,
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+  confirmPassword: z.string(),
+  rememberMe: z.boolean().optional(),
+  callbackURL: z.string().optional(),
 })
 
-export const signupFieldsSchema = registerBaseSchema.omit({  rememberMe: true, callbackURL: true })
+export const signupFieldsSchema = registerBaseSchema.omit({
+  rememberMe: true,
+  callbackURL: true,
+})
 
-export const registerSchema = registerBaseSchema.refine((data) => data.password === data.confirmPassword, {
+export const registerSchema = registerBaseSchema.refine(
+  (data) => data.password === data.confirmPassword,
+  {
     message: 'Passwords do not match',
     path: ['confirmPassword'],
-})
-
+  },
+)
 
 export type LoginSchema = z.infer<typeof loginSchema>
 export type RegisterSchema = z.infer<typeof registerSchema>
 export type LoginFields = z.infer<typeof loginFieldsSchema>
 export type SignupFields = z.infer<typeof signupFieldsSchema>
-
-
-

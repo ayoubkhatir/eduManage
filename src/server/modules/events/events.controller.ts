@@ -1,149 +1,147 @@
 import { db, type Database } from '#/server/db/db'
-import {
-    eventsTable,
-    teachersTable,
-} from '#/server/db/schema'
-import type { AddEventType, GetEventsType } from '#/types/eventsTypes';
+import { eventsTable, teachersTable } from '#/server/db/schema'
+import type { AddEventType, GetEventsType } from '#/types/eventsTypes'
 import { and, asc, eq } from 'drizzle-orm'
 
 class EventsController {
-    constructor(private readonly db: Database) { }
+  constructor(private readonly db: Database) {}
 
-    async listEvents({
-        schoolId,
-        classId,
-        teacherUserId,
-        isOwner,
-        // startDate,
-        // endDate,
-    }: GetEventsType) {
-        const conditions = []
-        conditions.push(eq(eventsTable.schoolId, schoolId))
-        let teacherId: string | undefined;
-        if (!classId && teacherUserId) {
-            const teacher = await this.db.query.teachersTable.findFirst({
-                where: eq(teachersTable.userId, teacherUserId),
-                columns: { id: true }
-            })
-            teacherId = teacher?.id
-        }
-        if (!isOwner) {
-            if (classId) {
-                conditions.push(eq(eventsTable.classId, classId))
-            } else if (!!teacherId) {
-                conditions.push(eq(eventsTable.teacherId, teacherId))
-            }
-        }
-
-        const whereClause = conditions.length ? and(...conditions) : undefined
-
-        const events = await this.db.query.eventsTable.findMany({
-            where: whereClause,
-            orderBy: asc(eventsTable.start),
-            with: {
-                class: {
-                    columns: {
-                        id: true,
-                        name: true
-                    }
-                },
-                teacher: {
-                    columns: { id: true },
-                    with: {
-                        user: {
-                            columns: {
-                                name: true
-                            }
-                        }
-                    }
-                }
-            }
-        })
-
-        const rows: {
-            id: string;
-            title: string;
-            start: Date;
-            end: Date;
-            color: string;
-            description: string | null;
-            allDay: boolean;
-            repeatWeekly: boolean;
-            isClass: boolean;
-            classId: string | null;
-            className: string | null;
-            teacherId: string | null;
-            teacherName: string | null;
-        }[] = events.map(e => ({
-            id: e.id,
-            title: e.title,
-            start: e.start,
-            end: e.end,
-            color: e.color,
-            description: e.description,
-            allDay: e.allDay,
-            repeatWeekly: e.repeatWeekly,
-            isClass: e.isClass,
-            classId: e.class?.id ?? null,
-            className: e.class?.name ?? "",
-            teacherName: e.teacher?.user.name ?? "",
-            teacherId: e.teacher?.id ?? null
-        }))
-
-        
-
-        return rows.map((row) => ({
-            id: row.id,
-            title: row.title,
-            start: row.start.toISOString(),
-            end: row.end.toISOString(),
-            color: row.color,
-            description: row.description ?? '',
-            allDay: row.allDay,
-            repeatWeekly: row.repeatWeekly,
-            isClass: row.isClass,
-            className: row.className ?? '',
-            teacherName: row.teacherName ?? '',
-            teacherId: row.teacherId ?? null,
-        }))
+  async listEvents({
+    schoolId,
+    classId,
+    teacherUserId,
+    isOwner,
+    // startDate,
+    // endDate,
+  }: GetEventsType) {
+    const conditions = []
+    conditions.push(eq(eventsTable.schoolId, schoolId))
+    let teacherId: string | undefined
+    if (!classId && teacherUserId) {
+      const teacher = await this.db.query.teachersTable.findFirst({
+        where: eq(teachersTable.userId, teacherUserId),
+        columns: { id: true },
+      })
+      teacherId = teacher?.id
+    }
+    if (!isOwner) {
+      if (classId) {
+        conditions.push(eq(eventsTable.classId, classId))
+      } else if (!!teacherId) {
+        conditions.push(eq(eventsTable.teacherId, teacherId))
+      }
     }
 
-    async createEvent(input: AddEventType) {
-        const [created] = await this.db
-            .insert(eventsTable)
-            .values({
-                schoolId: input.schoolId,
-                classId: input.classId,
-                teacherId: input.teacherId,
-                subjectId: input.subjectId,
-                title: input.title,
-                description: input.description,
-                color: input.color,
-                start: new Date(input.start),
-                end: new Date(input.end),
-                allDay: input.allDay,
-                repeatWeekly: input.repeatWeekly,
-                isClass: input.isClass,
-                status: input.status,
-            })
-            .returning()
+    const whereClause = conditions.length ? and(...conditions) : undefined
 
-        return created
-    }
+    const events = await this.db.query.eventsTable.findMany({
+      where: whereClause,
+      orderBy: asc(eventsTable.start),
+      with: {
+        class: {
+          columns: {
+            id: true,
+            name: true,
+          },
+        },
+        teacher: {
+          columns: { id: true },
+          with: {
+            user: {
+              columns: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    })
 
-    async updateEvent(id: string, data: Partial<AddEventType>) {
-        const [row] = await this.db
-            .update(eventsTable)
-            .set(data as any)
-            .where(eq(eventsTable.id, id))
-            .returning()
-        return row
-    }
+    const rows: {
+      id: string
+      title: string
+      start: Date
+      end: Date
+      color: string
+      description: string | null
+      allDay: boolean
+      repeatWeekly: boolean
+      isClass: boolean
+      classId: string | null
+      className: string | null
+      teacherId: string | null
+      teacherName: string | null
+    }[] = events.map((e) => ({
+      id: e.id,
+      title: e.title,
+      start: e.start,
+      end: e.end,
+      color: e.color,
+      description: e.description,
+      allDay: e.allDay,
+      repeatWeekly: e.repeatWeekly,
+      isClass: e.isClass,
+      classId: e.class?.id ?? null,
+      className: e.class?.name ?? '',
+      teacherName: e.teacher?.user.name ?? '',
+      teacherId: e.teacher?.id ?? null,
+    }))
 
-    async deleteEvent(id: string) {
-        const [row] = await this.db.delete(eventsTable).where(eq(eventsTable.id, id)).returning()
-        return row
-    }
+    return rows.map((row) => ({
+      id: row.id,
+      title: row.title,
+      start: row.start.toISOString(),
+      end: row.end.toISOString(),
+      color: row.color,
+      description: row.description ?? '',
+      allDay: row.allDay,
+      repeatWeekly: row.repeatWeekly,
+      isClass: row.isClass,
+      className: row.className ?? '',
+      teacherName: row.teacherName ?? '',
+      teacherId: row.teacherId ?? null,
+    }))
+  }
+
+  async createEvent(input: AddEventType) {
+    const [created] = await this.db
+      .insert(eventsTable)
+      .values({
+        schoolId: input.schoolId,
+        classId: input.classId,
+        teacherId: input.teacherId,
+        subjectId: input.subjectId,
+        title: input.title,
+        description: input.description,
+        color: input.color,
+        start: new Date(input.start),
+        end: new Date(input.end),
+        allDay: input.allDay,
+        repeatWeekly: input.repeatWeekly,
+        isClass: input.isClass,
+        status: input.status,
+      })
+      .returning()
+
+    return created
+  }
+
+  async updateEvent(id: string, data: Partial<AddEventType>) {
+    const [row] = await this.db
+      .update(eventsTable)
+      .set(data as any)
+      .where(eq(eventsTable.id, id))
+      .returning()
+    return row
+  }
+
+  async deleteEvent(id: string) {
+    const [row] = await this.db
+      .delete(eventsTable)
+      .where(eq(eventsTable.id, id))
+      .returning()
+    return row
+  }
 }
 
 export const eventsController = new EventsController(db)

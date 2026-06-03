@@ -54,10 +54,7 @@ export function CustomPagination({
 
       {items.map((item, i) =>
         item === 'ellipsis' ? (
-          <span
-            key={i}
-            className="px-1 text-muted-foreground/50 select-none"
-          >
+          <span key={i} className="px-1 text-muted-foreground/50 select-none">
             ...
           </span>
         ) : (

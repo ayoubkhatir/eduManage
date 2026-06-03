@@ -7,6 +7,7 @@ export const getResourcesQueryOptions = (searchParams: GetResourcesSchema) =>
     queryKey: ['resources', searchParams],
     queryFn: async () => {
       const response = await getResourcesServerFn({ data: searchParams })
+      console.log('getResourcesServerFn response:', response)
 
       if (response.success) {
         const { data, pagination } = response

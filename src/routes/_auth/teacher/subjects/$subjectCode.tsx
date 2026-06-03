@@ -56,6 +56,7 @@ import {
   addResourceServerFn,
   deleteResourceServerFn,
 } from '#/server/modules/resources/resources.server-functions'
+import { getTeacherAssignmentsServerFn } from '#/server/modules/teachers/teachers.server-functions'
 import { toast } from 'sonner'
 import { useMemo, useState, useEffect } from 'react'
 import { SimpleDocumentUpload } from '#/components/cloudinary-uploader'
@@ -70,7 +71,11 @@ export const Route = createFileRoute('/_auth/teacher/subjects/$subjectCode')({
   component: StudentResourcesPage,
   pendingComponent: StudentResourcesPending,
   validateSearch: zodValidator(
-    getResourcesSchema.omit({ teacherId: true, subjectCode: true , schoolId: true }),
+    getResourcesSchema.omit({
+      teacherId: true,
+      subjectCode: true,
+      schoolId: true,
+    }),
   ),
   loaderDeps: ({ search }) => search,
   loader: async ({ context, params: { subjectCode }, deps }) => {
@@ -187,8 +192,9 @@ function StudentResourcesContent() {
 
   const activeFilterCount = useMemo(
     () =>
-      [search.fileName, search.type, search.size, search.dateAdded].filter(Boolean).length +
-      (search.classId ? 1 : 0),
+      [search.fileName, search.type, search.size, search.dateAdded].filter(
+        Boolean,
+      ).length + (search.classId ? 1 : 0),
     [search],
   )
 
@@ -377,9 +383,7 @@ function StudentResourcesContent() {
                 className="h-10 w-full rounded-lg border border-border bg-muted/30 pl-9 pr-8 text-sm text-foreground outline-none transition-[color,box-shadow,background-color] placeholder:text-muted-foreground hover:bg-muted/50 focus:border-ring focus:ring-[3px] focus:ring-ring/40"
                 placeholder="Class ID"
                 value={localClassId}
-                onChange={(event) =>
-                  setLocalClassId(event.target.value)
-                }
+                onChange={(event) => setLocalClassId(event.target.value)}
               />
               {localClassId && (
                 <button
@@ -766,7 +770,7 @@ function AddResourceDialog({
               placeholder="Paste class id if this file is for one class only"
               value={form.watch('classId') ?? ''}
               onChange={(e) =>
-                form.setValue('classId', e.target.value || undefined, {
+                form.setValue('classId', e.target.value, {
                   shouldValidate: true,
                   shouldDirty: true,
                 })

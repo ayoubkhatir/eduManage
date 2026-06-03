@@ -19,7 +19,10 @@ export default function Loading({
         className,
       )}
     >
-      <Loader2Icon className="h-16 w-16 animate-spin text-primary" aria-hidden />
+      <Loader2Icon
+        className="h-16 w-16 animate-spin text-primary"
+        aria-hidden
+      />
       {text ? (
         <h2 className="text-center text-lg font-semibold text-black dark:text-white">
           {text}

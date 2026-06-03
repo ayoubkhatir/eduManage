@@ -92,13 +92,16 @@ export const Route = createFileRoute('/_auth/teacher/classes/')({
   ),
   loaderDeps: ({ search }) => search,
   loader: async ({ context, deps }) => {
-    const currentUser = await (FetchCurrentUserServerFn({
+    const currentUser = (await FetchCurrentUserServerFn({
       data: context.authState.user!,
     })) as TeacherUser
 
     if (!currentUser) throw new Error('Unauthorized')
     await context.queryClient.ensureQueryData(
-      getTeacherClassesQueryOptions({ ...deps, teacherId : currentUser!.info!.id }),
+      getTeacherClassesQueryOptions({
+        ...deps,
+        teacherId: currentUser!.info!.id,
+      }),
     )
     return { currentUser }
   },
@@ -156,7 +159,10 @@ function TeacherClassesContent() {
   const refreshPage = () => router.invalidate()
 
   const { data, isLoading, isError, isFetching, refetch } = useQuery(
-    getTeacherClassesQueryOptions({ ...filters, teacherId : currentUser!.info!.id }),
+    getTeacherClassesQueryOptions({
+      ...filters,
+      teacherId: currentUser!.info!.id,
+    }),
   )
 
   const classes = data?.data ?? []
@@ -278,7 +284,7 @@ function TeacherClassesContent() {
               </select>
             </div>
 
-              <div className="text-sm text-muted-foreground">
+            <div className="text-sm text-muted-foreground">
               {rowCount} assignement{rowCount === 1 ? '' : 's'}
             </div>
           </div>
@@ -319,7 +325,7 @@ function TeacherClassesContent() {
         <>
           <div className="px-6 mb-8">
             <Skeleton name="teacher-classes-grid" loading={isLoading && !data}>
-                  {classes.length === 0 ? (
+              {classes.length === 0 ? (
                 <div className="rounded-xl border border-border dark:border-border bg-card dark:bg-card p-8 text-center">
                   <span className="material-symbols-outlined text-4xl text-muted-foreground mb-2">
                     school

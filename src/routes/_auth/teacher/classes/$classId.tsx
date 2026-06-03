@@ -264,12 +264,12 @@ function RouteComponent() {
                     </div>
 
                     <div className="p-5">
-                        <p className="text-sm text-slate-500 dark:text-slate-400">
+                      <p className="text-sm text-slate-500 dark:text-slate-400">
                         This page is currently powered by class teacher
                         assignements. It can be upgraded later with full class
                         info, student count, roster, schedule, and marks
                         summaries.
-                        </p>
+                      </p>
                     </div>
                   </div>
                 </aside>

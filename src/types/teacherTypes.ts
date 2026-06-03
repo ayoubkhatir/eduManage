@@ -1,49 +1,57 @@
-import * as schema from '#/server/db/schema';
-import { classIdSchema, getTeacherClassMarksPageSchema } from '#/schemas/marks.schema';
-import { addTeacherSchema, assignmentIdSchema, assignTeacherSchema, editTeacherSchema, getTeacherClassesSchema, getTeachersSchema, teacherSearchSchema, updateTeacherAssignmentSchema } from '#/schemas/teachers.schema';
-import z from "zod";
-import type { AuthUser } from './authTypes';
-import type { validCuidSchema } from '#/schemas/shared.schema';
-
-
-
-
-
+import * as schema from '#/server/db/schema'
+import {
+  classIdSchema,
+  getTeacherClassMarksPageSchema,
+} from '#/schemas/marks.schema'
+import {
+  addTeacherSchema,
+  assignmentIdSchema,
+  assignTeacherSchema,
+  editTeacherSchema,
+  getTeacherClassesSchema,
+  getTeachersSchema,
+  teacherSearchSchema,
+  updateTeacherAssignmentSchema,
+} from '#/schemas/teachers.schema'
+import z from 'zod'
+import type { AuthUser } from './authTypes'
+import type { validCuidSchema } from '#/schemas/shared.schema'
 
 export type Teacher = typeof schema.teachersTable.$inferSelect
 
 // * Teacher with user info
-export type TeacherUser = Omit<AuthUser, "info"> & {
-    info: Teacher & {
-        subjects: {
-            id: string,
-            name: string
-        }[]
-    }
+export type TeacherUser = Omit<AuthUser, 'info'> & {
+  info: Teacher & {
+    subjects: {
+      id: string
+      name: string
+    }[]
+  }
 }
 
-export type TeacherAssignments = typeof schema.teacherAssignmentsTable.$inferSelect
+export type TeacherAssignments =
+  typeof schema.teacherAssignmentsTable.$inferSelect
 
 export type GetTeacherClassMarksPageType = z.infer<
-    typeof getTeacherClassMarksPageSchema
+  typeof getTeacherClassMarksPageSchema
 >
 
-export type GetTeachersType = z.infer<typeof getTeachersSchema>;
+export type GetTeachersType = z.infer<typeof getTeachersSchema>
 
-export type AddTeacherType = z.infer<typeof addTeacherSchema>;
+export type AddTeacherType = z.infer<typeof addTeacherSchema>
 
-export type EditTeacherType = z.infer<typeof editTeacherSchema>;
+export type EditTeacherType = z.infer<typeof editTeacherSchema>
 
-export type TeacherIdType = z.infer<typeof validCuidSchema>;
+export type TeacherIdType = z.infer<typeof validCuidSchema>
 
-export type TeacherUserIdType = z.infer<typeof validCuidSchema>;
+export type TeacherUserIdType = z.infer<typeof validCuidSchema>
 
-export type SchoolIdType = z.infer<typeof validCuidSchema>;
+export type SchoolIdType = z.infer<typeof validCuidSchema>
 
-export type AssignTeacherType = z.infer<typeof assignTeacherSchema>;
+export type AssignTeacherType = z.infer<typeof assignTeacherSchema>
 
 export type UpdateTeacherAssignmentType = z.infer<
-    typeof updateTeacherAssignmentSchema
+  typeof updateTeacherAssignmentSchema
 >
 
 export type AssignmentIdType = z.infer<typeof assignmentIdSchema>
@@ -55,30 +63,28 @@ export type GetTeacherClassesType = z.infer<typeof getTeacherClassesSchema>
 export type TeacherSearchType = z.infer<typeof teacherSearchSchema>
 
 export type TeacherClassItem = {
-    assignmentId: string
-    classId: string
-    className: string
-    gradeId: string
-    gradeName: string
-    subjectId: string
-    subjectName: string
-    studentCount: number
-    isPrimaryTeacher: boolean
-    status: schema.StatusEnum
+  assignmentId: string
+  classId: string
+  className: string
+  gradeId: string
+  gradeName: string
+  subjectId: string
+  subjectName: string
+  studentCount: number
+  isPrimaryTeacher: boolean
+  status: schema.StatusEnum
 }
 
-
 export function TeacherUserDto(
-    teacher: Teacher,
-    user: AuthUser,
-    subjects: { id: string, name: string }[]
+  teacher: Teacher,
+  user: AuthUser,
+  subjects: { id: string; name: string }[],
 ): TeacherUser {
-    return {
-        ...user,
-        info: {
-            ...teacher,
-            subjects
-        }
-
-    }
+  return {
+    ...user,
+    info: {
+      ...teacher,
+      subjects,
+    },
+  }
 }

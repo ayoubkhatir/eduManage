@@ -6,7 +6,7 @@ export const signupSchema = z
     fullName: z.string().min(2, 'Full name is required'),
     schoolName: z.string().min(2, 'School name is required'),
     email: z.email('Invalid email address'),
-    gender : genderSchema,
+    gender: genderSchema,
     password: z.string().min(8, 'Password must be at least 8 characters'),
     confirmPassword: z.string(),
     terms: z.boolean().refine((val) => val === true, {
