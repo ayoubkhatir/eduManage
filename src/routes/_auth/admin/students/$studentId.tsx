@@ -112,15 +112,6 @@ function OwnerStudentDetailContent() {
                             title="Profile Picture"
                             description="Click the avatar to update the picture"
                           />
-
-                          <div className="text-center">
-                            <p className="text-sm font-medium text-[#111318] dark:text-white">
-                              Profile Picture
-                            </p>
-                            <p className="text-xs text-[#616f89] dark:text-gray-400">
-                              Student avatar preview
-                            </p>
-                          </div>
                         </div>
                       </aside>
 

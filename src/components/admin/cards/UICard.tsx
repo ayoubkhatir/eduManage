@@ -226,20 +226,12 @@ export function AnnouncementsStatCards({
         cardTitle: 'Drafts',
         info: 0,
       },
-
-      {
-        id: 'total-views',
-        iconName: 'visibility',
-        iconColor: 'blue',
-        cardTitle: 'Total Views',
-        info: '1k',
-      },
     ],
     [announcements, fetchStatus],
   )
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
       {cards.map((card) => (
         <UICardComponent {...card} key={card.id} />
       ))}

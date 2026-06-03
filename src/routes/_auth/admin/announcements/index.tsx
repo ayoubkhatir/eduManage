@@ -79,7 +79,7 @@ function Announcement() {
           </Link>
         </div>
 
-        <Suspense fallback={<UICardSkeleton count={3} />}>
+        <Suspense fallback={<UICardSkeleton count={2} />}>
           <AnnouncementsStatCards
             schoolId={currentUser.info.id}
             filters={{ audience, search }}

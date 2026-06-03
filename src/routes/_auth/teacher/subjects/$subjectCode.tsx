@@ -56,7 +56,6 @@ import {
   addResourceServerFn,
   deleteResourceServerFn,
 } from '#/server/modules/resources/resources.server-functions'
-import { getTeacherAssignmentsServerFn } from '#/server/modules/teachers/teachers.server-functions'
 import { toast } from 'sonner'
 import { useMemo, useState, useEffect } from 'react'
 import { SimpleDocumentUpload } from '#/components/cloudinary-uploader'
