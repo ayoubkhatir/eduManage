@@ -136,9 +136,9 @@ export function useEditStudent(edited: StudentUser) {
       name: edited.name,
       image: edited.image ?? "",
       gender: edited.gender,
-      enrollmentDate: new Date().toISOString(),
+      enrollmentDate: edited.info.enrollmentDate,
       email: edited.email,
-      dateOfBirth: new Date().toISOString(),
+      dateOfBirth: edited.info.dateOfBirth,
       address: edited.info.address,
       telNumber: edited.telNumber!,
       studentId: edited.info.id,
@@ -152,13 +152,8 @@ export function useEditStudent(edited: StudentUser) {
 
   const { mutate: editStudent } = useMutation({
     mutationFn: async (data: EditStudentType) => {
-      try {
-        const response = await editStudentServerFn({ data })
-        return response;
-      } catch (error) {
-        console.log({ error })
-      }
-
+      const response = await editStudentServerFn({ data })
+      return response;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['students'] })

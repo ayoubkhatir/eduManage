@@ -249,9 +249,6 @@ class StudentsController {
 
 
     async editStudent(data: EditStudentType) {
-        const password = data.name // just the name of the user 
-        const passwordHash = await handlePassword.hash(password);
-
         const foundStudent = await this.db.query.studentsTable.findFirst({
             where: eq(studentsTable.id, data.studentId),
             columns: { userId: true }
@@ -265,18 +262,11 @@ class StudentsController {
                 email: data.email,
                 name: data.name,
                 image: data.image,
-                emailVerified: false,
                 telNumber: data.telNumber,
                 gender: data.gender,
             })
             .where(eq(users.id, userId))
             .returning()
-
-        await this.db.update(account)
-            .set({
-                password: passwordHash,
-            })
-            .where(eq(account.userId, userId))
 
         await this.db
             .update(studentsTable)
@@ -285,7 +275,8 @@ class StudentsController {
                 dateOfBirth: data.dateOfBirth,
                 parentName: data.parentName,
                 parentPhoneNumber: data.parentPhoneNumber,
-                status: StatusEnum.NEW,
+                classId: data.classId,
+                status: data.status,
                 enrollmentDate: data.enrollmentDate
             })
             .where(eq(studentsTable.id, data.studentId))
