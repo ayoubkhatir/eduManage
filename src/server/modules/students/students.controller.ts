@@ -1,151 +1,151 @@
 import { db, type Database } from '#/server/db/db'
 import {
-  account,
-  classesTable,
-  gradesTable,
-  StatusEnum,
-  studentsTable,
-  teachersTable,
-  UserRoleEnum,
-  users,
+    account,
+    classesTable,
+    gradesTable,
+    StatusEnum,
+    studentsTable,
+    teachersTable,
+    UserRoleEnum,
+    users,
 } from '#/server/db/schema'
 import {
-  and,
-  asc,
-  count,
-  desc,
-  eq,
-  gte,
-  ilike,
-  lt,
-  or,
-  sql,
-  SQL,
+    and,
+    asc,
+    count,
+    desc,
+    eq,
+    gte,
+    ilike,
+    lt,
+    or,
+    sql,
+    SQL,
 } from 'drizzle-orm'
 import generateId from '../../../lib/id_generator'
 import { handlePassword } from '#/server/utils/handle-password'
 import {
-  DashboardPeriodEnum,
-  StudentUserDto,
-  type AddStudentType,
-  type DashboardPeriod,
-  type EditStudentType,
-  type GetStudentsType,
-  type StudentUser,
+    DashboardPeriodEnum,
+    StudentUserDto,
+    type AddStudentType,
+    type DashboardPeriod,
+    type EditStudentType,
+    type GetStudentsType,
+    type StudentUser,
 } from '#/types/studentTypes'
 import type { ID } from '#/types/authTypes'
 
 class StudentsController {
-  constructor(private readonly db: Database) {}
+    constructor(private readonly db: Database) { }
 
-  async listStudents({
-    schoolId,
-    classe,
-    grade,
-    page,
-    search,
-    size,
-    sortOrder,
-    sortBy,
-    status,
-  }: GetStudentsType & { schoolId: string }) {
-    const safePage = Math.max(1, page ?? 1)
-    const safeSize = Math.max(1, size ?? 10)
-    const offset = (safePage - 1) * safeSize
+    async listStudents({
+        schoolId,
+        classe,
+        grade,
+        page,
+        search,
+        size,
+        sortOrder,
+        sortBy,
+        status,
+    }: GetStudentsType & { schoolId: string }) {
+        const safePage = Math.max(1, page ?? 1)
+        const safeSize = Math.max(1, size ?? 10)
+        const offset = (safePage - 1) * safeSize
 
-    const conditions: SQL<unknown>[] = []
-    conditions.push(eq(studentsTable.schoolId, schoolId))
-    const normalizedSearch = search?.trim()
-    const normalizedStatus = status?.trim()
-    const normalizedClass = classe?.trim()
-    const normalizedGrade = grade?.trim()
+        const conditions: SQL<unknown>[] = []
+        conditions.push(eq(studentsTable.schoolId, schoolId))
+        const normalizedSearch = search?.trim()
+        const normalizedStatus = status?.trim()
+        const normalizedClass = classe?.trim()
+        const normalizedGrade = grade?.trim()
 
-    const sortColumn =
-      sortBy === 'email'
-        ? sql`lower(${users.email})`
-        : sql`lower(${users.name})`
+        const sortColumn =
+            sortBy === 'email'
+                ? sql`lower(${users.email})`
+                : sql`lower(${users.name})`
 
-    const orderDirection =
-      sortOrder === 'desc' ? desc(sortColumn) : asc(sortColumn)
+        const orderDirection =
+            sortOrder === 'desc' ? desc(sortColumn) : asc(sortColumn)
 
-    // search by student name/email
-    if (normalizedSearch) {
-      conditions.push(
-        or(
-          ilike(users.name, `%${normalizedSearch}%`),
-          ilike(users.email, `%${normalizedSearch}%`),
-        ) as SQL<unknown>,
-      )
+        // search by student name/email
+        if (normalizedSearch) {
+            conditions.push(
+                or(
+                    ilike(users.name, `%${normalizedSearch}%`),
+                    ilike(users.email, `%${normalizedSearch}%`),
+                ) as SQL<unknown>,
+            )
+        }
+
+        // filter by status
+        if (normalizedStatus) {
+            conditions.push(eq(studentsTable.status, normalizedStatus as StatusEnum))
+        }
+
+        // filter by class
+        if (normalizedClass) {
+            conditions.push(eq(classesTable.id, normalizedClass))
+        }
+
+        // filter by grade
+        if (normalizedGrade) {
+            conditions.push(eq(gradesTable.id, normalizedGrade))
+        }
+
+        const whereClause = conditions.length > 0 ? and(...conditions) : undefined
+
+        const [rows, totalResult] = await Promise.all([
+            this.db
+                .select({
+                    student: studentsTable,
+                    user: users,
+                    classe: {
+                        id: classesTable.id,
+                        name: classesTable.name,
+                    },
+                    grade: {
+                        id: gradesTable.id,
+                        name: gradesTable.name,
+                    },
+                })
+                .from(studentsTable)
+                .innerJoin(users, eq(studentsTable.userId, users.id))
+                .innerJoin(classesTable, eq(studentsTable.classId, classesTable.id))
+                .innerJoin(gradesTable, eq(classesTable.gradeId, gradesTable.id))
+                .where(whereClause)
+                .orderBy(orderDirection)
+                .limit(safeSize)
+                .offset(offset),
+
+            this.db
+                .select({
+                    total: count(),
+                })
+                .from(studentsTable)
+                .innerJoin(users, eq(studentsTable.userId, users.id))
+                .innerJoin(classesTable, eq(studentsTable.classId, classesTable.id))
+                .innerJoin(gradesTable, eq(classesTable.gradeId, gradesTable.id))
+                .where(whereClause),
+        ])
+
+        const totalCount = Number(totalResult[0]?.total ?? 0)
+        const totalPages = Math.ceil(totalCount / safeSize)
+
+        const data = rows.map(({ student, user, classe, grade }) =>
+            StudentUserDto(student, user, classe, grade),
+        )
+
+        return {
+            data,
+            pagination: {
+                totalCount,
+                totalPages,
+            },
+        }
     }
 
-    // filter by status
-    if (normalizedStatus) {
-      conditions.push(eq(studentsTable.status, normalizedStatus as StatusEnum))
-    }
-
-    // filter by class
-    if (normalizedClass) {
-      conditions.push(eq(classesTable.id, normalizedClass))
-    }
-
-    // filter by grade
-    if (normalizedGrade) {
-      conditions.push(eq(gradesTable.id, normalizedGrade))
-    }
-
-    const whereClause = conditions.length > 0 ? and(...conditions) : undefined
-
-    const [rows, totalResult] = await Promise.all([
-      this.db
-        .select({
-          student: studentsTable,
-          user: users,
-          classe: {
-            id: classesTable.id,
-            name: classesTable.name,
-          },
-          grade: {
-            id: gradesTable.id,
-            name: gradesTable.name,
-          },
-        })
-        .from(studentsTable)
-        .innerJoin(users, eq(studentsTable.userId, users.id))
-        .innerJoin(classesTable, eq(studentsTable.classId, classesTable.id))
-        .innerJoin(gradesTable, eq(classesTable.gradeId, gradesTable.id))
-        .where(whereClause)
-        .orderBy(orderDirection)
-        .limit(safeSize)
-        .offset(offset),
-
-      this.db
-        .select({
-          total: count(),
-        })
-        .from(studentsTable)
-        .innerJoin(users, eq(studentsTable.userId, users.id))
-        .innerJoin(classesTable, eq(studentsTable.classId, classesTable.id))
-        .innerJoin(gradesTable, eq(classesTable.gradeId, gradesTable.id))
-        .where(whereClause),
-    ])
-
-    const totalCount = Number(totalResult[0]?.total ?? 0)
-    const totalPages = Math.ceil(totalCount / safeSize)
-
-    const data = rows.map(({ student, user, classe, grade }) =>
-      StudentUserDto(student, user, classe, grade),
-    )
-
-    return {
-      data,
-      pagination: {
-        totalCount,
-        totalPages,
-      },
-    }
-  }
-
-  async addStudent(data: AddStudentType) {
+    async addStudent(data: AddStudentType) {
         const userId = generateId();
 
         const passwordHash = await handlePassword.hash("student123")
@@ -380,7 +380,7 @@ class StudentsController {
             .select({ totalTeachers: count() })
             .from(teachersTable)
             .where(eq(teachersTable.schoolId, schoolId))
-            const [{ totalGrades }] = await this.db
+        const [{ totalGrades }] = await this.db
             .select({ totalGrades: count() })
             .from(gradesTable)
             .where(eq(gradesTable.schoolId, schoolId))

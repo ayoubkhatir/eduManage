@@ -151,6 +151,7 @@ export function useEditStudent(edited: StudentUser) {
   })
 
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
   const { mutate: editStudent } = useMutation({
     mutationFn: async (data: EditStudentType) => {
@@ -159,12 +160,15 @@ export function useEditStudent(edited: StudentUser) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['students'] })
+      toast.success('Edit User Success')
+      navigate({ to: '/admin/students' })
+    },
+    onError: () => {
+      toast.error('Error occured')
     },
   })
 
   function onSubmit(data: EditStudentType) {
-    const navigate = useNavigate()
-
     const newData: EditStudentType = {
       name: data.name,
       email: data.email,
@@ -183,15 +187,7 @@ export function useEditStudent(edited: StudentUser) {
       newPassword: data.newPassword || undefined,
       confirmPassword: data.confirmPassword || undefined,
     }
-    editStudent(newData, {
-      onSuccess: () => {
-        toast.success('Edit User Success')
-        navigate({ to: '/admin/students' })
-      },
-      onError: () => {
-        toast.error('Error occured')
-      },
-    })
+    editStudent(newData)
   }
 
   return { studentForm, onSubmit }
