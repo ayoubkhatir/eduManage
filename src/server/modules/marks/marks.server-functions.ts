@@ -4,6 +4,7 @@ import {
   deleteAssessmentSchema,
   getAssessmentMarksSchema,
   getAssessmentsByClassSubjectSchema,
+  getStudentSubjectAssessmentsSchema,
   getTeacherClassMarksPageSchema,
   saveStudentMarksSchema,
   updateAssessmentSchema,
@@ -276,5 +277,23 @@ export const saveStudentMarksServerFn = createServerFn({
     } catch (error) {
       console.log('\x1b[36m[server]\x1b[0m ' + error)
       return mapDbError(error) as APIResponse<StudentMarks>
+    }
+  })
+
+type StudentSubjectAssessments = Awaited<
+  ReturnType<typeof marksController.getStudentSubjectAssessments>
+>
+export const getStudentSubjectAssessmentsServerFn = createServerFn({
+  method: 'GET',
+})
+  .inputValidator(getStudentSubjectAssessmentsSchema)
+  .handler(async ({ data }) => {
+    try {
+      return successResponse(
+        await marksController.getStudentSubjectAssessments(data),
+      ) as APIResponse<StudentSubjectAssessments>
+    } catch (error) {
+      console.log('\x1b[36m[server]\x1b[0m ' + error)
+      return mapDbError(error) as APIResponse<StudentSubjectAssessments>
     }
   })

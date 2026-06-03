@@ -77,3 +77,11 @@ export const getAssessmentMarksSchema = z.object({
 export const deleteAssessmentSchema = z.object({
   assessmentId: validCuidSchema,
 })
+
+export const getStudentSubjectAssessmentsSchema = z.object({
+  classId: validCuidSchema,
+  subjectCode: z.string(),
+  studentId: validCuidSchema,
+  schoolId: validCuidSchema,
+  periodId: validCuidSchema.optional(),
+})

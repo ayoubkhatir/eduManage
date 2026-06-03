@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link, Outlet, useLocation } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 import { zodValidator } from '@tanstack/zod-adapter'
 import { useQuery } from '@tanstack/react-query'
@@ -105,9 +105,64 @@ const sortOptions = [
 ] as const
 
 function StudentResourcesContent() {
+  const { pathname } = useLocation()
+  const { subjectCode } = Route.useParams()
+  const isAssessmentsRoute = pathname.includes('/assessments')
+
+  return (
+    <motion.main
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      className="flex-1 overflow-y-auto bg-background-light p-4 dark:bg-background-dark md:p-8"
+    >
+      <div className="mx-auto max-w-7xl">
+        {/* Tab navigation */}
+        <div className="mb-6 flex gap-6 border-b border-border">
+          <Link
+            to="/student/subjects/$subjectCode"
+            params={{ subjectCode }}
+            className={`relative pb-3 text-sm font-semibold transition-colors ${
+              !isAssessmentsRoute
+                ? 'text-foreground'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            Resources
+            <span
+              className={`absolute bottom-0 left-0 right-0 h-0.5 rounded-full ${
+                !isAssessmentsRoute ? 'bg-primary' : 'bg-transparent'
+              }`}
+            />
+          </Link>
+          <Link
+            to="/student/subjects/$subjectCode/assessments"
+            params={{ subjectCode }}
+            search={{}}
+            className={`relative pb-3 text-sm font-semibold transition-colors ${
+              isAssessmentsRoute
+                ? 'text-foreground'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            Assessments &amp; Grades
+            <span
+              className={`absolute bottom-0 left-0 right-0 h-0.5 rounded-full ${
+                isAssessmentsRoute ? 'bg-primary' : 'bg-transparent'
+              }`}
+            />
+          </Link>
+        </div>
+
+        {isAssessmentsRoute ? <Outlet /> : <ResourcesContent />}
+      </div>
+    </motion.main>
+  )
+}
+
+function ResourcesContent() {
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
-
   const { currentUser } = Route.useLoaderData()
   const [localSize, setLocalSize] = useState(search.size)
   const debouncedSize = useDebounce(localSize, 500)
@@ -191,214 +246,207 @@ function StudentResourcesContent() {
   const columns = useMemo(() => getResourceColumns(), [])
 
   return (
-    <motion.main
-      initial={{ opacity: 0, y: 6 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-      className="flex-1 overflow-y-auto bg-background-light p-4 dark:bg-background-dark md:p-8"
-    >
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-8 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
-          <div>
-            <h1 className="text-3xl font-black tracking-tight text-[#0d121b] dark:text-white md:text-4xl">
-              Learning Resources
-            </h1>
-            <p className="mt-2 text-base text-[#4c669a] dark:text-gray-400">
-              Manage and organize educational materials, assignements, and
-              reference documents.
-            </p>
-          </div>
+    <>
+      <div className="mb-8 flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+        <div>
+          <h1 className="text-3xl font-black tracking-tight text-[#0d121b] dark:text-white md:text-4xl">
+            Learning Resources
+          </h1>
+          <p className="mt-2 text-base text-[#4c669a] dark:text-gray-400">
+            Manage and organize educational materials, assignements, and
+            reference documents.
+          </p>
         </div>
+      </div>
 
-        <div className="mb-6 rounded-2xl border border-border/70 bg-card p-5 shadow-sm">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-            <div className="relative sm:col-span-2 lg:col-span-1 xl:col-span-2">
-              <Search className="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
-              <SearchInput
-                className="h-10 rounded-lg border-border bg-muted/30 pl-9 text-sm shadow-none transition-colors hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring/40"
-                placeholder="Search by file name..."
-                value={search.fileName}
-                onSearch={(value) =>
-                  updateSearch({ fileName: value, pageIndex: 1 })
-                }
-              />
-            </div>
-
-            <Select
-              value={search.type || 'all'}
-              onValueChange={(v) =>
-                updateSearch({ type: v === 'all' ? '' : v, pageIndex: 1 })
+      <div className="mb-6 rounded-2xl border border-border/70 bg-card p-5 shadow-sm">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+          <div className="relative sm:col-span-2 lg:col-span-1 xl:col-span-2">
+            <Search className="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-muted-foreground" />
+            <SearchInput
+              className="h-10 rounded-lg border-border bg-muted/30 pl-9 text-sm shadow-none transition-colors hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring/40"
+              placeholder="Search by file name..."
+              value={search.fileName}
+              onSearch={(value) =>
+                updateSearch({ fileName: value, pageIndex: 1 })
               }
-            >
-              <SelectTrigger className="h-10 w-full rounded-lg border-border bg-muted/30 text-sm shadow-none transition-colors hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring/40 ">
-                <FileType className="mr-2 size-4 shrink-0 text-muted-foreground" />
-                <SelectValue placeholder="All types" />
-              </SelectTrigger>
-              <SelectContent className="border-border bg-card">
-                {typeOptions.map((opt) => (
-                  <SelectItem key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <div className="relative">
-              <HardDrive className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="number"
-                inputMode="decimal"
-                min="0"
-                value={localSize ? localSize.replace(/\s*mb$/i, '') : ''}
-                onChange={(e) =>
-                  setLocalSize(e.target.value ? `${e.target.value} MB` : '')
-                }
-                className="h-9 w-full rounded-lg border border-border bg-muted/30 pl-9 pr-12 text-sm text-foreground outline-none transition-[color,box-shadow,background-color] placeholder:text-muted-foreground hover:bg-muted/50 focus:border-ring focus:ring-[3px] focus:ring-ring/40 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                placeholder="Size"
-              />
-              <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                MB
-              </span>
-            </div>
-
-            <div className="relative">
-              <Calendar className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="date"
-                value={search.dateAdded}
-                onChange={(e) =>
-                  updateSearch({ dateAdded: e.target.value, pageIndex: 1 })
-                }
-                className="h-9 w-full rounded-lg border border-border bg-muted/30 pl-9 pr-8 text-sm text-foreground outline-none transition-[color,box-shadow,background-color] hover:bg-muted/50 focus:border-ring focus:ring-[3px] focus:ring-ring/40"
-              />
-              {search.dateAdded && (
-                <button
-                  type="button"
-                  onClick={() => updateSearch({ dateAdded: '', pageIndex: 1 })}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                >
-                  <X className="size-3.5" />
-                </button>
-              )}
-            </div>
-
-            <Select
-              value={search.sortBy}
-              onValueChange={(v) =>
-                updateSearch({
-                  sortBy: v as typeof search.sortBy,
-                  pageIndex: 1,
-                })
-              }
-            >
-              <SelectTrigger className="h-10 w-full rounded-lg border-border bg-muted/30 text-sm shadow-none transition-colors hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring/40">
-                <ArrowUpDown className="mr-2 size-4 shrink-0 text-muted-foreground" />
-                <SelectValue placeholder="Sort" />
-              </SelectTrigger>
-              <SelectContent className="border-border bg-card">
-                {sortOptions.map((opt) => (
-                  <SelectItem key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <div className="relative">
-              <BookOpen className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <input
-                className="h-10 w-full rounded-lg border border-border bg-muted/30 pl-9 pr-8 text-sm text-foreground outline-none transition-[color,box-shadow,background-color] placeholder:text-muted-foreground hover:bg-muted/50 focus:border-ring focus:ring-[3px] focus:ring-ring/40"
-                placeholder="Class ID"
-                value={localClassId}
-                onChange={(event) => setLocalClassId(event.target.value)}
-              />
-              {localClassId && (
-                <button
-                  type="button"
-                  onClick={() => setLocalClassId('')}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-                >
-                  <X className="size-3.5" />
-                </button>
-              )}
-            </div>
+            />
           </div>
 
-          {hasActiveFilters && (
-            <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-4">
-              <span className="text-xs font-medium text-muted-foreground">
-                {activeFilterCount} active filter
-                {activeFilterCount !== 1 ? 's' : ''}
-              </span>
+          <Select
+            value={search.type || 'all'}
+            onValueChange={(v) =>
+              updateSearch({ type: v === 'all' ? '' : v, pageIndex: 1 })
+            }
+          >
+            <SelectTrigger className="h-10 w-full rounded-lg border-border bg-muted/30 text-sm shadow-none transition-colors hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring/40 ">
+              <FileType className="mr-2 size-4 shrink-0 text-muted-foreground" />
+              <SelectValue placeholder="All types" />
+            </SelectTrigger>
+            <SelectContent className="border-border bg-card">
+              {typeOptions.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <div className="relative">
+            <HardDrive className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              type="number"
+              inputMode="decimal"
+              min="0"
+              value={localSize ? localSize.replace(/\s*mb$/i, '') : ''}
+              onChange={(e) =>
+                setLocalSize(e.target.value ? `${e.target.value} MB` : '')
+              }
+              className="h-9 w-full rounded-lg border border-border bg-muted/30 pl-9 pr-12 text-sm text-foreground outline-none transition-[color,box-shadow,background-color] placeholder:text-muted-foreground hover:bg-muted/50 focus:border-ring focus:ring-[3px] focus:ring-ring/40 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              placeholder="Size"
+            />
+            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              MB
+            </span>
+          </div>
+
+          <div className="relative">
+            <Calendar className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              type="date"
+              value={search.dateAdded}
+              onChange={(e) =>
+                updateSearch({ dateAdded: e.target.value, pageIndex: 1 })
+              }
+              className="h-9 w-full rounded-lg border border-border bg-muted/30 pl-9 pr-8 text-sm text-foreground outline-none transition-[color,box-shadow,background-color] hover:bg-muted/50 focus:border-ring focus:ring-[3px] focus:ring-ring/40"
+            />
+            {search.dateAdded && (
               <button
                 type="button"
-                onClick={clearAllFilters}
-                className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                onClick={() => updateSearch({ dateAdded: '', pageIndex: 1 })}
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
               >
-                <FilterX className="size-3.5" />
-                Clear all
+                <X className="size-3.5" />
               </button>
-            </div>
-          )}
+            )}
+          </div>
+
+          <Select
+            value={search.sortBy}
+            onValueChange={(v) =>
+              updateSearch({
+                sortBy: v as typeof search.sortBy,
+                pageIndex: 1,
+              })
+            }
+          >
+            <SelectTrigger className="h-10 w-full rounded-lg border-border bg-muted/30 text-sm shadow-none transition-colors hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring/40">
+              <ArrowUpDown className="mr-2 size-4 shrink-0 text-muted-foreground" />
+              <SelectValue placeholder="Sort" />
+            </SelectTrigger>
+            <SelectContent className="border-border bg-card">
+              {sortOptions.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <div className="relative">
+            <BookOpen className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              className="h-10 w-full rounded-lg border border-border bg-muted/30 pl-9 pr-8 text-sm text-foreground outline-none transition-[color,box-shadow,background-color] placeholder:text-muted-foreground hover:bg-muted/50 focus:border-ring focus:ring-[3px] focus:ring-ring/40"
+              placeholder="Class ID"
+              value={localClassId}
+              onChange={(event) => setLocalClassId(event.target.value)}
+            />
+            {localClassId && (
+              <button
+                type="button"
+                onClick={() => setLocalClassId('')}
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              >
+                <X className="size-3.5" />
+              </button>
+            )}
+          </div>
         </div>
 
-        {status === 'pending' ? (
-          <div className="rounded-xl border border-border bg-card p-12">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 border-b border-border pb-3">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="h-3 flex-1 animate-pulse rounded bg-muted"
-                  />
-                ))}
-              </div>
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="flex items-center gap-3 py-2">
-                  <div className="h-4 w-1/4 animate-pulse rounded bg-muted" />
-                  <div className="h-4 w-1/6 animate-pulse rounded bg-muted" />
-                  <div className="h-4 w-1/6 animate-pulse rounded bg-muted" />
-                  <div className="h-4 w-1/6 animate-pulse rounded bg-muted" />
-                  <div className="h-4 w-1/12 animate-pulse rounded bg-muted" />
-                </div>
-              ))}
-            </div>
+        {hasActiveFilters && (
+          <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-4">
+            <span className="text-xs font-medium text-muted-foreground">
+              {activeFilterCount} active filter
+              {activeFilterCount !== 1 ? 's' : ''}
+            </span>
+            <button
+              type="button"
+              onClick={clearAllFilters}
+              className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            >
+              <FilterX className="size-3.5" />
+              Clear all
+            </button>
           </div>
-        ) : status === 'error' ? (
-          <div className="rounded-xl border border-red-200 bg-red-50 p-12 text-center dark:border-red-900 dark:bg-red-950/30">
-            <AlertCircle className="mx-auto mb-3 size-10 text-red-400" />
-            <p className="text-sm font-medium text-red-600 dark:text-red-400">
-              Failed to load resources.
-            </p>
-            <p className="mt-1 text-xs text-red-500 dark:text-red-400">
-              Please try refreshing the page.
-            </p>
-          </div>
-        ) : (
-          <ResourcesTable
-            data={data.data}
-            columns={columns}
-            pagination={pagination}
-            paginationOptions={{
-              rowCount: data.pagination.totalCount,
-              onPaginationChange: (paginationState) => {
-                const nextPagination =
-                  typeof paginationState === 'function'
-                    ? paginationState(pagination)
-                    : paginationState
-
-                navigate({
-                  search: (s) => ({
-                    ...s,
-                    pageIndex: nextPagination.pageIndex,
-                    pageSize: nextPagination.pageSize,
-                  }),
-                })
-              },
-            }}
-          />
         )}
       </div>
-    </motion.main>
+
+      {status === 'pending' ? (
+        <div className="rounded-xl border border-border bg-card p-12">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 border-b border-border pb-3">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-3 flex-1 animate-pulse rounded bg-muted"
+                />
+              ))}
+            </div>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-3 py-2">
+                <div className="h-4 w-1/4 animate-pulse rounded bg-muted" />
+                <div className="h-4 w-1/6 animate-pulse rounded bg-muted" />
+                <div className="h-4 w-1/6 animate-pulse rounded bg-muted" />
+                <div className="h-4 w-1/6 animate-pulse rounded bg-muted" />
+                <div className="h-4 w-1/12 animate-pulse rounded bg-muted" />
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : status === 'error' ? (
+        <div className="rounded-xl border border-red-200 bg-red-50 p-12 text-center dark:border-red-900 dark:bg-red-950/30">
+          <AlertCircle className="mx-auto mb-3 size-10 text-red-400" />
+          <p className="text-sm font-medium text-red-600 dark:text-red-400">
+            Failed to load resources.
+          </p>
+          <p className="mt-1 text-xs text-red-500 dark:text-red-400">
+            Please try refreshing the page.
+          </p>
+        </div>
+      ) : (
+        <ResourcesTable
+          data={data.data}
+          columns={columns}
+          pagination={pagination}
+          paginationOptions={{
+            rowCount: data.pagination.totalCount,
+            onPaginationChange: (paginationState) => {
+              const nextPagination =
+                typeof paginationState === 'function'
+                  ? paginationState(pagination)
+                  : paginationState
+
+              navigate({
+                search: (s) => ({
+                  ...s,
+                  pageIndex: nextPagination.pageIndex,
+                  pageSize: nextPagination.pageSize,
+                }),
+              })
+            },
+          }}
+        />
+      )}
+    </>
   )
 }

@@ -105,8 +105,9 @@ function StudentSubjectsContent() {
             {subjects.map((subject) => (
               <Link
                 key={subject.id}
-                to="/student/subjects/$subjectCode"
+                to="/student/subjects/$subjectCode/assessments"
                 params={{ subjectCode: subject.code }}
+                search={{}}
               >
                 <SubjectCard subject={subject} />
               </Link>

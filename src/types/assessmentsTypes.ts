@@ -6,6 +6,7 @@ import {
   saveStudentMarksSchema,
   getAssessmentMarksSchema,
   deleteAssessmentSchema,
+  getStudentSubjectAssessmentsSchema,
 } from '#/schemas/marks.schema'
 import z from 'zod'
 
@@ -28,3 +29,5 @@ export type SaveStudentMarksSchema = z.infer<typeof saveStudentMarksSchema>
 export type GetAssessmentMarksSchema = z.infer<typeof getAssessmentMarksSchema>
 
 export type DeleteAssessmentSchema = z.infer<typeof deleteAssessmentSchema>
+
+export type GetStudentSubjectAssessmentsSchema = z.infer<typeof getStudentSubjectAssessmentsSchema>

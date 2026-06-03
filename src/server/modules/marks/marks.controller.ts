@@ -208,6 +208,79 @@ class MarksController {
       )
   }
 
+  async getStudentSubjectAssessments(input: {
+    classId: string
+    subjectCode: string
+    studentId: string
+    schoolId: string
+    periodId?: string
+  }) {
+    const subject = await this.db
+      .select({
+        id: subjectsTable.id,
+        name: subjectsTable.name,
+        code: subjectsTable.code,
+      })
+      .from(subjectsTable)
+      .where(eq(subjectsTable.code, input.subjectCode))
+      .then((rows) => rows[0] ?? null)
+
+    if (!subject) throw new Error('Subject not found')
+
+    const assessments = await this.db
+      .select({
+        id: assessmentsTable.id,
+        title: assessmentsTable.title,
+        type: assessmentsTable.type,
+        maxScore: assessmentsTable.maxScore,
+        weight: assessmentsTable.weight,
+        assessmentDate: assessmentsTable.assessmentDate,
+        notes: assessmentsTable.notes,
+        periodId: assessmentsTable.periodId,
+        status: assessmentsTable.status,
+        createdAt: assessmentsTable.createdAt,
+        score: studentMarksTable.score,
+        absent: studentMarksTable.absent,
+        excused: studentMarksTable.excused,
+        comment: studentMarksTable.comment,
+        markUpdatedAt: studentMarksTable.updatedAt,
+      })
+      .from(assessmentsTable)
+      .leftJoin(
+        studentMarksTable,
+        and(
+          eq(studentMarksTable.assessmentId, assessmentsTable.id),
+          eq(studentMarksTable.studentId, input.studentId),
+        ),
+      )
+      .where(
+        and(
+          eq(assessmentsTable.classId, input.classId),
+          eq(assessmentsTable.subjectId, subject.id),
+          ...(input.periodId
+            ? [eq(assessmentsTable.periodId, input.periodId)]
+            : []),
+        ),
+      )
+      .orderBy(
+        desc(assessmentsTable.assessmentDate),
+        desc(assessmentsTable.createdAt),
+      )
+
+    const periods = await this.db
+      .select({
+        id: assessmentPeriodsTable.id,
+        name: assessmentPeriodsTable.name,
+        code: assessmentPeriodsTable.code,
+      })
+      .from(assessmentPeriodsTable)
+      .where(eq(assessmentPeriodsTable.schoolId, input.schoolId))
+      .orderBy(desc(assessmentPeriodsTable.startDate))
+      .catch(() => [])
+
+    return { assessments, periods, subject }
+  }
+
   async getAssessmentMarks(assessmentId: string) {
     const assessment = await this.db
       .select({
