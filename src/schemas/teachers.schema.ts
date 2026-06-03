@@ -14,20 +14,27 @@ export const addTeacherSchema = addUserSchema.extend({
   dateOfBirth: z.string(),
   about: z.string(),
 })
+export const editTeacherSchema = z
+    .object({
+        teacherId: validCuidSchema,
+        name: z.string().min(2).max(50),
+        email: z.email(),
+        image: z.string().nullable(),
+        telNumber: z.string().min(1).max(20),
+        gender: genderSchema,
 
-export const editTeacherSchema = z.object({
-  teacherId: validCuidSchema,
-  name: z.string().min(2).max(50),
-  email: z.email(),
-  image: z.string().nullable(),
-  telNumber: z.string().min(1).max(20),
-  gender: genderSchema,
+        about: z.string(),
+        address: z.string().min(1),
+        dateOfBirth: z.string().min(1),
+        status: statusSchema,
 
-  about: z.string(),
-  address: z.string().min(1),
-  dateOfBirth: z.string().min(1),
-  status: statusSchema,
-})
+        assignmentDueDates: z.boolean().optional(),
+        schoolAnnouncements: z.boolean().optional(),
+        emailMarketing: z.boolean().optional(),
+    })
+
+
+
 
 export const assignTeacherSchema = z.object({
   schoolId: validCuidSchema,

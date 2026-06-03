@@ -5,15 +5,55 @@ import { Switch } from '@/components/ui/switch'
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
 import { UserAvatar } from '#/components/admin/Table/columnsData'
 import { UserRoleEnum } from '#/server/db/schema'
-import type { AuthUser } from '#/types/authTypes'
+import type { StudentUser } from '#/types/studentTypes'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { updateStudentSettingsServerFn } from '#/server/modules/students/students.server-functions'
+import { toast } from 'sonner'
+import { useRouter } from '@tanstack/react-router'
 
-function useUpdateSettings() {
+function useUpdateSettings({ user }: { user: StudentUser }) {
   const form = useForm<NewInfoSchema>({
     resolver: standardSchemaResolver(newInfoSchema),
+    defaultValues: {
+      username: user.name,
+      telNumber: user.telNumber ?? '',
+      about: '',
+      assignmentDueDates: true,
+      newGradesPosted: true,
+      schoolAnnouncements: true,
+      emailMarketing: false,
+    },
     mode: 'onSubmit',
     reValidateMode: 'onChange',
   })
-  const onSubmit = async (_data: NewInfoSchema) => {}
+  const queryClient = useQueryClient()
+  const router = useRouter()
+
+  const { mutate: updateStudent } = useMutation({
+    mutationFn: async (data: NewInfoSchema) => {
+      const response = await updateStudentSettingsServerFn({
+        data: {
+          studentId: user.info.id,
+          name: data.username,
+          telNumber: data.telNumber,
+        },
+      })
+      if (!response.success) throw new Error('Error occurred')
+      return response.data
+    },
+    onSuccess: () => {
+      toast.success('Settings updated')
+      queryClient.invalidateQueries({ queryKey: ['student'] })
+      router.invalidate()
+    },
+    onError: () => {
+      toast.error('Error occurred')
+    },
+  })
+
+  const onSubmit = (data: NewInfoSchema) => {
+    updateStudent(data)
+  }
   return { form, onSubmit }
 }
 
@@ -21,10 +61,10 @@ export default function SettingsComp({
   user,
   userRole,
 }: {
-  user: AuthUser
+  user: StudentUser
   userRole: UserRoleEnum.STUDENT | UserRoleEnum.TEACHER
 }) {
-  const { form, onSubmit } = useUpdateSettings()
+  const { form, onSubmit } = useUpdateSettings({ user })
   const isTeacher = userRole === UserRoleEnum.TEACHER
 
   return (
@@ -46,6 +86,10 @@ export default function SettingsComp({
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-6 lg:flex-row"
           >
+            <input type="hidden" {...form.register('assignmentDueDates')} />
+            <input type="hidden" {...form.register('newGradesPosted')} />
+            <input type="hidden" {...form.register('schoolAnnouncements')} />
+            <input type="hidden" {...form.register('emailMarketing')} />
             <div className="flex-1 space-y-6">
               {/* Profile */}
               <section className="overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-sm dark:border-white/6 dark:bg-white/2">
@@ -248,7 +292,11 @@ export default function SettingsComp({
                         Receive alerts 24h before an assignement is due.
                       </p>
                     </div>
-                    <Switch defaultChecked className="shrink-0" />
+                    <Switch
+                      checked={form.watch('assignmentDueDates')}
+                      onCheckedChange={(checked) => form.setValue('assignmentDueDates', checked)}
+                      className="shrink-0"
+                    />
                   </div>
                   {!isTeacher && (
                     <div className="flex items-center justify-between py-4">
@@ -261,7 +309,11 @@ export default function SettingsComp({
                           work.
                         </p>
                       </div>
-                      <Switch defaultChecked className="shrink-0" />
+                      <Switch
+                        checked={form.watch('newGradesPosted')}
+                        onCheckedChange={(checked) => form.setValue('newGradesPosted', checked)}
+                        className="shrink-0"
+                      />
                     </div>
                   )}
                   <div className="flex items-center justify-between py-4">
@@ -273,7 +325,11 @@ export default function SettingsComp({
                         Important news regarding school closures or events.
                       </p>
                     </div>
-                    <Switch defaultChecked className="shrink-0" />
+                    <Switch
+                      checked={form.watch('schoolAnnouncements')}
+                      onCheckedChange={(checked) => form.setValue('schoolAnnouncements', checked)}
+                      className="shrink-0"
+                    />
                   </div>
                   <div className="flex items-center justify-between py-4">
                     <div>
@@ -284,7 +340,11 @@ export default function SettingsComp({
                         Receive newsletters and promotional content.
                       </p>
                     </div>
-                    <Switch className="shrink-0" />
+                    <Switch
+                      checked={form.watch('emailMarketing')}
+                      onCheckedChange={(checked) => form.setValue('emailMarketing', checked)}
+                      className="shrink-0"
+                    />
                   </div>
                 </div>
               </section>

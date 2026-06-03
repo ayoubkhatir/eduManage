@@ -17,8 +17,7 @@ import { useRef, useState } from 'react'
 import type { FieldValues, Path, UseFormReturn } from 'react-hook-form'
 
 function getCloudinaryUrl(publicId: string, size?: number) {
-  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dziurs45p'
-  // If publicId looks like a full URL, return as-is
+  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
   if (/^https?:\/\//i.test(publicId)) return publicId
 
   const transformation = size ? `c_thumb,w_${size},h_${size},g_face` : ''

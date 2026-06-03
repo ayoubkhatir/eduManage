@@ -1,19 +1,10 @@
-import { createServerFn } from '@tanstack/react-start'
-import {
-  paginatedSuccessResponse,
-  successResponse,
-  type APIResponse,
-  type APIErrorResponses,
-} from '#/server/utils/response.type'
-import {
-  addStudentSchema,
-  dashboardPeriodSchema,
-  editStudentSchema,
-  getStudentsSchema,
-} from '#/schemas/students.schema'
-import { validCuidSchema } from '#/schemas/shared.schema'
-import { mapDbError } from '#/server/utils/db_error_handling'
-import { studentsController } from './students.controller'
+import { createServerFn } from "@tanstack/react-start";
+import { paginatedSuccessResponse, successResponse, type APIResponse, type APIErrorResponses } from "#/server/utils/response.type";
+import { addStudentSchema, dashboardPeriodSchema, editStudentSchema, getStudentsSchema } from "#/schemas/students.schema";
+import { validCuidSchema } from "#/schemas/shared.schema";
+import { mapDbError } from "#/server/utils/db_error_handling";
+import { studentsController } from "./students.controller";
+import { z } from 'zod/v4'
 
 export const getAllStudentsServerFn = createServerFn({ method: 'GET' })
   .inputValidator(getStudentsSchema.extend({ schoolId: validCuidSchema }))
@@ -75,8 +66,24 @@ export const getDashboardStatsServerFn = createServerFn({ method: 'GET' })
     successResponse(await studentsController.getDashboardStats(schoolId)),
   )
 
-export const getDashboardChartServerFn = createServerFn({ method: 'GET' })
-  .inputValidator(dashboardPeriodSchema)
-  .handler(async ({ data }) =>
-    successResponse(await studentsController.getDashboardChart({ ...data })),
-  )
+
+export const getDashboardChartServerFn = createServerFn({ method: "GET" })
+    .inputValidator(dashboardPeriodSchema)
+    .handler(async ({ data }) => successResponse(await studentsController.getDashboardChart({ ...data })))
+
+export const updateStudentSettingsServerFn = createServerFn({ method: 'POST' })
+    .inputValidator(z.object({
+        studentId: validCuidSchema,
+        name: z.string().min(1),
+        telNumber: z.string().optional(),
+        image: z.string().nullable().optional(),
+    }))
+    .handler(async ({ data }) => {
+        try {
+            const result = await studentsController.updateStudentSettings(data)
+            return successResponse(result)
+        } catch (error) {
+            console.log("\x1b[36m[server]\x1b[0m " + error)
+            return mapDbError(error) as APIErrorResponses
+        }
+    })

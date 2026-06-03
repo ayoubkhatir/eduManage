@@ -63,6 +63,9 @@ function SettingsComp({ teacher }: { teacher: TeacherUser }) {
           >
             {/* Main form area */}
             <div className="flex-1 space-y-6">
+              <input type="hidden" {...form.register('assignmentDueDates')} />
+              <input type="hidden" {...form.register('schoolAnnouncements')} />
+              <input type="hidden" {...form.register('emailMarketing')} />
               {/* Profile */}
               <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
                 <div className="border-b border-border p-6">
@@ -246,7 +249,11 @@ function SettingsComp({ teacher }: { teacher: TeacherUser }) {
                         Receive alerts 24h before an assignement is due.
                       </p>
                     </div>
-                    <Switch defaultChecked className="shrink-0" />
+                    <Switch
+                      checked={form.watch('assignmentDueDates')}
+                      onCheckedChange={(checked) => form.setValue('assignmentDueDates', checked)}
+                      className="shrink-0"
+                    />
                   </div>
                   <div className="flex items-center justify-between py-4">
                     <div>
@@ -257,7 +264,11 @@ function SettingsComp({ teacher }: { teacher: TeacherUser }) {
                         Important news regarding school closures or events.
                       </p>
                     </div>
-                    <Switch defaultChecked className="shrink-0" />
+                    <Switch
+                      checked={form.watch('schoolAnnouncements')}
+                      onCheckedChange={(checked) => form.setValue('schoolAnnouncements', checked)}
+                      className="shrink-0"
+                    />
                   </div>
                   <div className="flex items-center justify-between py-4">
                     <div>
@@ -268,7 +279,11 @@ function SettingsComp({ teacher }: { teacher: TeacherUser }) {
                         Receive newsletters and promotional content.
                       </p>
                     </div>
-                    <Switch className="shrink-0" />
+                    <Switch
+                      checked={form.watch('emailMarketing')}
+                      onCheckedChange={(checked) => form.setValue('emailMarketing', checked)}
+                      className="shrink-0"
+                    />
                   </div>
                 </div>
               </section>
