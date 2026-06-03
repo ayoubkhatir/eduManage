@@ -16,18 +16,24 @@ class EventsController {
   }: GetEventsType) {
     const conditions = []
     conditions.push(eq(eventsTable.schoolId, schoolId))
-    let teacherId: string | undefined
-    if (!classId && teacherUserId) {
+
+    let teacherId: string | undefined = undefined
+    if (!classId) {
+      conditions.push(eq(eventsTable.isClass, false))
+      if (teacherUserId) {
       const teacher = await this.db.query.teachersTable.findFirst({
         where: eq(teachersTable.userId, teacherUserId),
         columns: { id: true },
       })
       teacherId = teacher?.id
     }
+    }
+
+
+
+    
     if (!isOwner) {
-      if (classId) {
-        conditions.push(eq(eventsTable.classId, classId))
-      } else if (!!teacherId) {
+      if (classId && !!teacherId) {
         conditions.push(eq(eventsTable.teacherId, teacherId))
       }
     }
