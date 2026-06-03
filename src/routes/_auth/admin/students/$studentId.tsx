@@ -198,6 +198,30 @@ function OwnerStudentDetailContent() {
                       <StudentClassSelector schoolId={currentUser.info.id} />
                     </div>
                   </div>
+                  <div className="p-8 border-b border-[#f0f2f4] dark:border-gray-800">
+                    <h3 className="text-[#111318] dark:text-white text-lg font-bold mb-6 flex items-center gap-2">
+                      <span className="material-symbols-outlined text-primary">
+                        lock
+                      </span>
+                      Security
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <InputWrapper
+                        form={studentForm}
+                        name="newPassword"
+                        label="New Password"
+                        placeholder="Leave blank to keep current"
+                        type="password"
+                      />
+                      <InputWrapper
+                        form={studentForm}
+                        name="confirmPassword"
+                        label="Confirm Password"
+                        placeholder="Confirm new password"
+                        type="password"
+                      />
+                    </div>
+                  </div>
                   <div className="p-6 bg-[#f8f9fc] dark:bg-[#151a25] border-t border-[#f0f2f4] dark:border-gray-800 flex flex-col-reverse sm:flex-row items-center justify-end gap-4 rounded-b-xl">
                     <Link to="/admin/students">
                       <button

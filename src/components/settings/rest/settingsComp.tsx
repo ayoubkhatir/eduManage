@@ -18,6 +18,7 @@ function useUpdateSettings({ user }: { user: StudentUser }) {
       username: user.name,
       telNumber: user.telNumber ?? '',
       about: '',
+      image: user.image,
       assignmentDueDates: true,
       newGradesPosted: true,
       schoolAnnouncements: true,
@@ -36,6 +37,7 @@ function useUpdateSettings({ user }: { user: StudentUser }) {
           studentId: user.info.id,
           name: data.username,
           telNumber: data.telNumber,
+          image: data.image ?? null,
         },
       })
       if (!response.success) throw new Error('Error occurred')
@@ -86,6 +88,7 @@ export default function SettingsComp({
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-6 lg:flex-row"
           >
+            <input type="hidden" {...form.register('image')} />
             <input type="hidden" {...form.register('assignmentDueDates')} />
             <input type="hidden" {...form.register('newGradesPosted')} />
             <input type="hidden" {...form.register('schoolAnnouncements')} />
@@ -100,7 +103,7 @@ export default function SettingsComp({
                 </div>
                 <div className="flex flex-col items-center gap-6 p-6 sm:flex-row">
                   <div className="shrink-0">
-                    <UserAvatar image={user.image} size={25} />
+                    <UserAvatar image={form.watch('image') ?? null} size={25} />
                   </div>
                   <div className="flex flex-col items-center text-center sm:items-start sm:text-left">
                     <h3 className="text-lg font-bold text-slate-900 dark:text-white">
@@ -109,12 +112,15 @@ export default function SettingsComp({
                     <p className="text-sm text-slate-500 dark:text-slate-400">
                       {isTeacher ? 'Teacher' : 'Student'}
                     </p>
-                    <button
-                      type="button"
-                      className="cursor-pointer mt-3 rounded-lg px-4 py-2 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
-                    >
-                      Remove Photo
-                    </button>
+                    {form.watch('image') ? (
+                      <button
+                        type="button"
+                        onClick={() => form.setValue('image', '', { shouldDirty: true })}
+                        className="cursor-pointer mt-3 rounded-lg px-4 py-2 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+                      >
+                        Remove Photo
+                      </button>
+                    ) : null}
                   </div>
                 </div>
               </section>

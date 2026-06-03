@@ -7,6 +7,7 @@ export const newInfoSchema = z
     username: z.string().min(1, 'Username is required'),
     telNumber: phoneNumberSchema,
     about: z.string().nullable().optional(),
+    image: z.string().nullable().optional(),
     newPassword: z
       .string()
       .min(6, 'Password must be at least 6 characters long')

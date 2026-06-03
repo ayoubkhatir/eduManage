@@ -25,8 +25,16 @@ export const addStudentSchema = addUserSchema.extend({
 })
 
 export const editStudentSchema = addStudentSchema
-  .extend({ studentId: validCuidSchema })
+  .extend({
+    studentId: validCuidSchema,
+    newPassword: z.string().min(6, 'Password must be at least 6 characters').optional().or(z.literal('')),
+    confirmPassword: z.string().optional().or(z.literal('')),
+  })
   .omit({ schoolId: true })
+  .refine((data) => !data.newPassword || data.newPassword === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  })
 
 export const studentSearchSchema = z.object({
   search: z.string().default(''),

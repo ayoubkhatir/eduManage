@@ -144,6 +144,8 @@ export function useEditStudent(edited: StudentUser) {
       studentId: edited.info.id,
       classId: edited.info.class.id,
       gradeId: edited.info.grade.id,
+      newPassword: '',
+      confirmPassword: '',
     },
     resolver: standardSchemaResolver(editStudentSchema),
   })
@@ -178,6 +180,8 @@ export function useEditStudent(edited: StudentUser) {
       image: data.image,
       telNumber: data.telNumber,
       studentId: data.studentId,
+      newPassword: data.newPassword || undefined,
+      confirmPassword: data.confirmPassword || undefined,
     }
     editStudent(newData, {
       onSuccess: () => {

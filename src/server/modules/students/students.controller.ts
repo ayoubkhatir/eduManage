@@ -266,6 +266,14 @@ class StudentsController {
             .where(eq(users.id, userId))
             .returning()
 
+        if (data.newPassword) {
+            const passwordHash = await handlePassword.hash(data.newPassword)
+            await this.db
+                .update(account)
+                .set({ password: passwordHash })
+                .where(and(eq(account.userId, userId), eq(account.providerId, "credential")))
+        }
+
         await this.db
             .update(studentsTable)
             .set({

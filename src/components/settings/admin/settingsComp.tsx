@@ -17,6 +17,7 @@ function useEditSettings({ admin }: { admin: AdminUser }) {
       description: '',
       email: admin.email,
       phoneNumber: admin.telNumber ?? '',
+      image: admin.image ?? undefined,
       SchoolName: admin.info.schoolName,
       teacherNotifications: true,
       schoolAnnouncements: true,
