@@ -93,14 +93,7 @@ class MarksController {
         status: assessmentPeriodsTable.status,
       })
       .from(assessmentPeriodsTable)
-      .where(
-        eq(
-          assessmentPeriodsTable.schoolId,
-          teacherAssignments[0]?.classId
-            ? teacherAssignments[0]!.classId
-            : classInfo.classId,
-        ),
-      ) // replace if needed
+      .where(eq(assessmentPeriodsTable.schoolId, input.schoolId))
       .orderBy(desc(assessmentPeriodsTable.startDate))
       .catch(() => [])
 

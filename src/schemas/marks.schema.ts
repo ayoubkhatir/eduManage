@@ -17,6 +17,7 @@ export const assessmentIdSchema = z.object({
 export const getTeacherClassMarksPageSchema = z.object({
   classId: validCuidSchema,
   teacherId: validCuidSchema,
+  schoolId: validCuidSchema,
   subjectId: validCuidSchema.optional(),
   periodId: validCuidSchema.optional(),
 })

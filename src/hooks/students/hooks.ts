@@ -161,6 +161,8 @@ export function useEditStudent(edited: StudentUser) {
   })
 
   function onSubmit(data: EditStudentType) {
+    const navigate = useNavigate()
+
     const newData: EditStudentType = {
       name: data.name,
       email: data.email,
@@ -180,6 +182,7 @@ export function useEditStudent(edited: StudentUser) {
     editStudent(newData, {
       onSuccess: () => {
         toast.success('Edit User Success')
+        navigate({ to: '/admin/students' })
       },
       onError: () => {
         toast.error('Error occured')

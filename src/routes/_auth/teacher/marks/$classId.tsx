@@ -15,6 +15,8 @@ import {
   saveStudentMarksServerFn,
 } from '@/server/modules/marks/marks.server-functions'
 import { AssessmentTypeEnum, StatusEnum } from '#/server/db/schema'
+import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
+import type { TeacherUser } from '#/types/teacherTypes'
 import { motion } from 'framer-motion'
 
 type AssessmentMarksData = {
@@ -83,6 +85,15 @@ const getAssessmentMarksQueryOptions = (assessmentId?: string) =>
 
 export const Route = createFileRoute('/_auth/teacher/marks/$classId')({
   component: RouteComponent,
+  loader: async ({ context }) => {
+    const currentUser = (await FetchCurrentUserServerFn({
+      data: context.authState.user!,
+    })) as TeacherUser
+
+    if (!currentUser) throw new Error('Unauthorized')
+
+    return { currentUser }
+  },
   staticData: {
     breadcrumb: [
       'Marks',
@@ -95,11 +106,11 @@ export const Route = createFileRoute('/_auth/teacher/marks/$classId')({
 
 function RouteComponent() {
   const { classId } = Route.useParams()
+  const { currentUser } = Route.useLoaderData()
   const queryClient = useQueryClient()
 
-  // Replace these with auth/session values
-  const teacherId = 'cjeqi4oqhvn5'
-  const schoolId = 'r0akyppqt5jl'
+  const teacherId = currentUser.info.id
+  const schoolId = currentUser.info.schoolId
 
   const [selectedSubjectId, setSelectedSubjectId] = useState<string>('')
   const [selectedAssessmentId, setSelectedAssessmentId] = useState<string>('')

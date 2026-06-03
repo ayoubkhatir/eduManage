@@ -104,7 +104,13 @@ export default function SettingsComp({ admin }: { admin: AdminUser }) {
                       value={admin.image ?? ''}
                       onChange={(url) => {
                         form.setValue('image', url)
+                        form.trigger('image')
                       }}
+                      // value={admin.image ?? ''}
+                      // onChange={(url) => {
+                      //   url && form.setValue('image', url)
+                      //   form.trigger('image')
+                      // }}
                     />
                   </div>
 
@@ -268,7 +274,9 @@ export default function SettingsComp({ admin }: { admin: AdminUser }) {
                     </div>
                     <Switch
                       checked={form.watch(item.name)}
-                      onCheckedChange={(checked) => form.setValue(item.name, checked)}
+                      onCheckedChange={(checked) =>
+                        form.setValue(item.name, checked)
+                      }
                       className="shrink-0"
                     />
                   </div>

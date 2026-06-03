@@ -63,6 +63,7 @@ function SettingsComp({ teacher }: { teacher: TeacherUser }) {
           >
             {/* Main form area */}
             <div className="flex-1 space-y-6">
+              <input type="hidden" {...form.register('image')} />
               <input type="hidden" {...form.register('assignmentDueDates')} />
               <input type="hidden" {...form.register('schoolAnnouncements')} />
               <input type="hidden" {...form.register('emailMarketing')} />
@@ -75,7 +76,7 @@ function SettingsComp({ teacher }: { teacher: TeacherUser }) {
                 </div>
                 <div className="flex flex-col items-center gap-6 p-6 sm:flex-row">
                   <div className="shrink-0">
-                    <UserAvatar image={teacher.image} size={25} />
+                    <UserAvatar image={form.watch('image')} size={25} />
                   </div>
                   <div className="flex flex-col items-center text-center sm:items-start sm:text-left">
                     <h3 className="text-lg font-bold text-foreground">
@@ -84,12 +85,15 @@ function SettingsComp({ teacher }: { teacher: TeacherUser }) {
                     <p className="text-sm text-muted-foreground">
                       {teacher.role}
                     </p>
-                    <button
-                      type="button"
-                      className="mt-3 rounded-xl px-4 py-2 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 cursor-pointer"
-                    >
-                      Remove Photo
-                    </button>
+                    {form.watch('image') ? (
+                      <button
+                        type="button"
+                        onClick={() => form.setValue('image', '', { shouldDirty: true })}
+                        className="mt-3 rounded-xl px-4 py-2 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 cursor-pointer"
+                      >
+                        Remove Photo
+                      </button>
+                    ) : null}
                   </div>
                 </div>
               </section>
