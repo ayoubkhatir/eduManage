@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Skeleton } from 'boneyard-js/react'
 import { useUpdateTeacherSettings } from '#/hooks/teachers/hooks'
 import { FormProvider } from 'react-hook-form'
-import { UserAvatar } from '#/components/admin/Table/columnsData'
+import { SimpleImageUpload } from '#/components/cloudinary-uploader'
 import { Switch } from '#/components/ui/switch'
 import type { TeacherUser } from '#/types/teacherTypes'
 import { FetchCurrentUserServerFn } from '#/routes/-fetchAuthStateInBeforeLoad'
@@ -63,7 +63,13 @@ function SettingsComp({ teacher }: { teacher: TeacherUser }) {
           >
             {/* Main form area */}
             <div className="flex-1 space-y-6">
+              <input type="hidden" {...form.register('teacherId')} />
               <input type="hidden" {...form.register('image')} />
+              <input type="hidden" {...form.register('email')} />
+              <input type="hidden" {...form.register('gender')} />
+              <input type="hidden" {...form.register('address')} />
+              <input type="hidden" {...form.register('dateOfBirth')} />
+              <input type="hidden" {...form.register('status')} />
               <input type="hidden" {...form.register('assignmentDueDates')} />
               <input type="hidden" {...form.register('schoolAnnouncements')} />
               <input type="hidden" {...form.register('emailMarketing')} />
@@ -74,26 +80,23 @@ function SettingsComp({ teacher }: { teacher: TeacherUser }) {
                     Profile Picture
                   </h2>
                 </div>
-                <div className="flex flex-col items-center gap-6 p-6 sm:flex-row">
-                  <div className="shrink-0">
-                    <UserAvatar image={form.watch('image')} size={25} />
+                <div className="flex flex-col gap-6 p-6 md:flex-row md:items-center">
+                  <div className="group relative shrink-0">
+                    <SimpleImageUpload
+                      value={form.watch('image') ?? ''}
+                      onChange={(url) => {
+                        form.setValue('image', url)
+                        form.trigger('image')
+                      }}
+                    />
                   </div>
-                  <div className="flex flex-col items-center text-center sm:items-start sm:text-left">
-                    <h3 className="text-lg font-bold text-foreground">
+                  <div className="flex-1 space-y-1">
+                    <h3 className="font-semibold text-foreground">
                       {teacher.name}
                     </h3>
                     <p className="text-sm text-muted-foreground">
                       {teacher.role}
                     </p>
-                    {form.watch('image') ? (
-                      <button
-                        type="button"
-                        onClick={() => form.setValue('image', '', { shouldDirty: true })}
-                        className="mt-3 rounded-xl px-4 py-2 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 cursor-pointer"
-                      >
-                        Remove Photo
-                      </button>
-                    ) : null}
                   </div>
                 </div>
               </section>

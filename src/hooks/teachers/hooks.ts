@@ -245,7 +245,7 @@ export function useUpdateTeacherSettings(teacher: TeacherUser) {
   const form: UseFormReturn<EditTeacherType> = useForm<EditTeacherType>({
     resolver: standardSchemaResolver(editTeacherSchema),
     defaultValues: {
-      teacherId: teacher.id,
+      teacherId: teacher.info.id,
       name: teacher.name,
       email: teacher.email,
       image: teacher.image,
@@ -261,11 +261,16 @@ export function useUpdateTeacherSettings(teacher: TeacherUser) {
     }
   })
   const router = useRouter()
+  const queryClient = useQueryClient()
   const { mutate: updateTeacherSettings } = useMutation({
     mutationFn: async (data: EditTeacherType) => {
       const response = await editTeacherServerFn({ data })
       if (response.success) return response.data
-      throw new Error('Error occured')
+      const message =
+        'message' in response
+          ? response.message
+          : 'Error has occured'
+      throw new Error(message)
     },
     onSuccess: () => {
       toast.success('Update Success')
@@ -274,13 +279,14 @@ export function useUpdateTeacherSettings(teacher: TeacherUser) {
         queryKey: ['teachers', teacher.id, `userId-${teacher.info.userId}`],
       })
     },
-    onError: () => {
-      toast.error('Error occured')
+    onError: (error) => {
+      toast.error(error.message || 'Error occured')
     },
   })
   const onSubmit = async (data: EditTeacherType) => {
-    updateTeacherSettings(data)
-    form.reset()
+    updateTeacherSettings(data, {
+      onSuccess: () => form.reset(data),
+    })
   }
 
   return { form, onSubmit }
